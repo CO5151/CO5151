@@ -3,6 +3,8 @@ CO5151 HCMUT
 # Context Engineering & Agent RAG Architectural Guide
 ### High-Performance Retrieval, Metric Evaluation (Ragas & Industry Standards), System Design & Google ADK Guide (with Local Ollama Setup)
 
+> **Documentation**: Explore the complete [LegalPilot-VN Documentation](docs/README.md) for [Architecture Decision Records (ADRs)](docs/adr/README.md), [Architecture Overview](docs/architecture/overview.md), and [Developer Guides](docs/development/getting-started.md).
+
 ---
 
 ## 1. What is RAG (Retrieval-Augmented Generation)?
