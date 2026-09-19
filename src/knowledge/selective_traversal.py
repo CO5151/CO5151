@@ -22,9 +22,7 @@ logger = get_logger(__name__)
 class TraversalContext:
     """Configuration parameters for a selective traversal query."""
 
-    reference_date: str = field(
-        default_factory=lambda: datetime.now().strftime("%Y-%m-%d")
-    )
+    reference_date: str = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d"))
     max_hops: int = 2
     max_nodes: int = 10
     allowed_rel_types: list[str] = field(
@@ -97,7 +95,9 @@ class SelectiveTraversalEngine:
             ctx.reference_date,
         )
         if not is_seed_active and ctx.strict_temporal:
-            logger.warning("Seed document '%s' is not active at %s", seed_doc_id, ctx.reference_date)
+            logger.warning(
+                "Seed document '%s' is not active at %s", seed_doc_id, ctx.reference_date
+            )
             pruned_count += 1
             return TraversalResult(
                 seed_doc_id=seed_doc_id,
@@ -199,7 +199,9 @@ class SelectiveTraversalEngine:
                 if amender_details:
                     for a_art in amender_details.get("articles", []):
                         # If amender article mentions modifying this article
-                        if f"Điều {art_num}" in a_art.get("content", "") or f"Điều {art_num}" in a_art.get("title", ""):
+                        if f"Điều {art_num}" in a_art.get(
+                            "content", ""
+                        ) or f"Điều {art_num}" in a_art.get("title", ""):
                             active_version["is_amended"] = True
                             active_version["amended_by"] = amender_id
                             active_version["amendment_notes"] = (
