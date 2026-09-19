@@ -87,24 +87,40 @@ def normalize_doc_id(doc_id_raw: str) -> str:
     return cleaned.upper()
 
 
-def parse_legal_document(text: str, default_metadata: dict[str, Any] | None = None) -> ParsedDocument:
+def parse_legal_document(
+    text: str, default_metadata: dict[str, Any] | None = None
+) -> ParsedDocument:
     """Parses raw text of a Vietnamese legal document into a structured hierarchy."""
     meta = default_metadata or {}
 
     # 1. Extract Document Identifier (Số hiệu)
     doc_id_match = re.search(r"Số:\s*([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)", text, re.IGNORECASE)
-    doc_id = normalize_doc_id(doc_id_match.group(1)) if doc_id_match else meta.get("doc_id", "UNKNOWN/DOC")
+    doc_id = (
+        normalize_doc_id(doc_id_match.group(1))
+        if doc_id_match
+        else meta.get("doc_id", "UNKNOWN/DOC")
+    )
 
     # 2. Extract Issuer (Cơ quan ban hành)
-    issuer_match = re.search(r"^(CHÍNH PHỦ|BỘ [^\n]+|THỦ TƯỚNG CHÍNH PHỦ|QUỐC HỘI)", text, re.MULTILINE | re.IGNORECASE)
-    issuer = issuer_match.group(1).strip().title() if issuer_match else meta.get("issuer", "Chính phủ")
+    issuer_match = re.search(
+        r"^(CHÍNH PHỦ|BỘ [^\n]+|THỦ TƯỚNG CHÍNH PHỦ|QUỐC HỘI)", text, re.MULTILINE | re.IGNORECASE
+    )
+    issuer = (
+        issuer_match.group(1).strip().title() if issuer_match else meta.get("issuer", "Chính phủ")
+    )
 
     # 3. Extract Document Type
-    type_match = re.search(r"\n(NGHỊ ĐỊNH|THÔNG TƯ|LUẬT|QUYẾT ĐỊNH|NGHỊ QUYẾT)\n", text, re.IGNORECASE)
-    doc_type = type_match.group(1).strip().title() if type_match else meta.get("doc_type", "Nghị định")
+    type_match = re.search(
+        r"\n(NGHỊ ĐỊNH|THÔNG TƯ|LUẬT|QUYẾT ĐỊNH|NGHỊ QUYẾT)\n", text, re.IGNORECASE
+    )
+    doc_type = (
+        type_match.group(1).strip().title() if type_match else meta.get("doc_type", "Nghị định")
+    )
 
     # 4. Extract Issue Date (Ngày ký / ban hành)
-    date_match = re.search(r"ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})", text, re.IGNORECASE)
+    date_match = re.search(
+        r"ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})", text, re.IGNORECASE
+    )
     if date_match:
         d, m, y = date_match.groups()
         issue_date = f"{int(y):04d}-{int(m):02d}-{int(d):02d}"
@@ -162,11 +178,15 @@ def parse_legal_document(text: str, default_metadata: dict[str, Any] | None = No
                 c_num = c_match.group(1).strip()
                 c_text = c_match.group(2).strip()
                 clause_id = f"{article_id}:Clause_{c_num}"
-                parsed_clauses.append(ParsedClause(clause_id=clause_id, clause_number=c_num, content=c_text))
+                parsed_clauses.append(
+                    ParsedClause(clause_id=clause_id, clause_number=c_num, content=c_text)
+                )
         else:
             # Single clause article
             clause_id = f"{article_id}:Clause_1"
-            parsed_clauses.append(ParsedClause(clause_id=clause_id, clause_number="1", content=art_content))
+            parsed_clauses.append(
+                ParsedClause(clause_id=clause_id, clause_number="1", content=art_content)
+            )
 
         parsed_articles.append(
             ParsedArticle(
@@ -234,7 +254,9 @@ def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalC
                 target_doc_id=target_doc,
                 target_article_id=target_art,
                 rel_type="SUPERSEDES",
-                scope=f"Repeals Article {a_num} Clause {c_num}" if c_num else f"Repeals Article {a_num}",
+                scope=f"Repeals Article {a_num} Clause {c_num}"
+                if c_num
+                else f"Repeals Article {a_num}",
                 effective_date=doc.effective_date,
             )
         )
@@ -358,9 +380,7 @@ class LegalIngestionPipeline:
             "cross_refs_count": len(cross_refs),
         }
 
-    def _ingest_to_neo4j(
-        self, doc: ParsedDocument, cross_refs: list[LegalCrossReference]
-    ) -> None:
+    def _ingest_to_neo4j(self, doc: ParsedDocument, cross_refs: list[LegalCrossReference]) -> None:
         """Upserts document, articles, clauses, and relationships into Neo4j."""
         self.neo4j_client.init_schema()
 
