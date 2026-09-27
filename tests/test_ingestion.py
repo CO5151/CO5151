@@ -9,7 +9,9 @@ from src.knowledge.ingestion import (
     LegalIngestionPipeline,
     extract_cross_references,
     generate_legal_chunks,
+    llm_fallback_parse_document,
     normalize_doc_id,
+    parse_html_document,
     parse_legal_document,
 )
 from src.knowledge.neo4j_client import Neo4jClient
@@ -118,3 +120,66 @@ def test_pipeline_ingestion_end_to_end():
     with contextlib.suppress(Exception):
         qdrant_manager.client.delete_collection("test_ingest_suite")
     neo4j_client.close()
+
+
+SAMPLE_HTML = """<!DOCTYPE html>
+<html>
+<head><title>Nghị định 100/2024/NĐ-CP</title></head>
+<body>
+<div class="vbTitle">NGHỊ ĐỊNH VỀ QUẢN LÝ LAO ĐỘNG</div>
+<p>CHÍNH PHỦ</p>
+<p>Số: 100/2024/NĐ-CP</p>
+<p>Hà Nội, ngày 20 tháng 05 năm 2024</p>
+<p>Điều 1. Phạm vi áp dụng</p>
+<p>1. Nghị định này quy định việc quản lý người lao động nước ngoài.</p>
+<p>2. Áp dụng đối với doanh nghiệp có vốn đầu tư nước ngoài.</p>
+<p>Điều 2. Văn bản dẫn chiếu</p>
+<p>Thực hiện theo quy định tại <a href="http://vbpl.vn/152-2020">152/2020/NĐ-CP</a> và sửa đổi bổ sung.</p>
+</body>
+</html>
+"""
+
+
+def test_parse_html_document():
+    """Tests parsing HTML legal markup with hyperlinks and semantic tags."""
+    doc, refs = parse_html_document(SAMPLE_HTML)
+
+    assert doc.doc_id == "100/2024/ND-CP"
+    assert doc.issuer == "Chính Phủ"
+    assert doc.issue_date == "2024-05-20"
+    assert len(doc.articles) == 2
+
+    art1 = doc.articles[0]
+    assert art1.article_number == "1"
+    assert len(art1.clauses) == 2
+    assert "quản lý người lao động nước ngoài" in art1.clauses[0].content
+
+    # Check extracted hyperlink cross-reference
+    assert any(ref.target_doc_id == "152/2020/ND-CP" for ref in refs)
+
+
+def test_llm_fallback_graceful_offline(monkeypatch):
+    """Tests LLM fallback parser handles missing or invalid API keys gracefully."""
+    from src.core.config import settings
+
+    monkeypatch.setattr(settings, "GEMINI_API_KEY", "")
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+
+    doc = llm_fallback_parse_document("Văn bản bất thường không có cấu trúc chuẩn")
+    assert doc is None
+
+
+def test_cli_ingestion_help():
+    """Tests CLI entrypoint loads without error."""
+    import subprocess
+    import sys
+
+    res = subprocess.run(
+        [sys.executable, "-m", "src.knowledge.ingestion", "--help"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert res.returncode == 0
+    assert "--file" in res.stdout
+    assert "--dir" in res.stdout
