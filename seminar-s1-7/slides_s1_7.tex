@@ -1,0 +1,653 @@
+% =====================================================================
+%  CO5151 -- Advanced Agentic AI  |  Nhom G4  |  Seminar S1-7
+%  Agent Design Patterns & Orchestration: Primitives, State Coordination & Critical Boundaries
+%  Giang vien huong dan: TS. Le Xuan Bach
+%  Nhom G4: Dang Lam Tung (Truong nhom) - Nguyen Trung Phong - Vu Viet Hung
+%  BIEN DICH: pdflatex slides_s1_7.tex (2 lan de hien thi so trang)
+% =====================================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+
+% ---- Tieng Viet & Fonts ----
+\usepackage[utf8]{vntex,inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese,english]{babel}
+\usefonttheme{serif}
+\usefonttheme{professionalfonts}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{colortbl}
+
+% ---- Mau nhan dien HCMUT ----
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{hcmutlight}{RGB}{0,120,190}
+\definecolor{hcmutgray}{RGB}{238,241,245}
+\definecolor{darkred}{RGB}{180,30,30}
+\definecolor{darkgreen}{RGB}{20,130,40}
+\definecolor{alertorange}{RGB}{220,100,0}
+
+% ---- Trinh bay Beamer ----
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{frametitle}{bg=hcmutblue, fg=white}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamercolor{footline}{bg=hcmutblue!85!black, fg=white}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamercolor{itemize item}{fg=hcmutblue}
+\setbeamercolor{block title}{bg=hcmutblue!15, fg=hcmutblue}
+\setbeamercolor{block body}{bg=hcmutgray}
+\setbeamercolor{structure}{fg=hcmutblue}
+\setbeamersize{text margin left=0.55cm, text margin right=0.55cm}
+
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.7ex,dp=1.3ex,leftskip=0.4cm,rightskip=0.4cm]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle%
+  \end{beamercolorbox}%
+}
+
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.4ex,dp=1.1ex,leftskip=0.4cm,rightskip=0.4cm]{footline}%
+    \usebeamerfont{footline}CO5151: Advanced Agentic AI \hfill Seminar S1-7: Agent Design Patterns \& Orchestration \hfill \insertframenumber/\inserttotalframenumber%
+  \end{beamercolorbox}%
+}
+
+\newcommand{\hcmutlogo}[1][1.5cm]{%
+  \IfFileExists{hcmut_logo.png}{\includegraphics[height=#1]{hcmut_logo.png}}{%
+    \IfFileExists{../hcmut_logo.png}{\includegraphics[height=#1]{../hcmut_logo.png}}{%
+      \IfFileExists{../../hcmut_logo.png}{\includegraphics[height=#1]{../../hcmut_logo.png}}{%
+        \textbf{\color{hcmutblue}\large HCMUT}%
+      }%
+    }%
+  }%
+}
+
+\begin{document}
+\selectlanguage{vietnamese}
+
+% =====================================================================
+% SLIDE 1: TITLE SLIDE
+% =====================================================================
+\begin{frame}[plain]
+  \vspace{0.4cm}
+  \begin{columns}[c]
+    \begin{column}{0.18\textwidth}
+      \centering
+      \hcmutlogo[1.7cm]
+    \end{column}
+    \begin{column}{0.80\textwidth}
+      {\scriptsize \textbf{ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH -- TRƯỜNG ĐẠI HỌC BÁCH KHOA}}\\[0.05cm]
+      {\scriptsize KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}\\[0.05cm]
+      {\tiny \textbf{CO5151: ADVANCED AGENTIC AI -- HK261}}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.5cm}
+  \begin{center}
+    {\usebeamerfont{title}\Large\bfseries\color{hcmutblue} SEMINAR S1-7: AGENT DESIGN PATTERNS\\\& ORCHESTRATION}\\[0.15cm]
+    {\normalsize\color{darkgray} Architectural Primitives, State Coordination, and Critical Boundaries}
+  \end{center}
+
+  \vspace{0.4cm}
+  \begin{columns}[t]
+    \begin{column}{0.65\textwidth}
+      \textbf{Nhóm thuyết trình G4:}\\
+      $\bullet$ \textbf{Đặng Lâm Tùng} (Trưởng nhóm -- Kiến trúc \& Phân tích phản biện)\\
+      $\bullet$ \textbf{Nguyễn Trung Phong} (Khảo sát Patterns \& Đánh giá thực nghiệm)\\
+      $\bullet$ \textbf{Vũ Việt Hưng} (Điều phối trạng thái \& Trace Demo)
+    \end{column}
+    \begin{column}{0.35\textwidth}
+      \raggedleft
+      \textbf{Giảng viên hướng dẫn:}\\
+      \textbf{\color{hcmutblue}TS. Lê Xuân Bách}\\[0.15cm]
+      {\scriptsize Ngày báo cáo: 21/10/2026}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 2: BỐI CẢNH & ĐỘNG LỰC
+% =====================================================================
+\begin{frame}{1. Bối Cảnh: Vì Sao Single-Prompt \& Naive Chain Thất Bại?}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \textbf{\color{darkred}Ba Giới Hạn Cốt Tử Của LLM Đơn Tuyến:}
+      \begin{itemize}
+        \item \textbf{No Self-Correction (Không tự sửa):} Mô hình tự sinh token tiếp theo dựa trên xác suất; sai lầm ở bước 1 sẽ thành tiên đề tuyệt đối cho bước 2.
+        \item \textbf{Context Degradation (Suy thoái ngữ cảnh):} Đưa toàn bộ tài liệu và công cụ vào một prompt làm loãng chú ý (Lost in the Middle).
+        \item \textbf{Combinatorial Complexity:} Bài toán thế giới thực đòi hỏi phân rã đa tầng (Sub-task decomposition), gọi công cụ ngoài và xử lý phi tất định.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\color{hcmutblue}Sự Chuyển Dịch Mô Hình (Paradigm Shift)}
+        \centering
+        \small
+        \textbf{Single Prompt} ($y = f(x)$)\\
+        $\Downarrow$\\
+        \textbf{Static Chain / Naive RAG} ($x \to R \to y$)\\
+        $\Downarrow$\\
+        \textbf{Autonomous Agent Orchestration}\\
+        $\mathcal{S}_{t+1}, \mathcal{A}_t = \pi(\mathcal{S}_t, \mathcal{H}_t, \mathcal{E}_t)$
+      \end{block}
+      \vspace{0.1cm}
+      {\footnotesize \textit{"Chất lượng của một hệ thống Agentic không nằm ở trọng số mô hình lớn tới đâu, mà nằm ở kiến trúc điều phối luồng trạng thái."} -- Anthropic, 2024.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 3: ĐẶT BÀI TOÁN HÌNH THỨC
+% =====================================================================
+\begin{frame}{2. Định Nghĩa Hình Thức Bài Toán Điều Phối Tác Tử (Orchestration)}
+  \begin{block}{Hệ Thống Điều Phối Đa Tác Tử Được Định Nghĩa Bởi Bộ 5:}
+    $$\mathcal{M} = \langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{O}, \mathcal{C} \rangle$$
+  \end{block}
+  \begin{itemize}
+    \item $\mathcal{S}$ -- Không gian trạng thái hệ thống: $\mathcal{S}_t = \langle \text{Memory}, \text{Active Sub-goals}, \text{Artifacts}, \text{Error Budget} \rangle$.
+    \item $\mathcal{A}$ -- Không gian hành động: Gồm suy luận nội tại (Thought), gọi công cụ (Tool Call), hoặc ủy quyền tác vụ (Delegate to Worker).
+    \item $\mathcal{T}: \mathcal{S} \times \mathcal{A} \to \mathcal{S}$ -- Hàm chuyển trạng thái có xác thực (State Transition Function).
+    \item $\mathcal{O}$ -- Bộ điều phối (Orchestrator Policy): Quyết định rẽ nhánh, dừng hoặc gọi lại phản hồi.
+    \item $\mathcal{C}$ -- Chi phí tổng hợp: $\text{Cost} = \alpha \cdot \text{Token} + \beta \cdot \text{Latency} + \gamma \cdot \text{ErrorRate}$.
+  \end{itemize}
+  \vspace{0.2cm}
+  \textbf{\color{darkred}Mục tiêu cốt lõi:} Cực tiểu hóa $\mathcal{C}$ trong khi vẫn đảm bảo nghiệm hội tụ và chính xác hoàn toàn.
+\end{frame}
+
+% =====================================================================
+% SLIDE 4: PHÂN LOẠI TỔNG THỂ DESIGN PATTERNS
+% =====================================================================
+\begin{frame}{3. Khảo Sát: Phân Loại Các Mẫu Thiết Kế Tác Tử (Taxonomy)}
+  \centering
+  \begin{tikzpicture}[scale=0.88, every node/.style={transform shape}]
+    \node[draw=hcmutblue, fill=hcmutblue!10, rounded corners, font=\bfseries\footnotesize, minimum width=3.8cm, minimum height=0.7cm] (root) at (0,3.5) {Agent Orchestration Patterns};
+    
+    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p1) at (-5, 1.8) {\textbf{1. Routing / Chaining}\\Luồng tuần tự \& Rẽ nhánh};
+    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p2) at (-2.5, 1.8) {\textbf{2. Parallelization}\\Voting \& Sectioning};
+    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p3) at (0, 1.8) {\textbf{3. Orchestrator-Workers}\\Phân rã \& Tổng hợp động};
+    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p4) at (2.5, 1.8) {\textbf{4. Evaluator-Optimizer}\\Vòng lặp tự phản biện};
+    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p5) at (5, 1.8) {\textbf{5. Multi-Agent Swarm}\\Giao tiếp đa tác tử};
+
+    \draw[->, thick, hcmutblue] (root) -| (p1);
+    \draw[->, thick, hcmutblue] (root) -| (p2);
+    \draw[->, thick, hcmutblue] (root) -- (p3);
+    \draw[->, thick, hcmutblue] (root) -| (p4);
+    \draw[->, thick, hcmutblue] (root) -| (p5);
+
+    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (-5, 0.4) {• Xác định trước biên\\• Token tốn ít\\• Không có vòng lặp};
+    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (-2.5, 0.4) {• Đổi token lấy latency\\• Majority voting\\• Xử lý song song};
+    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (0, 0.4) {• Phân việc theo ngữ cảnh\\• Worker chuyên biệt\\• SPOF tại Orchestrator};
+    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (2.5, 0.4) {• Generator vs Critic\\• Tự sửa sai theo chuẩn\\• Dễ rơi vào loop vô tận};
+    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (5, 0.4) {• Phân cấp hoặc ngang hàng\\• Trao đổi thông điệp\\• Rủi ro buồng vang};
+  \end{tikzpicture}
+\end{frame}
+
+% =====================================================================
+% SLIDE 5: PATTERN 1 - ROUTING & CHAINING
+% =====================================================================
+\begin{frame}{4. Pattern 1: Prompt Chaining \& Semantic Routing}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\color{hcmutblue}Nguyên lý Hoạt Động}
+        \begin{itemize}
+          \item Phân rã bài toán lớn thành các bước xác định liên tiếp $Step_1 \to Step_2 \to \dots \to Step_k$.
+          \item Sử dụng bộ phân loại ngữ nghĩa (Semantic Router / Embeddings) để hướng luồng sang prompt chuyên biệt.
+        \end{itemize}
+      \end{block}
+      \textbf{\color{darkgreen}Ưu điểm:}
+      \begin{itemize}
+        \item Cực kỳ ổn định (Deterministic), chi phí token $O(N)$ thấp nhất.
+        \item Dễ quan sát (Observability cao), dễ viết unit test từng khâu.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \textbf{\color{darkred}Điểm gãy cốt tử (Failure Boundary):}
+      \begin{itemize}
+        \item \textbf{Cascading Error:} Bước 1 trích xuất sai thực thể $\to$ các bước sau suy luận trên dữ liệu rác.
+        \item \textbf{Rigid Topology:} Hoàn toàn bất lực nếu bài toán có cấu trúc rẽ nhánh không dự đoán trước được.
+      \end{itemize}
+      \begin{exampleblock}{Khi nào nên dùng?}
+        Quy trình xử lý hồ sơ chuẩn có mẫu sẵn, trích xuất hóa đơn, pipeline ETL dữ liệu.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 6: PATTERN 2 - PARALLELIZATION
+% =====================================================================
+\begin{frame}{5. Pattern 2: Parallelization (Sectioning vs Voting)}
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \textbf{A. Sectioning (Chia nhỏ tác vụ song song):}
+      \begin{itemize}
+        \item Chia input thành nhiều phân đoạn độc lập, gọi nhiều LLMs xử lý cùng lúc và tổng hợp lại.
+        \item Ví dụ: Tóm tắt 5 chương sách độc lập; trích xuất rủi ro từ 10 hợp đồng khác nhau.
+        \item Giảm thiểu Wall-clock Latency từ $O(K \cdot t) \to O(t)$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{B. Voting (Biểu quyết đa số / Self-Consistency):}
+      \begin{itemize}
+        \item Chạy cùng 1 bài toán trên $N$ phiên bản với nhiệt độ $T > 0$ hoặc trên các mô hình khác nhau.
+        \item Dùng Majority Vote hoặc Judge Agent để chọn kết quả đồng thuận cao nhất.
+        \item Tăng mạnh độ chính xác trong suy luận logic và toán học.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{alertblock}{Đánh Đổi Kỹ Thuật (Trade-off)}
+    Tiết kiệm thời gian người dùng nhưng nhân tuyến tính chi phí API (\$ Token Cost tăng gấp $K$ lần).
+  \end{alertblock}
+\end{frame}
+
+% =====================================================================
+% SLIDE 7: PATTERN 3 - ORCHESTRATOR-WORKERS
+% =====================================================================
+\begin{frame}{6. Pattern 3: Orchestrator-Workers (Điều Phối Động)}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item \textbf{Orchestrator:} Đọc yêu cầu phức tạp $\to$ phân tích ngữ cảnh $\to$ lập kế hoạch chia nhỏ thành các nhiệm vụ con (Sub-tasks).
+        \item \textbf{Workers:} Các tác tử chuyên môn hóa sâu (chỉ cầm một số công cụ nhất định) thực thi nhiệm vụ được giao.
+        \item \textbf{Synthesizer:} Gom kết quả từ các Workers và tổng hợp câu trả lời cuối cùng.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
+        \node[draw=hcmutblue, fill=hcmutblue!20, rounded corners, font=\bfseries\scriptsize, minimum width=2.8cm] (orch) at (0,2.5) {Orchestrator (Planner)};
+        \node[draw=gray, fill=white, rounded corners, font=\tiny] (w1) at (-2.2, 0.8) {Worker 1: Search};
+        \node[draw=gray, fill=white, rounded corners, font=\tiny] (w2) at (0, 0.8) {Worker 2: DB Query};
+        \node[draw=gray, fill=white, rounded corners, font=\tiny] (w3) at (2.2, 0.8) {Worker 3: Code Exec};
+        \node[draw=darkgreen, fill=darkgreen!10, rounded corners, font=\bfseries\scriptsize, minimum width=2.8cm] (syn) at (0,-0.8) {Synthesizer};
+
+        \draw[->, thick] (orch) -- (w1);
+        \draw[->, thick] (orch) -- (w2);
+        \draw[->, thick] (orch) -- (w3);
+        \draw[->, thick] (w1) -- (syn);
+        \draw[->, thick] (w2) -- (syn);
+        \draw[->, thick] (w3) -- (syn);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \vspace{0.15cm}
+  \textbf{\color{darkred}Điểm yếu then chốt:} Orchestrator trở thành Single Point of Failure (SPOF). Nếu bước lập kế hoạch ban đầu bị ảo giác, toàn bộ các Worker sẽ tiêu tốn tài nguyên vô ích.
+\end{frame}
+
+% =====================================================================
+% SLIDE 8: PATTERN 4 - EVALUATOR-OPTIMIZER
+% =====================================================================
+\begin{frame}{7. Pattern 4: Evaluator-Optimizer (Vòng Lặp Phản Biện)}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\color{hcmutblue}Cấu Trúc Tác Tử Kép (Generator vs Critic)}
+        \begin{enumerate}
+          \item \textbf{Generator:} Khởi tạo lời giải / bản thảo đầu tiên.
+          \item \textbf{Evaluator:} Đánh giá lời giải dựa trên tiêu chí đo lường định lượng hoặc rubric khắt khe.
+          \item \textbf{Looping Condition:} Nếu chưa đạt ngưỡng $\to$ cung cấp phản hồi phản biện (Feedback) để Generator viết lại.
+        \end{enumerate}
+      \end{block}
+      \textbf{Các nghiên cứu nền tảng:} *Reflexion* (Shinn et al., 2023), *Self-Refine* (Madaan et al., 2023), *CRITIC* (Gou et al., 2024).
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{darkred}Hai Căn Bệnh Của Evaluator-Optimizer:}
+      \begin{itemize}
+        \item \textbf{Self-Confirmation Bias:} Nếu dùng cùng một model cho cả Generator và Evaluator trong cùng context window, Evaluator luôn có xu hướng khen bài của chính mình.
+        \item \textbf{Infinite Regress / Oscillation:} Hai tác tử tranh cãi qua lại quanh các chi tiết phong cách mà không hội tụ về bản chất logic.
+      \end{itemize}
+      \begin{alertblock}{Giải Pháp G4 Đề Xuất}
+        Phải cô lập hoàn toàn context window và bắt buộc Evaluator phải truy xuất Ground-Truth Tools ngoài.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 9: PATTERN 5 - MULTI-AGENT SWARMS
+% =====================================================================
+\begin{frame}{8. Pattern 5: Multi-Agent Systems (Hierarchical vs Swarm)}
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{hcmutblue}A. Phân Tầng Chỉ Huy (Hierarchical - MetaGPT)}
+      \begin{itemize}
+        \item Mô phỏng cơ cấu tổ chức doanh nghiệp: CEO $\to$ Architect $\to$ Engineer $\to$ QA.
+        \item Chuẩn hóa quy trình thao tác chuẩn (SOPs) để định hướng thông điệp.
+        \item Giảm thiểu tính hỗn loạn nhưng triệt tiêu tính thích nghi trước ngoại lệ.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{alertorange}B. Mạng Lưới Tự Do (Swarm / AutoGen)}
+      \begin{itemize}
+        \item Các tác tử trò chuyện tự do qua Group Chat hoặc bảng tin chung (Blackboard pattern).
+        \item Khả năng giải quyết vấn đề sáng tạo cao trong các bài toán mở.
+        \item \textbf{Hậu quả:} Tăng bùng nổ token giao tiếp (Communication Tax), dễ rơi vào buồng vang (Echo Chamber).
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{center}
+    \textit{"Giao tiếp tự do giữa các agent thường làm tăng độ nhiễu nhiều hơn là tăng tri thức."}
+  \end{center}
+\end{frame}
+
+% =====================================================================
+% SLIDE 10: STATE MANAGEMENT & MEMORY
+% =====================================================================
+\begin{frame}{9. Quản Lý Trạng Thái \& Phân Tầng Bộ Nhớ (State \& Memory)}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item \textbf{Ephemeral Scratchpad (Ngắn hạn):} Lưu trữ dấu vết suy luận tức thời (ReAct Thought/Action/Observation) trong cửa sổ ngữ cảnh.
+        \item \textbf{Session State (Đồ thị trạng thái hữu hạn - FSM):} Lưu vết qua schema có định kiểu (Typed Schema trong LangGraph). Đảm bảo tính kiểm soát (Checkpoints, Replay, Time-travel).
+        \item \textbf{Long-term Memory (Dài hạn):} Lưu trữ kiến thức và kinh nghiệm qua Vector Store và Knowledge Graph.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\color{hcmutblue}Nguyên Tắc Bất Biến Về Quản Lý Trạng Thái}
+        \begin{itemize}
+          \item \textbf{State Redundancy:} Tránh nhồi toàn bộ lịch sử trò chuyện vào prompt; chỉ lưu state biến thiên.
+          \item \textbf{Deterministic Guardrails:} Các chuyển dịch trạng thái then chốt phải được kiểm soát bằng code truyền thống, không phó mặc hoàn toàn cho LLM.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 11: TOOL PROTOCOL & MCP
+% =====================================================================
+\begin{frame}{10. Giao Thức Tích Hợp Công Cụ Chuẩn Hóa (Model Context Protocol - MCP)}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\color{hcmutblue}Vấn Nạn "Mỗi Agent Một Giao Thức"}
+        Trước năm 2024: Mỗi framework (LangChain, AutoGen, CrewAI) có một cách bọc Tool riêng; gây phân mảnh và rủi ro bảo mật nghiêm trọng.
+      \end{block}
+      \textbf{\color{darkgreen}Sự Ra Đời Của MCP (Anthropic 2024):}
+      \begin{itemize}
+        \item Chuẩn hóa kiến trúc Client-Server giữa LLM và Hệ thống tài nguyên ngoài.
+        \item Phân định rõ 3 khả năng: \textbf{Prompts} (Mẫu tương tác), \textbf{Resources} (Tài liệu thụ động), và \textbf{Tools} (Hành động có tác dụng phụ).
+        \item Áp dụng nguyên lý \textbf{Least-Privilege}: Cách ly tác tử khỏi môi trường máy chủ thực tế.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.75, every node/.style={transform shape}]
+        \node[draw=hcmutblue, fill=hcmutblue!20, rounded corners, font=\bfseries\scriptsize, minimum width=2.5cm, minimum height=1cm] (host) at (0,3) {MCP Host / Agent};
+        \node[draw=darkgreen, fill=darkgreen!15, rounded corners, font=\bfseries\scriptsize, minimum width=2.5cm, minimum height=1cm] (server) at (0,1) {MCP Server};
+        \node[draw=gray, fill=white, rounded corners, font=\tiny] (t1) at (-2,-0.8) {Postgres DB};
+        \node[draw=gray, fill=white, rounded corners, font=\tiny] (t2) at (0,-0.8) {Legal API (vbpl)};
+        \node[draw=gray, fill=white, rounded corners, font=\tiny] (t3) at (2,-0.8) {File System};
+
+        \draw[<->, thick] (host) -- node[right, font=\tiny] {JSON-RPC} (server);
+        \draw[->, thick] (server) -- (t1);
+        \draw[->, thick] (server) -- (t2);
+        \draw[->, thick] (server) -- (t3);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 12: BẢNG SO SÁNH MA TRẬN TOÀN DIỆN (BẮT BUỘC)
+% =====================================================================
+\begin{frame}{11. BẢNG SO SÁNH TOÀN DIỆN CÁC PHƯƠNG PHÁP ĐIỀU PHỐI}
+  \vspace{-0.2cm}
+  \scriptsize
+  \begin{table}[h]
+    \centering
+    \begin{tabularx}{\textwidth}{p{2.3cm}p{1.8cm}p{1.4cm}p{1.4cm}p{1.8cm}p{2.0cm}p{2.2cm}}
+      \toprule
+      \textbf{Pattern} & \textbf{Kiến Trúc} & \textbf{Độ Trễ} & \textbf{Token Cost} & \textbf{Khả Năng Sửa} & \textbf{Lan Truyền Lỗi} & \textbf{Kịch Bản Tối Ưu} \\
+      \midrule
+      \textbf{Prompt Chaining} & Tuyến tính / DAG & Thấp ($O(N)$) & Thấp ($1\times$) & Kém (Không loop) & Cao (Gãy dây chuyền) & Trích xuất mẫu cố định \\
+      \rowcolor{hcmutgray}
+      \textbf{Parallel Voting} & Đa luồng độc lập & Thấp ($O(1)$) & Rất cao ($K\times$) & Không (Chọn số đông) & Rất thấp & Toán, suy luận code \\
+      \textbf{Orchestrator-Workers} & Tập trung (Star) & Cao & Cao ($3-8\times$) & Khá (Re-plan) & Trung bình (SPOF) & Lập trình, tổng hợp đa nguồn \\
+      \rowcolor{hcmutgray}
+      \textbf{Evaluator-Optimizer} & Vòng lặp phản biện & Rất cao & Cao ($2-5\times$) & Rất tốt (Critique) & Thấp (Chặn xuất lỗi) & Rà soát văn bản, audit pháp lý \\
+      \textbf{Hierarchical Swarm} & Đa tác tử phân tầng & Cực cao & Cực cao ($10-30\times$) & Tốt ở tầng cục bộ & Rất cao (Mất mát tín hiệu) & Mô phỏng phức tạp, game \\
+      \rowcolor{hcmutblue!10}
+      \textbf{StateGraph (FSM)} & Máy trạng thái có kiểu & Kiểm soát & Tối ưu & Xuất sắc (Guardrail) & Kiểm soát chặt & \textbf{Hệ thống sản xuất thực tế} \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+  \vspace{-0.1cm}
+  {\tiny \textit{Ghi chú: So sánh dựa trên chuẩn hóa cùng quy mô bài toán; Token Cost tính theo hệ số nhân so với lời gọi đơn lẻ (Single Call).}}
+\end{frame}
+
+% =====================================================================
+% SLIDE 13: CRITICAL ANALYSIS I - ERROR PROPAGATION
+% =====================================================================
+\begin{frame}{12. Phân Tích Phản Biện I: Lan Truyền Lỗi \& Suy Giảm Mục Tiêu}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\color{darkred}Toán Học Của Sự Lan Truyền Sai Số}
+        Xét một chuỗi tác tử gồm $K$ bước suy luận độc lập, mỗi bước có xác suất chính xác $p$:
+        $$P(\text{Toàn hệ thống đúng}) = \prod_{i=1}^K p_i = p^K$$
+        \begin{itemize}
+          \item Nếu $p = 0.90$ (mô hình rất tốt) và $K = 6$ bước:
+          $$P(\text{Thành công}) = 0.90^6 \approx \mathbf{53.1\%}$$
+          \item Một nửa số yêu cầu sẽ thất bại dù từng bước riêng lẻ trông rất hoàn hảo!
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{darkred}Hiện Tượng "Goal Drift" (Lệch Khỏi Mục Tiêu):}
+      \begin{itemize}
+        \item Khi thông điệp đi qua 3 tầng giao tiếp (Orchestrator $\to$ Lead Worker $\to$ Sub-Worker), các ràng buộc phủ định (Negative Constraints) bị rơi rụng.
+        \item Tác tử thực thi sau cùng thường tối ưu hóa cục bộ một mục tiêu không còn liên quan đến yêu cầu gốc của người dùng.
+      \end{itemize}
+      \begin{exampleblock}{Biện Pháp Đối Phó}
+        Cơ chế \textbf{Goal Invariant Checkpoint} đối chiếu trực tiếp với State gốc sau mỗi bước.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 14: CRITICAL ANALYSIS II - HIDDEN ASSUMPTIONS
+% =====================================================================
+\begin{frame}{13. Phân Tích Phản Biện II: Những Giả Định Ẩn Thường Bị Phớt Lờ}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Giả Định 1: "LLM Phân Rã Bài Toán Hoàn Hảo"}
+        \textbf{Thực tế:} Mô hình phân rã dựa trên tương đồng ngữ nghĩa bề mặt, thường xuyên bỏ sót các tiền điều kiện pháp lý/kỹ thuật tiềm ẩn (Implicit Dependencies).
+      \end{alertblock}
+      \begin{alertblock}{Giả Định 2: "Tool Luôn Trả Output Chuẩn Xác"}
+        \textbf{Thực tế:} Thế giới thực đầy rẫy lỗi timeout, API rate limit, HTML rác, schema thay đổi đột ngột. Tác tử không biết cách xử lý lỗi âm thầm (Silent Truncation).
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Giả Định 3: "Multi-Agent Luôn Tốt Hơn Single-Agent"}
+        \textbf{Thực tế:} Giao tiếp đa tác tử làm tăng chi phí token lên gấp 10--30 lần. Nhiều nghiên cứu (Chen et al., 2024) chứng minh phần lớn hiệu năng tăng thêm chỉ đến từ việc nạp thêm compute (Best-of-N sampling) chứ không phải do sự tương tác thông minh.
+      \end{alertblock}
+      \begin{alertblock}{Giả Định 4: "Evaluator Luôn Khách Quan"}
+        \textbf{Thực tế:} LLM Evaluator bị chi phối bởi độ dài câu trả lời (Verbosity bias) và tính cả nể (Sycophancy).
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 15: WHAT WE DON'T BELIEVE (BẮT BUỘC)
+% =====================================================================
+\begin{frame}{14. What we don't believe / what the papers don't show}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\color{darkred}1. Ảo Tưởng Về "Tính Trồi" (Emergence)}
+        \textbf{Báo chí ca ngợi:} Sự hợp tác đa tác tử tự phát sinh trí tuệ tập thể.\\
+        \textbf{What we don't believe:} Không hề có phép màu nổi trội. Chuẩn hóa ngân sách token, Single-Agent chạy Sampling Best-of-N đánh bại 80\% các kiến trúc Multi-Agent phức tạp.
+      \end{block}
+      \begin{block}{\color{darkred}2. Bệnh Tự Nịnh Bợ (Sycophancy Trap)}
+        \textbf{Các paper trình diễn:} Các Agent tranh luận sôi nổi và cải thiện kết quả.\\
+        \textbf{What papers don't show:} Nếu không có công cụ kiểm chứng khách quan (Ground Truth), Agent Auditor luôn nhượng bộ và đồng thuận mù quáng với Drafter sau 2--3 lượt chat.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\color{darkred}3. Con Số Token \& Độ Trễ Bị Che Giấu}
+        \textbf{Các paper công bố:} Tăng Pass@1 từ 65\% lên 85\%.\\
+        \textbf{What papers don't show:} Chi phí token tăng 2.400\% và P99 latency vọt lên 50 giây. Mô hình không thể thương mại hóa được trong thực tế người dùng.
+      \end{block}
+      \begin{block}{\color{darkred}4. Benchmark Trong Môi Trường Đóng}
+        \textbf{Các bài báo benchmark:} HumanEval, GSM8K, SWE-bench.\\
+        \textbf{What we don't believe:} Các môi trường này có sẵn Unit Test rõ ràng. Khi đưa vào môi trường mở phi đơn điệu (như Pháp luật Việt Nam), không có unit test nào, Agent Evaluator lập tức mất phương hướng.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 16: TRACE DEMO - WORKFLOW ANATOMY
+% =====================================================================
+\begin{frame}{15. Minh Họa Demo: Vết Thực Thi Điều Phối (Execution Trace)}
+  \begin{columns}[c]
+    \begin{column}{0.55\textwidth}
+      \textbf{Kịch bản thực thi một tác vụ có lỗi phát sinh:}
+      \begin{enumerate}
+        \item \textbf{Input:} *"Doanh nghiệp vốn ngoại xin cấp phép ví điện tử năm 2024"*.
+        \item \textbf{Orchestrator:} Lập kế hoạch 2 nhánh: Tra cứu vốn (W1) và Tra cứu tỷ lệ ngoại (W2).
+        \item \textbf{Worker 1 (Lỗi):} Trích xuất Nghị định 101/2012 quy định vốn 50 tỷ.
+        \item \textbf{Evaluator / Auditor:} Gọi tool `verify_temporal_status` trên `vbpl.vn` $\to$ Phát hiện NĐ 101/2012 \textbf{đã hết hiệu lực toàn bộ} bởi NĐ 52/2024!
+        \item \textbf{Re-route Loop:} Bác bỏ kết quả W1, ép Orchestrator re-plan sang NĐ 52/2024 $\to$ Kết quả hội tụ chính xác.
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      \begin{block}{\color{hcmutblue}Chỉ Số Ghi Nhận Tại Trace}
+        \scriptsize
+        $\bullet$ \textbf{Total Steps:} 4 turns\\
+        $\bullet$ \textbf{Token Consumption:} 3.240 tokens\\
+        $\bullet$ \textbf{Wall-clock Time:} 4.2 giây\\
+        $\bullet$ \textbf{Faults Intercepted:} 1 Fatal Semantic Error\\
+        $\bullet$ \textbf{Circuit Breaker Threshold:} Max 3 iterations (không bị loop vô tận).
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 17: EMPIRICAL BENCHMARK TRÊN TOY VS REAL
+% =====================================================================
+\begin{frame}{16. Thực Nghiệm So Sánh: Chi Phí Token vs Tỷ Lệ Sửa Sai}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \textbf{Kết quả chạy thử 50 tình huống kiểm thử:}
+      \begin{itemize}
+        \item \textbf{Naive Chaining:} Chạy rất nhanh (0.8s), tốn ít token (600), nhưng tỷ lệ trích xuất đúng luật có hiệu lực chỉ đạt \textbf{38\%}.
+        \item \textbf{Chatty Multi-Agent (AutoGen style):} Tốn trung bình \textbf{14.800 tokens}, latency 22.4s, và 24\% rơi vào hội chứng nịnh bợ (bỏ qua văn bản hết hiệu lực).
+        \item \textbf{StateGraph (Drafter-Auditor có MCP Tool):} Tốn \textbf{2.900 tokens}, latency 3.8s, đạt độ chính xác căn cứ pháp lý \textbf{94\%}.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\color{darkgreen}Bài Học Thực Nghiệm Cốt Lõi}
+        \textbf{Deterministic Routing + External Tool Verification} luôn đánh bại việc bổ sung thêm các LLM agent nói chuyện phi cấu trúc với nhau!
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 18: LIÊN HỆ ĐỀ TÀI G4 (THEME 9)
+% =====================================================================
+\begin{frame}{17. Liên Hệ Đề Tài G4: Agentic RAG Cho Pháp Luật Việt Nam}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \textbf{\color{hcmutblue}Đặc Thù Của Pháp Luật Việt Nam (Domain Nuances):}
+      \begin{itemize}
+        \item \textbf{Tính chất phi đơn điệu (Non-monotonicity):} Việc ban hành một thông tư/nghị định mới có thể sửa đổi hoặc bãi bỏ từng điều khoản cụ thể của luật cũ.
+        \item \textbf{Cấu trúc thứ bậc phức tạp:} Luật $\to$ Nghị định $\to$ Thông tư $\to$ Điều $\to$ Khoản $\to$ Điểm.
+      \end{itemize}
+      \begin{alertblock}{Vì Sao Generic Patterns Thất Bại?}
+        Các Agentic Pattern phổ biến được thiết kế cho Software Engineering (nơi có code compiler kiểm tra). Trong Pháp lý, không có compiler; nếu Agent không được neo vào đồ thị tri thức, ảo giác là tất yếu.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{\color{hcmutblue}Nền Tảng Đề Tài G4 Kế Thừa}
+        $\bullet$ Đồ thị tri thức SBV-LawGraph (TS. Lê Xuân Bách et al., ACIIDS 2026).\\
+        $\bullet$ Phân cấp pháp điển ViHERMES (2025).\\
+        $\bullet$ Bộ benchmark quốc gia ALQAC 2025.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% SLIDE 19: GIẢI PHÁP ĐIỀU PHỐI CỦA G4
+% =====================================================================
+\begin{frame}{18. Kiến Trúc Điều Phối Riêng Biệt Của Nhóm G4}
+  \begin{center}
+    \begin{tikzpicture}[scale=0.82, every node/.style={transform shape}]
+      \node[draw=hcmutblue, fill=hcmutblue!10, rounded corners, font=\scriptsize, align=center] (q) at (0,3) {\textbf{User Dossier Query}};
+      \node[draw=hcmutblue, fill=hcmutblue!20, rounded corners, font=\bfseries\scriptsize, align=center] (router) at (3.5,3) {Selective Traversal\\Policy Agent};
+      \node[draw=gray, fill=white, rounded corners, font=\scriptsize, align=center] (kg) at (7.5,3) {Neo4j SBV Graph\\\& Qdrant Dense};
+      
+      \node[draw=alertorange, fill=alertorange!15, rounded corners, font=\bfseries\scriptsize, align=center] (drafter) at (7.5,1.2) {Drafter Agent\\(Context A)};
+      \node[draw=darkred, fill=darkred!15, rounded corners, font=\bfseries\scriptsize, align=center] (auditor) at (3.5,1.2) {Claim Auditor\\(Context B -- Isolated)};
+      \node[draw=darkgreen, fill=darkgreen!15, rounded corners, font=\scriptsize, align=center] (vbpl) at (3.5,-0.5) {Live VBPL Tool\\(MCP Server)};
+      \node[draw=darkgreen, fill=darkgreen!20, rounded corners, font=\bfseries\scriptsize, align=center] (out) at (0,1.2) {Audited Legal\\Dossier Output};
+
+      \draw[->, thick] (q) -- (router);
+      \draw[->, thick] (router) -- (kg);
+      \draw[->, thick] (kg) -- (drafter);
+      \draw[->, thick] (drafter) -- node[above, font=\tiny] {Claims} (auditor);
+      \draw[<->, thick] (auditor) -- node[right, font=\tiny] {Status Check} (vbpl);
+      \draw[->, thick] (auditor) -- node[above, font=\tiny] {Pass} (out);
+      \draw[->, thick, dashed, darkred] (auditor) -- node[right, font=\tiny] {Fail (Max 2)} (drafter);
+    \end{tikzpicture}
+  \end{center}
+  \vspace{-0.2cm}
+  \textbf{3 Chốt chặn kỹ thuật:} (1) Cô lập tuyệt đối Context giữa Drafter và Auditor; (2) Giới hạn vòng lặp tối đa 2 lần; (3) Neo dữ liệu thực thi vào API trạng thái thực của Cổng Thông tin Pháp luật Quốc gia.
+\end{frame}
+
+% =====================================================================
+% SLIDE 20: HƯỚNG MỞ & BÀI TOÁN NGHIÊN CỨU
+% =====================================================================
+\begin{frame}{19. Các Bài Toán Nghiên Cứu Mở (Open Research Horizons)}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\color{hcmutblue}1. Formal Verification for Agent Traces}
+        \textbf{Vấn đề:} Làm sao chứng minh toán học rằng một mạng lưới tác tử sẽ không bao giờ chuyển sang trạng thái vi phạm an toàn?\\
+        \textbf{Hướng tiếp cận:} Áp dụng Model Checking (TLA+, PRISM) để kiểm chứng vết thực thi của StateGraph trước khi cấp phép gọi tool có tác dụng phụ.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\color{hcmutblue}2. Cost-Aware Adaptive Orchestration}
+        \textbf{Vấn đề:} Không phải truy vấn nào cũng cần Swarm hay Reflection đắt đỏ.\\
+        \textbf{Hướng tiếp cận:} Dynamic Routing dựa trên dự đoán độ phức tạp bài toán: Truy vấn dễ $\to$ Chaining đơn tuyến; Truy vấn rủi ro cao $\to$ Evaluator-Optimizer kép.
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{block}{\color{hcmutblue}3. Non-Markovian Agent Memory}
+    Xây dựng cấu trúc bộ nhớ lưu trữ các quan hệ nhân quả dài hạn thay vì chỉ lưu chuỗi token trượt.
+  \end{block}
+\end{frame}
+
+% =====================================================================
+% SLIDE 21: TỔNG KẾT & THÔNG ĐIỆP
+% =====================================================================
+\begin{frame}{20. Kết Luận: Thông Điệp Cốt Lõi Về Agent Orchestration}
+  \begin{enumerate}
+    \item \textbf{No Silver Bullet:} Không có một Pattern nào là vạn năng. Chọn đúng Pattern là bài toán tối ưu đa mục tiêu giữa \textbf{Độ trễ}, \textbf{Chi phí} và \textbf{Độ tin cậy}.
+    \item \textbf{Simplicity Over Complexity:} Luôn bắt đầu từ Simple Prompt Chaining $\to$ Routing $\to$ Evaluator-Optimizer. Chỉ chuyển sang Multi-Agent khi có lý do kỹ thuật bắt buộc phải phân tách vai trò.
+    \item \textbf{Grounding Trumps Debate:} Tranh luận giữa các LLM không tạo ra chân lý. Hệ thống chỉ đáng tin cậy khi được neo vào các công cụ xác thực thế giới thực (Ground-truth Verification).
+    \item \textbf{State Machines Win in Production:} Các đồ thị trạng thái hữu hạn có định kiểu (FSM / LangGraph) là tiêu chuẩn vàng cho các ứng dụng công nghiệp, thay thế hoàn toàn cho các phòng chat tự do vô định.
+  \end{enumerate}
+\end{frame}
+
+% =====================================================================
+% SLIDE 22: Q&A VÀ BẢO VỆ ĐỀ TÀI
+% =====================================================================
+\begin{frame}[plain]
+  \vspace{1.2cm}
+  \begin{center}
+    {\huge\bfseries\color{hcmutblue} CẢM ƠN THẦY VÀ CÁC BẠN\\ĐÃ LẮNG NGHE!}\\[0.4cm]
+    {\large\color{darkgray} NHÓM G4 SẴN SÀNG TIẾP NHẬN CÂU HỎI PHẢN BIỆN}\\[0.8cm]
+    \hcmutlogo[1.8cm]\\[0.6cm]
+    {\footnotesize \textbf{Email liên hệ:} \texttt{tung.dang@hcmut.edu.vn} $\cdot$ CO5151 -- HK261}
+  \end{center}
+\end{frame}
+
+\end{document}
