@@ -30,3 +30,4 @@ def setup_logger(name: str = "legalpilot", level: str = "INFO") -> logging.Logge
 
 # Default application logger instance
 logger = setup_logger()
+get_logger = setup_logger

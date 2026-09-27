@@ -27,6 +27,12 @@ class RetrievalError(LegalPilotException):
     pass
 
 
+class KnowledgeBaseError(RetrievalError):
+    """Raised when a graph or vector database operation fails."""
+
+    pass
+
+
 class AuditorRejectionError(LegalPilotException):
     """Raised when the Claim Auditor rejects a draft after max retry loops."""
 
