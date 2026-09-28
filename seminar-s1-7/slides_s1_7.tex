@@ -111,7 +111,7 @@
           \item Compounding Error ($P = p^n$)
           \item Prompt Chains \& Routers
           \item Extension 1: Self-Consistency
-          \item G4 Production Case Study
+          \item Decision: Simple Code First
         \end{itemize}
       \end{block}
     \end{column}
@@ -119,7 +119,7 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Part II: Systems \& Fallacies}}
         \textbf{Vu Viet Hung}\\
-        {\scriptsize (9.5 mins $\vert$ Slides 10--15)}\\[0.08cm]
+        {\scriptsize (9.5 mins $\vert$ Slides 10--14)}\\[0.08cm]
         \begin{itemize}\footnotesize
           \item Orchestrator vs. Long Context
           \item Lead/Subagents ($3-8\times$ Cost)
@@ -131,15 +131,16 @@
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part III: Verification \& Demo}}
+      \begin{block}{\textbf{Part III: G4 Architecture \& Verification}}
         \textbf{Dang Lam Tung (Lead)}\\
-        {\scriptsize (9.5 mins $\vert$ Slides 16--21)}\\[0.08cm]
+        {\scriptsize (11 mins $\vert$ Slides 15--21)}\\[0.08cm]
         \begin{itemize}\footnotesize
-          \item Ground-Truth vs. Internal Signal
+          \item Architecture: Orchestrator \& Sub-Agents
+          \item External Verification (OpenAI 2025)
           \item Extension 3: Step Verifiers (PRM)
           \item Extension 4: STaR Bootstrap Loop
-          \item 4-Paper Feedback Matrix
-          \item Live LegalPilot-VN Project Demo
+          \item Feedback Synthesis Matrix
+          \item Live Project Verification Trace
           \item 50-Query Benchmark Results
         \end{itemize}
       \end{block}
@@ -378,27 +379,29 @@
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 9: WHY BORING CODE WINS: REJECTED SWARMS IN LEGAL AI
-\begin{frame}{Why Boring Code Wins: Why G4 Rejected Swarms in Legal AI}
-  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Group G4 Production Case Study in Vietnamese Law}
+% SLIDE 9: WHEN TO STICK WITH SIMPLE CODE
+\begin{frame}{Decision Framework: When to Stick with Simple Code}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Three Practical Checks Before Adding Agents}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Rejected: Conversational Swarms}}
+      \begin{block}{\textbf{Stick with Code (90\% of Tasks)}}
         \begin{itemize}\footnotesize
-          \item Free-form Drafter \& Auditor debate
-          \item \textbf{Failure Mode}: Sycophancy (agreed on revoked Decree 101/2012)
-          \item \textbf{Result}: $5\times$ token burn with zero error recovery
+          \item Execution path is predictable ahead of time
+          \item Zero tolerance for hallucination or drift
+          \item Tight latency and predictable token budgets
+          \item Steps can be verified by deterministic unit tests
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Adopted: Deterministic StateGraph}}
+      \begin{alertblock}{\textbf{Consider an Agent (Only When...)}}
         \begin{itemize}\footnotesize
-          \item Semantic routing into scoped legal specialists
-          \item Knowledge graph enforces hierarchy (Law $\succ$ Decree $\succ$ Circular)
-          \item \textbf{External Oracle}: VBPL API validates statute validity live
+          \item Execution path cannot be pre-enumerated
+          \item Problem requires multi-step hypothesis search
+          \item Reliable external checker exists (compiler / API)
+          \item Application can afford a $3\times$--$8\times$ token multiplier
         \end{itemize}
       \end{alertblock}
     \end{column}
@@ -406,12 +409,12 @@
 
   \vspace{0.15cm}
   \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Engineering Verdict}},fonttitle=\footnotesize\bfseries]
-    \footnotesize In statutory compliance, code must hold the steering wheel. Never trust document validity to model consensus.
+    \footnotesize If you cannot write a reliable automated test to verify the agent's output, giving it autonomy only automates failure.
   \end{tcolorbox}
 \end{frame}
 
 % =====================================================================
-% BLOCK 2: VU VIET HUNG (SLIDES 10 - 15) -- 9.5 MINUTES
+% BLOCK 2: VU VIET HUNG (SLIDES 10 - 14) -- 9.5 MINUTES
 % =====================================================================
 
 % SLIDE 10: WHY NOT JUST STUFF EVERYTHING INTO ONE GIANT CONTEXT WINDOW?
@@ -435,7 +438,7 @@
         \begin{itemize}\footnotesize
           \item \textbf{Context Isolation}: Workers receive only scoped parameters
           \item \textbf{Parallel Fan-Out}: Concurrent worker execution speeds latency
-          \item \textbf{Specialized Prompts}: Extraction prompt $\neq$ Penalty prompt
+          \item \textbf{Specialized Prompts}: Compliance Drafter $\neq$ Claim Auditor
           \item \textbf{Unit Testable}: Workers independently verifiable \& mockable
         \end{itemize}
       \end{alertblock}
@@ -579,61 +582,79 @@
   \end{block}
 \end{frame}
 
-% SLIDE 15: HOW WE ACTUALLY BUILT IT
-\begin{frame}{How We Actually Built It: Deterministic Graphs with Real-World Checks}
-  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Group G4's Production Architecture for Vietnamese Law}
+% =====================================================================
+% BLOCK 3: DANG LAM TUNG (LEAD) (SLIDES 15 - 21) -- 11 MINUTES
+% =====================================================================
+
+% SLIDE 15: G4 SYSTEM ARCHITECTURE (FROM D1 PROPOSAL)
+\begin{frame}{Architecture: Orchestrator Coordinating Sub-Agents}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Theme 9: Vietnamese Legal Agentic RAG System}
 
   \begin{center}
-    \resizebox{0.92\textwidth}{!}{%
-    \begin{tikzpicture}[node distance=0.8cm and 0.9cm, >=Stealth, auto,
-      block/.style={rectangle, draw=hcmutblue, fill=hcmutgray, thick, rounded corners, minimum height=0.7cm, font=\scriptsize\bfseries, align=center},
-      tool/.style={rectangle, draw=darkred, fill=red!10, thick, rounded corners, minimum height=0.7cm, font=\scriptsize, align=center},
-      check/.style={diamond, draw=darkgreen, fill=green!10, thick, aspect=1.8, font=\tiny\bfseries, align=center}
+    \resizebox{0.88\textwidth}{!}{%
+    \begin{tikzpicture}[
+      font=\scriptsize,
+      box/.style={draw, rounded corners=2pt, inner sep=3pt, align=center, minimum height=0.7cm, fill=white},
+      sub/.style={box, fill=hcmutblue!10, draw=hcmutblue!80, thick, minimum width=3.0cm},
+      ar/.style={-{Stealth[length=2mm]}, thick, draw=hcmutblue!85!black},
+      fb/.style={-{Stealth[length=2.2mm]}, very thick, dashed, draw=darkred},
+      fbx/.style={{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, very thick, dashed, draw=darkred},
+      db/.style={{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}, thick, dotted, draw=hcmutlight!80!black}
     ]
-      \node[block] (query) {User Question\\(Traffic / Business)};
-      \node[block, right=of query] (router) {Semantic Router\\(Domain Sorter)};
-      \node[block, above right=0.3cm and 0.8cm of router] (w1) {Worker 1\\(Extracts Violation)};
-      \node[block, below right=0.3cm and 0.8cm of router] (w2) {Worker 2\\(Retrieves Penalty)};
-      \node[tool, right=1.2cm of router] (db) {National Law API\\(vbpl.vn)};
-      \node[check, right=of db] (verifier) {Status\\Valid?};
-      \node[block, right=of verifier] (synth) {Dossier Builder\\\& Checkpointer};
+      % Sub-agents container
+      \node[draw, dashed, rounded corners=4pt, draw=hcmutblue!60, inner sep=0pt, minimum width=7.4cm, minimum height=1.9cm] (SUB) at (3.7,3.6) {};
+      \node[font=\tiny\bfseries, text=hcmutblue, anchor=south west] at (0.2,4.35) {SUB-AGENTS};
 
-      \draw[->, thick] (query) -- (router);
-      \draw[->, thick] (router) |- (w1);
-      \draw[->, thick] (router) |- (w2);
-      \draw[->, thick] (w1) -| (db);
-      \draw[->, thick] (w2) -| (db);
-      \draw[->, thick] (db) -- (verifier);
-      \draw[->, thick] (verifier) -- node[above]{\tiny Active} (synth);
-      \draw[->, thick, dashed, darkred] (verifier) -- ++(0,-1.0cm) -| node[near start, below]{\tiny Revoked $\to$ Re-route} (router);
+      % Nodes
+      \node[box, fill=black!6, minimum width=2.8cm] (U) at (3.7,6.3)
+        {User Query\\ {\tiny SME Compliance Officer}};
+      \node[box, fill=hcmutblue!20, draw=hcmutblue, very thick, minimum width=4.4cm, minimum height=0.8cm] (O) at (3.7,5.2)
+        {\textbf{LEGAL ORCHESTRATOR} (Supervisor)\\ {\tiny State Management $\cdot$ Loop Counter $\le 3$}};
+      \node[box, fill=hcmutlight!12, draw=hcmutblue!60, text width=3.8cm, minimum height=1.3cm] (M) at (10.4,5.2)
+        {\textbf{SYSTEM MEMORY (SQLite)}\\ {\tiny $\bullet$ Short-Term: Session State, Graph Edges\\ $\bullet$ Long-Term: Profile, Audit History}};
+      \node[sub] (D) at (1.8,3.6) {\textbf{Compliance Drafter}\\ {\tiny Graph Search $\cdot$ VBPL Tool}};
+      \node[sub] (A) at (5.6,3.6) {\textbf{Claim Auditor}\\ {\tiny Toolless $\cdot$ Claim Decomp.}};
+      \node[box, fill=green!8, draw=darkgreen, text width=3.8cm, minimum height=1.8cm, align=left] (MP) at (10.4,3.3)
+        {\textbf{MCP TOOLS}\\ {\tiny $\bullet$ LawGraph: Neo4j $\le 2$ hops\\ $\bullet$ Web Oracle: \texttt{vbpl.vn} Status\\ $\bullet$ Write: \texttt{export\_dossier}}};
+      \node[box, fill=red!8, draw=darkred, very thick, minimum width=3.4cm] (H) at (3.7,1.8)
+        {\textbf{HUMAN GATE}\\ {\tiny Irreversible Action Approval}};
+      \node[box, fill=hcmutblue!18, draw=hcmutblue, very thick, minimum width=3.4cm] (OUT) at (3.7,0.8)
+        {Compliance Dossier + Audit Log};
+
+      % Connections
+      \draw[ar] (U) -- (O);
+      \draw[ar] (O) -- (SUB);
+      \draw[db] (O) -- (M);
+      \draw[fbx] (D) -- (A) node[midway, above, font=\tiny\bfseries, text=darkred] {Cross-Audit Loop};
+      \draw[db] (SUB.east) -- (MP.west) node[midway, above, font=\tiny] {Tool Calls};
+      \draw[ar] (A) |- (H);
+      \draw[ar] (H) -- (OUT);
     \end{tikzpicture}%
     }
   \end{center}
 
-  \vspace{0.1cm}
+  \vspace{0.05cm}
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \textbf{\color{hcmutblue}Isolated Contexts in Action}:
-      \begin{itemize}\scriptsize
-        \item The penalty worker only looks at sanction brackets, ignoring procedural legal boilerplate.
+      \textbf{\color{hcmutblue}Drafter-Auditor Separation}:
+      \begin{itemize}\footnotesize
+        \item \textbf{Drafter}: Traverses LawGraph ($\le 2$ hops) \& calls VBPL API
+        \item \textbf{Auditor}: Toolless claim decomposition for objective critique
       \end{itemize}
     \end{column}
     \begin{column}{0.48\textwidth}
-      \textbf{\color{darkgreen}Real Checkpointing}:
-      \begin{itemize}\scriptsize
-        \item State is written to disk after the government API returns valid document status.
+      \textbf{\color{darkgreen}Durable State \& Human Gate}:
+      \begin{itemize}\footnotesize
+        \item Session state persisted in SQLite; retry limit $\le 3$
+        \item Irreversible filings require explicit human approval
       \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
 
-% =====================================================================
-% BLOCK 3: DANG LAM TUNG (LEAD) (SLIDES 16 - 21) -- 9.5 MINUTES
-% =====================================================================
-
-% SLIDE 16: WHERE DOES REAL FEEDBACK COME FROM?
-\begin{frame}{The Crucial Question: Where Does the Feedback Actually Come From?}
-  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Internal Imagination vs. External Ground Truth}
+% SLIDE 16: OPENAI (2025) - EXTERNAL VERIFICATION & ENVIRONMENT ORACLES
+\begin{frame}{External Verification: Ground-Truth Oracles vs. Model Self-Critique}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ OpenAI (2025): A Practical Guide to Building Agents}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
@@ -782,10 +803,11 @@
         \footnotesize
         \texttt{G4 Architecture Trace}:
         \begin{enumerate}\footnotesize
-          \item \textbf{Worker}: Proposes Decree 101/2012
+          \item \textbf{Compliance Drafter}: Proposes Decree 101/2012
           \item \textbf{MCP Tool}: Invokes \texttt{vbpl\_verify\_status} API
           \item \textbf{Intercept}: Tool returns \texttt{REVOKED\_BY\_52/2024}
-          \item \textbf{Rollback}: StateGraph rewinds \& routes to Decree 52/2024
+          \item \textbf{Claim Auditor}: Flags citation error \& demands re-retrieval
+          \item \textbf{Orchestrator}: Rewinds state \& routes to Decree 52/2024
           \item \textbf{Outcome}: \textbf{100\% verified compliance}
         \end{enumerate}
       \end{alertblock}
