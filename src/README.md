@@ -248,5 +248,6 @@ print(f"Is Verified: {state.audit_report.is_fully_verified}")
 
 1. **Google ADK Compatibility**: All agents extend `ADKAgent` and use standard `ToolDefinition` interfaces for plug-and-play modularity.
 2. **Temporal Correctness**: Claim Auditor acts as an external verification oracle to eliminate citations of revoked or expired legal instruments.
-3. **Selective Traversal**: Avoids the >60% context dilution noise of static 1-hop expansions by pruning irrelevant cross-amendment edges.
-4. **Durable State Management**: SQLite persists the full execution state and audit trail across all sessions.
+3. **GraphRAG with Selective Traversal (`src/knowledge/selective_traversal.py`)**: Unlike standard static 1-hop GraphRAG (which mechanically dumps unrelated omnibus circular edges and causes >60% context noise), our Neo4j-backed Selective Edge Traversal prunes expired/future nodes, selectively resolves amendment chains (`AMENDS`, `SUPERSEDES`, `GUIDES`), and delivers clean, grounded retrieval contexts.
+4. **Dual-Mode Operation**: Runs immediately in standalone catalog mode (zero setup) or with full enterprise Neo4j + Qdrant databases via `docker compose up -d`.
+5. **Durable State Management**: SQLite persists the full execution state and audit trail across all sessions.
