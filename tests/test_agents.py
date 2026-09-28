@@ -118,5 +118,34 @@ class TestLegalAgents(unittest.TestCase):
         self.assertIn("Nghị định 52/2024/NĐ-CP", state.final_compliance_dossier)
 
 
+    def test_lawgraph_trace_selective_edge_tool(self) -> None:
+        """Tests that trace_selective_edge tool returns structured traversal output."""
+        from src.tools.lawgraph_tool import trace_selective_edge
+
+        res = trace_selective_edge("52/2024/ND-CP", reference_date="2024-08-01")
+        self.assertIn("seed_doc_id", res)
+        self.assertEqual(res["seed_doc_id"], "52/2024/ND-CP")
+        self.assertIn("noise_reduction_ratio", res)
+
+    def test_query_lawgraph_tool(self) -> None:
+        """Tests that query_lawgraph tool retrieves relevant statutory provisions."""
+        from src.tools.lawgraph_tool import query_lawgraph
+
+        provisions = query_lawgraph("ví điện tử thanh toán", top_k=3)
+        self.assertGreater(len(provisions), 0)
+        self.assertLessEqual(len(provisions), 3)
+
+    def test_lawgraph_dynamic_fallback(self) -> None:
+        """Tests that LawGraphAgent handles live_db fallback without crashing."""
+        agent = LawGraphAgent(use_live_db=True)
+        # Querying an unknown doc ID triggers dynamic graph lookup
+        provisions = agent.retrieve_provisions(
+            subgoals=["Tra cứu văn bản 999/2026/ND-CP"],
+            keywords=["999/2026/ND-CP"],
+            force_live_db=True,
+        )
+        self.assertIsInstance(provisions, list)
+
+
 if __name__ == "__main__":
     unittest.main()
