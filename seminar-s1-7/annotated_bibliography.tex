@@ -1,7 +1,7 @@
 \documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[vietnamese,english]{babel}
-\usepackage[top=1.3cm,bottom=1.3cm,left=1.5cm,right=1.5cm]{geometry}
+\usepackage[top=1.2cm,bottom=1.2cm,left=1.5cm,right=1.5cm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{enumitem}
 \usepackage{xcolor}
@@ -20,7 +20,7 @@
 }
 
 \titleformat{\section}{\normalsize\bfseries\color{hcmutblue}}{\thesection.}{0.4em}{}[\titlerule]
-\titlespacing*{\section}{0pt}{5pt}{3pt}
+\titlespacing*{\section}{0pt}{4pt}{2pt}
 
 \pagestyle{empty}
 
@@ -28,48 +28,48 @@
 \selectlanguage{vietnamese}
 
 \begin{center}
-  {\footnotesize \textbf{ĐẠI HỌC BÁCH KHOA ĐHQG-HCM -- KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}}\\[0.05cm]
-  {\small \textbf{CO5151: ADVANCED AGENTIC AI (HK261)} -- GIẢNG VIÊN: \textbf{TS. LÊ XUÂN BÁCH}}\\[0.15cm]
-  {\large\bfseries\color{hcmutblue} ANNOTATED BIBLIOGRAPHY: AGENT DESIGN PATTERNS \& ORCHESTRATION}\\[0.05cm]
+  {\footnotesize \textbf{ĐẠI HỌC BÁCH KHOA ĐHQG-HCM -- KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}}\\[0.04cm]
+  {\small \textbf{CO5151: ADVANCED AGENTIC AI (HK261)} -- GIẢNG VIÊN HƯỚNG DẪN: \textbf{TS. LÊ XUÂN BÁCH}}\\[0.12cm]
+  {\large\bfseries\color{hcmutblue} ANNOTATED BIBLIOGRAPHY: AGENT DESIGN PATTERNS \& ORCHESTRATION}\\[0.04cm]
   {\footnotesize \textbf{Nhóm G4}: Đặng Lâm Tùng (Trưởng nhóm) $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng $\vert$ \textit{Chủ đề S1-7 -- Ngày 21/10/2026}}
 \end{center}
 
-\vspace{-0.2cm}
-\noindent\textit{\footnotesize \textbf{Quy ước}: Danh mục gồm Core và Extension papers; mỗi bài kèm ĐÚNG MỘT CÂU nhận xét phản biện/hoài nghi học thuật (Critical Reflection), tuyệt đối không tóm tắt nội dung.}
+\vspace{-0.25cm}
+\noindent\textit{\footnotesize \textbf{Quy ước bắt buộc}: Liệt kê đúng 4 Core Readings và 4 Extension Papers theo đề cương; mỗi bài kèm ĐÚNG MỘT CÂU nhận xét phản biện/hoài nghi học thuật (Critical Reflection), tuyệt đối không tóm tắt nội dung.}
 
-\section{Core Papers (Các Công Trình Nền Tảng)}
-\begin{enumerate}[leftmargin=1.4em, itemsep=2.5pt, topsep=1pt]
-  \item \textbf{Wu, Q., et al. (Microsoft Research, 2023).} \textit{AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation.} arXiv:2308.08155.\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Cơ chế hội thoại tự do giữa các tác tử dễ dẫn đến bùng nổ token phi kiểm soát và hiện tượng nịnh bợ (sycophancy) tập thể, khiến chi phí điều phối vượt xa giá trị giải thuật mang lại nếu thiếu một máy trạng thái hữu hạn (FSM) cưỡng chế điều kiện dừng.
-
+\section{Core Readings (Các Tài Liệu Cốt Lõi)}
+\begin{enumerate}[leftmargin=1.4em, itemsep=2pt, topsep=1pt]
   \item \textbf{Anthropic. (Dec 2024).} \textit{Building Effective Agents.} Anthropic Research Whitepaper.\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Dù phân lập chuẩn xác các khối nguyên tử (building blocks) thực dụng, tài liệu đã đánh giá thấp sự phức tạp của việc phục hồi trạng thái khi một mắt xích trong chuỗi công cụ thất bại âm thầm (silent truncation) giữa môi trường sản xuất thực tế.
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Dù phân lập chuẩn xác các khối nguyên tử thực dụng và cổ xúy cho tính tinh gọn, tài liệu đã đánh giá thấp chi phí kỹ thuật khổng lồ của việc xử lý ngoại lệ và phục hồi trạng thái khi một mắt xích công cụ trung gian gặp lỗi âm thầm trong môi trường sản xuất thực tế.
 
-  \item \textbf{Shinn, N., Cassano, F., Labash, B., et al. (NeurIPS 2023).} \textit{Reflexion: Language Agents with Verbal Reinforcement Learning.}\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Khả năng tự phản biện qua bộ nhớ ngôn ngữ bị phụ thuộc nặng nề vào năng lực suy luận của chính mô hình đó, dẫn đến bẫy tự xác nhận (self-confirmation bias) khi tác tử kiên quyết dùng các chu kỳ suy luận sau để hợp thức hóa một tiên đề sai ban đầu.
+  \item \textbf{Anthropic. (Feb 2025).} \textit{How We Built Our Multi-Agent Research System.} Anthropic Engineering Blog.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Mô hình phân tách Lead/Subagent tăng vọt năng lực thăm dò song song nhưng phải đánh đổi bằng sự bùng nổ chi phí token gấp 3--8 lần và nút thắt cổ chai độ trễ nghiêm trọng khi Lead Agent phải tổng hợp ngữ cảnh khổng lồ từ các tác tử phụ.
 
-  \item \textbf{Madaan, A., Tandon, N., Gupta, P., et al. (NeurIPS 2023).} \textit{Self-Refine: Iterative Refinement with Self-Feedback.}\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Quá trình tinh chỉnh lặp lại không có tín hiệu phản hồi khách quan từ môi trường ngoài (ground-truth execution) chỉ làm thay đổi phong cách biểu đạt văn phong chứ không cải thiện độ chính xác bản chất của nghiệm logic.
+  \item \textbf{OpenAI. (2025).} \textit{A Practical Guide to Building Agents.} OpenAI Developer Documentation.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Bản hướng dẫn thiên lệch về việc trao quyền tự trị tối đa cho vòng lặp Tool Calling của mô hình mà xem nhẹ rủi ro tích lũy sai số theo hàm số mũ khi số lượng bước gọi công cụ vượt quá ngưỡng kiểm soát tiền định.
+
+  \item \textbf{LangChain Team. (2024).} \textit{LangGraph: Multi-Agent Workflows as Cyclic State Graphs.} Technical Documentation.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Cơ chế Checkpointing giải quyết triệt để tính bền bỉ và khả năng phục hồi lỗi cho tác tử chạy dài, nhưng việc cưỡng bức mọi hành vi vào đồ thị trạng thái hữu hạn đã vô tình biến hệ thống thành một luồng công việc kỹ thuật truyền thống hơn là một thực thể AI tự thích ứng.
 \end{enumerate}
 
-\section{Extension \& Methodological Papers (Công Trình Mở Rộng \& Phương Pháp Luận)}
-\begin{enumerate}[leftmargin=1.4em, itemsep=2.5pt, topsep=1pt, start=5]
-  \item \textbf{Hong, S., Zheng, X., Chen, J., et al. (ICLR 2024).} \textit{MetaGPT: Meta Programming for Multi-Agent Collaborative Framework.}\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Việc áp đặt quy trình thao tác chuẩn (SOP) tĩnh kiểu kỹ nghệ phần mềm công nghiệp làm tê liệt khả năng thích ứng linh hoạt của LLM trước các sự cố ngoại lệ phát sinh ngoài kịch bản dự kiến.
+\section{Extension Papers (Các Công Trình Mở Rộng \& Phản Biện Chuyên Sâu)}
+\begin{enumerate}[leftmargin=1.4em, itemsep=2pt, topsep=1pt, start=5]
+  \item \textbf{Wang, X., Wei, J., Schuurmans, D., et al. (ICLR 2023).} \textit{Self-Consistency Improves Chain of Thought Reasoning in Language Models.}\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Cơ chế lấy mẫu đa dạng kết hợp bầu chọn số đông thực chất chỉ lọc được nhiễu ngẫu nhiên trong quá trình giải mã chứ hoàn toàn bất lực trước các lỗi sai hệ thống xuất phát từ lỗ hổng tri thức nội tại của mô hình nền tảng.
 
-  \item \textbf{Gou, Z., Shao, Z., Gong, Y., et al. (ICLR 2024).} \textit{CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing.}\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Dù chứng minh được vai trò sống còn của công cụ kiểm chứng ngoài, nghiên cứu né tránh bài toán bùng nổ độ trễ tương tác (latency overhead) khi mỗi bước phản biện đều phải đợi lời gọi API từ bên thứ ba.
+  \item \textbf{Huang, J., Chen, X., Mishra, S., et al. (ICLR 2024).} \textit{Large Language Models Cannot Self-Correct Reasoning Yet.}\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Công trình bóc trần ảo tưởng về khả năng tự sửa sai nội tại của LLM, chứng minh rằng các vòng lặp phản biện thiếu tín hiệu kiểm chứng ngoại vi không những vô ích mà còn làm suy giảm độ chính xác tổng thể do thiên kiến nịnh bợ theo prompt phản biện.
 
-  \item \textbf{Chen, W., et al. (2024).} \textit{Are More LLM Calls All You Need? Towards a Principled Understanding of Scaling Agentic Workflows.} arXiv:2403.02419.\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Công trình bóc trần luận điểm rằng phần lớn sự vượt trội của kiến trúc đa tác tử thực chất chỉ là hệ quả của việc gia tăng ngân sách tính toán (sampling compute), và hiệu năng này suy giảm rất nhanh theo quy luật lợi suất giảm dần (diminishing returns).
+  \item \textbf{Lightman, H., Kosaraju, V., Burda, Y., et al. (OpenAI, 2023).} \textit{Let's Verify Step by Step.}\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Dù mô hình phần thưởng theo tiến trình (PRM) cung cấp tín hiệu phản hồi từng bước vượt trội so với giám sát kết quả cuối, chi phí gán nhãn dữ liệu nhân tạo cho từng bước suy luận tạo ra một rào cản kinh tế khổng lồ khiến phương pháp này khó mở rộng ra ngoài miền toán học và lập trình.
 
-  \item \textbf{LangChain Team. (2024).} \textit{LangGraph: Multi-Agent Workflows as Cyclic Graphs.} Technical Documentation.\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Việc mô hình hóa agent thành đồ thị trạng thái xác định giải quyết triệt để tính phi tất định nhưng thực chất đã biến hệ thống thành một luồng công việc kỹ thuật truyền thống hơn là một thực thể trí tuệ nhân tạo tự trị.
+  \item \textbf{Zelikman, E., Wu, Y., Mu, J., \& Goodman, N. (NeurIPS 2022).} \textit{STaR: Bootstrapping Reasoning With Reasoning.}\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Vòng lặp tự học chỉ duy trì được tính hội tụ nhờ có nhãn đáp án đúng làm màng lọc ngoại vi ở bước giữ lại suy luận, nghĩa là khả năng mở rộng của mô hình vẫn bị giới hạn tuyệt đối bởi không gian các bài toán có sẵn ground-truth xác thực.
 \end{enumerate}
 
-\vspace{-0.1cm}
+\vspace{-0.15cm}
 \begin{center}
-  \rule{0.6\textwidth}{0.4pt}\\[0.05cm]
+  \rule{0.6\textwidth}{0.4pt}\\[0.04cm]
   {\tiny \color{darkgray}CO5151 HK261 -- Nhóm G4 cam kết tự thực hiện 100\% các câu nhận xét phản biện dựa trên phân tích bài báo gốc.}
 \end{center}
 

@@ -138,7 +138,7 @@ def run_pattern_state_graph(query: str) -> ExecutionMetrics:
     state = AgentState(query=query)
     metrics = ExecutionMetrics()
 
-    print(f"  {CYAN}[Node: Orchestrator / Planner]{RESET} Tiếp nhận hồ sơ $\\to$ Phân rã 2 Sub-goals:")
+    print(f"  {CYAN}[Node: Orchestrator / Planner]{RESET} Tiếp nhận hồ sơ -> Phân rã 2 Sub-goals:")
     print(f"    Sub-goal 1: Điều kiện Vốn tối thiểu")
     print(f"    Sub-goal 2: Tỷ lệ sở hữu nước ngoài (Room ngoại)")
     metrics.total_tokens += 420

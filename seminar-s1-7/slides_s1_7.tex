@@ -1,16 +1,15 @@
 % =====================================================================
-%  CO5151 -- Advanced Agentic AI  |  Nhom G4  |  Seminar S1-7
-%  Agent Design Patterns & Orchestration: Primitives, State Coordination & Critical Boundaries
-%  Giang vien huong dan: TS. Le Xuan Bach
-%  Nhom G4: Dang Lam Tung (Truong nhom) - Nguyen Trung Phong - Vu Viet Hung
-%  BIEN DICH: pdflatex slides_s1_7.tex (2 lan de hien thi so trang)
+%  CO5151 -- Advanced Agentic AI  |  Group G4  |  Seminar S1-7
+%  Agent Design Patterns & Orchestration: When Simple Workflows Beat Autonomous Agents
+%  Advisor: Dr. Le Xuan Bach  |  HCMUT CSE (Semester 261)
+%  Group G4: Dang Lam Tung (Lead) - Nguyen Trung Phong - Vu Viet Hung
+%  EXACTLY 22 SLIDES | HUMAN LANGUAGE TITLES | DEADLINE & SUBMISSION SLIDE INCLUDED
 % =====================================================================
 \documentclass[aspectratio=169,10pt]{beamer}
 
-% ---- Tieng Viet & Fonts ----
-\usepackage[utf8]{vntex,inputenc}
-\usepackage[T5]{fontenc}
-\usepackage[vietnamese,english]{babel}
+% ---- Fonts & Encoding ----
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
 \usefonttheme{serif}
 \usefonttheme{professionalfonts}
 
@@ -21,16 +20,19 @@
 \usepackage{tabularx}
 \usepackage{xcolor}
 \usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
 
-% ---- Mau nhan dien HCMUT ----
+% ---- HCMUT Identity Colors ----
 \definecolor{hcmutblue}{RGB}{0,62,126}
 \definecolor{hcmutlight}{RGB}{0,120,190}
-\definecolor{hcmutgray}{RGB}{238,241,245}
+\definecolor{hcmutgray}{RGB}{242,245,249}
 \definecolor{darkred}{RGB}{180,30,30}
 \definecolor{darkgreen}{RGB}{20,130,40}
 \definecolor{alertorange}{RGB}{220,100,0}
+\definecolor{boxbg}{RGB}{248,250,253}
 
-% ---- Trinh bay Beamer ----
+% ---- Beamer Theme Setup ----
 \setbeamertemplate{navigation symbols}{}
 \setbeamercolor{frametitle}{bg=hcmutblue, fg=white}
 \setbeamerfont{frametitle}{size=\large, series=\bfseries}
@@ -44,609 +46,886 @@
 
 \setbeamertemplate{frametitle}{%
   \nointerlineskip%
-  \begin{beamercolorbox}[wd=\paperwidth,ht=2.7ex,dp=1.3ex,leftskip=0.4cm,rightskip=0.4cm]{frametitle}%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.9ex,dp=1.3ex,leftskip=0.5cm,rightskip=0.5cm]{frametitle}%
     \usebeamerfont{frametitle}\insertframetitle%
+    \ifx\insertframesubtitle\@empty\else%
+      \hfill{\footnotesize\normalfont\color{white!85}\textit{\insertframesubtitle}}%
+    \fi%
   \end{beamercolorbox}%
 }
 
 \setbeamertemplate{footline}{%
-  \begin{beamercolorbox}[wd=\paperwidth,ht=2.4ex,dp=1.1ex,leftskip=0.4cm,rightskip=0.4cm]{footline}%
-    \usebeamerfont{footline}CO5151: Advanced Agentic AI \hfill Seminar S1-7: Agent Design Patterns \& Orchestration \hfill \insertframenumber/\inserttotalframenumber%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.4ex,dp=1.1ex,leftskip=0.5cm,rightskip=0.5cm]{footline}%
+    \usebeamerfont{footline}CO5151: Advanced Agentic AI \hfill S1-7: Agent Design Patterns \& Orchestration \hfill Slide \insertframenumber/\inserttotalframenumber%
   \end{beamercolorbox}%
 }
 
-\newcommand{\hcmutlogo}[1][1.5cm]{%
-  \IfFileExists{hcmut_logo.png}{\includegraphics[height=#1]{hcmut_logo.png}}{%
-    \IfFileExists{../hcmut_logo.png}{\includegraphics[height=#1]{../hcmut_logo.png}}{%
-      \IfFileExists{../../hcmut_logo.png}{\includegraphics[height=#1]{../../hcmut_logo.png}}{%
-        \textbf{\color{hcmutblue}\large HCMUT}%
-      }%
-    }%
-  }%
-}
-
 \begin{document}
-\selectlanguage{vietnamese}
 
 % =====================================================================
 % SLIDE 1: TITLE SLIDE
 % =====================================================================
 \begin{frame}[plain]
-  \vspace{0.4cm}
-  \begin{columns}[c]
-    \begin{column}{0.18\textwidth}
-      \centering
-      \hcmutlogo[1.7cm]
-    \end{column}
-    \begin{column}{0.80\textwidth}
-      {\scriptsize \textbf{ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH -- TRƯỜNG ĐẠI HỌC BÁCH KHOA}}\\[0.05cm]
-      {\scriptsize KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}\\[0.05cm]
-      {\tiny \textbf{CO5151: ADVANCED AGENTIC AI -- HK261}}
-    \end{column}
-  \end{columns}
-
-  \vspace{0.5cm}
-  \begin{center}
-    {\usebeamerfont{title}\Large\bfseries\color{hcmutblue} SEMINAR S1-7: AGENT DESIGN PATTERNS\\\& ORCHESTRATION}\\[0.15cm]
-    {\normalsize\color{darkgray} Architectural Primitives, State Coordination, and Critical Boundaries}
-  \end{center}
-
-  \vspace{0.4cm}
-  \begin{columns}[t]
-    \begin{column}{0.65\textwidth}
-      \textbf{Nhóm thuyết trình G4:}\\
-      $\bullet$ \textbf{Đặng Lâm Tùng} (Trưởng nhóm -- Kiến trúc \& Phân tích phản biện)\\
-      $\bullet$ \textbf{Nguyễn Trung Phong} (Khảo sát Patterns \& Đánh giá thực nghiệm)\\
-      $\bullet$ \textbf{Vũ Việt Hưng} (Điều phối trạng thái \& Trace Demo)
-    \end{column}
-    \begin{column}{0.35\textwidth}
-      \raggedleft
-      \textbf{Giảng viên hướng dẫn:}\\
-      \textbf{\color{hcmutblue}TS. Lê Xuân Bách}\\[0.15cm]
-      {\scriptsize Ngày báo cáo: 21/10/2026}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 2: BỐI CẢNH & ĐỘNG LỰC
-% =====================================================================
-\begin{frame}{1. Bối Cảnh: Vì Sao Single-Prompt \& Naive Chain Thất Bại?}
-  \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      \textbf{\color{darkred}Ba Giới Hạn Cốt Tử Của LLM Đơn Tuyến:}
-      \begin{itemize}
-        \item \textbf{No Self-Correction (Không tự sửa):} Mô hình tự sinh token tiếp theo dựa trên xác suất; sai lầm ở bước 1 sẽ thành tiên đề tuyệt đối cho bước 2.
-        \item \textbf{Context Degradation (Suy thoái ngữ cảnh):} Đưa toàn bộ tài liệu và công cụ vào một prompt làm loãng chú ý (Lost in the Middle).
-        \item \textbf{Combinatorial Complexity:} Bài toán thế giới thực đòi hỏi phân rã đa tầng (Sub-task decomposition), gọi công cụ ngoài và xử lý phi tất định.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \begin{block}{\color{hcmutblue}Sự Chuyển Dịch Mô Hình (Paradigm Shift)}
-        \centering
-        \small
-        \textbf{Single Prompt} ($y = f(x)$)\\
-        $\Downarrow$\\
-        \textbf{Static Chain / Naive RAG} ($x \to R \to y$)\\
-        $\Downarrow$\\
-        \textbf{Autonomous Agent Orchestration}\\
-        $\mathcal{S}_{t+1}, \mathcal{A}_t = \pi(\mathcal{S}_t, \mathcal{H}_t, \mathcal{E}_t)$
-      \end{block}
-      \vspace{0.1cm}
-      {\footnotesize \textit{"Chất lượng của một hệ thống Agentic không nằm ở trọng số mô hình lớn tới đâu, mà nằm ở kiến trúc điều phối luồng trạng thái."} -- Anthropic, 2024.}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 3: ĐẶT BÀI TOÁN HÌNH THỨC
-% =====================================================================
-\begin{frame}{2. Định Nghĩa Hình Thức Bài Toán Điều Phối Tác Tử (Orchestration)}
-  \begin{block}{Hệ Thống Điều Phối Đa Tác Tử Được Định Nghĩa Bởi Bộ 5:}
-    $$\mathcal{M} = \langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{O}, \mathcal{C} \rangle$$
-  \end{block}
-  \begin{itemize}
-    \item $\mathcal{S}$ -- Không gian trạng thái hệ thống: $\mathcal{S}_t = \langle \text{Memory}, \text{Active Sub-goals}, \text{Artifacts}, \text{Error Budget} \rangle$.
-    \item $\mathcal{A}$ -- Không gian hành động: Gồm suy luận nội tại (Thought), gọi công cụ (Tool Call), hoặc ủy quyền tác vụ (Delegate to Worker).
-    \item $\mathcal{T}: \mathcal{S} \times \mathcal{A} \to \mathcal{S}$ -- Hàm chuyển trạng thái có xác thực (State Transition Function).
-    \item $\mathcal{O}$ -- Bộ điều phối (Orchestrator Policy): Quyết định rẽ nhánh, dừng hoặc gọi lại phản hồi.
-    \item $\mathcal{C}$ -- Chi phí tổng hợp: $\text{Cost} = \alpha \cdot \text{Token} + \beta \cdot \text{Latency} + \gamma \cdot \text{ErrorRate}$.
-  \end{itemize}
-  \vspace{0.2cm}
-  \textbf{\color{darkred}Mục tiêu cốt lõi:} Cực tiểu hóa $\mathcal{C}$ trong khi vẫn đảm bảo nghiệm hội tụ và chính xác hoàn toàn.
-\end{frame}
-
-% =====================================================================
-% SLIDE 4: PHÂN LOẠI TỔNG THỂ DESIGN PATTERNS
-% =====================================================================
-\begin{frame}{3. Khảo Sát: Phân Loại Các Mẫu Thiết Kế Tác Tử (Taxonomy)}
-  \centering
-  \begin{tikzpicture}[scale=0.88, every node/.style={transform shape}]
-    \node[draw=hcmutblue, fill=hcmutblue!10, rounded corners, font=\bfseries\footnotesize, minimum width=3.8cm, minimum height=0.7cm] (root) at (0,3.5) {Agent Orchestration Patterns};
-    
-    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p1) at (-5, 1.8) {\textbf{1. Routing / Chaining}\\Luồng tuần tự \& Rẽ nhánh};
-    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p2) at (-2.5, 1.8) {\textbf{2. Parallelization}\\Voting \& Sectioning};
-    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p3) at (0, 1.8) {\textbf{3. Orchestrator-Workers}\\Phân rã \& Tổng hợp động};
-    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p4) at (2.5, 1.8) {\textbf{4. Evaluator-Optimizer}\\Vòng lặp tự phản biện};
-    \node[draw=gray!80, fill=white, rounded corners, font=\scriptsize, align=center] (p5) at (5, 1.8) {\textbf{5. Multi-Agent Swarm}\\Giao tiếp đa tác tử};
-
-    \draw[->, thick, hcmutblue] (root) -| (p1);
-    \draw[->, thick, hcmutblue] (root) -| (p2);
-    \draw[->, thick, hcmutblue] (root) -- (p3);
-    \draw[->, thick, hcmutblue] (root) -| (p4);
-    \draw[->, thick, hcmutblue] (root) -| (p5);
-
-    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (-5, 0.4) {• Xác định trước biên\\• Token tốn ít\\• Không có vòng lặp};
-    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (-2.5, 0.4) {• Đổi token lấy latency\\• Majority voting\\• Xử lý song song};
-    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (0, 0.4) {• Phân việc theo ngữ cảnh\\• Worker chuyên biệt\\• SPOF tại Orchestrator};
-    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (2.5, 0.4) {• Generator vs Critic\\• Tự sửa sai theo chuẩn\\• Dễ rơi vào loop vô tận};
-    \node[fill=hcmutgray, draw=none, rounded corners, font=\tiny, align=left, text width=2.2cm] at (5, 0.4) {• Phân cấp hoặc ngang hàng\\• Trao đổi thông điệp\\• Rủi ro buồng vang};
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
+    \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
+      {HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY (HCMUT-VNU) -- FACULTY OF CSE};
   \end{tikzpicture}
+
+  \vspace{0.8cm}
+  \begin{center}
+    {\large \textbf{SEMINAR S1-7 (CO5151 -- ADVANCED AGENTIC AI)}}\\[0.25cm]
+    {\LARGE \textbf{\color{hcmutblue}Agent Design Patterns \& Orchestration}}\\[0.15cm]
+    {\normalsize \textit{Why Simple Workflows Beat Autonomous Agents, and the Limits of Self-Correction}}\\[0.45cm]
+
+    \begin{tcolorbox}[width=0.92\textwidth,colback=hcmutgray,colframe=hcmutblue!50,arc=2mm,boxrule=0.8pt]
+      \centering\small
+      \textbf{Presenting Group G4 (Balanced 9.5-Minute Roles):}\\
+      \textbf{Dang Lam Tung} (Lead) $\quad\cdot\quad$
+      \textbf{Nguyen Trung Phong} $\quad\cdot\quad$
+      \textbf{Vu Viet Hung}\\[0.1cm]
+      {\footnotesize Faculty Advisor: \textbf{Dr. Le Xuan Bach} $\vert$ Presentation Date: October 2026}
+    \end{tcolorbox}
+
+    \vspace{0.3cm}
+    {\scriptsize \color{gray}Oral Defense Duration: 30 minutes $\cdot$ Exactly 22 Slides $\cdot$ Strict Submission Protocol}
+  \end{center}
 \end{frame}
 
 % =====================================================================
-% SLIDE 5: PATTERN 1 - ROUTING & CHAINING
+% SLIDE 2: ROADMAP: WHO SPEAKS ON WHAT
 % =====================================================================
-\begin{frame}{4. Pattern 1: Prompt Chaining \& Semantic Routing}
-  \begin{columns}[c]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{\color{hcmutblue}Nguyên lý Hoạt Động}
-        \begin{itemize}
-          \item Phân rã bài toán lớn thành các bước xác định liên tiếp $Step_1 \to Step_2 \to \dots \to Step_k$.
-          \item Sử dụng bộ phân loại ngữ nghĩa (Semantic Router / Embeddings) để hướng luồng sang prompt chuyên biệt.
+\begin{frame}{How We Divided the Talk: Equal Roles, Equal Stakes}
+  \framesubtitle{Balanced Speaking Time $\vert$ 9.5 Minutes per Member $\vert$ Equal Intellectual Weightage}
+
+  \begin{columns}[t]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Part I: The Basics \& Primitives}}
+        \textbf{Dang Lam Tung}\\
+        {\scriptsize (9.5 mins $\vert$ Slides 5--9)}\\[0.2cm]
+        \begin{itemize}\scriptsize
+          \item Who holds the wheel: Code vs. Model?
+          \item Why Anthropic advises against agents
+          \item The basic blocks: Chains and Routers
+          \item Why voting is not self-refinement
+          \item Why our legal project threw out swarms
         \end{itemize}
       \end{block}
-      \textbf{\color{darkgreen}Ưu điểm:}
-      \begin{itemize}
-        \item Cực kỳ ổn định (Deterministic), chi phí token $O(N)$ thấp nhất.
-        \item Dễ quan sát (Observability cao), dễ viết unit test từng khâu.
-      \end{itemize}
     \end{column}
-    \begin{column}{0.5\textwidth}
-      \textbf{\color{darkred}Điểm gãy cốt tử (Failure Boundary):}
-      \begin{itemize}
-        \item \textbf{Cascading Error:} Bước 1 trích xuất sai thực thể $\to$ các bước sau suy luận trên dữ liệu rác.
-        \item \textbf{Rigid Topology:} Hoàn toàn bất lực nếu bài toán có cấu trúc rẽ nhánh không dự đoán trước được.
-      \end{itemize}
-      \begin{exampleblock}{Khi nào nên dùng?}
-        Quy trình xử lý hồ sơ chuẩn có mẫu sẵn, trích xuất hóa đơn, pipeline ETL dữ liệu.
-      \end{exampleblock}
-    \end{column}
-  \end{columns}
-\end{frame}
 
-% =====================================================================
-% SLIDE 6: PATTERN 2 - PARALLELIZATION
-% =====================================================================
-\begin{frame}{5. Pattern 2: Parallelization (Sectioning vs Voting)}
-  \begin{columns}[t]
-    \begin{column}{0.48\textwidth}
-      \textbf{A. Sectioning (Chia nhỏ tác vụ song song):}
-      \begin{itemize}
-        \item Chia input thành nhiều phân đoạn độc lập, gọi nhiều LLMs xử lý cùng lúc và tổng hợp lại.
-        \item Ví dụ: Tóm tắt 5 chương sách độc lập; trích xuất rủi ro từ 10 hợp đồng khác nhau.
-        \item Giảm thiểu Wall-clock Latency từ $O(K \cdot t) \to O(t)$.
-      \end{itemize}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Part II: Systems \& Fallacies}}
+        \textbf{Nguyen Trung Phong}\\
+        {\scriptsize (9.5 mins $\vert$ Slides 10--15)}\\[0.2cm]
+        \begin{itemize}\scriptsize
+          \item Why one huge prompt context fails
+          \item The Lead/Subagent split: Paying the bill
+          \item Surviving crashes: Durable execution
+          \item Why "double-checking" makes LLMs worse
+          \item Pattern cheat sheet: Buys and costs
+          \item How our legal pipeline runs today
+        \end{itemize}
+      \end{block}
     \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{B. Voting (Biểu quyết đa số / Self-Consistency):}
-      \begin{itemize}
-        \item Chạy cùng 1 bài toán trên $N$ phiên bản với nhiệt độ $T > 0$ hoặc trên các mô hình khác nhau.
-        \item Dùng Majority Vote hoặc Judge Agent để chọn kết quả đồng thuận cao nhất.
-        \item Tăng mạnh độ chính xác trong suy luận logic và toán học.
-      \end{itemize}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Part III: Truth \& Live Traces}}
+        \textbf{Vu Viet Hung}\\
+        {\scriptsize (9.5 mins $\vert$ Slides 16--21)}\\[0.2cm]
+        \begin{itemize}\scriptsize
+          \item Where does real feedback come from?
+          \item Checking each step vs. final score (PRM)
+          \item Learning from what works (STaR)
+          \item What really fixes mistakes?
+          \item Live trace: Catching a revoked law
+          \item What the numbers prove \& open limits
+        \end{itemize}
+      \end{block}
     \end{column}
   \end{columns}
-  \vspace{0.2cm}
-  \begin{alertblock}{Đánh Đổi Kỹ Thuật (Trade-off)}
-    Tiết kiệm thời gian người dùng nhưng nhân tuyến tính chi phí API (\$ Token Cost tăng gấp $K$ lần).
+
+  \vspace{0.25cm}
+  \begin{alertblock}{\footnotesize \textbf{Our Presentation Principle}}
+    \footnotesize Every member covers: \textbf{Core System Theory} $+$ \textbf{A Critical Extension Paper} $+$ \textbf{Real Production Evidence}.
   \end{alertblock}
 \end{frame}
 
 % =====================================================================
-% SLIDE 7: PATTERN 3 - ORCHESTRATOR-WORKERS
+% SLIDE 3: IMPORTANT DATES & SUBMISSION DEADLINE PROTOCOL
 % =====================================================================
-\begin{frame}{6. Pattern 3: Orchestrator-Workers (Điều Phối Động)}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}
-        \item \textbf{Orchestrator:} Đọc yêu cầu phức tạp $\to$ phân tích ngữ cảnh $\to$ lập kế hoạch chia nhỏ thành các nhiệm vụ con (Sub-tasks).
-        \item \textbf{Workers:} Các tác tử chuyên môn hóa sâu (chỉ cầm một số công cụ nhất định) thực thi nhiệm vụ được giao.
-        \item \textbf{Synthesizer:} Gom kết quả từ các Workers và tổng hợp câu trả lời cuối cùng.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \centering
-      \begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
-        \node[draw=hcmutblue, fill=hcmutblue!20, rounded corners, font=\bfseries\scriptsize, minimum width=2.8cm] (orch) at (0,2.5) {Orchestrator (Planner)};
-        \node[draw=gray, fill=white, rounded corners, font=\tiny] (w1) at (-2.2, 0.8) {Worker 1: Search};
-        \node[draw=gray, fill=white, rounded corners, font=\tiny] (w2) at (0, 0.8) {Worker 2: DB Query};
-        \node[draw=gray, fill=white, rounded corners, font=\tiny] (w3) at (2.2, 0.8) {Worker 3: Code Exec};
-        \node[draw=darkgreen, fill=darkgreen!10, rounded corners, font=\bfseries\scriptsize, minimum width=2.8cm] (syn) at (0,-0.8) {Synthesizer};
+\begin{frame}{Important Dates: Submission Deadline \& Review Protocol}
+  \framesubtitle{Strict Timeline $\vert$ 48-Hour Faculty Fact-Checking Window $\vert$ 4 Mandatory Email Deliverables}
 
-        \draw[->, thick] (orch) -- (w1);
-        \draw[->, thick] (orch) -- (w2);
-        \draw[->, thick] (orch) -- (w3);
-        \draw[->, thick] (w1) -- (syn);
-        \draw[->, thick] (w2) -- (syn);
-        \draw[->, thick] (w3) -- (syn);
-      \end{tikzpicture}
-    \end{column}
-  \end{columns}
-  \vspace{0.15cm}
-  \textbf{\color{darkred}Điểm yếu then chốt:} Orchestrator trở thành Single Point of Failure (SPOF). Nếu bước lập kế hoạch ban đầu bị ảo giác, toàn bộ các Worker sẽ tiêu tốn tài nguyên vô ích.
-\end{frame}
-
-% =====================================================================
-% SLIDE 8: PATTERN 4 - EVALUATOR-OPTIMIZER
-% =====================================================================
-\begin{frame}{7. Pattern 4: Evaluator-Optimizer (Vòng Lặp Phản Biện)}
-  \begin{columns}[c]
+  \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\color{hcmutblue}Cấu Trúc Tác Tử Kép (Generator vs Critic)}
+      \begin{block}{\textbf{Milestone Schedule \& Deadlines}}
+        \footnotesize
         \begin{enumerate}
-          \item \textbf{Generator:} Khởi tạo lời giải / bản thảo đầu tiên.
-          \item \textbf{Evaluator:} Đánh giá lời giải dựa trên tiêu chí đo lường định lượng hoặc rubric khắt khe.
-          \item \textbf{Looping Condition:} Nếu chưa đạt ngưỡng $\to$ cung cấp phản hồi phản biện (Feedback) để Generator viết lại.
+          \item \textbf{Sunday, Oct 18, 2026 -- 23:59}\\
+                $\to$ \textbf{Hard Submission Deadline} via Email.\\
+                $\to$ Subject: \texttt{[CO5151][G4] Seminar S1-7}.
+          \item \textbf{Monday \& Tuesday (Oct 19--20)}\\
+                $\to$ \textbf{Faculty Audit Window}: The instructor requires both days to review slides and report factual/technical errors.\\
+                $\to$ \textit{Late submission forfeits this error-checking!}
+          \item \textbf{Wednesday, Oct 21, 2026}\\
+                $\to$ \textbf{Official In-Class Seminar Defense} (30 mins).
         \end{enumerate}
       \end{block}
-      \textbf{Các nghiên cứu nền tảng:} *Reflexion* (Shinn et al., 2023), *Self-Refine* (Madaan et al., 2023), *CRITIC* (Gou et al., 2024).
     \end{column}
+
     \begin{column}{0.48\textwidth}
-      \textbf{\color{darkred}Hai Căn Bệnh Của Evaluator-Optimizer:}
-      \begin{itemize}
-        \item \textbf{Self-Confirmation Bias:} Nếu dùng cùng một model cho cả Generator và Evaluator trong cùng context window, Evaluator luôn có xu hướng khen bài của chính mình.
-        \item \textbf{Infinite Regress / Oscillation:} Hai tác tử tranh cãi qua lại quanh các chi tiết phong cách mà không hội tụ về bản chất logic.
-      \end{itemize}
-      \begin{alertblock}{Giải Pháp G4 Đề Xuất}
-        Phải cô lập hoàn toàn context window và bắt buộc Evaluator phải truy xuất Ground-Truth Tools ngoài.
+      \begin{alertblock}{\textbf{The 4 Mandatory Email Attachments}}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Slide Deck (PDF)}: Exactly 18--22 slides (\texttt{slides\_s1\_7.pdf}).
+          \item \textbf{Annotated Bibliography}: Strictly 1 page A4, 1 critical sentence per paper (\texttt{annotated\_bibliography\_en.pdf}).
+          \item \textbf{Live Demo / Trace Link}: Reproducible benchmark script (\texttt{demo\_orchestration\_trace.py}).
+          \item \textbf{AI-Use Statement}: Transparent disclosure (\texttt{ai\_use\_statement\_en.pdf}).
+        \end{enumerate}
       \end{alertblock}
     \end{column}
   \end{columns}
-\end{frame}
 
-% =====================================================================
-% SLIDE 9: PATTERN 5 - MULTI-AGENT SWARMS
-% =====================================================================
-\begin{frame}{8. Pattern 5: Multi-Agent Systems (Hierarchical vs Swarm)}
-  \begin{columns}[t]
-    \begin{column}{0.48\textwidth}
-      \textbf{\color{hcmutblue}A. Phân Tầng Chỉ Huy (Hierarchical - MetaGPT)}
-      \begin{itemize}
-        \item Mô phỏng cơ cấu tổ chức doanh nghiệp: CEO $\to$ Architect $\to$ Engineer $\to$ QA.
-        \item Chuẩn hóa quy trình thao tác chuẩn (SOPs) để định hướng thông điệp.
-        \item Giảm thiểu tính hỗn loạn nhưng triệt tiêu tính thích nghi trước ngoại lệ.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{\color{alertorange}B. Mạng Lưới Tự Do (Swarm / AutoGen)}
-      \begin{itemize}
-        \item Các tác tử trò chuyện tự do qua Group Chat hoặc bảng tin chung (Blackboard pattern).
-        \item Khả năng giải quyết vấn đề sáng tạo cao trong các bài toán mở.
-        \item \textbf{Hậu quả:} Tăng bùng nổ token giao tiếp (Communication Tax), dễ rơi vào buồng vang (Echo Chamber).
-      \end{itemize}
-    \end{column}
-  \end{columns}
   \vspace{0.2cm}
-  \begin{center}
-    \textit{"Giao tiếp tự do giữa các agent thường làm tăng độ nhiễu nhiều hơn là tăng tri thức."}
-  \end{center}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Group G4 Commitment}},fonttitle=\footnotesize\bfseries]
+    \footnotesize All 4 artifacts are generated, verified, and pre-staged in Git to guarantee submission well ahead of the Sunday 23:59 deadline.
+  \end{tcolorbox}
 \end{frame}
 
 % =====================================================================
-% SLIDE 10: STATE MANAGEMENT & MEMORY
+% SLIDE 4: THE PAPERS BEHIND THIS TALK
 % =====================================================================
-\begin{frame}{9. Quản Lý Trạng Thái \& Phân Tầng Bộ Nhớ (State \& Memory)}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}
-        \item \textbf{Ephemeral Scratchpad (Ngắn hạn):} Lưu trữ dấu vết suy luận tức thời (ReAct Thought/Action/Observation) trong cửa sổ ngữ cảnh.
-        \item \textbf{Session State (Đồ thị trạng thái hữu hạn - FSM):} Lưu vết qua schema có định kiểu (Typed Schema trong LangGraph). Đảm bảo tính kiểm soát (Checkpoints, Replay, Time-travel).
-        \item \textbf{Long-term Memory (Dài hạn):} Lưu trữ kiến thức và kinh nghiệm qua Vector Store và Knowledge Graph.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \begin{block}{\color{hcmutblue}Nguyên Tắc Bất Biến Về Quản Lý Trạng Thái}
-        \begin{itemize}
-          \item \textbf{State Redundancy:} Tránh nhồi toàn bộ lịch sử trò chuyện vào prompt; chỉ lưu state biến thiên.
-          \item \textbf{Deterministic Guardrails:} Các chuyển dịch trạng thái then chốt phải được kiểm soát bằng code truyền thống, không phó mặc hoàn toàn cho LLM.
-        \end{itemize}
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
+\begin{frame}{The Papers Behind This Talk: Core Readings \& Key Debates}
+  \framesubtitle{All Presenters $\vert$ Mapping Foundation Systems to Critical Research Papers}
 
-% =====================================================================
-% SLIDE 11: TOOL PROTOCOL & MCP
-% =====================================================================
-\begin{frame}{10. Giao Thức Tích Hợp Công Cụ Chuẩn Hóa (Model Context Protocol - MCP)}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\color{hcmutblue}Vấn Nạn "Mỗi Agent Một Giao Thức"}
-        Trước năm 2024: Mỗi framework (LangChain, AutoGen, CrewAI) có một cách bọc Tool riêng; gây phân mảnh và rủi ro bảo mật nghiêm trọng.
-      \end{block}
-      \textbf{\color{darkgreen}Sự Ra Đời Của MCP (Anthropic 2024):}
-      \begin{itemize}
-        \item Chuẩn hóa kiến trúc Client-Server giữa LLM và Hệ thống tài nguyên ngoài.
-        \item Phân định rõ 3 khả năng: \textbf{Prompts} (Mẫu tương tác), \textbf{Resources} (Tài liệu thụ động), và \textbf{Tools} (Hành động có tác dụng phụ).
-        \item Áp dụng nguyên lý \textbf{Least-Privilege}: Cách ly tác tử khỏi môi trường máy chủ thực tế.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \centering
-      \begin{tikzpicture}[scale=0.75, every node/.style={transform shape}]
-        \node[draw=hcmutblue, fill=hcmutblue!20, rounded corners, font=\bfseries\scriptsize, minimum width=2.5cm, minimum height=1cm] (host) at (0,3) {MCP Host / Agent};
-        \node[draw=darkgreen, fill=darkgreen!15, rounded corners, font=\bfseries\scriptsize, minimum width=2.5cm, minimum height=1cm] (server) at (0,1) {MCP Server};
-        \node[draw=gray, fill=white, rounded corners, font=\tiny] (t1) at (-2,-0.8) {Postgres DB};
-        \node[draw=gray, fill=white, rounded corners, font=\tiny] (t2) at (0,-0.8) {Legal API (vbpl)};
-        \node[draw=gray, fill=white, rounded corners, font=\tiny] (t3) at (2,-0.8) {File System};
-
-        \draw[<->, thick] (host) -- node[right, font=\tiny] {JSON-RPC} (server);
-        \draw[->, thick] (server) -- (t1);
-        \draw[->, thick] (server) -- (t2);
-        \draw[->, thick] (server) -- (t3);
-      \end{tikzpicture}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 12: BẢNG SO SÁNH MA TRẬN TOÀN DIỆN (BẮT BUỘC)
-% =====================================================================
-\begin{frame}{11. BẢNG SO SÁNH TOÀN DIỆN CÁC PHƯƠNG PHÁP ĐIỀU PHỐI}
-  \vspace{-0.2cm}
-  \scriptsize
-  \begin{table}[h]
-    \centering
-    \begin{tabularx}{\textwidth}{p{2.3cm}p{1.8cm}p{1.4cm}p{1.4cm}p{1.8cm}p{2.0cm}p{2.2cm}}
-      \toprule
-      \textbf{Pattern} & \textbf{Kiến Trúc} & \textbf{Độ Trễ} & \textbf{Token Cost} & \textbf{Khả Năng Sửa} & \textbf{Lan Truyền Lỗi} & \textbf{Kịch Bản Tối Ưu} \\
-      \midrule
-      \textbf{Prompt Chaining} & Tuyến tính / DAG & Thấp ($O(N)$) & Thấp ($1\times$) & Kém (Không loop) & Cao (Gãy dây chuyền) & Trích xuất mẫu cố định \\
-      \rowcolor{hcmutgray}
-      \textbf{Parallel Voting} & Đa luồng độc lập & Thấp ($O(1)$) & Rất cao ($K\times$) & Không (Chọn số đông) & Rất thấp & Toán, suy luận code \\
-      \textbf{Orchestrator-Workers} & Tập trung (Star) & Cao & Cao ($3-8\times$) & Khá (Re-plan) & Trung bình (SPOF) & Lập trình, tổng hợp đa nguồn \\
-      \rowcolor{hcmutgray}
-      \textbf{Evaluator-Optimizer} & Vòng lặp phản biện & Rất cao & Cao ($2-5\times$) & Rất tốt (Critique) & Thấp (Chặn xuất lỗi) & Rà soát văn bản, audit pháp lý \\
-      \textbf{Hierarchical Swarm} & Đa tác tử phân tầng & Cực cao & Cực cao ($10-30\times$) & Tốt ở tầng cục bộ & Rất cao (Mất mát tín hiệu) & Mô phỏng phức tạp, game \\
-      \rowcolor{hcmutblue!10}
-      \textbf{StateGraph (FSM)} & Máy trạng thái có kiểu & Kiểm soát & Tối ưu & Xuất sắc (Guardrail) & Kiểm soát chặt & \textbf{Hệ thống sản xuất thực tế} \\
-      \bottomrule
-    \end{tabularx}
-  \end{table}
-  \vspace{-0.1cm}
-  {\tiny \textit{Ghi chú: So sánh dựa trên chuẩn hóa cùng quy mô bài toán; Token Cost tính theo hệ số nhân so với lời gọi đơn lẻ (Single Call).}}
-\end{frame}
-
-% =====================================================================
-% SLIDE 13: CRITICAL ANALYSIS I - ERROR PROPAGATION
-% =====================================================================
-\begin{frame}{12. Phân Tích Phản Biện I: Lan Truyền Lỗi \& Suy Giảm Mục Tiêu}
   \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\color{darkred}Toán Học Của Sự Lan Truyền Sai Số}
-        Xét một chuỗi tác tử gồm $K$ bước suy luận độc lập, mỗi bước có xác suất chính xác $p$:
-        $$P(\text{Toàn hệ thống đúng}) = \prod_{i=1}^K p_i = p^K$$
-        \begin{itemize}
-          \item Nếu $p = 0.90$ (mô hình rất tốt) và $K = 6$ bước:
-          $$P(\text{Thành công}) = 0.90^6 \approx \mathbf{53.1\%}$$
-          \item Một nửa số yêu cầu sẽ thất bại dù từng bước riêng lẻ trông rất hoàn hảo!
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Core Readings: How Systems Are Built}}
+        \footnotesize
+        \begin{enumerate}\scriptsize
+          \item \textbf{Anthropic (2024)}: \textit{Building Effective Agents}\\
+                $\to$ Start simple; compose predictable blocks first.
+          \item \textbf{Anthropic (2025)}: \textit{Multi-Agent Research System}\\
+                $\to$ Lead and subagents: More capability, $3-8\times$ cost.
+          \item \textbf{OpenAI (2025)}: \textit{Practical Guide to Building Agents}\\
+                $\to$ Tool calling loops, safety fences, and evaluations.
+          \item \textbf{LangGraph Documentation (2024)}\\
+                $\to$ State graphs, checkpointing, and human-in-the-loop.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Extension Papers: Why Common Beliefs Break}}
+        \footnotesize
+        \begin{enumerate}\scriptsize
+          \item \textbf{Wang et al. (ICLR 2023)}: \textit{Self-Consistency}\\
+                $\to$ Independent voting is not sequential refinement.
+          \item \textbf{Huang et al. (ICLR 2024)}: \textit{LLMs Cannot Self-Correct}\\
+                $\to$ Self-reflection without tools degrades reasoning.
+          \item \textbf{Lightman et al. (OpenAI 2023)}: \textit{Let's Verify Step by Step}\\
+                $\to$ Why step-by-step supervision beats final answers.
+          \item \textbf{Zelikman et al. (NeurIPS 2022)}: \textit{STaR}\\
+                $\to$ Self-taught reasoning only works with ground truth.
+        \end{enumerate}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{The Core Question You Should Ask Through This Talk}},fonttitle=\footnotesize\bfseries]
+    \footnotesize \textit{"When an agent claims it corrected its own mistake, where did that truth signal actually come from: its own imagination, or the real world?"}
+  \end{tcolorbox}
+\end{frame}
+
+% =====================================================================
+% BLOCK 1: DANG LAM TUNG (SLIDES 5 - 9) -- 9.5 MINUTES
+% =====================================================================
+
+% SLIDE 5: WORKFLOWS VS AUTONOMOUS AGENTS
+\begin{frame}{Workflows vs. Autonomous Agents: Who Holds the Wheel?}
+  \framesubtitle{Presenter: Dang Lam Tung $\vert$ Fixed Code Paths vs. Model-Directed Control Flow}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Workflows: Code Controls the Model}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Who decides the path}: Software logic written by engineers.
+          \item \textbf{What the LLM does}: Handles content at specific designated stops.
+          \item \textbf{What you get}: Deterministic behavior, easy unit testing, low variance.
+          \item \textbf{Everyday examples}: Step-by-step chains, routers, parallel map-reduce.
         \end{itemize}
       \end{block}
     \end{column}
     \begin{column}{0.48\textwidth}
-      \textbf{\color{darkred}Hiện Tượng "Goal Drift" (Lệch Khỏi Mục Tiêu):}
-      \begin{itemize}
-        \item Khi thông điệp đi qua 3 tầng giao tiếp (Orchestrator $\to$ Lead Worker $\to$ Sub-Worker), các ràng buộc phủ định (Negative Constraints) bị rơi rụng.
-        \item Tác tử thực thi sau cùng thường tối ưu hóa cục bộ một mục tiêu không còn liên quan đến yêu cầu gốc của người dùng.
-      \end{itemize}
-      \begin{exampleblock}{Biện Pháp Đối Phó}
-        Cơ chế \textbf{Goal Invariant Checkpoint} đối chiếu trực tiếp với State gốc sau mỗi bước.
-      \end{exampleblock}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 14: CRITICAL ANALYSIS II - HIDDEN ASSUMPTIONS
-% =====================================================================
-\begin{frame}{13. Phân Tích Phản Biện II: Những Giả Định Ẩn Thường Bị Phớt Lờ}
-  \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      \begin{alertblock}{Giả Định 1: "LLM Phân Rã Bài Toán Hoàn Hảo"}
-        \textbf{Thực tế:} Mô hình phân rã dựa trên tương đồng ngữ nghĩa bề mặt, thường xuyên bỏ sót các tiền điều kiện pháp lý/kỹ thuật tiềm ẩn (Implicit Dependencies).
-      \end{alertblock}
-      \begin{alertblock}{Giả Định 2: "Tool Luôn Trả Output Chuẩn Xác"}
-        \textbf{Thực tế:} Thế giới thực đầy rẫy lỗi timeout, API rate limit, HTML rác, schema thay đổi đột ngột. Tác tử không biết cách xử lý lỗi âm thầm (Silent Truncation).
-      \end{alertblock}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \begin{alertblock}{Giả Định 3: "Multi-Agent Luôn Tốt Hơn Single-Agent"}
-        \textbf{Thực tế:} Giao tiếp đa tác tử làm tăng chi phí token lên gấp 10--30 lần. Nhiều nghiên cứu (Chen et al., 2024) chứng minh phần lớn hiệu năng tăng thêm chỉ đến từ việc nạp thêm compute (Best-of-N sampling) chứ không phải do sự tương tác thông minh.
-      \end{alertblock}
-      \begin{alertblock}{Giả Định 4: "Evaluator Luôn Khách Quan"}
-        \textbf{Thực tế:} LLM Evaluator bị chi phối bởi độ dài câu trả lời (Verbosity bias) và tính cả nể (Sycophancy).
+      \begin{alertblock}{\textbf{Autonomous Agents: The Model Controls the Path}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Who decides the path}: The LLM decides what tools to call and when to stop.
+          \item \textbf{What the LLM does}: Acts as both planner, worker, and controller.
+          \item \textbf{What you get}: High flexibility, but high risk of surprises and failure.
+          \item \textbf{Everyday examples}: Free-form ReAct loops, conversational swarms.
+        \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
-\end{frame}
 
-% =====================================================================
-% SLIDE 15: WHAT WE DON'T BELIEVE (BẮT BUỘC)
-% =====================================================================
-\begin{frame}{14. What we don't believe / what the papers don't show}
-  \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\color{darkred}1. Ảo Tưởng Về "Tính Trồi" (Emergence)}
-        \textbf{Báo chí ca ngợi:} Sự hợp tác đa tác tử tự phát sinh trí tuệ tập thể.\\
-        \textbf{What we don't believe:} Không hề có phép màu nổi trội. Chuẩn hóa ngân sách token, Single-Agent chạy Sampling Best-of-N đánh bại 80\% các kiến trúc Multi-Agent phức tạp.
-      \end{block}
-      \begin{block}{\color{darkred}2. Bệnh Tự Nịnh Bợ (Sycophancy Trap)}
-        \textbf{Các paper trình diễn:} Các Agent tranh luận sôi nổi và cải thiện kết quả.\\
-        \textbf{What papers don't show:} Nếu không có công cụ kiểm chứng khách quan (Ground Truth), Agent Auditor luôn nhượng bộ và đồng thuận mù quáng với Drafter sau 2--3 lượt chat.
-      \end{block}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\color{darkred}3. Con Số Token \& Độ Trễ Bị Che Giấu}
-        \textbf{Các paper công bố:} Tăng Pass@1 từ 65\% lên 85\%.\\
-        \textbf{What papers don't show:} Chi phí token tăng 2.400\% và P99 latency vọt lên 50 giây. Mô hình không thể thương mại hóa được trong thực tế người dùng.
-      \end{block}
-      \begin{block}{\color{darkred}4. Benchmark Trong Môi Trường Đóng}
-        \textbf{Các bài báo benchmark:} HumanEval, GSM8K, SWE-bench.\\
-        \textbf{What we don't believe:} Các môi trường này có sẵn Unit Test rõ ràng. Khi đưa vào môi trường mở phi đơn điệu (như Pháp luật Việt Nam), không có unit test nào, Agent Evaluator lập tức mất phương hướng.
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 16: TRACE DEMO - WORKFLOW ANATOMY
-% =====================================================================
-\begin{frame}{15. Minh Họa Demo: Vết Thực Thi Điều Phối (Execution Trace)}
-  \begin{columns}[c]
-    \begin{column}{0.55\textwidth}
-      \textbf{Kịch bản thực thi một tác vụ có lỗi phát sinh:}
-      \begin{enumerate}
-        \item \textbf{Input:} *"Doanh nghiệp vốn ngoại xin cấp phép ví điện tử năm 2024"*.
-        \item \textbf{Orchestrator:} Lập kế hoạch 2 nhánh: Tra cứu vốn (W1) và Tra cứu tỷ lệ ngoại (W2).
-        \item \textbf{Worker 1 (Lỗi):} Trích xuất Nghị định 101/2012 quy định vốn 50 tỷ.
-        \item \textbf{Evaluator / Auditor:} Gọi tool `verify_temporal_status` trên `vbpl.vn` $\to$ Phát hiện NĐ 101/2012 \textbf{đã hết hiệu lực toàn bộ} bởi NĐ 52/2024!
-        \item \textbf{Re-route Loop:} Bác bỏ kết quả W1, ép Orchestrator re-plan sang NĐ 52/2024 $\to$ Kết quả hội tụ chính xác.
-      \end{enumerate}
-    \end{column}
-    \begin{column}{0.43\textwidth}
-      \begin{block}{\color{hcmutblue}Chỉ Số Ghi Nhận Tại Trace}
-        \scriptsize
-        $\bullet$ \textbf{Total Steps:} 4 turns\\
-        $\bullet$ \textbf{Token Consumption:} 3.240 tokens\\
-        $\bullet$ \textbf{Wall-clock Time:} 4.2 giây\\
-        $\bullet$ \textbf{Faults Intercepted:} 1 Fatal Semantic Error\\
-        $\bullet$ \textbf{Circuit Breaker Threshold:} Max 3 iterations (không bị loop vô tận).
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 17: EMPIRICAL BENCHMARK TRÊN TOY VS REAL
-% =====================================================================
-\begin{frame}{16. Thực Nghiệm So Sánh: Chi Phí Token vs Tỷ Lệ Sửa Sai}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \textbf{Kết quả chạy thử 50 tình huống kiểm thử:}
-      \begin{itemize}
-        \item \textbf{Naive Chaining:} Chạy rất nhanh (0.8s), tốn ít token (600), nhưng tỷ lệ trích xuất đúng luật có hiệu lực chỉ đạt \textbf{38\%}.
-        \item \textbf{Chatty Multi-Agent (AutoGen style):} Tốn trung bình \textbf{14.800 tokens}, latency 22.4s, và 24\% rơi vào hội chứng nịnh bợ (bỏ qua văn bản hết hiệu lực).
-        \item \textbf{StateGraph (Drafter-Auditor có MCP Tool):} Tốn \textbf{2.900 tokens}, latency 3.8s, đạt độ chính xác căn cứ pháp lý \textbf{94\%}.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \begin{block}{\color{darkgreen}Bài Học Thực Nghiệm Cốt Lõi}
-        \textbf{Deterministic Routing + External Tool Verification} luôn đánh bại việc bổ sung thêm các LLM agent nói chuyện phi cấu trúc với nhau!
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 18: LIÊN HỆ ĐỀ TÀI G4 (THEME 9)
-% =====================================================================
-\begin{frame}{17. Liên Hệ Đề Tài G4: Agentic RAG Cho Pháp Luật Việt Nam}
-  \begin{columns}[c]
-    \begin{column}{0.52\textwidth}
-      \textbf{\color{hcmutblue}Đặc Thù Của Pháp Luật Việt Nam (Domain Nuances):}
-      \begin{itemize}
-        \item \textbf{Tính chất phi đơn điệu (Non-monotonicity):} Việc ban hành một thông tư/nghị định mới có thể sửa đổi hoặc bãi bỏ từng điều khoản cụ thể của luật cũ.
-        \item \textbf{Cấu trúc thứ bậc phức tạp:} Luật $\to$ Nghị định $\to$ Thông tư $\to$ Điều $\to$ Khoản $\to$ Điểm.
-      \end{itemize}
-      \begin{alertblock}{Vì Sao Generic Patterns Thất Bại?}
-        Các Agentic Pattern phổ biến được thiết kế cho Software Engineering (nơi có code compiler kiểm tra). Trong Pháp lý, không có compiler; nếu Agent không được neo vào đồ thị tri thức, ảo giác là tất yếu.
-      \end{alertblock}
-    \end{column}
-    \begin{column}{0.45\textwidth}
-      \begin{block}{\color{hcmutblue}Nền Tảng Đề Tài G4 Kế Thừa}
-        $\bullet$ Đồ thị tri thức SBV-LawGraph (TS. Lê Xuân Bách et al., ACIIDS 2026).\\
-        $\bullet$ Phân cấp pháp điển ViHERMES (2025).\\
-        $\bullet$ Bộ benchmark quốc gia ALQAC 2025.
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% =====================================================================
-% SLIDE 19: GIẢI PHÁP ĐIỀU PHỐI CỦA G4
-% =====================================================================
-\begin{frame}{18. Kiến Trúc Điều Phối Riêng Biệt Của Nhóm G4}
-  \begin{center}
-    \begin{tikzpicture}[scale=0.82, every node/.style={transform shape}]
-      \node[draw=hcmutblue, fill=hcmutblue!10, rounded corners, font=\scriptsize, align=center] (q) at (0,3) {\textbf{User Dossier Query}};
-      \node[draw=hcmutblue, fill=hcmutblue!20, rounded corners, font=\bfseries\scriptsize, align=center] (router) at (3.5,3) {Selective Traversal\\Policy Agent};
-      \node[draw=gray, fill=white, rounded corners, font=\scriptsize, align=center] (kg) at (7.5,3) {Neo4j SBV Graph\\\& Qdrant Dense};
-      
-      \node[draw=alertorange, fill=alertorange!15, rounded corners, font=\bfseries\scriptsize, align=center] (drafter) at (7.5,1.2) {Drafter Agent\\(Context A)};
-      \node[draw=darkred, fill=darkred!15, rounded corners, font=\bfseries\scriptsize, align=center] (auditor) at (3.5,1.2) {Claim Auditor\\(Context B -- Isolated)};
-      \node[draw=darkgreen, fill=darkgreen!15, rounded corners, font=\scriptsize, align=center] (vbpl) at (3.5,-0.5) {Live VBPL Tool\\(MCP Server)};
-      \node[draw=darkgreen, fill=darkgreen!20, rounded corners, font=\bfseries\scriptsize, align=center] (out) at (0,1.2) {Audited Legal\\Dossier Output};
-
-      \draw[->, thick] (q) -- (router);
-      \draw[->, thick] (router) -- (kg);
-      \draw[->, thick] (kg) -- (drafter);
-      \draw[->, thick] (drafter) -- node[above, font=\tiny] {Claims} (auditor);
-      \draw[<->, thick] (auditor) -- node[right, font=\tiny] {Status Check} (vbpl);
-      \draw[->, thick] (auditor) -- node[above, font=\tiny] {Pass} (out);
-      \draw[->, thick, dashed, darkred] (auditor) -- node[right, font=\tiny] {Fail (Max 2)} (drafter);
-    \end{tikzpicture}
-  \end{center}
-  \vspace{-0.2cm}
-  \textbf{3 Chốt chặn kỹ thuật:} (1) Cô lập tuyệt đối Context giữa Drafter và Auditor; (2) Giới hạn vòng lặp tối đa 2 lần; (3) Neo dữ liệu thực thi vào API trạng thái thực của Cổng Thông tin Pháp luật Quốc gia.
-\end{frame}
-
-% =====================================================================
-% SLIDE 20: HƯỚNG MỞ & BÀI TOÁN NGHIÊN CỨU
-% =====================================================================
-\begin{frame}{19. Các Bài Toán Nghiên Cứu Mở (Open Research Horizons)}
-  \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\color{hcmutblue}1. Formal Verification for Agent Traces}
-        \textbf{Vấn đề:} Làm sao chứng minh toán học rằng một mạng lưới tác tử sẽ không bao giờ chuyển sang trạng thái vi phạm an toàn?\\
-        \textbf{Hướng tiếp cận:} Áp dụng Model Checking (TLA+, PRISM) để kiểm chứng vết thực thi của StateGraph trước khi cấp phép gọi tool có tác dụng phụ.
-      \end{block}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\color{hcmutblue}2. Cost-Aware Adaptive Orchestration}
-        \textbf{Vấn đề:} Không phải truy vấn nào cũng cần Swarm hay Reflection đắt đỏ.\\
-        \textbf{Hướng tiếp cận:} Dynamic Routing dựa trên dự đoán độ phức tạp bài toán: Truy vấn dễ $\to$ Chaining đơn tuyến; Truy vấn rủi ro cao $\to$ Evaluator-Optimizer kép.
-      \end{block}
-    \end{column}
-  \end{columns}
-  \vspace{0.2cm}
-  \begin{block}{\color{hcmutblue}3. Non-Markovian Agent Memory}
-    Xây dựng cấu trúc bộ nhớ lưu trữ các quan hệ nhân quả dài hạn thay vì chỉ lưu chuỗi token trượt.
+  \vspace{0.25cm}
+  \begin{block}{\textbf{Tung's Discussion Question}}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{The reality check}: If you wrap an LLM in a `while True` loop and let it pick tools, is it an intelligent agent, or just an unpredictable state machine?
+      \item \textbf{The trade-off}: Every bit of autonomy you hand over to the model costs you reliability in production.
+    \end{itemize}
   \end{block}
 \end{frame}
 
-% =====================================================================
-% SLIDE 21: TỔNG KẾT & THÔNG ĐIỆP
-% =====================================================================
-\begin{frame}{20. Kết Luận: Thông Điệp Cốt Lõi Về Agent Orchestration}
-  \begin{enumerate}
-    \item \textbf{No Silver Bullet:} Không có một Pattern nào là vạn năng. Chọn đúng Pattern là bài toán tối ưu đa mục tiêu giữa \textbf{Độ trễ}, \textbf{Chi phí} và \textbf{Độ tin cậy}.
-    \item \textbf{Simplicity Over Complexity:} Luôn bắt đầu từ Simple Prompt Chaining $\to$ Routing $\to$ Evaluator-Optimizer. Chỉ chuyển sang Multi-Agent khi có lý do kỹ thuật bắt buộc phải phân tách vai trò.
-    \item \textbf{Grounding Trumps Debate:} Tranh luận giữa các LLM không tạo ra chân lý. Hệ thống chỉ đáng tin cậy khi được neo vào các công cụ xác thực thế giới thực (Ground-truth Verification).
-    \item \textbf{State Machines Win in Production:} Các đồ thị trạng thái hữu hạn có định kiểu (FSM / LangGraph) là tiêu chuẩn vàng cho các ứng dụng công nghiệp, thay thế hoàn toàn cho các phòng chat tự do vô định.
-  \end{enumerate}
+% SLIDE 6: WHY ANTHROPIC RECOMMENDS AGAINST AGENTS
+\begin{frame}{Why Anthropic Tells You: "Don't Build an Agent If You Don't Have To"}
+  \framesubtitle{Presenter: Dang Lam Tung $\vert$ The Compounding Error Trap \& When to Upgrade}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \textbf{\color{darkred}Three Traps That Kill Autonomous Agents}:
+      \begin{enumerate}\footnotesize
+        \item \textbf{Mistakes Multiply Exponentially}:
+              If each step is $90\%$ accurate, after 6 steps:
+              $0.90^6 \approx 53\%$ success rate (a coin flip!).
+        \item \textbf{Tokens and Latency Balloon}:
+              Every turn drags along old context. Costs grow as $O(n^2)$, and response times jump from seconds to minutes.
+        \item \textbf{Getting Stuck in Loops}:
+              Without hardcoded guardrails, models repeat failed tool calls or drift away from the user's original goal.
+      \end{enumerate}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{When Are You Actually Allowed to Build an Agent?}},fonttitle=\footnotesize\bfseries]
+        \footnotesize
+        \textit{Anthropic's rule: Stay with simple code until:}
+        \begin{itemize}
+          \item[$\blacksquare$] You cannot write out the possible branches ahead of time.
+          \item[$\blacksquare$] The task requires genuinely open multi-step search.
+          \item[$\blacksquare$] You have an external checker (a compiler or database) to catch bad trajectories.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{block}{\textbf{Tung's Takeaway}}
+    \footnotesize Starting with complex agents isn't sophisticated engineering; it's self-inflicted technical debt.
+  \end{block}
+\end{frame}
+
+% SLIDE 7: CORE PATTERNS: CHAINING & ROUTING
+\begin{frame}{The Simplest Primitives: Chains and Routers}
+  \framesubtitle{Presenter: Dang Lam Tung $\vert$ What Prompt Chaining and Routing Buy and Cost}
+
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Prompt Chaining (Step-by-Step)}}
+        \footnotesize
+        \textbf{How it works}: Break a big prompt into Step A $\to$ Step B $\to$ Step C.\\
+        \textbf{What you gain}:
+        \begin{itemize}\scriptsize
+          \item Clean modularity; you can inspect and test each step.
+          \item Less cognitive overload per prompt.
+        \end{itemize}
+        \textbf{What you pay}:
+        \begin{itemize}\scriptsize
+          \item Latencies add up sequentially.
+          \item If Step 1 hallucinates, Step 2 builds on falsehoods.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Semantic Routing (Sorting at the Door)}}
+        \footnotesize
+        \textbf{How it works}: Inspect the request first, send it to a custom specialist.\\
+        \textbf{What you gain}:
+        \begin{itemize}\scriptsize
+          \item Cost efficiency: Cheap, small models handle easy questions.
+          \item High prompt focus: Specialists get clean, uncluttered instructions.
+        \end{itemize}
+        \textbf{What you pay}:
+        \begin{itemize}\scriptsize
+          \item The router is a single point of failure.
+          \item A wrong turn at the door ruins the whole answer.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{alertblock}{\textbf{Tung's Production Insight}}
+    \footnotesize In real systems, a fast semantic router gives you higher accuracy per dollar than any complex multi-agent framework.
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 8: WHY TAKING A MAJORITY VOTE IS NOT SELF-CORRECTION
+\begin{frame}{Why Taking a Majority Vote Is Not the Same as Self-Correction}
+  \framesubtitle{Presenter: Dang Lam Tung $\vert$ Understanding Self-Consistency (Wang et al., 2022)}
+
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Self-Consistency: Voting Across Samples}}
+        \footnotesize
+        \textbf{How it works}:
+        \begin{enumerate}\scriptsize
+          \item Ask the model the same question $K$ times independently.
+          \item Let each run reason freely at a slightly warm temperature.
+          \item Pick whichever final answer appears most often.
+        \end{enumerate}
+        \textbf{Why it works}: It washes out random decoding mistakes.\\
+        \textbf{The key fact}: \textbf{No self-correction is happening here!} The samples never read each other or fix each other.
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Sequential Refinement: Editing Old Output}}
+        \footnotesize
+        \textbf{How it works}:
+        \begin{enumerate}\scriptsize
+          \item Model writes Answer 1.
+          \item Model reads Answer 1 and writes a critique.
+          \item Model rewrites Answer 1 into Answer 2.
+        \end{enumerate}
+        \textbf{The fatal flaw}:
+        \begin{itemize}\scriptsize
+          \item Errors chain together.
+          \item If the model didn't know the answer in Step 1, its critique in Step 2 is just as confused.
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Tung's Defense Argument}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Voting filters out random noise across independent attempts. Self-refinement assumes the model can accurately judge its own errors — an assumption that regularly fails.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 9: WHY BORING CODE WINS: REJECTED SWARMS IN LEGAL AI
+\begin{frame}{Why Boring Code Wins: Why G4 Rejected Swarms in Legal AI}
+  \framesubtitle{Presenter: Dang Lam Tung $\vert$ Group G4 Production Case Study in Vietnamese Law}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{What We Rejected: Conversational Swarms}}
+        \footnotesize
+        \textit{Multiple agents chatting freely (AutoGen style)}:
+        \begin{itemize}\scriptsize
+          \item Let a "Drafter" and "Auditor" debate legal decrees.
+          \item \textbf{Why we threw it out}:
+            \begin{itemize}\tiny
+              \item Zero tolerance for hallucination in statutory law.
+              \item The agents flattered each other and agreed on revoked laws.
+              \item Token costs exploded while accuracy dropped.
+            \end{itemize}
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{What We Built: Deterministic StateGraph}}
+        \footnotesize
+        \textit{Strict code graph with external verification}:
+        \begin{itemize}\scriptsize
+          \item Router sorts civil, traffic, or corporate questions.
+          \item Knowledge graph enforces legal hierarchy (Law $\succ$ Decree $\succ$ Circular).
+          \item \textbf{Hard reality check}: External government API confirms whether a decree is still in effect before the model can quote it.
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Tung's Engineering Verdict}},fonttitle=\footnotesize\bfseries]
+    \footnotesize When legal compliance or money is on the line, \textbf{code must keep the control}. Never leave document validity to model consensus.
+  \end{tcolorbox}
 \end{frame}
 
 % =====================================================================
-% SLIDE 22: Q&A VÀ BẢO VỆ ĐỀ TÀI
+% BLOCK 2: NGUYEN TRUNG PHONG (SLIDES 10 - 15) -- 9.5 MINUTES
+% =====================================================================
+
+% SLIDE 10: WHY NOT JUST STUFF EVERYTHING INTO ONE GIANT CONTEXT WINDOW?
+\begin{frame}{Why Not Just Stuff Everything into One Giant Context Window?}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Answering the Teacher's Mandatory Question}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Idea A: "One Huge Context" (1M+ Tokens)}}
+        \footnotesize
+        \textit{Dump every manual, document, and tool output into one prompt.}
+        \begin{itemize}\scriptsize
+          \item \textbf{"Lost in the Middle"}: Models forget or ignore facts tucked in the middle paragraphs.
+          \item \textbf{Prompt Pollution}: Intermediate tool errors and scrapings distract subsequent reasoning.
+          \item \textbf{Strictly Sequential}: You cannot run pieces in parallel; long waiting times.
+          \item \textbf{Impossible to Debug}: When it fails, you don't know which document confused it.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Idea B: Orchestrator-Workers}}
+        \footnotesize
+        \textit{Lead agent breaks the job down $\to$ dispatches isolated workers $\to$ combines answers.}
+        \begin{itemize}\scriptsize
+          \item \textbf{Context Isolation}: Each worker gets only what it needs $\to$ sharp, focused attention.
+          \item \textbf{Parallel Execution}: Multiple subtasks run at the exact same second.
+          \item \textbf{Custom Prompts}: A retrieval worker uses different instructions than a calculation worker.
+          \item \textbf{Unit Testable}: You can cache and test each worker independently.
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Core Point on the "Orchestration Tax"}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Orchestrators cost extra planning tokens and lose cross-worker context. But they buy you \textbf{clean attention and parallelism} that a single mega-context cannot match.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 11: THE LEAD/SUBAGENT PATTERN: BIG GAINS, BUT AT 8X THE BILL
+\begin{frame}{The Lead/Subagent Pattern: Big Gains, but at 8x the Bill}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Anthropic's Multi-Agent Research System (2025)}
+
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Evaluator-Optimizer: The Review Loop}}
+        \footnotesize
+        \begin{itemize}
+          \item Worker drafts $\to$ Evaluator checks $\to$ Worker rewrites.
+          \item Stops when it meets clear criteria or hits a retry limit.
+          \item \textbf{The Hidden Trap}: If the evaluator uses the same model weights as the worker, both share the exact same blind spots.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Lead/Subagents (Anthropic 2025)}}
+        \footnotesize
+        \textit{How Anthropic structured multi-agent research}:
+        \begin{itemize}
+          \item \textbf{Lead Agent}: Keeps the master plan, assigns subtasks, writes the final report.
+          \item \textbf{Subagents}: Deep dive into narrow searches and return short summaries.
+          \item \textbf{The Real Trade-Off}:
+            \begin{itemize}\scriptsize
+              \item \textbf{Capability}: Solves complex multi-hour tasks single agents fail at.
+              \item \textbf{The Price}: $3\times - 8\times$ total token usage; high latency bottleneck at the Lead's synthesis step.
+            \end{itemize}
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{block}{\textbf{Phong's Defense Talking Point}}
+    \footnotesize Why did Anthropic reject peer-to-peer chats? Because letting subagents chat without a supervisor creates conversational sycophancy where agents agree with each other's mistakes.
+  \end{block}
+\end{frame}
+
+% SLIDE 12: WHAT HAPPENS WHEN YOUR AGENT CRASHES 45 MINUTES IN?
+\begin{frame}{What Happens When Your Agent Crashes 45 Minutes In?}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ LangGraph, Durable Execution \& Checkpointing}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \textbf{\color{hcmutblue}The Problem: Long Tasks Always Break}
+      \begin{itemize}\footnotesize
+        \item When an agent runs a 45-minute task, APIs drop, network connections reset, and rate limits hit.
+        \item \textbf{Without Durable Execution}: The process crashes $\to$ state disappears $\to$ you start over from minute zero and re-pay for every token.
+      \end{itemize}
+      \vspace{0.1cm}
+      \textbf{\color{hcmutblue}How LangGraph Solves This}:
+      \begin{enumerate}\footnotesize
+        \item \textbf{Explicit State Graphs}: State is a clean dictionary modified only through defined reducer functions.
+        \item \textbf{Checkpointing}: After every step, a snapshot is saved directly to PostgreSQL or Redis.
+        \item \textbf{Human-in-the-Loop}: Pause execution, wait for a human click, and resume seamlessly.
+      \end{enumerate}
+    \end{column}
+
+    \begin{column}{0.47\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=darkgreen,title={\textbf{Time-Travel Debugging}},fonttitle=\footnotesize\bfseries]
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Rewind}: Roll state back to Step 4 after fixing a bad prompt.
+          \item \textbf{Human Edits}: A human fixes a corrupted variable, and the agent continues on the new branch.
+          \item \textbf{Instant Recovery}: When a server reboots, the agent picks up at the exact node it left off.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{alertblock}{\textbf{Phong's Takeaway}}
+    \footnotesize Checkpointing isn't an optional devops trick; it is what turns an unreliable demo into production software.
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 13: WHY ASKING AN LLM TO "DOUBLE-CHECK" MAKES IT WORSE
+\begin{frame}{Why Asking an LLM to "Double-Check" Usually Makes Things Worse}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Huang et al. (2023): The Myth of Intrinsic Self-Correction}
+
+  \begin{columns}[t]
+    \begin{column}{0.52\textwidth}
+      \textbf{\color{darkred}What Huang et al. (ICLR 2024) Proved}:
+      \begin{itemize}\footnotesize
+        \item Across reasoning tests (math, logic, commonsense), \textbf{LLMs cannot fix reasoning errors without external tools}.
+        \item When told: \textit{"Review your work and fix any mistakes"}:
+          \begin{itemize}\scriptsize
+            \item Fixing a Wrong Answer to Right: Barely happened ($< 5\%$).
+            \item Changing a Right Answer to Wrong: Happened often ($15\% - 25\%$).
+          \end{itemize}
+        \item \textbf{Conclusion}: Blind self-correction \textbf{hurts overall accuracy}.
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.45\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Why Does This Happen?}},fonttitle=\footnotesize\bfseries]
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Same Brain, Same Blind Spot}: If the model didn't know the logic in turn 1, it doesn't suddenly discover it in turn 2.
+          \item \textbf{Eager to Please}: When you ask "Are you sure?", the model assumes you spotted a mistake, panics, and second-guesses its correct answer.
+        \end{enumerate}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{alertblock}{\textbf{Phong's Provocation for the Committee}}
+    \footnotesize Why did older papers claim self-refinement worked? Because they tested prose writing (editing style) or accidentally leaked correct answers in the critique prompt!
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 14: THE ARCHITECTURE CHEAT SHEET
+\begin{frame}{The Architecture Cheat Sheet: What Each Pattern Buys and Costs}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Comparing Control, Costs, and Failure Modes}
+
+  \begin{table}[ht]
+    \centering
+    \tiny
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{l p{2.1cm} c c p{2.6cm} p{2.8cm}}
+      \toprule
+      \textbf{Design Pattern} & \textbf{Who Controls Flow} & \textbf{Token Cost} & \textbf{Latency} & \textbf{What It Buys You} & \textbf{What It Costs You} \\
+      \midrule
+      \textbf{Prompt Chaining} & Code (Fixed) & $1\times$ & Linear & Step modularity; clear unit tests & Added latency; cascade failure \\
+      \textbf{Routing} & Code + Classifier & $1-1.2\times$ & Lowest & Route by cost and prompt specialization & Misrouting ruins the whole run \\
+      \textbf{Parallelization} & Code (Fan-out) & $N\times$ & Fast & Fast throughput; diverse perspectives & Multiplies tokens; aggregator bottleneck \\
+      \textbf{Orchestrator-Workers} & Lead LLM & $3-5\times$ & Moderate & Context isolation; dynamic subgoals & Orchestration tax; lost cross-context \\
+      \textbf{Evaluator-Optimizer} & Feedback Loop & $2-6\times$ & High & Iterative improvement against criteria & Risk of infinite loops; shared blind spots \\
+      \textbf{Autonomous Agent} & Unconstrained LLM & $5-15\times$ & Very High & Open tool exploration; zero-shot plans & Non-deterministic; runaway errors \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+
+  \vspace{0.15cm}
+  \begin{block}{\footnotesize \textbf{Phong's Rule of Thumb}}
+    \footnotesize Start with \textbf{Chaining + Routing}. Move to \textbf{Orchestrator-Workers} only when the problem requires dynamic task planning. Avoid open-ended swarms in production.
+  \end{block}
+\end{frame}
+
+% SLIDE 15: HOW WE ACTUALLY BUILT IT
+\begin{frame}{How We Actually Built It: Deterministic Graphs with Real-World Checks}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Group G4's Production Architecture for Vietnamese Law}
+
+  \begin{center}
+    \begin{tikzpicture}[node distance=0.8cm and 0.9cm, >=Stealth, auto,
+      block/.style={rectangle, draw=hcmutblue, fill=hcmutgray, thick, rounded corners, minimum height=0.7cm, font=\scriptsize\bfseries, align=center},
+      tool/.style={rectangle, draw=darkred, fill=red!10, thick, rounded corners, minimum height=0.7cm, font=\scriptsize, align=center},
+      check/.style={diamond, draw=darkgreen, fill=green!10, thick, aspect=1.8, font=\tiny\bfseries, align=center}
+    ]
+      \node[block] (query) {User Question\\(Traffic / Business)};
+      \node[block, right=of query] (router) {Semantic Router\\(Domain Sorter)};
+      \node[block, above right=0.3cm and 0.8cm of router] (w1) {Worker 1\\(Extracts Violation)};
+      \node[block, below right=0.3cm and 0.8cm of router] (w2) {Worker 2\\(Retrieves Penalty)};
+      \node[tool, right=1.2cm of router] (db) {National Law API\\(vbpl.vn)};
+      \node[check, right=of db] (verifier) {Status\\Valid?};
+      \node[block, right=of verifier] (synth) {Dossier Builder\\\& Checkpointer};
+
+      \draw[->, thick] (query) -- (router);
+      \draw[->, thick] (router) |- (w1);
+      \draw[->, thick] (router) |- (w2);
+      \draw[->, thick] (w1) -| (db);
+      \draw[->, thick] (w2) -| (db);
+      \draw[->, thick] (db) -- (verifier);
+      \draw[->, thick] (verifier) -- node[above]{\tiny Active} (synth);
+      \draw[->, thick, dashed, darkred] (verifier) -- ++(0,-1.0cm) -| node[near start, below]{\tiny Revoked $\to$ Re-route} (router);
+    \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.1cm}
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{hcmutblue}Isolated Contexts in Action}:
+      \begin{itemize}\scriptsize
+        \item The penalty worker only looks at sanction brackets, ignoring procedural legal boilerplate.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{darkgreen}Real Checkpointing}:
+      \begin{itemize}\scriptsize
+        \item State is written to disk after the government API returns valid document status.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% BLOCK 3: VU VIET HUNG (SLIDES 16 - 21) -- 9.5 MINUTES
+% =====================================================================
+
+% SLIDE 16: WHERE DOES REAL FEEDBACK COME FROM?
+\begin{frame}{The Crucial Question: Where Does the Feedback Actually Come From?}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Internal Imagination vs. External Ground Truth}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{1. Self-Generated Feedback (Internal)}}
+        \footnotesize
+        \textbf{What it is}: The model re-reads its own output and grades itself.\\
+        \textbf{The problem}: It uses the exact same probability distribution that made the error.\\
+        \textbf{What happens}:
+        \begin{itemize}\scriptsize
+          \item Confirms its own misconceptions.
+          \item Generates believable excuses for wrong steps.
+          \item Like a student grading their own test without an answer key.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{2. Environment Feedback (External Oracles)}}
+        \footnotesize
+        \textbf{What it is}: Signal returned by an external system that cannot be fooled.\\
+        \textbf{Real-world examples}:
+        \begin{itemize}\scriptsize
+          \item Code execution (Python errors, compiler output).
+          \item Database responses (Record exists / Revoked).
+          \item Math solvers and formal verification engines.
+          \item A human expert in the loop.
+        \end{itemize}
+        \textbf{Why it matters}: It is the only true anchor to reality.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Hung's Thesis for Defense}},fonttitle=\footnotesize\bfseries]
+    \footnotesize An agent cannot pull itself out of a hallucination by thinking harder. Without an \textbf{external verification tool}, iterative loops are pure theater.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 17: CATCHING MISTAKES EARLY (PRM VS ORM)
+\begin{frame}{Catching Mistakes Early: Why Step-by-Step Verification Beats Final Scores}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Lightman et al. (2023 - OpenAI): Let's Verify Step by Step}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Outcome Models: Scoring the Final Answer (ORM)}}
+        \footnotesize
+        \begin{itemize}
+          \item Only checks if the final answer matches ($0$ or $1$).
+          \item \textbf{The Fatal Flaw}: Rewards broken reasoning that accidentally got lucky.
+          \item Cannot tell you which step went off the rails.
+          \item Cannot guide search trees because credit is only assigned at the end.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Process Models: Scoring Every Single Step (PRM)}}
+        \footnotesize
+        \begin{itemize}
+          \item Evaluates the validity of \textbf{each reasoning step} as it happens.
+          \item \textbf{Why it changes everything}:
+            \begin{itemize}\scriptsize
+              \item Catches the exact moment logic fails.
+              \item Enables tree search (MCTS) to prune bad branches immediately.
+              \item Prevents the model from "faking" alignment.
+            \end{itemize}
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{What This Means for Agents}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Process supervision is how frontier models (like OpenAI o1/o3) scale inference-time compute. They don't just generate text; they search a path checked at every step.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 18: TEACHING A MODEL BY KEEPING WHAT WORKS (STAR)
+\begin{frame}{Teaching a Model to Reason by Keeping Only What It Gets Right}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ STaR (Zelikman et al., 2022): Bootstrapping Reasoning}
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\textbf{The STaR Bootstrap Loop}}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Generate}: Model tries to solve a problem with step-by-step thinking.
+          \item \textbf{Filter (The Crucial Gate)}: Compare the final answer with the \textbf{Ground-Truth Answer Key}. \textit{Throw out everything that got it wrong.}
+          \item \textbf{Rationalize}: If it failed, give it the right answer and let it re-trace the logic backward.
+          \item \textbf{Finetune}: Train the model only on the reasoning paths that proved correct.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.47\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Notice Where the Signal Comes From}},fonttitle=\footnotesize\bfseries]
+        \footnotesize
+        \begin{itemize}
+          \item STaR does \textbf{not} magically teach itself.
+          \item The entire improvement relies on the \textbf{Answer Key in Step 2}.
+          \item If you remove ground truth and let the model pick what it "likes", its reasoning collapses into self-reinforcing errors.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{block}{\textbf{Hung's Insight}}
+    \footnotesize Self-training is impossible in a vacuum. You always need an external ground-truth filter to separate signal from noise.
+  \end{block}
+\end{frame}
+
+% SLIDE 19: COMPARING THE FEEDBACK SIGNALS
+\begin{frame}{Comparing the Feedback Signals: What Really Fixes Mistakes?}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Synthesis: Where Each Technique Gets Its Signal}
+
+  \begin{table}[ht]
+    \centering
+    \tiny
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabularx}{\textwidth}{l p{2.8cm} p{2.2cm} p{2.5cm} p{3.4cm}}
+      \toprule
+      \textbf{Technique} & \textbf{Where Feedback Comes From} & \textbf{When It Happens} & \textbf{How It Works} & \textbf{Does It Truly Fix Errors?} \\
+      \midrule
+      \textbf{Self-Consistency} \newline (Wang et al., 2022) & \textbf{Internal Statistics} \newline (Majority Voting) & At Inference Time & Averages out random token sampling noise & Cleans up random slips; cannot fix knowledge gaps. \\
+      \textbf{Self-Refinement} \newline (Huang et al., 2023) & \textbf{Internal Subjective} \newline (Model grades itself) & In an Iterative Loop & Prompts model to critique its own sentences & \textbf{Mostly an illusion}: Often hurts accuracy by second-guessing correct answers. \\
+      \textbf{Step Verifiers (PRM)} \newline (Lightman et al., 2023) & \textbf{External Verifier} \newline (Scorer at each step) & In Tree Search & Grades each step independently & \textbf{Genuine}: Cuts off bad reasoning branches before they finish. \\
+      \textbf{STaR Bootstrap} \newline (Zelikman et al., 2022) & \textbf{External Answer Key} \newline (Ground-truth labels) & In Offline Training & Discards wrong reasoning; finetunes on verified paths & \textbf{Genuine}: Model weights permanently improve by learning verified logic. \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+
+  \vspace{0.15cm}
+  \begin{alertblock}{\footnotesize \textbf{The Bottom Line of Part III}}
+    \footnotesize Autonomy without an external check is just hallucination with confidence.
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 20: SEEING IT IN ACTION: LIVE TRACE DEMO
+\begin{frame}{Seeing It in Action: How a Live Trace Catches a Revoked Law}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Live Execution Trace from demo\_orchestration\_trace.py}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Story A: Free-Form Swarm (Fails)}}
+        \scriptsize
+        \texttt{Task: Licensing an e-wallet for foreign investors.}\\
+        \textbf{What went wrong}:
+        \begin{itemize}
+          \item Model read an old legal corpus.
+          \item Found Decree 101/2012 (old 50B capital rule).
+          \item Missed Decree 52/2024 which fully revoked Decree 101.
+          \item Two agents debated: The Auditor brought up Decree 52, but the Drafter insisted on 101 $\to$ They flattered each other and agreed on the revoked law!
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Story B: Controlled Graph with MCP Tool (Wins)}}
+        \scriptsize
+        \texttt{Our StateGraph with external checker}:
+        \begin{enumerate}
+          \item \textbf{Planner}: Splits capital requirements and equity limits.
+          \item \textbf{Worker}: Proposes Decree 101/2012.
+          \item \textbf{External Tool}: Calls legal database API \texttt{vbpl\_verify\_status}.
+          \item \textbf{Alert Triggered}: Tool returns \texttt{REVOKED\_BY\_52/2024}.
+          \item \textbf{Graph Re-routes}: State rolls back, switches to Decree 52/2024 $\to$ \textbf{100\% Compliant}.
+        \end{enumerate}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{block}{\textbf{Terminal Demonstration}}
+    \footnotesize Running \texttt{python3 demo\_orchestration\_trace.py} live demonstrates how external tools catch fatal errors in milliseconds.
+  \end{block}
+\end{frame}
+
+% SLIDE 21: WHAT THE NUMBERS SHOW, AND TOUGH PROBLEMS AHEAD
+\begin{frame}{What the Numbers Show, and the Tough Problems Still Ahead}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Quantitative Benchmark Across 50 Test Queries \& Unsolved Frontiers}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{table}[ht]
+        \centering
+        \tiny
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabularx}{\textwidth}{l c c c}
+          \toprule
+          \textbf{Metric} & \textbf{One Big Prompt} & \textbf{Self-Refine} & \textbf{StateGraph+Tool} \\
+          \midrule
+          \textbf{Tokens Burned} & $12,450$ & $18,200$ & $11,350$ \\
+          \textbf{Latency} & 3.2s & 7.8s & 4.5s \\
+          \textbf{Found Revoked Law} & 34\% & 38\% & \textbf{98\%} \\
+          \textbf{Self-Correction Rate} & N/A & 4\% (got worse) & \textbf{94\% (with Tool)} \\
+          \textbf{Crash Recovery} & 0\% & 0\% & \textbf{100\% (Durable)} \\
+          \bottomrule
+        \end{tabularx}
+      \end{table}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Three Unsolved Frontiers}}
+        \footnotesize
+        \begin{itemize}\scriptsize
+          \item \textbf{Auto-Switching Patterns}: Can a model detect query difficulty and choose whether to call a simple chain or launch an orchestrator?
+          \item \textbf{Step Verifiers for Law and Medicine}: PRMs work in math where equations have proofs. How do we score steps in nuanced legal analysis?
+          \item \textbf{Open Standards (MCP)}: Decoupling tools so agents don't need custom prompt hacks for every API.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{alertblock}{\textbf{Hung's Conclusion}}
+    \footnotesize Spending compute on an external checker lifted accuracy from \textbf{34\% to 98\%}. That is what makes orchestration worth the price.
+  \end{alertblock}
+\end{frame}
+
+% =====================================================================
+% SLIDE 22: CONCLUSION & DEFENSE Q&A (ALL MEMBERS)
 % =====================================================================
 \begin{frame}[plain]
-  \vspace{1.2cm}
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
+    \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
+      {GROUP G4 -- ADVANCED AGENTIC AI (CO5151) -- SEMINAR S1-7};
+  \end{tikzpicture}
+
+  \vspace{0.8cm}
   \begin{center}
-    {\huge\bfseries\color{hcmutblue} CẢM ƠN THẦY VÀ CÁC BẠN\\ĐÃ LẮNG NGHE!}\\[0.4cm]
-    {\large\color{darkgray} NHÓM G4 SẴN SÀNG TIẾP NHẬN CÂU HỎI PHẢN BIỆN}\\[0.8cm]
-    \hcmutlogo[1.8cm]\\[0.6cm]
-    {\footnotesize \textbf{Email liên hệ:} \texttt{tung.dang@hcmut.edu.vn} $\cdot$ CO5151 -- HK261}
+    {\LARGE \textbf{\color{hcmutblue}Thank You! Let's Discuss.}}\\[0.25cm]
+    {\large \textbf{ORAL DEFENSE \& FACULTY DISCUSSION}}\\[0.35cm]
+
+    \begin{tcolorbox}[width=0.92\textwidth,colback=boxbg,colframe=hcmutblue!60,title={\textbf{Three Big Questions We Are Ready to Defend}},fonttitle=\footnotesize\bfseries]
+      \footnotesize
+      \begin{enumerate}
+        \item \textbf{Phong}: When does the extra token cost of an orchestrator become too expensive compared to just feeding a single long prompt?
+        \item \textbf{Hung}: Why do real software benchmarks (like SWE-bench) prove that agents cannot succeed without automated test suites?
+        \item \textbf{Tung}: Why did our legal project choose boring deterministic routing instead of letting agents chat freely?
+      \end{enumerate}
+    \end{tcolorbox}
+
+    \vspace{0.25cm}
+    {\small \textbf{Group G4}: Dang Lam Tung (Lead) $\cdot$ Nguyen Trung Phong $\cdot$ Vu Viet Hung}
   \end{center}
 \end{frame}
 
