@@ -8,7 +8,6 @@ Verifies:
 - Markdown and LaTeX report generation
 """
 
-import json
 import unittest
 from pathlib import Path
 
@@ -39,7 +38,9 @@ class TestEvaluationMetrics(unittest.TestCase):
     def test_normalize_article_id(self) -> None:
         """Tests article ID canonicalization."""
         self.assertEqual(normalize_article_id("12/2022/TT-NHNN_15"), "12/2022/tt-nhnn_15")
-        self.assertEqual(normalize_article_id("Điều 15 Thông tư 12/2022/TT-NHNN"), "12/2022/tt-nhnn_15")
+        self.assertEqual(
+            normalize_article_id("Điều 15 Thông tư 12/2022/TT-NHNN"), "12/2022/tt-nhnn_15"
+        )
         self.assertEqual(normalize_article_id("52/2024/ND-CP:Điều 22"), "52/2024/nd-cp_22")
         self.assertEqual(normalize_article_id(""), "")
 

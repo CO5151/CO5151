@@ -6,11 +6,13 @@ adhering to administrative formatting and safety guardrail disclaimers. Complian
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from src.agents.base import ADKAgent
 from src.core.logger import logger
-from src.memory.state_models import AuditReport, EnterpriseProfile
+
+if TYPE_CHECKING:
+    from src.memory.state_models import AuditReport, EnterpriseProfile
 
 
 class DrafterAgent(ADKAgent):
@@ -57,8 +59,16 @@ class DrafterAgent(ADKAgent):
         ]
 
         if profile:
-            capital_str = f"{profile.charter_capital:,.0f} VNĐ" if profile.charter_capital is not None else "Chưa xác định"
-            ratio_str = f"{profile.foreign_ownership_ratio * 100:.1f}%" if profile.foreign_ownership_ratio is not None else "0.0%"
+            capital_str = (
+                f"{profile.charter_capital:,.0f} VNĐ"
+                if profile.charter_capital is not None
+                else "Chưa xác định"
+            )
+            ratio_str = (
+                f"{profile.foreign_ownership_ratio * 100:.1f}%"
+                if profile.foreign_ownership_ratio is not None
+                else "0.0%"
+            )
             lines.extend(
                 [
                     f"DOANH NGHIỆP: {profile.company_name} ({profile.entity_type})",

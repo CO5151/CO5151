@@ -6,7 +6,7 @@ resolving amendment chains and temporal validity bounds. Compliant with Google A
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, ClassVar
 
 from src.agents.base import ADKAgent
 from src.core.logger import logger
@@ -16,7 +16,7 @@ class LawGraphAgent(ADKAgent):
     """Agent responsible for statutory retrieval and legal graph traversal."""
 
     # Built-in knowledge catalog for core Vietnamese business & administrative regulations
-    STATUTE_CATALOG: dict[str, dict[str, Any]] = {
+    STATUTE_CATALOG: ClassVar[dict[str, dict[str, Any]]] = {
         "52/2024/ND-CP": {
             "doc_id": "52/2024/ND-CP",
             "title": "Nghị định 52/2024/NĐ-CP về thanh toán không dùng tiền mặt",

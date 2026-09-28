@@ -5,15 +5,17 @@ Launch with:
     adk web adk_agents
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from google.adk import Agent
-from src.tools.statutory_retriever import retrieve_statutory_provisions
-from src.tools.validity_checker import check_statute_validity
+
 from src.agents.orchestrator import LegalOrchestrator
 from src.memory.state_models import EnterpriseProfile
+from src.tools.statutory_retriever import retrieve_statutory_provisions
+from src.tools.validity_checker import check_statute_validity
 
 
-def lookup_legal_statutes(keywords: List[str]) -> List[Dict[str, Any]]:
+def lookup_legal_statutes(keywords: list[str]) -> list[dict[str, Any]]:
     """Tra cứu các điều khoản quy phạm pháp luật Việt Nam (Luật, Nghị định, Thông tư) theo từ khoá.
 
     Args:
@@ -25,7 +27,7 @@ def lookup_legal_statutes(keywords: List[str]) -> List[Dict[str, Any]]:
     return retrieve_statutory_provisions(keywords)
 
 
-def verify_statute_validity(doc_id: str) -> Dict[str, Any]:
+def verify_statute_validity(doc_id: str) -> dict[str, Any]:
     """Kiểm tra trạng thái hiệu lực pháp lý của văn bản quy phạm pháp luật (còn hiệu lực hay đã hết hiệu lực/bị bãi bỏ).
 
     Args:
@@ -37,7 +39,9 @@ def verify_statute_validity(doc_id: str) -> Dict[str, Any]:
     return check_statute_validity(doc_id)
 
 
-def execute_compliance_audit_pipeline(query: str, company_name: str = "Doanh nghiệp Mẫu", charter_capital: float = 30_000_000_000.0) -> str:
+def execute_compliance_audit_pipeline(
+    query: str, company_name: str = "Doanh nghiệp Mẫu", charter_capital: float = 30_000_000_000.0
+) -> str:
     """Thực thi toàn bộ quy trình điều phối đa tác tử kiểm định và lập hồ sơ tuân thủ pháp lý.
 
     Thực hiện:

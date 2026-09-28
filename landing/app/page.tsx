@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import {
   IconScale,
   IconShieldCheck,
@@ -14,7 +13,13 @@ import {
   IconSearch,
   IconLock,
   IconTerminal,
+  IconCode,
+  IconBook,
+  IconLayersLinked,
+  IconSparkles,
 } from "@tabler/icons-react";
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 export default function Home() {
   return (
@@ -41,14 +46,17 @@ export default function Home() {
             <a href="#traversal" className="transition hover:text-zinc-200">
               Selective Traversal
             </a>
+            <a href="#ingestion" className="transition hover:text-zinc-200">
+              Hybrid Ingestion
+            </a>
             <a href="#auditor" className="transition hover:text-zinc-200">
               Claim Auditor
             </a>
             <a href="#threat-model" className="transition hover:text-zinc-200">
-              Threat Model
+              Security
             </a>
-            <a href="#benchmarks" className="transition hover:text-zinc-200">
-              Benchmarks
+            <a href="#adrs" className="transition hover:text-zinc-200">
+              ADRs & Docs
             </a>
           </nav>
 
@@ -57,15 +65,17 @@ export default function Home() {
               href="https://github.com/DangLamTung/CO5151"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-9 items-center rounded-md border border-zinc-800 bg-zinc-900 px-3 text-xs font-medium text-zinc-300 transition hover:border-zinc-700 hover:text-white"
+              className="inline-flex h-9 items-center rounded-md border border-zinc-800 bg-zinc-900 px-3 text-xs font-medium text-zinc-300 transition hover:border-zinc-700 hover:text-white active:scale-[0.98]"
             >
               GitHub
             </a>
             <a
-              href="#demo"
-              className="inline-flex h-9 items-center rounded-md bg-emerald-500 px-3.5 text-xs font-medium text-black transition hover:bg-emerald-400"
+              href="https://github.com/DangLamTung/CO5151/tree/main/docs"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-9 items-center rounded-md bg-emerald-500 px-3.5 text-xs font-medium text-black transition hover:bg-emerald-400 active:scale-[0.98]"
             >
-              Launch Demo
+              Documentation
             </a>
           </div>
         </div>
@@ -82,29 +92,29 @@ export default function Home() {
                 CO5151 Research Deliverable
               </div>
 
-              <h1 className="font-serif text-4xl font-medium tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-semibold tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl leading-[1.1]">
                 Autonomous Legal Compliance for Vietnamese Statutory Law
               </h1>
 
-              <p className="mt-5 text-base leading-relaxed text-zinc-400 sm:text-lg">
-                Multi-agent RAG resolving cross-statutory amendments, verifying temporal validity on official gazettes, and auditing claims with zero hallucination.
+              <p className="mt-5 max-w-[65ch] text-base leading-relaxed text-zinc-400 sm:text-lg">
+                Multi-agent RAG resolving cross-statutory amendments, verifying temporal gazette validity, and auditing compliance with zero hallucination.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
                   href="#architecture"
-                  className="inline-flex h-11 items-center rounded-md bg-emerald-500 px-5 text-sm font-semibold text-black transition hover:bg-emerald-400"
+                  className="inline-flex h-11 items-center rounded-md bg-emerald-500 px-5 text-sm font-semibold text-black transition hover:bg-emerald-400 active:scale-[0.98]"
                 >
                   Explore Architecture
                 </a>
                 <a
-                  href="https://github.com/DangLamTung/CO5151/blob/main/D1-proposal/D1_Proposal_Theme9_Vietnamese_Legal_RAG.md"
+                  href="https://github.com/DangLamTung/CO5151/tree/main/docs"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/80 px-5 text-sm font-medium text-zinc-300 transition hover:border-zinc-700 hover:text-white"
+                  className="inline-flex h-11 items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/80 px-5 text-sm font-medium text-zinc-300 transition hover:border-zinc-700 hover:text-white active:scale-[0.98]"
                 >
-                  <IconFileText size={16} />
-                  Read D1 Proposal
+                  <IconBook size={16} />
+                  Read Documentation
                 </a>
               </div>
             </div>
@@ -122,7 +132,7 @@ export default function Home() {
                 </div>
                 <div className="relative aspect-video w-full bg-zinc-950">
                   <Image
-                    src="/images/hero-agent-trace.jpg"
+                    src={`${basePath}/images/hero-agent-trace.jpg`}
                     alt="Multi-agent legal compliance execution visualization"
                     fill
                     className="object-cover"
@@ -143,7 +153,7 @@ export default function Home() {
         {/* Section 2: Problem Context (Layout Family: Asymmetric Data Grid) */}
         <section id="problem" className="border-t border-zinc-800/80 py-20">
           <div className="max-w-3xl">
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-zinc-100 sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
               Statutory reasoning is not a keyword search problem
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
@@ -179,14 +189,14 @@ export default function Home() {
             </div>
 
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-blue-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-emerald-400">
                 <IconShieldCheck size={20} />
               </div>
               <h3 className="mt-4 text-base font-semibold text-zinc-100">Lack of Claim Auditing</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 Standard RAG pipelines pass LLM generation directly to the user without verifying individual propositions against source articles, leading to hallucinated regulatory thresholds.
               </p>
-              <div className="mt-4 rounded border border-zinc-800 bg-zinc-950 p-2 font-mono text-[11px] text-blue-400">
+              <div className="mt-4 rounded border border-zinc-800 bg-zinc-950 p-2 font-mono text-[11px] text-emerald-400">
                 Verification: Zero Gate Checks
               </div>
             </div>
@@ -196,11 +206,11 @@ export default function Home() {
         {/* Section 3: Multi-Agent Architecture (Layout Family: Vertical Process Stepper) */}
         <section id="architecture" className="border-t border-zinc-800/80 py-20">
           <div className="max-w-3xl">
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-zinc-100 sm:text-4xl">
-              Five specialized agents under supervisor orchestration
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
+              Five specialized agents under Google ADK supervisor orchestration
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
-              Built on Google ADK with shared execution state. Tasks are dynamically routed based on statutory ambiguity, factual completeness, and verification feedback.
+              Built on Google Agent Development Kit with shared execution state. Tasks are dynamically routed based on statutory ambiguity, factual completeness, and verification feedback.
             </p>
           </div>
 
@@ -212,11 +222,11 @@ export default function Home() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-zinc-100">1. Orchestrator Agent (Supervisor)</h3>
+                    <h3 className="text-sm font-semibold text-zinc-100">1. Lead Counsel Agent (Supervisor)</h3>
                     <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">Google ADK</span>
                   </div>
                   <p className="mt-1 text-xs text-zinc-400">
-                    Evaluates user compliance inquiries, decomposes complex queries, queries enterprise SQLite memory, and manages interactive disambiguation.
+                    Analyzes user compliance inquiries, decomposes multi-faceted questions into specialist tasks, and synthesizes verified statutory counsel.
                   </p>
                 </div>
               </div>
@@ -230,33 +240,33 @@ export default function Home() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-zinc-100">2. LawGraph Research Agent</h3>
+                    <h3 className="text-sm font-semibold text-zinc-100">2. Legal Research Agent</h3>
                     <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">Neo4j + Qdrant</span>
                   </div>
                   <p className="mt-1 text-xs text-zinc-400">
-                    Executes hybrid sparse-dense vector retrieval and selective edge traversal over AMENDS and GUIDES relationships.
+                    Queries the dual knowledge layer to retrieve contextualized legal chunks and traverses AMENDS, SUPERSEDES, and GUIDES relationships.
                   </p>
                 </div>
               </div>
-              <div className="shrink-0 font-mono text-xs text-zinc-500">Read-Only MCP</div>
+              <div className="shrink-0 font-mono text-xs text-zinc-500">Dual Knowledge Search</div>
             </div>
 
             <div className="flex flex-col gap-4 rounded-xl border border-zinc-800 bg-zinc-900/30 p-5 md:flex-row md:items-center md:justify-between">
               <div className="flex items-start gap-4">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-200">
-                  <IconSearch size={18} />
+                  <IconShieldCheck size={18} />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-zinc-100">3. Live Legal Law Update Agent</h3>
-                    <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">vbpl.vn Portal</span>
+                    <h3 className="text-sm font-semibold text-zinc-100">3. Compliance Auditor Agent</h3>
+                    <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">Criterion Evaluator</span>
                   </div>
                   <p className="mt-1 text-xs text-zinc-400">
-                    Queries the National Database of Legal Documents (VBPL) to confirm active in-force status and detect recent circulars.
+                    Evaluates enterprise facts against statutory conditions, calculates risk scores, and detects non-compliant operational scenarios.
                   </p>
                 </div>
               </div>
-              <div className="shrink-0 font-mono text-xs text-zinc-500">24h TTL Cache</div>
+              <div className="shrink-0 font-mono text-xs text-zinc-500">Risk Assessment</div>
             </div>
 
             <div className="flex flex-col gap-4 rounded-xl border border-zinc-800 bg-zinc-900/30 p-5 md:flex-row md:items-center md:justify-between">
@@ -266,33 +276,33 @@ export default function Home() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-zinc-100">4. Compliance Drafter Agent</h3>
-                    <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">Synthesis Engine</span>
+                    <h3 className="text-sm font-semibold text-zinc-100">4. Form Validator Agent</h3>
+                    <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">Form 11/PLI Dossier</span>
                   </div>
                   <p className="mt-1 text-xs text-zinc-400">
-                    Compiles verified statutory evidence and enterprise parameters into structured compliance matrices and administrative checklists.
+                    Inspects mandatory administrative dossiers, checklists, and statutory application templates required under Vietnamese labor decrees.
                   </p>
                 </div>
               </div>
-              <div className="shrink-0 font-mono text-xs text-zinc-500">Reversible-Write</div>
+              <div className="shrink-0 font-mono text-xs text-zinc-500">Dossier Validation</div>
             </div>
 
             <div className="flex flex-col gap-4 rounded-xl border border-zinc-800 bg-zinc-900/30 p-5 md:flex-row md:items-center md:justify-between">
               <div className="flex items-start gap-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-red-900/50 bg-red-950/40 text-red-400">
-                  <IconShieldCheck size={18} />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-emerald-900/50 bg-emerald-950/40 text-emerald-400">
+                  <IconSearch size={18} />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-zinc-100">5. Claim Auditor Agent (Critic)</h3>
-                    <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">SAFE / Ragas</span>
+                    <h3 className="text-sm font-semibold text-zinc-100">5. Drafting Assistant Agent</h3>
+                    <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-300">Synthesis Engine</span>
                   </div>
                   <p className="mt-1 text-xs text-zinc-400">
-                    Decomposes draft opinions into atomic propositions and checks each claim against source articles. Triggers backtracking loops on failure.
+                    Drafts formal legal opinions, enterprise compliance reports, and explanation documents with verified statutory citations.
                   </p>
                 </div>
               </div>
-              <div className="shrink-0 font-mono text-xs text-emerald-400">Closed-Loop Gate</div>
+              <div className="shrink-0 font-mono text-xs text-emerald-400">Verified Synthesis</div>
             </div>
           </div>
         </section>
@@ -306,7 +316,7 @@ export default function Home() {
                 Selective Edge Traversal
               </div>
 
-              <h2 className="font-serif text-3xl font-medium tracking-tight text-zinc-100 sm:text-4xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
                 Pruning context noise at the graph retrieval layer
               </h2>
 
@@ -343,7 +353,7 @@ export default function Home() {
                 </div>
                 <div className="relative aspect-video w-full bg-zinc-950">
                   <Image
-                    src="/images/selective-traversal-graph.jpg"
+                    src={`${basePath}/images/selective-traversal-graph.jpg`}
                     alt="Legal knowledge graph showing AMENDS and GUIDES edges"
                     fill
                     className="object-cover"
@@ -354,10 +364,77 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 5: Closed-Loop Claim Auditor (Layout Family: Split Feature with Audit Table) */}
+        {/* Section 5: Hybrid Ingestion Engine (Layout Family: Bento Grid 3-Way Architecture) */}
+        <section id="ingestion" className="border-t border-zinc-800/80 py-20">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
+              Hybrid parsing pipeline for real-world legal portals
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
+              Vietnamese legislation is published across varied channels: gazette text, HTML government portals, and non-standard scans. Our ingestion engine adapts dynamically.
+            </p>
+          </div>
+
+          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-emerald-400">
+                <IconCode size={20} />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-100">HTML DOM Parser</h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Uses BeautifulSoup to parse scraped legal portals (vbpl.vn, thuvienphapluat). Automatically extracts hyperlinked statutory cross-references from anchor tags.
+              </p>
+              <div className="mt-4 rounded border border-zinc-800 bg-zinc-950 p-2 font-mono text-[11px] text-emerald-400">
+                bs4 + Semantic Tag Walk
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-blue-400">
+                <IconLayersLinked size={20} />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-100">Regex Gazette Engine</h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Standardized regex extraction mapping official decrees into Document, Article (Điều), and Clause (Khoản) hierarchy with normalized identifiers.
+              </p>
+              <div className="mt-4 rounded border border-zinc-800 bg-zinc-950 p-2 font-mono text-[11px] text-blue-400">
+                Normalized ID: 152/2020/ND-CP
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-purple-400">
+                <IconSparkles size={20} />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-100">LLM Fallback Parser</h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Invokes Gemini 2.5 Flash when regex or HTML yield 0 articles (scanned/OCR text), outputting strict structured JSON with graceful offline fallback.
+              </p>
+              <div className="mt-4 rounded border border-zinc-800 bg-zinc-950 p-2 font-mono text-[11px] text-purple-400">
+                Gemini 2.5 Flash Fallback
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-950/70 p-4 font-mono text-xs text-zinc-300">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-2 text-zinc-500">
+              <span>CLI Batch Ingestion Entrypoint</span>
+              <span className="text-emerald-400">v0.1.0</span>
+            </div>
+            <div className="mt-3 space-y-1">
+              <div className="text-zinc-400"># Ingest sample decrees into Neo4j and Qdrant in one command</div>
+              <div className="text-emerald-400">$ ./run.sh ingest data/raw</div>
+              <div className="text-zinc-500">[+] Parsed 152/2020/ND-CP: 5 articles, 2 cross-references</div>
+              <div className="text-zinc-500">[+] Parsed 70/2023/ND-CP: 2 articles, 6 cross-references</div>
+              <div className="text-emerald-400">[+] Upserted 17 points into &apos;vietnamese_legal_clauses&apos;</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 6: Closed-Loop Claim Auditor (Layout Family: Split Feature with Audit Table) */}
         <section id="auditor" className="border-t border-zinc-800/80 py-20">
           <div className="max-w-3xl">
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-zinc-100 sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
               Self-reflective verification against active statutes
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
@@ -419,10 +496,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 6: Threat Model v0 (Layout Family: Bento Grid with Varied Densities) */}
+        {/* Section 7: Threat Model & Security (Layout Family: Bento Grid) */}
         <section id="threat-model" className="border-t border-zinc-800/80 py-20">
           <div className="max-w-3xl">
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-zinc-100 sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
               Guarded actions and ten-vector adversarial defense
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
@@ -440,7 +517,7 @@ export default function Home() {
                 Irreversible actions demand explicit officer authorization
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
-                Any tool invocation that exports compliance dossiers or submits filings generates a short-lived token (`CONFIRM-XXXX`) persisted in SQLite. The action halts execution until verified by an authorized officer.
+                Any tool invocation that exports compliance dossiers or submits filings generates a short-lived token (CONFIRM-XXXX) persisted in SQLite. The action halts execution until verified by an authorized officer.
               </p>
               <div className="mt-4 flex items-center gap-3 rounded-lg border border-zinc-800 bg-zinc-950 p-3 font-mono text-xs">
                 <span className="text-zinc-500">Token Status:</span>
@@ -477,7 +554,7 @@ export default function Home() {
                 Strict Traversal Caps and Directory Confinement
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
-                Search depth is strictly capped at 2 hops and 5 documents max to prevent denial of service. File export operations strip `../` and are confined exclusively to `./workspace/dossiers/`.
+                Search depth is strictly capped at 2 hops and 5 documents max to prevent denial of service. File export operations strip parent-directory sequences and are confined exclusively to workspace folders.
               </p>
               <div className="mt-4 flex flex-wrap gap-4 font-mono text-xs">
                 <span className="text-zinc-400">Max Depth: 2 Hops</span>
@@ -488,70 +565,130 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 7: Empirical Benchmarks (Layout Family: Structured Metric Table) */}
-        <section id="benchmarks" className="border-t border-zinc-800/80 py-20">
+        {/* Section 8: Architecture Decision Records (Layout Family: 4-Card Grid) */}
+        <section id="adrs" className="border-t border-zinc-800/80 py-20">
           <div className="max-w-3xl">
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-zinc-100 sm:text-4xl">
-              Measured across 120 legal tasks and three random seeds
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
+              Documented architectural decisions and engineering specifications
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
-              Benchmarked against the SBV Legal Corpus (1,703 documents, 9,661 articles) and evaluated for precision, claim grounding, and operational latency.
+              Explore the complete technical rationale, trade-off evaluations, and system schemas in the newly organized documentation library.
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
-              <div className="font-mono text-3xl font-bold tracking-tight text-emerald-400">0.84</div>
-              <div className="mt-2 text-sm font-medium text-zinc-200">Precision@2</div>
-              <div className="mt-1 text-xs text-zinc-500">vs 0.38 SBV baseline</div>
-            </div>
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <a
+              href="https://github.com/DangLamTung/CO5151/blob/main/docs/adr/0001-multi-agent-adk.md"
+              target="_blank"
+              rel="noreferrer"
+              className="group rounded-xl border border-zinc-800 bg-zinc-900/40 p-6 transition hover:border-zinc-700 hover:bg-zinc-900/70"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs text-emerald-400">ADR-0001</span>
+                <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">Accepted</span>
+              </div>
+              <h3 className="mt-3 text-base font-semibold text-zinc-100 group-hover:text-emerald-400">
+                Multi-Agent Orchestration via Google ADK
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Rationale for decomposing legal workflows into Lead Counsel, Research, Audit, Form, and Drafting specialists.
+              </p>
+            </a>
 
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
-              <div className="font-mono text-3xl font-bold tracking-tight text-emerald-400">98.4%</div>
-              <div className="mt-2 text-sm font-medium text-zinc-200">Grounding Rate</div>
-              <div className="mt-1 text-xs text-zinc-500">SAFE / Ragas audited</div>
-            </div>
+            <a
+              href="https://github.com/DangLamTung/CO5151/blob/main/docs/adr/0002-dual-storage-graph-vector.md"
+              target="_blank"
+              rel="noreferrer"
+              className="group rounded-xl border border-zinc-800 bg-zinc-900/40 p-6 transition hover:border-zinc-700 hover:bg-zinc-900/70"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs text-emerald-400">ADR-0002</span>
+                <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">Accepted</span>
+              </div>
+              <h3 className="mt-3 text-base font-semibold text-zinc-100 group-hover:text-emerald-400">
+                Dual Storage: Neo4j Graph + Qdrant Vector
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Why vector similarity alone fails in legal RAG and how graph hierarchy eliminates citation hallucination.
+              </p>
+            </a>
 
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
-              <div className="font-mono text-3xl font-bold tracking-tight text-zinc-100">7.4s</div>
-              <div className="mt-2 text-sm font-medium text-zinc-200">Avg Latency</div>
-              <div className="mt-1 text-xs text-zinc-500">End-to-end multi-agent</div>
-            </div>
+            <a
+              href="https://github.com/DangLamTung/CO5151/blob/main/docs/adr/0003-selective-temporal-traversal.md"
+              target="_blank"
+              rel="noreferrer"
+              className="group rounded-xl border border-zinc-800 bg-zinc-900/40 p-6 transition hover:border-zinc-700 hover:bg-zinc-900/70"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs text-emerald-400">ADR-0003</span>
+                <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">Accepted</span>
+              </div>
+              <h3 className="mt-3 text-base font-semibold text-zinc-100 group-hover:text-emerald-400">
+                Selective Temporal Traversal
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Dynamic resolution of amendment and repeal edges across changing decree versions (Decree 152 vs Decree 70).
+              </p>
+            </a>
 
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
-              <div className="font-mono text-3xl font-bold tracking-tight text-zinc-100">$0.002</div>
-              <div className="mt-2 text-sm font-medium text-zinc-200">Cost per Query</div>
-              <div className="mt-1 text-xs text-zinc-500">&lt;11% total course budget</div>
-            </div>
+            <a
+              href="https://github.com/DangLamTung/CO5151/blob/main/docs/adr/0004-sqlite-memory-and-token-gate.md"
+              target="_blank"
+              rel="noreferrer"
+              className="group rounded-xl border border-zinc-800 bg-zinc-900/40 p-6 transition hover:border-zinc-700 hover:bg-zinc-900/70"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs text-emerald-400">ADR-0004</span>
+                <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">Accepted</span>
+              </div>
+              <h3 className="mt-3 text-base font-semibold text-zinc-100 group-hover:text-emerald-400">
+                SQLite Memory & Tiered Token Gating
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Zero-maintenance embedded persistence for compliance audit trails and hard token budgeting ceilings.
+              </p>
+            </a>
           </div>
         </section>
 
-        {/* Section 8: Action Box (Layout Family: Full-Width Action Box) */}
+        {/* Section 9: Quickstart Action Box (Layout Family: Full-Width Action Box) */}
         <section id="demo" className="border-t border-zinc-800/80 py-20">
-          <div className="rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900/80 to-zinc-950 p-8 text-center sm:p-12">
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-zinc-100 sm:text-4xl">
-              Verifiable compliance automation for regulatory counsel
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-zinc-400">
-              Review the technical design proposal, test the local multi-agent setup, or examine the selective edge traversal implementation.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <div className="rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900/80 to-zinc-950 p-8 sm:p-12">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
+                Ready to run locally in under five minutes
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                Initialize the environment, ingest sample decrees, and launch the multi-agent Streamlit assistant with single-command workflows.
+              </p>
+            </div>
+
+            <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs text-zinc-300">
+              <div className="text-zinc-500">// 1. Foundation setup (Docker + SQLite + .env)</div>
+              <div className="text-emerald-400">$ ./run.sh setup</div>
+              <div className="mt-2 text-zinc-500">// 2. Ingest legal documents into Neo4j and Qdrant</div>
+              <div className="text-emerald-400">$ ./run.sh ingest data/raw</div>
+              <div className="mt-2 text-zinc-500">// 3. Start the Web UI</div>
+              <div className="text-emerald-400">$ ./run.sh ui</div>
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
                 href="https://github.com/DangLamTung/CO5151"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 items-center gap-2 rounded-md bg-emerald-500 px-6 text-sm font-semibold text-black transition hover:bg-emerald-400"
+                className="inline-flex h-11 items-center gap-2 rounded-md bg-emerald-500 px-6 text-sm font-semibold text-black transition hover:bg-emerald-400 active:scale-[0.98]"
               >
-                Launch Web Demo
+                Launch on GitHub
                 <IconArrowRight size={16} />
               </a>
               <a
-                href="https://github.com/DangLamTung/CO5151/blob/main/D1-proposal/D1_Proposal_Theme9_Vietnamese_Legal_RAG.md"
+                href="https://github.com/DangLamTung/CO5151/tree/main/docs"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 items-center rounded-md border border-zinc-800 bg-zinc-900 px-6 text-sm font-medium text-zinc-300 transition hover:border-zinc-700 hover:text-white"
+                className="inline-flex h-11 items-center rounded-md border border-zinc-800 bg-zinc-900 px-6 text-sm font-medium text-zinc-300 transition hover:border-zinc-700 hover:text-white active:scale-[0.98]"
               >
-                Read D1 Proposal
+                Read Documentation
               </a>
             </div>
           </div>
