@@ -101,7 +101,7 @@
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Part I: The Basics \& Primitives}}
-        \textbf{Dang Lam Tung}\\
+        \textbf{Nguyen Trung Phong}\\
         {\scriptsize (9.5 mins $\vert$ Slides 5--9)}\\[0.2cm]
         \begin{itemize}\scriptsize
           \item Who holds the wheel: Code vs. Model?
@@ -115,7 +115,7 @@
 
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Part II: Systems \& Fallacies}}
-        \textbf{Nguyen Trung Phong}\\
+        \textbf{Vu Viet Hung}\\
         {\scriptsize (9.5 mins $\vert$ Slides 10--15)}\\[0.2cm]
         \begin{itemize}\scriptsize
           \item Why one huge prompt context fails
@@ -129,15 +129,15 @@
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part III: Truth \& Live Traces}}
-        \textbf{Vu Viet Hung}\\
+      \begin{block}{\textbf{Part III: Truth \& Live Project}}
+        \textbf{Dang Lam Tung (Lead)}\\
         {\scriptsize (9.5 mins $\vert$ Slides 16--21)}\\[0.2cm]
         \begin{itemize}\scriptsize
           \item Where does real feedback come from?
           \item Checking each step vs. final score (PRM)
           \item Learning from what works (STaR)
           \item What really fixes mistakes?
-          \item Live trace: Catching a revoked law
+          \item Live LegalPilot-VN agent run \& demo
           \item What the numbers prove \& open limits
         \end{itemize}
       \end{block}
@@ -179,7 +179,7 @@
         \begin{enumerate}
           \item \textbf{Slide Deck (PDF)}: Exactly 18--22 slides (\texttt{slides\_s1\_7.pdf}).
           \item \textbf{Annotated Bibliography}: Strictly 1 page A4, 1 critical sentence per paper (\texttt{annotated\_bibliography\_en.pdf}).
-          \item \textbf{Live Demo / Trace Link}: Reproducible benchmark script (\texttt{demo\_orchestration\_trace.py}).
+          \item \textbf{Live Demo / Codebase}: Complete project codebase with runnable CLI \& UI verification trace.
           \item \textbf{AI-Use Statement}: Transparent disclosure (\texttt{ai\_use\_statement\_en.pdf}).
         \end{enumerate}
       \end{alertblock}
@@ -239,12 +239,12 @@
 \end{frame}
 
 % =====================================================================
-% BLOCK 1: DANG LAM TUNG (SLIDES 5 - 9) -- 9.5 MINUTES
+% BLOCK 1: NGUYEN TRUNG PHONG (SLIDES 5 - 9) -- 9.5 MINUTES
 % =====================================================================
 
 % SLIDE 5: WORKFLOWS VS AUTONOMOUS AGENTS
 \begin{frame}{Workflows vs. Autonomous Agents: Who Holds the Wheel?}
-  \framesubtitle{Presenter: Dang Lam Tung $\vert$ Fixed Code Paths vs. Model-Directed Control Flow}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Fixed Code Paths vs. Model-Directed Control Flow}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
@@ -270,7 +270,7 @@
   \end{columns}
 
   \vspace{0.25cm}
-  \begin{block}{\textbf{Tung's Discussion Question}}
+  \begin{block}{\textbf{Phong's Discussion Question}}
     \footnotesize
     \begin{itemize}
       \item \textbf{The reality check}: If you wrap an LLM in a `while True` loop and let it pick tools, is it an intelligent agent, or just an unpredictable state machine?
@@ -281,7 +281,7 @@
 
 % SLIDE 6: WHY ANTHROPIC RECOMMENDS AGAINST AGENTS
 \begin{frame}{Why Anthropic Tells You: "Don't Build an Agent If You Don't Have To"}
-  \framesubtitle{Presenter: Dang Lam Tung $\vert$ The Compounding Error Trap \& When to Upgrade}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ The Compounding Error Trap \& When to Upgrade}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -311,14 +311,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{block}{\textbf{Tung's Takeaway}}
+  \begin{block}{\textbf{Phong's Takeaway}}
     \footnotesize Starting with complex agents isn't sophisticated engineering; it's self-inflicted technical debt.
   \end{block}
 \end{frame}
 
 % SLIDE 7: CORE PATTERNS: CHAINING & ROUTING
 \begin{frame}{The Simplest Primitives: Chains and Routers}
-  \framesubtitle{Presenter: Dang Lam Tung $\vert$ What Prompt Chaining and Routing Buy and Cost}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ What Prompt Chaining and Routing Buy and Cost}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
@@ -357,14 +357,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{alertblock}{\textbf{Tung's Production Insight}}
+  \begin{alertblock}{\textbf{Phong's Production Insight}}
     \footnotesize In real systems, a fast semantic router gives you higher accuracy per dollar than any complex multi-agent framework.
   \end{alertblock}
 \end{frame}
 
 % SLIDE 8: WHY TAKING A MAJORITY VOTE IS NOT SELF-CORRECTION
 \begin{frame}{Why Taking a Majority Vote Is Not the Same as Self-Correction}
-  \framesubtitle{Presenter: Dang Lam Tung $\vert$ Understanding Self-Consistency (Wang et al., 2022)}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Understanding Self-Consistency (Wang et al., 2022)}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
@@ -400,14 +400,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Tung's Defense Argument}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Defense Argument}},fonttitle=\footnotesize\bfseries]
     \footnotesize Voting filters out random noise across independent attempts. Self-refinement assumes the model can accurately judge its own errors — an assumption that regularly fails.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 9: WHY BORING CODE WINS: REJECTED SWARMS IN LEGAL AI
 \begin{frame}{Why Boring Code Wins: Why G4 Rejected Swarms in Legal AI}
-  \framesubtitle{Presenter: Dang Lam Tung $\vert$ Group G4 Production Case Study in Vietnamese Law}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Group G4 Production Case Study in Vietnamese Law}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
@@ -440,18 +440,18 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Tung's Engineering Verdict}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Engineering Verdict}},fonttitle=\footnotesize\bfseries]
     \footnotesize When legal compliance or money is on the line, \textbf{code must keep the control}. Never leave document validity to model consensus.
   \end{tcolorbox}
 \end{frame}
 
 % =====================================================================
-% BLOCK 2: NGUYEN TRUNG PHONG (SLIDES 10 - 15) -- 9.5 MINUTES
+% BLOCK 2: VU VIET HUNG (SLIDES 10 - 15) -- 9.5 MINUTES
 % =====================================================================
 
 % SLIDE 10: WHY NOT JUST STUFF EVERYTHING INTO ONE GIANT CONTEXT WINDOW?
 \begin{frame}{Why Not Just Stuff Everything into One Giant Context Window?}
-  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Answering the Teacher's Mandatory Question}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Answering the Teacher's Mandatory Question}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
@@ -482,14 +482,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Core Point on the "Orchestration Tax"}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Hung's Core Point on the "Orchestration Tax"}},fonttitle=\footnotesize\bfseries]
     \footnotesize Orchestrators cost extra planning tokens and lose cross-worker context. But they buy you \textbf{clean attention and parallelism} that a single mega-context cannot match.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 11: THE LEAD/SUBAGENT PATTERN: BIG GAINS, BUT AT 8X THE BILL
 \begin{frame}{The Lead/Subagent Pattern: Big Gains, but at 8x the Bill}
-  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Anthropic's Multi-Agent Research System (2025)}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Anthropic's Multi-Agent Research System (2025)}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
@@ -521,14 +521,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{block}{\textbf{Phong's Defense Talking Point}}
+  \begin{block}{\textbf{Hung's Defense Talking Point}}
     \footnotesize Why did Anthropic reject peer-to-peer chats? Because letting subagents chat without a supervisor creates conversational sycophancy where agents agree with each other's mistakes.
   \end{block}
 \end{frame}
 
 % SLIDE 12: WHAT HAPPENS WHEN YOUR AGENT CRASHES 45 MINUTES IN?
 \begin{frame}{What Happens When Your Agent Crashes 45 Minutes In?}
-  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ LangGraph, Durable Execution \& Checkpointing}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ LangGraph, Durable Execution \& Checkpointing}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -559,14 +559,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{alertblock}{\textbf{Phong's Takeaway}}
+  \begin{alertblock}{\textbf{Hung's Takeaway}}
     \footnotesize Checkpointing isn't an optional devops trick; it is what turns an unreliable demo into production software.
   \end{alertblock}
 \end{frame}
 
 % SLIDE 13: WHY ASKING AN LLM TO "DOUBLE-CHECK" MAKES IT WORSE
 \begin{frame}{Why Asking an LLM to "Double-Check" Usually Makes Things Worse}
-  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Huang et al. (2023): The Myth of Intrinsic Self-Correction}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Huang et al. (2023): The Myth of Intrinsic Self-Correction}
 
   \begin{columns}[t]
     \begin{column}{0.52\textwidth}
@@ -594,14 +594,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{alertblock}{\textbf{Phong's Provocation for the Committee}}
+  \begin{alertblock}{\textbf{Hung's Provocation for the Committee}}
     \footnotesize Why did older papers claim self-refinement worked? Because they tested prose writing (editing style) or accidentally leaked correct answers in the critique prompt!
   \end{alertblock}
 \end{frame}
 
 % SLIDE 14: THE ARCHITECTURE CHEAT SHEET
 \begin{frame}{The Architecture Cheat Sheet: What Each Pattern Buys and Costs}
-  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Comparing Control, Costs, and Failure Modes}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Comparing Control, Costs, and Failure Modes}
 
   \begin{table}[ht]
     \centering
@@ -622,14 +622,14 @@
   \end{table}
 
   \vspace{0.15cm}
-  \begin{block}{\footnotesize \textbf{Phong's Rule of Thumb}}
+  \begin{block}{\footnotesize \textbf{Hung's Rule of Thumb}}
     \footnotesize Start with \textbf{Chaining + Routing}. Move to \textbf{Orchestrator-Workers} only when the problem requires dynamic task planning. Avoid open-ended swarms in production.
   \end{block}
 \end{frame}
 
 % SLIDE 15: HOW WE ACTUALLY BUILT IT
 \begin{frame}{How We Actually Built It: Deterministic Graphs with Real-World Checks}
-  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Group G4's Production Architecture for Vietnamese Law}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Group G4's Production Architecture for Vietnamese Law}
 
   \begin{center}
     \begin{tikzpicture}[node distance=0.8cm and 0.9cm, >=Stealth, auto,
@@ -674,12 +674,12 @@
 \end{frame}
 
 % =====================================================================
-% BLOCK 3: VU VIET HUNG (SLIDES 16 - 21) -- 9.5 MINUTES
+% BLOCK 3: DANG LAM TUNG (LEAD) (SLIDES 16 - 21) -- 9.5 MINUTES
 % =====================================================================
 
 % SLIDE 16: WHERE DOES REAL FEEDBACK COME FROM?
 \begin{frame}{The Crucial Question: Where Does the Feedback Actually Come From?}
-  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Internal Imagination vs. External Ground Truth}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Internal Imagination vs. External Ground Truth}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
@@ -713,14 +713,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Hung's Thesis for Defense}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Tung's Thesis for Defense}},fonttitle=\footnotesize\bfseries]
     \footnotesize An agent cannot pull itself out of a hallucination by thinking harder. Without an \textbf{external verification tool}, iterative loops are pure theater.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 17: CATCHING MISTAKES EARLY (PRM VS ORM)
 \begin{frame}{Catching Mistakes Early: Why Step-by-Step Verification Beats Final Scores}
-  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Lightman et al. (2023 - OpenAI): Let's Verify Step by Step}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Lightman et al. (2023 - OpenAI): Let's Verify Step by Step}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
@@ -759,7 +759,7 @@
 
 % SLIDE 18: TEACHING A MODEL BY KEEPING WHAT WORKS (STAR)
 \begin{frame}{Teaching a Model to Reason by Keeping Only What It Gets Right}
-  \framesubtitle{Presenter: Vu Viet Hung $\vert$ STaR (Zelikman et al., 2022): Bootstrapping Reasoning}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ STaR (Zelikman et al., 2022): Bootstrapping Reasoning}
 
   \begin{columns}[c]
     \begin{column}{0.5\textwidth}
@@ -787,14 +787,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{block}{\textbf{Hung's Insight}}
+  \begin{block}{\textbf{Tung's Insight}}
     \footnotesize Self-training is impossible in a vacuum. You always need an external ground-truth filter to separate signal from noise.
   \end{block}
 \end{frame}
 
 % SLIDE 19: COMPARING THE FEEDBACK SIGNALS
 \begin{frame}{Comparing the Feedback Signals: What Really Fixes Mistakes?}
-  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Synthesis: Where Each Technique Gets Its Signal}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Synthesis: Where Each Technique Gets Its Signal}
 
   \begin{table}[ht]
     \centering
@@ -820,7 +820,7 @@
 
 % SLIDE 20: SEEING IT IN ACTION: LIVE TRACE DEMO
 \begin{frame}{Seeing It in Action: How a Live Trace Catches a Revoked Law}
-  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Live Execution Trace from demo\_orchestration\_trace.py}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Live Project Verification Trace (src.agents.orchestrator)}
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
@@ -853,14 +853,14 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{block}{\textbf{Terminal Demonstration}}
-    \footnotesize Running \texttt{python3 demo\_orchestration\_trace.py} live demonstrates how external tools catch fatal errors in milliseconds.
+  \begin{block}{\textbf{Live Project Demonstration}}
+    \footnotesize Running \texttt{python3 -m src.agents.orchestrator} or \texttt{streamlit run src/ui/app.py} executes our full multi-agent pipeline live, demonstrating external MCP status checks intercepting revoked decrees in milliseconds.
   \end{block}
 \end{frame}
 
 % SLIDE 21: WHAT THE NUMBERS SHOW, AND TOUGH PROBLEMS AHEAD
 \begin{frame}{What the Numbers Show, and the Tough Problems Still Ahead}
-  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Quantitative Benchmark Across 50 Test Queries \& Unsolved Frontiers}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Quantitative Benchmark Across 50 Test Queries \& Unsolved Frontiers}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -895,7 +895,7 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{alertblock}{\textbf{Hung's Conclusion}}
+  \begin{alertblock}{\textbf{Tung's Conclusion}}
     \footnotesize Spending compute on an external checker lifted accuracy from \textbf{34\% to 98\%}. That is what makes orchestration worth the price.
   \end{alertblock}
 \end{frame}
@@ -918,9 +918,9 @@
     \begin{tcolorbox}[width=0.92\textwidth,colback=boxbg,colframe=hcmutblue!60,title={\textbf{Three Big Questions We Are Ready to Defend}},fonttitle=\footnotesize\bfseries]
       \footnotesize
       \begin{enumerate}
-        \item \textbf{Phong}: When does the extra token cost of an orchestrator become too expensive compared to just feeding a single long prompt?
-        \item \textbf{Hung}: Why do real software benchmarks (like SWE-bench) prove that agents cannot succeed without automated test suites?
-        \item \textbf{Tung}: Why did our legal project choose boring deterministic routing instead of letting agents chat freely?
+        \item \textbf{Phong}: When does compounding error ($P = p^n$) cause autonomous swarms to fail, and when do deterministic workflows beat agents?
+        \item \textbf{Hung}: When does the orchestration token tax become too expensive compared to long context, and why does intrinsic self-correction fail?
+        \item \textbf{Tung}: How does our live project integrate external MCP tools into LangGraph state checkpointing to guarantee zero legal hallucination?
       \end{enumerate}
     \end{tcolorbox}
 
