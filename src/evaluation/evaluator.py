@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, cast
 
 from src.core.logger import logger
 from src.evaluation.baselines import (
@@ -78,7 +78,7 @@ class SBVLawGraphEvaluator:
             with open(self.dataset_path, encoding="utf-8") as f:
                 data = json.load(f)
             logger.info(f"Loaded {len(data)} SBV benchmark test queries from {self.dataset_path}")
-            return data
+            return cast("list[dict[str, Any]]", data) if isinstance(data, list) else []
         except Exception as e:
             logger.error(f"Failed to load dataset: {e}")
             return []

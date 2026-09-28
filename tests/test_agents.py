@@ -10,6 +10,7 @@ Tests the multi-agent pipeline:
 import contextlib
 import unittest
 from pathlib import Path
+from typing import Any
 
 from src.agents.claim_auditor import ClaimAuditorAgent
 from src.agents.drafter import DrafterAgent
@@ -49,7 +50,7 @@ class TestLegalAgents(unittest.TestCase):
 
     def test_claim_auditor_detects_revoked_document(self) -> None:
         """Tests that ClaimAuditorAgent flags expired statutes and computes grounding rate."""
-        sample_clauses = [
+        sample_clauses: list[dict[str, Any]] = [
             {
                 "doc_id": "101/2012/ND-CP",
                 "status": "expired",
@@ -109,6 +110,9 @@ class TestLegalAgents(unittest.TestCase):
 
         self.assertTrue(state.is_completed)
         self.assertIsNotNone(state.final_compliance_dossier)
+        self.assertIsNotNone(state.audit_report)
+        assert state.audit_report is not None
+        assert state.final_compliance_dossier is not None
         self.assertEqual(state.audit_report.grounding_rate, 1.0)
         self.assertTrue(state.audit_report.is_fully_verified)
         self.assertIn("Nghị định 52/2024/NĐ-CP", state.final_compliance_dossier)

@@ -243,6 +243,8 @@ if __name__ == "__main__":
     print("\n" + str(result_state.final_compliance_dossier))
     print(
         "\n[Audit Status]:",
-        "100% Grounded" if result_state.audit_report.is_fully_verified else "Warning",
+        "100% Grounded"
+        if (result_state.audit_report and result_state.audit_report.is_fully_verified)
+        else "Warning",
     )
     print("[Session ID]:", result_state.session_id)

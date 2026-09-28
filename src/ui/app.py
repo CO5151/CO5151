@@ -104,17 +104,21 @@ if run_btn and query:
     # Metrics Row
     # --------------------------------------------------------------------------
     st.success("✅ Quy trình thẩm định hoàn tất!")
+    audit_report = state.audit_report
+    grounding_rate_val = audit_report.grounding_rate if audit_report else 0.0
+    is_fully_verified = audit_report.is_fully_verified if audit_report else False
+
     m1, m2, m3, m4 = st.columns(4)
     with m1:
         st.metric(
             label="Grounding Rate (Xác thực)",
-            value=f"{state.audit_report.grounding_rate * 100:.1f}%",
-            delta="100% Active" if state.audit_report.is_fully_verified else "Cảnh báo",
+            value=f"{grounding_rate_val * 100:.1f}%",
+            delta="100% Active" if is_fully_verified else "Cảnh báo",
         )
     with m2:
         st.metric(
             label="Trạng thái kiểm định",
-            value="HỢP LỆ HOÀN TOÀN" if state.audit_report.is_fully_verified else "CẦN LƯU Ý",
+            value="HỢP LỆ HOÀN TOÀN" if is_fully_verified else "CẦN LƯU Ý",
         )
     with m3:
         st.metric(
@@ -155,12 +159,16 @@ if run_btn and query:
         )
 
         st.markdown("#### 3. Verification Oracle (ClaimAuditorAgent)")
-        st.write(f"- **Tổng số luận điểm:** {state.audit_report.total_claims}")
-        st.write(f"- **Số luận điểm hợp lệ:** {state.audit_report.grounded_claims}")
-        if state.audit_report.auditor_feedback:
-            st.warning(f"**Cảnh báo của Auditor:** {state.audit_report.auditor_feedback}")
+        if audit_report:
+            st.write(f"- **Tổng số luận điểm:** {audit_report.total_claims}")
+            st.write(f"- **Số luận điểm hợp lệ:** {audit_report.grounded_claims}")
+            feedback = audit_report.auditor_feedback or audit_report.critique_feedback
+            if feedback:
+                st.warning(f"**Cảnh báo của Auditor:** {feedback}")
+            else:
+                st.info("Tất cả các căn cứ đều còn hiệu lực thi hành và có nội dung xác thực.")
         else:
-            st.info("Tất cả các căn cứ đều còn hiệu lực thi hành và có nội dung xác thực.")
+            st.info("Chưa có báo cáo thẩm định từ Auditor.")
 
         if state.retry_count > 0:
             st.markdown("#### 4. Re-routing Loop (Tự động khắc phục lỗi)")

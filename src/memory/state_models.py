@@ -81,6 +81,7 @@ class AuditReport(BaseModel):
     grounding_rate: float
     is_fully_verified: bool
     critique_feedback: str | None = None
+    auditor_feedback: str | None = None
 
 
 class LegalAgentState(BaseModel):
