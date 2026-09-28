@@ -100,4 +100,6 @@ class LegalAgentState(BaseModel):
     human_confirmation_needed: bool = False
     human_token: str | None = None
     final_dossier_path: str | None = None
+    final_compliance_dossier: str | None = None
+    is_completed: bool = False
     execution_trace: list[dict[str, Any]] = Field(default_factory=list)

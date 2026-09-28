@@ -1,0 +1,75 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[top=1.2cm,bottom=1.2cm,left=1.5cm,right=1.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{darkgray}{RGB}{50,50,50}
+\definecolor{critiquecolor}{RGB}{140,25,25}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=hcmutblue,
+    citecolor=hcmutblue,
+    urlcolor=hcmutblue
+}
+
+\titleformat{\section}{\normalsize\bfseries\color{hcmutblue}}{\thesection.}{0.4em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+  {\footnotesize \textbf{HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY (HCMUT-VNU) -- FACULTY OF CSE}}\\[0.04cm]
+  {\small \textbf{CO5151: ADVANCED AGENTIC AI (HK261)} -- ADVISOR: \textbf{DR. LE XUAN BACH}}\\[0.12cm]
+  {\large\bfseries\color{hcmutblue} ANNOTATED BIBLIOGRAPHY: AGENT DESIGN PATTERNS \& ORCHESTRATION}\\[0.04cm]
+  {\footnotesize \textbf{Group G4}: Dang Lam Tung (Lead) $\cdot$ Nguyen Trung Phong $\cdot$ Vu Viet Hung $\vert$ \textit{Topic S1-7 -- October 2026}}
+\end{center}
+
+\vspace{-0.25cm}
+\noindent\textit{\footnotesize \textbf{Mandatory Constraint}: Exactly 4 Core Readings and 4 Extension Papers; each entry is accompanied by EXACTLY ONE critical reflection sentence (skeptical academic critique), strictly avoiding descriptive summaries.}
+
+\section{Core Readings (Foundational System Architectures)}
+\begin{enumerate}[leftmargin=1.4em, itemsep=2pt, topsep=1pt]
+  \item \textbf{Anthropic. (Dec 2024).} \textit{Building Effective Agents.} Anthropic Research Whitepaper.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} While astutely isolating pragmatic atomic building blocks and advocating for structural simplicity, the report significantly underestimates the engineering overhead of state reconciliation and graceful exception handling when an intermediate tool in a chain suffers from silent semantic failure in production environments.
+
+  \item \textbf{Anthropic. (Feb 2025).} \textit{How We Built Our Multi-Agent Research System.} Anthropic Engineering Blog.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The hierarchical Lead/Subagent paradigm unlocks deep parallel exploration but incurs a severe $3\times$--$8\times$ token cost multiplier alongside a latency bottleneck at the Lead Agent's context synthesis stage that limits its viability for real-time applications.
+
+  \item \textbf{OpenAI. (2025).} \textit{A Practical Guide to Building Agents.} OpenAI Developer Documentation.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The guide exhibits an overly optimistic bias toward granting full autonomy to model-directed tool-calling loops, glossing over how quickly compound failure probabilities degrade overall system reliability as multi-turn step counts increase linearly.
+
+  \item \textbf{LangChain Team. (2024).} \textit{LangGraph: Multi-Agent Workflows as Cyclic State Graphs.} Technical Documentation.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} Although state graph checkpointing provides vital durability for failure recovery, forcing dynamic agent reasoning into a deterministic finite-state machine fundamentally converts the system into a traditional workflow pipeline rather than a truly adaptive autonomous entity.
+\end{enumerate}
+
+\section{Extension Papers (Critical Methodology \& Empirical Debates)}
+\begin{enumerate}[leftmargin=1.4em, itemsep=2pt, topsep=1pt, start=5]
+  \item \textbf{Wang, X., Wei, J., Schuurmans, D., et al. (ICLR 2023).} \textit{Self-Consistency Improves Chain of Thought Reasoning in Language Models.}\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} Sampling diverse reasoning trajectories and taking a majority vote merely marginalizes over stochastic token decoding noise, remaining fundamentally impotent against systematic reasoning fallacies rooted in the model's underlying parameter weights.
+
+  \item \textbf{Huang, J., Chen, X., Mishra, S., et al. (ICLR 2024).} \textit{Large Language Models Cannot Self-Correct Reasoning Yet.}\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} This work decisively shatters the myth of intrinsic self-correction, proving that without external ground-truth execution feedback, prompting models to self-critique predominantly causes sycophantic reversals that actively degrade overall benchmark accuracy.
+
+  \item \textbf{Lightman, H., Kosaraju, V., Burda, Y., et al. (OpenAI, 2023).} \textit{Let's Verify Step by Step.}\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} While process-supervised reward models (PRMs) provide superior step-level credit assignment compared to outcome-supervised models, the exorbitant economic cost of dense human step-level annotation renders process supervision difficult to scale beyond formal mathematical domains.
+
+  \item \textbf{Zelikman, E., Wu, Y., Mu, J., \& Goodman, N. (NeurIPS 2022).} \textit{STaR: Bootstrapping Reasoning With Reasoning.}\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The bootstrap reasoning loop achieves convergence solely because it uses an external ground-truth answer key to discard flawed rationales, meaning the model cannot autonomously expand its reasoning frontier beyond domains where verification oracles already exist.
+\end{enumerate}
+
+\vspace{-0.15cm}
+\begin{center}
+  \rule{0.6\textwidth}{0.4pt}\\[0.04cm]
+  {\tiny \color{darkgray}CO5151 HK261 -- Group G4 certifies that 100\% of critical reflection sentences are original academic critiques based on primary sources.}
+\end{center}
+
+\end{document}

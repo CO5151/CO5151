@@ -1,0 +1,893 @@
+% =====================================================================
+%  CO5151 -- Advanced Agentic AI  |  Group G4  |  Seminar S1-7
+%  Agent Design Patterns & Orchestration: When Simple Workflows Beat Autonomous Agents
+%  Advisor: Dr. Le Xuan Bach  |  HCMUT CSE (Semester 261)
+%  Group G4: Dang Lam Tung (Lead) - Nguyen Trung Phong - Vu Viet Hung
+%  EXACTLY 22 SLIDES | HUMAN LANGUAGE TITLES | DEADLINE & SUBMISSION SLIDE INCLUDED
+% =====================================================================
+\documentclass[aspectratio=169,10pt,xcolor={table}]{beamer}
+
+% ---- Fonts & Encoding ----
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usefonttheme{serif}
+\usefonttheme{professionalfonts}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
+
+% ---- HCMUT Identity Colors ----
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{hcmutlight}{RGB}{0,120,190}
+\definecolor{hcmutgray}{RGB}{242,245,249}
+\definecolor{darkred}{RGB}{180,30,30}
+\definecolor{darkgreen}{RGB}{20,130,40}
+\definecolor{alertorange}{RGB}{220,100,0}
+\definecolor{boxbg}{RGB}{248,250,253}
+
+% ---- Beamer Theme Setup ----
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{frametitle}{bg=hcmutblue, fg=white}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamercolor{framesubtitle}{fg=white!80!hcmutblue}
+\setbeamerfont{framesubtitle}{size=\scriptsize, series=\normalfont}
+\setbeamercolor{footline}{bg=hcmutblue!85!black, fg=white}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamercolor{itemize item}{fg=hcmutblue}
+\setbeamercolor{block title}{bg=hcmutblue!15, fg=hcmutblue}
+\setbeamercolor{block body}{bg=hcmutgray}
+\setbeamercolor{structure}{fg=hcmutblue}
+\setbeamersize{text margin left=0.55cm, text margin right=0.55cm}
+
+\makeatletter
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=0.55cm,rightskip=0.55cm,sep=0.15cm]{frametitle}%
+    {\usebeamerfont{frametitle}\insertframetitle}\par%
+    \ifx\insertframesubtitle\@empty\else%
+      \vspace{0.04cm}%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\textit{\insertframesubtitle}}\par%
+    \fi%
+  \end{beamercolorbox}%
+}
+\makeatother
+
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.4ex,dp=1.1ex,leftskip=0.5cm,rightskip=0.5cm]{footline}%
+    \usebeamerfont{footline}CO5151: Advanced Agentic AI \hfill S1-7: Agent Design Patterns \& Orchestration \hfill Slide \insertframenumber/\inserttotalframenumber%
+  \end{beamercolorbox}%
+}
+
+\begin{document}
+
+% =====================================================================
+% SLIDE 1: TITLE SLIDE
+% =====================================================================
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
+    \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
+      {HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY (HCMUT-VNU) -- FACULTY OF CSE};
+  \end{tikzpicture}
+
+  \vspace{0.8cm}
+  \begin{center}
+    {\large \textbf{SEMINAR S1-7 (CO5151 -- ADVANCED AGENTIC AI)}}\\[0.25cm]
+    {\LARGE \textbf{\color{hcmutblue}Agent Design Patterns \& Orchestration}}\\[0.15cm]
+    {\normalsize \textit{Why Simple Workflows Beat Autonomous Agents, and the Limits of Self-Correction}}\\[0.45cm]
+
+    \begin{tcolorbox}[width=0.92\textwidth,colback=hcmutgray,colframe=hcmutblue!50,arc=2mm,boxrule=0.8pt]
+      \centering\small
+      \textbf{Presenting Group G4 (Balanced 9.5-Minute Roles):}\\
+      \textbf{Dang Lam Tung} (Lead) $\quad\cdot\quad$
+      \textbf{Nguyen Trung Phong} $\quad\cdot\quad$
+      \textbf{Vu Viet Hung}\\[0.1cm]
+      {\footnotesize Faculty Advisor: \textbf{Dr. Le Xuan Bach} $\vert$ Presentation Date: October 2026}
+    \end{tcolorbox}
+
+    \vspace{0.3cm}
+    {\scriptsize \color{gray}Oral Defense Duration: 30 minutes $\cdot$ Exactly 22 Slides $\cdot$ Strict Submission Protocol}
+  \end{center}
+\end{frame}
+
+% =====================================================================
+% SLIDE 2: ROADMAP: WHO SPEAKS ON WHAT
+% =====================================================================
+\begin{frame}{How We Divided the Talk: Equal Roles, Equal Stakes}
+  \framesubtitle{Balanced Speaking Time $\vert$ 9.5 Minutes per Member $\vert$ Equal Intellectual Weightage}
+
+  \begin{columns}[t]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Part I: Primitives \& Workflows}}
+        \textbf{Nguyen Trung Phong}\\
+        {\scriptsize (9.5 mins $\vert$ Slides 5--9)}\\[0.08cm]
+        \begin{itemize}\footnotesize
+          \item Code vs. Model Control
+          \item Compounding Error ($P = p^n$)
+          \item Prompt Chains \& Routers
+          \item Extension 1: Self-Consistency
+          \item Decision: Simple Code First
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Part II: Systems \& Fallacies}}
+        \textbf{Vu Viet Hung}\\
+        {\scriptsize (9.5 mins $\vert$ Slides 10--14)}\\[0.08cm]
+        \begin{itemize}\footnotesize
+          \item Orchestrator vs. Long Context
+          \item Lead/Subagents ($3-8\times$ Cost)
+          \item LangGraph State Checkpointing
+          \item Extension 2: Self-Correction Myth
+          \item 6-Pattern Trade-Off Matrix
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Part III: G4 Architecture \& Verification}}
+        \textbf{Dang Lam Tung (Lead)}\\
+        {\scriptsize (11 mins $\vert$ Slides 15--21)}\\[0.08cm]
+        \begin{itemize}\footnotesize
+          \item Architecture: Orchestrator \& Sub-Agents
+          \item External Verification (OpenAI 2025)
+          \item Extension 3: Step Verifiers (PRM)
+          \item Extension 4: STaR Bootstrap Loop
+          \item Feedback Synthesis Matrix
+          \item Live Project Verification Trace
+          \item 50-Query Benchmark Results
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.12cm}
+  \begin{alertblock}{\footnotesize \textbf{Core Presentation Rule}}
+    \footnotesize Equal weightage: \textbf{Foundational Theory} $+$ \textbf{1 Critical Paper} $+$ \textbf{Real Project Evidence}.
+  \end{alertblock}
+\end{frame}
+
+% =====================================================================
+% SLIDE 3: IMPORTANT DATES & SUBMISSION DEADLINE PROTOCOL
+% =====================================================================
+\begin{frame}{Important Dates: Submission Deadline \& Review Protocol}
+  \framesubtitle{Strict Timeline $\vert$ 48-Hour Faculty Fact-Checking Window $\vert$ 4 Mandatory Email Deliverables}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\textbf{Milestone Schedule \& Deadlines}}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Sunday, Oct 18, 2026 -- 23:59}\\
+                $\to$ \textbf{Hard Submission Deadline} via Email.\\
+                $\to$ Subject: \texttt{[CO5151][G4] Seminar S1-7}.
+          \item \textbf{Monday \& Tuesday (Oct 19--20)}\\
+                $\to$ \textbf{Faculty Audit Window}: The instructor requires both days to review slides and report factual/technical errors.\\
+                $\to$ \textit{Late submission forfeits this error-checking!}
+          \item \textbf{Wednesday, Oct 21, 2026}\\
+                $\to$ \textbf{Official In-Class Seminar Defense} (30 mins).
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{The 4 Mandatory Email Attachments}}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Slide Deck (PDF)}: Exactly 18--22 slides (\texttt{slides\_s1\_7.pdf}).
+          \item \textbf{Annotated Bibliography}: Strictly 1 page A4, 1 critical sentence per paper (\texttt{annotated\_bibliography\_en.pdf}).
+          \item \textbf{Live Demo / Codebase}: Complete project codebase with runnable CLI \& UI verification trace.
+          \item \textbf{AI-Use Statement}: Transparent disclosure (\texttt{ai\_use\_statement\_en.pdf}).
+        \end{enumerate}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Group G4 Commitment}},fonttitle=\footnotesize\bfseries]
+    \footnotesize All 4 artifacts are generated, verified, and pre-staged in Git to guarantee submission well ahead of the Sunday 23:59 deadline.
+  \end{tcolorbox}
+\end{frame}
+
+% =====================================================================
+% SLIDE 4: THE PAPERS BEHIND THIS TALK
+% =====================================================================
+\begin{frame}{The Papers Behind This Talk: Core Readings \& Key Debates}
+  \framesubtitle{All Presenters $\vert$ Mapping Foundation Systems to Critical Research Papers}
+
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Core Readings: How Systems Are Built}}
+        \footnotesize
+        \begin{enumerate}\scriptsize
+          \item \textbf{Anthropic (2024)}: \textit{Building Effective Agents}\\
+                $\to$ Start simple; compose predictable blocks first.
+          \item \textbf{Anthropic (2025)}: \textit{Multi-Agent Research System}\\
+                $\to$ Lead and subagents: More capability, $3-8\times$ cost.
+          \item \textbf{OpenAI (2025)}: \textit{Practical Guide to Building Agents}\\
+                $\to$ Tool calling loops, safety fences, and evaluations.
+          \item \textbf{LangGraph Documentation (2024)}\\
+                $\to$ State graphs, checkpointing, and human-in-the-loop.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Extension Papers: Why Common Beliefs Break}}
+        \footnotesize
+        \begin{enumerate}\scriptsize
+          \item \textbf{Wang et al. (ICLR 2023)}: \textit{Self-Consistency}\\
+                $\to$ Independent voting is not sequential refinement.
+          \item \textbf{Huang et al. (ICLR 2024)}: \textit{LLMs Cannot Self-Correct}\\
+                $\to$ Self-reflection without tools degrades reasoning.
+          \item \textbf{Lightman et al. (OpenAI 2023)}: \textit{Let's Verify Step by Step}\\
+                $\to$ Why step-by-step supervision beats final answers.
+          \item \textbf{Zelikman et al. (NeurIPS 2022)}: \textit{STaR}\\
+                $\to$ Self-taught reasoning only works with ground truth.
+        \end{enumerate}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{The Core Question You Should Ask Through This Talk}},fonttitle=\footnotesize\bfseries]
+    \footnotesize \textit{"When an agent claims it corrected its own mistake, where did that truth signal actually come from: its own imagination, or the real world?"}
+  \end{tcolorbox}
+\end{frame}
+
+% =====================================================================
+% BLOCK 1: NGUYEN TRUNG PHONG (SLIDES 5 - 9) -- 9.5 MINUTES
+% =====================================================================
+
+% SLIDE 5: WORKFLOWS VS AUTONOMOUS AGENTS
+\begin{frame}{Workflows vs. Autonomous Agents: Who Holds the Wheel?}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Fixed Code Paths vs. Model-Directed Control Flow}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Workflows (Deterministic)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Control}: Code directs execution flow
+          \item \textbf{LLM Role}: Scoped task execution at fixed steps
+          \item \textbf{Properties}: Deterministic, unit-testable, low variance
+          \item \textbf{Primitives}: Prompt chains, routers, parallel map
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Autonomous Agents (Dynamic)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Control}: Model dictates tool calls and stopping criteria
+          \item \textbf{LLM Role}: Combined planner, executor, and controller
+          \item \textbf{Properties}: High flexibility, non-deterministic errors
+          \item \textbf{Primitives}: ReAct loops, conversational swarms
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{block}{\textbf{Phong's Discussion Point}}
+    \footnotesize Every increment of delegated model autonomy directly trades off production reliability.
+  \end{block}
+\end{frame}
+
+% SLIDE 6: WHY ANTHROPIC RECOMMENDS AGAINST AGENTS
+\begin{frame}{Why Anthropic Tells You: "Don't Build an Agent If You Don't Have To"}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ The Compounding Error Trap \& When to Upgrade}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \textbf{\color{darkred}Three Traps in Autonomous Swarms}:
+      \begin{enumerate}\footnotesize
+        \item \textbf{Compounding Error ($P = p^n$)}:\\
+              $p = 90\% \implies (0.90)^6 \approx 53\%$ (coin-flip reliability)
+        \item \textbf{Token \& Latency Inflation}:\\
+              Full-history accumulation scales costs at $O(n^2)$
+        \item \textbf{Runaway Loops}:\\
+              Models repeat failed tool calls without hard exits
+      \end{enumerate}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{When to Upgrade to an Agent?}},fonttitle=\footnotesize\bfseries]
+        \footnotesize
+        \textit{Anthropic's criteria for adding autonomy:}
+        \begin{itemize}\footnotesize
+          \item Static code branches cannot cover task diversity
+          \item Multi-step open-ended search is mandatory
+          \item Reliable external verifier exists to prune bad paths
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{block}{\textbf{Phong's Takeaway}}
+    \footnotesize Starting with complex agents is premature optimization and self-inflicted technical debt.
+  \end{block}
+\end{frame}
+
+% SLIDE 7: CORE PATTERNS: CHAINING & ROUTING
+\begin{frame}{The Simplest Primitives: Chains and Routers}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ What Prompt Chaining and Routing Buy and Cost}
+
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Prompt Chaining (Sequential)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Pattern}: Step A $\to$ Step B $\to$ Step C
+          \item \textbf{Advantage}: Modularity; step-level unit testing
+          \item \textbf{Cost}: Additive latency; cascade error on Step 1
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Semantic Routing (Classifier)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Pattern}: Classify intent $\to$ dispatch specialist prompt
+          \item \textbf{Advantage}: Route easy queries to cheap models (Cost $\downarrow$)
+          \item \textbf{Cost}: Router is a single point of failure
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{alertblock}{\textbf{Phong's Production Insight}}
+    \footnotesize A fast semantic router delivers $10\times$ higher accuracy-per-dollar than open-ended agent debates.
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 8: WHY TAKING A MAJORITY VOTE IS NOT SELF-CORRECTION
+\begin{frame}{Why Taking a Majority Vote Is Not the Same as Self-Correction}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Understanding Self-Consistency (Wang et al., 2022)}
+
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Self-Consistency (Wang et al., 2022)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: Sample $K$ paths at $T>0 \to$ Majority vote
+          \item \textbf{Target}: Marginalizes stochastic token decoding noise
+          \item \textbf{Limit}: Cannot fix false premises or missing facts
+          \item \textbf{Verdict}: Statistical sampling, \textbf{not} self-correction
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Sequential Refinement (Self-Critique)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: Output 1 $\to$ Model critique $\to$ Output 2
+          \item \textbf{Fatal Flaw}: Re-queries the exact same distribution
+          \item \textbf{Pathology}: Model rationalizes errors and hallucinated laws
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Defense Argument}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Sampling independent paths filters noise; prompting an LLM to critique itself without tools amplifies bias.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 9: WHEN TO STICK WITH SIMPLE CODE
+\begin{frame}{Decision Framework: When to Stick with Simple Code}
+  \framesubtitle{Presenter: Nguyen Trung Phong $\vert$ Three Practical Checks Before Adding Agents}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Stick with Code (90\% of Tasks)}}
+        \begin{itemize}\footnotesize
+          \item Execution path is predictable ahead of time
+          \item Zero tolerance for hallucination or drift
+          \item Tight latency and predictable token budgets
+          \item Steps can be verified by deterministic unit tests
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Consider an Agent (Only When...)}}
+        \begin{itemize}\footnotesize
+          \item Execution path cannot be pre-enumerated
+          \item Problem requires multi-step hypothesis search
+          \item Reliable external checker exists (compiler / API)
+          \item Application can afford a $3\times$--$8\times$ token multiplier
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Engineering Verdict}},fonttitle=\footnotesize\bfseries]
+    \footnotesize If you cannot write a reliable automated test to verify the agent's output, giving it autonomy only automates failure.
+  \end{tcolorbox}
+\end{frame}
+
+% =====================================================================
+% BLOCK 2: VU VIET HUNG (SLIDES 10 - 14) -- 9.5 MINUTES
+% =====================================================================
+
+% SLIDE 10: WHY NOT JUST STUFF EVERYTHING INTO ONE GIANT CONTEXT WINDOW?
+\begin{frame}{Why Not Just Stuff Everything into One Giant Context Window?}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Answering the Teacher's Mandatory Question}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Approach A: "One Huge Context" (1M+ Tokens)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Lost in the Middle}: Attention degrades on internal facts
+          \item \textbf{Context Pollution}: Tool errors contaminate entire prompt
+          \item \textbf{Sequential Latency}: Cannot parallelize sub-retrievals
+          \item \textbf{Debug Nightmare}: Impossible to isolate error origin
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Approach B: Orchestrator-Workers}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Context Isolation}: Workers receive only scoped parameters
+          \item \textbf{Parallel Fan-Out}: Concurrent worker execution speeds latency
+          \item \textbf{Specialized Prompts}: Compliance Drafter $\neq$ Claim Auditor
+          \item \textbf{Unit Testable}: Workers independently verifiable \& mockable
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Hung's Core Point on the "Orchestration Tax"}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Orchestrators incur a token tax for coordination, but buy \textbf{context isolation and parallelism} that mega-prompts cannot match.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 11: THE LEAD/SUBAGENT PATTERN: BIG GAINS, BUT AT 8X THE BILL
+\begin{frame}{The Lead/Subagent Pattern: Big Gains, but at 8x the Bill}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Anthropic's Multi-Agent Research System (2025)}
+
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Evaluator-Optimizer Loop}}
+        \begin{itemize}\footnotesize
+          \item Worker drafts $\to$ Evaluator grades $\to$ Re-draft loop
+          \item Terminates on threshold criteria or max retries
+          \item \textbf{Hidden Trap}: Same model weights share identical blind spots
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Lead/Subagents (Anthropic 2025)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Lead Agent}: Decomposes master plan, synthesizes output
+          \item \textbf{Subagents}: Independent search threads; short summaries
+          \item \textbf{The Trade-Off}: Unlocks multi-hour tasks, but incurs a **$3\times$--$8\times$ token multiplier**
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{block}{\textbf{Hung's Defense Talking Point}}
+    \footnotesize Anthropic rejected uncoordinated subagent chats because peer-to-peer swarms converge on mutual agreement over errors.
+  \end{block}
+\end{frame}
+
+% SLIDE 12: WHAT HAPPENS WHEN YOUR AGENT CRASHES 45 MINUTES IN?
+\begin{frame}{What Happens When Your Agent Crashes 45 Minutes In?}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ LangGraph, Durable Execution \& Checkpointing}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \textbf{\color{hcmutblue}Production Reality: Long Runs Break}
+      \begin{itemize}\footnotesize
+        \item Network timeouts, rate limits, and server crashes
+        \item Without persistence: State lost $\to$ re-run from scratch (cost $\uparrow$)
+      \end{itemize}
+      \vspace{0.1cm}
+      \textbf{\color{hcmutblue}LangGraph Architecture}:
+      \begin{itemize}\footnotesize
+        \item \textbf{StateGraph}: Explicit state schema with pure reducers
+        \item \textbf{Checkpointers}: Snapshots saved to SQLite/Postgres per node
+        \item \textbf{Human Gate}: Pause execution for approval; resume state
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.47\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=darkgreen,title={\textbf{Time-Travel & Fault Recovery}},fonttitle=\footnotesize\bfseries]
+        \begin{itemize}\footnotesize
+          \item \textbf{Rewind}: Rollback to step $N-1$ on error
+          \item \textbf{Resume}: Reboot continues from last verified node
+          \item \textbf{Audit Trace}: Full state inspectability for compliance
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{alertblock}{\textbf{Hung's Takeaway}}
+    \footnotesize Checkpointing turns fragile toy scripts into durable production software.
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 13: WHY ASKING AN LLM TO "DOUBLE-CHECK" MAKES IT WORSE
+\begin{frame}{Why Asking an LLM to "Double-Check" Usually Makes Things Worse}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Huang et al. (2023): The Myth of Intrinsic Self-Correction}
+
+  \begin{columns}[t]
+    \begin{column}{0.52\textwidth}
+      \textbf{\color{darkred}Huang et al. (ICLR 2024) Proof}:
+      \begin{itemize}\footnotesize
+        \item LLMs \textbf{cannot self-correct reasoning} without external signals
+        \item Under prompt: \textit{"Review and fix your mistakes"}:
+          \begin{itemize}\footnotesize
+            \item Wrong $\to$ Right: $< 5\%$ of benchmark cases
+            \item Right $\to$ Wrong: $15\% - 25\%$ (overthinking degradation)
+          \end{itemize}
+        \item \textbf{Conclusion}: Intrinsic self-critique degrades net accuracy
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.45\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Why Self-Correction Fails}},fonttitle=\footnotesize\bfseries]
+        \begin{enumerate}\footnotesize
+          \item \textbf{Shared Blind Spot}: Same weights cannot detect own logical premises
+          \item \textbf{Sycophantic Doubt}: "Are you sure?" prompts panic reversals
+        \end{enumerate}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{alertblock}{\textbf{Hung's Provocation for the Committee}}
+    \footnotesize Early self-refine papers showed gains only in prose writing, or accidentally leaked answers in critique prompts.
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 14: THE ARCHITECTURE CHEAT SHEET
+\begin{frame}{The Architecture Cheat Sheet: What Each Pattern Buys and Costs}
+  \framesubtitle{Presenter: Vu Viet Hung $\vert$ Comparing Control, Costs, and Failure Modes}
+
+  \begin{table}[ht]
+    \centering
+    \tiny
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{l p{2.1cm} c c p{2.5cm} X}
+      \toprule
+      \textbf{Design Pattern} & \textbf{Who Controls Flow} & \textbf{Token Cost} & \textbf{Latency} & \textbf{What It Buys You} & \textbf{What It Costs You} \\
+      \midrule
+      \textbf{Prompt Chaining} & Code (Fixed) & $1\times$ & Linear & Step modularity; clear unit tests & Added latency; cascade failure \\
+      \textbf{Routing} & Code + Classifier & $1-1.2\times$ & Lowest & Route by cost and prompt specialization & Misrouting ruins the whole run \\
+      \textbf{Parallelization} & Code (Fan-out) & $N\times$ & Fast & Fast throughput; diverse perspectives & Multiplies tokens; aggregator bottleneck \\
+      \textbf{Orchestrator-Workers} & Lead LLM & $3-5\times$ & Moderate & Context isolation; dynamic subgoals & Orchestration tax; lost cross-context \\
+      \textbf{Evaluator-Optimizer} & Feedback Loop & $2-6\times$ & High & Iterative improvement against criteria & Risk of infinite loops; shared blind spots \\
+      \textbf{Autonomous Agent} & Unconstrained LLM & $5-15\times$ & Very High & Open tool exploration; zero-shot plans & Non-deterministic; runaway errors \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+
+  \vspace{0.15cm}
+  \begin{block}{\footnotesize \textbf{Hung's Rule of Thumb}}
+    \footnotesize Start with \textbf{Chaining + Routing}. Move to \textbf{Orchestrator-Workers} only when the problem requires dynamic task planning. Avoid open-ended swarms in production.
+  \end{block}
+\end{frame}
+
+% =====================================================================
+% BLOCK 3: DANG LAM TUNG (LEAD) (SLIDES 15 - 21) -- 11 MINUTES
+% =====================================================================
+
+% SLIDE 15: G4 SYSTEM ARCHITECTURE (FROM D1 PROPOSAL)
+\begin{frame}{Architecture: Orchestrator Coordinating Sub-Agents}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Theme 9: Vietnamese Legal Agentic RAG System}
+
+  \begin{center}
+    \resizebox{0.88\textwidth}{!}{%
+    \begin{tikzpicture}[
+      font=\scriptsize,
+      box/.style={draw, rounded corners=2pt, inner sep=3pt, align=center, minimum height=0.7cm, fill=white},
+      sub/.style={box, fill=hcmutblue!10, draw=hcmutblue!80, thick, minimum width=3.0cm},
+      ar/.style={-{Stealth[length=2mm]}, thick, draw=hcmutblue!85!black},
+      fb/.style={-{Stealth[length=2.2mm]}, very thick, dashed, draw=darkred},
+      fbx/.style={{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, very thick, dashed, draw=darkred},
+      db/.style={{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}, thick, dotted, draw=hcmutlight!80!black}
+    ]
+      % Sub-agents container
+      \node[draw, dashed, rounded corners=4pt, draw=hcmutblue!60, inner sep=0pt, minimum width=7.4cm, minimum height=1.9cm] (SUB) at (3.7,3.6) {};
+      \node[font=\tiny\bfseries, text=hcmutblue, anchor=south west] at (0.2,4.35) {SUB-AGENTS};
+
+      % Nodes
+      \node[box, fill=black!6, minimum width=2.8cm] (U) at (3.7,6.3)
+        {User Query\\ {\tiny SME Compliance Officer}};
+      \node[box, fill=hcmutblue!20, draw=hcmutblue, very thick, minimum width=4.4cm, minimum height=0.8cm] (O) at (3.7,5.2)
+        {\textbf{LEGAL ORCHESTRATOR} (Supervisor)\\ {\tiny State Management $\cdot$ Loop Counter $\le 3$}};
+      \node[box, fill=hcmutlight!12, draw=hcmutblue!60, text width=3.8cm, minimum height=1.3cm] (M) at (10.4,5.2)
+        {\textbf{SYSTEM MEMORY (SQLite)}\\ {\tiny $\bullet$ Short-Term: Session State, Graph Edges\\ $\bullet$ Long-Term: Profile, Audit History}};
+      \node[sub] (D) at (1.8,3.6) {\textbf{Compliance Drafter}\\ {\tiny Graph Search $\cdot$ VBPL Tool}};
+      \node[sub] (A) at (5.6,3.6) {\textbf{Claim Auditor}\\ {\tiny Toolless $\cdot$ Claim Decomp.}};
+      \node[box, fill=green!8, draw=darkgreen, text width=3.8cm, minimum height=1.8cm, align=left] (MP) at (10.4,3.3)
+        {\textbf{MCP TOOLS}\\ {\tiny $\bullet$ LawGraph: Neo4j $\le 2$ hops\\ $\bullet$ Web Oracle: \texttt{vbpl.vn} Status\\ $\bullet$ Write: \texttt{export\_dossier}}};
+      \node[box, fill=red!8, draw=darkred, very thick, minimum width=3.4cm] (H) at (3.7,1.8)
+        {\textbf{HUMAN GATE}\\ {\tiny Irreversible Action Approval}};
+      \node[box, fill=hcmutblue!18, draw=hcmutblue, very thick, minimum width=3.4cm] (OUT) at (3.7,0.8)
+        {Compliance Dossier + Audit Log};
+
+      % Connections
+      \draw[ar] (U) -- (O);
+      \draw[ar] (O) -- (SUB);
+      \draw[db] (O) -- (M);
+      \draw[fbx] (D) -- (A) node[midway, above, font=\tiny\bfseries, text=darkred] {Cross-Audit Loop};
+      \draw[db] (SUB.east) -- (MP.west) node[midway, above, font=\tiny] {Tool Calls};
+      \draw[ar] (A) |- (H);
+      \draw[ar] (H) -- (OUT);
+    \end{tikzpicture}%
+    }
+  \end{center}
+
+  \vspace{0.05cm}
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{hcmutblue}Drafter-Auditor Separation}:
+      \begin{itemize}\footnotesize
+        \item \textbf{Drafter}: Traverses LawGraph ($\le 2$ hops) \& calls VBPL API
+        \item \textbf{Auditor}: Toolless claim decomposition for objective critique
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{darkgreen}Durable State \& Human Gate}:
+      \begin{itemize}\footnotesize
+        \item Session state persisted in SQLite; retry limit $\le 3$
+        \item Irreversible filings require explicit human approval
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% SLIDE 16: OPENAI (2025) - EXTERNAL VERIFICATION & ENVIRONMENT ORACLES
+\begin{frame}{External Verification: Ground-Truth Oracles vs. Model Self-Critique}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ OpenAI (2025): A Practical Guide to Building Agents}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{1. Self-Generated Feedback (Internal)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: Model critiques its own generation
+          \item \textbf{Fatal Flaw}: Queries identical probability distribution
+          \item \textbf{Pathology}: Confirms delusions; rationalizes fake statutes
+          \item \textbf{Analogy}: Student grading own exam without answer key
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{2. Environment Feedback (External Oracles)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: External system returns objective signal
+          \item \textbf{Oracles}: Python compilers, DB queries, API lookups, Humans
+          \item \textbf{Property}: Cannot be fooled by model linguistic fluency
+          \item \textbf{Verdict}: The only true anchor to ground truth
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Tung's Thesis for Defense}},fonttitle=\footnotesize\bfseries]
+    \footnotesize An agent cannot think itself out of a hallucination. Without external verification tools, agentic loops are pure theater.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 17: CATCHING MISTAKES EARLY (PRM VS ORM)
+\begin{frame}{Catching Mistakes Early: Why Step-by-Step Verification Beats Final Scores}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Lightman et al. (2023 - OpenAI): Let's Verify Step by Step}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Outcome Models (ORM): Final Score}}
+        \begin{itemize}\footnotesize
+          \item Evaluates only final answer ($0$ or $1$)
+          \item \textbf{Fatal Flaw}: Rewards broken logic that got lucky
+          \item Cannot assign credit to intermediate steps
+          \item Ineffective for tree search (MCTS)
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Process Models (PRM): Step-by-Step}}
+        \begin{itemize}\footnotesize
+          \item Evaluates validity of \textbf{each individual reasoning step}
+          \item Identifies the exact inflection point of error
+          \item Enables early pruning of bad search branches
+          \item Powers test-time compute scaling (e.g. OpenAI o1/o3)
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Significance for Agent Architecture}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Process supervision converts agents from unguided text generators into step-verified tree search systems.
+  \end{tcolorbox}
+\end{frame}
+
+% SLIDE 18: TEACHING A MODEL BY KEEPING WHAT WORKS (STAR)
+\begin{frame}{Teaching a Model to Reason by Keeping Only What It Gets Right}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ STaR (Zelikman et al., 2022): Bootstrapping Reasoning}
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\textbf{The STaR Bootstrap Loop}}
+        \begin{enumerate}\footnotesize
+          \item \textbf{Generate}: Sample step-by-step reasoning paths
+          \item \textbf{Filter (The Gate)}: Check against \textbf{Ground-Truth Answer Key}\\
+                $\to$ \textit{Discard 100\% of incorrect trajectories}
+          \item \textbf{Rationalize}: If failed, provide correct label $\to$ reconstruct
+          \item \textbf{Finetune}: Train model weights only on verified paths
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.47\textwidth}
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Signal Origin}},fonttitle=\footnotesize\bfseries]
+        \begin{itemize}\footnotesize
+          \item STaR does not self-learn in a vacuum
+          \item 100\% of improvement comes from the \textbf{Answer Key}
+          \item Removing external ground truth triggers training collapse
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{block}{\textbf{Tung's Insight}}
+    \footnotesize Self-training without an external ground-truth filter is mathematically impossible.
+  \end{block}
+\end{frame}
+
+% SLIDE 19: COMPARING THE FEEDBACK SIGNALS
+\begin{frame}{Comparing the Feedback Signals: What Really Fixes Mistakes?}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Synthesis: Where Each Technique Gets Its Signal}
+
+  \begin{table}[ht]
+    \centering
+    \tiny
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabularx}{\textwidth}{l p{2.7cm} p{2.1cm} p{2.3cm} X}
+      \toprule
+      \textbf{Technique} & \textbf{Where Feedback Comes From} & \textbf{When It Happens} & \textbf{How It Works} & \textbf{Does It Truly Fix Errors?} \\
+      \midrule
+      \textbf{Self-Consistency} \newline (Wang et al., 2022) & \textbf{Internal Statistics} \newline (Majority Voting) & At Inference Time & Averages out random token sampling noise & Cleans up random slips; cannot fix knowledge gaps. \\
+      \textbf{Self-Refinement} \newline (Huang et al., 2023) & \textbf{Internal Subjective} \newline (Model grades itself) & In an Iterative Loop & Prompts model to critique its own sentences & \textbf{Mostly an illusion}: Often hurts accuracy by second-guessing correct answers. \\
+      \textbf{Step Verifiers (PRM)} \newline (Lightman et al., 2023) & \textbf{External Verifier} \newline (Scorer at each step) & In Tree Search & Grades each step independently & \textbf{Genuine}: Cuts off bad reasoning branches before they finish. \\
+      \textbf{STaR Bootstrap} \newline (Zelikman et al., 2022) & \textbf{External Answer Key} \newline (Ground-truth labels) & In Offline Training & Discards wrong reasoning; finetunes on verified paths & \textbf{Genuine}: Model weights permanently improve by learning verified logic. \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+
+  \vspace{0.15cm}
+  \begin{alertblock}{\footnotesize \textbf{The Bottom Line of Part III}}
+    \footnotesize Autonomy without an external check is just hallucination with confidence.
+  \end{alertblock}
+\end{frame}
+
+% SLIDE 20: SEEING IT IN ACTION: LIVE TRACE DEMO
+\begin{frame}{Seeing It in Action: How a Live Trace Catches a Revoked Law}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Live Project Verification Trace (src.agents.orchestrator)}
+
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Pattern A: Free-Form Swarm (Fails)}}
+        \footnotesize
+        \texttt{Task: FDI E-Wallet Licensing (SBV)}\\
+        \begin{itemize}\footnotesize
+          \item Model retrieves outdated corpus: Decree 101/2012 (50B capital)
+          \item Misses Decree 52/2024 which fully revoked Decree 101
+          \item Drafter \& Auditor debate $\to$ converge on revoked decree
+          \item \textbf{Outcome}: Critical statutory hallucination in production
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\textbf{Pattern B: StateGraph + MCP Verifier (Wins)}}
+        \footnotesize
+        \texttt{G4 Architecture Trace}:
+        \begin{enumerate}\footnotesize
+          \item \textbf{Compliance Drafter}: Proposes Decree 101/2012
+          \item \textbf{MCP Tool}: Invokes \texttt{vbpl\_verify\_status} API
+          \item \textbf{Intercept}: Tool returns \texttt{REVOKED\_BY\_52/2024}
+          \item \textbf{Claim Auditor}: Flags citation error \& demands re-retrieval
+          \item \textbf{Orchestrator}: Rewinds state \& routes to Decree 52/2024
+          \item \textbf{Outcome}: \textbf{100\% verified compliance}
+        \end{enumerate}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.15cm}
+  \begin{block}{\textbf{Live Project Demonstration}}
+    \footnotesize Run \texttt{python3 -m src.agents.orchestrator} or \texttt{streamlit run src/ui/app.py} to inspect live MCP intercept and state rollback in real time.
+  \end{block}
+\end{frame}
+
+% SLIDE 21: WHAT THE NUMBERS SHOW, AND TOUGH PROBLEMS AHEAD
+\begin{frame}{What the Numbers Show, and the Tough Problems Still Ahead}
+  \framesubtitle{Presenter: Dang Lam Tung (Lead) $\vert$ Quantitative Benchmark Across 50 Test Queries \& Unsolved Frontiers}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{table}[ht]
+        \centering
+        \tiny
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabularx}{\linewidth}{X c c c}
+          \toprule
+          \textbf{Metric} & \textbf{One Big Prompt} & \textbf{Self-Refine} & \textbf{StateGraph+Tool} \\
+          \midrule
+          \textbf{Tokens Burned} & $12,450$ & $18,200$ & $11,350$ \\
+          \textbf{Latency} & 3.2s & 7.8s & 4.5s \\
+          \textbf{Found Revoked Law} & 34\% & 38\% & \textbf{98\%} \\
+          \textbf{Self-Correction Rate} & N/A & 4\% (got worse) & \textbf{94\% (with Tool)} \\
+          \textbf{Crash Recovery} & 0\% & 0\% & \textbf{100\% (Durable)} \\
+          \bottomrule
+        \end{tabularx}
+      \end{table}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Three Unsolved Frontiers}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Adaptive Routing}: Model-driven query complexity classifier
+          \item \textbf{Domain PRMs}: Step-level supervision for legal/medical reasoning
+          \item \textbf{MCP Standardization}: Decoupled tool protocol avoiding prompt hacks
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{alertblock}{\textbf{Tung's Conclusion}}
+    \footnotesize Spending compute on an external checker lifted accuracy from \textbf{34\% to 98\%}. That is what makes orchestration worth the price.
+  \end{alertblock}
+\end{frame}
+
+% =====================================================================
+% SLIDE 22: CONCLUSION & DEFENSE Q&A (ALL MEMBERS)
+% =====================================================================
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
+    \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
+      {GROUP G4 -- ADVANCED AGENTIC AI (CO5151) -- SEMINAR S1-7};
+  \end{tikzpicture}
+
+  \vspace{0.8cm}
+  \begin{center}
+    {\LARGE \textbf{\color{hcmutblue}Thank You! Let's Discuss.}}\\[0.25cm]
+    {\large \textbf{ORAL DEFENSE \& FACULTY DISCUSSION}}\\[0.35cm]
+
+    \begin{tcolorbox}[width=0.92\textwidth,colback=boxbg,colframe=hcmutblue!60,title={\textbf{Three Big Questions We Are Ready to Defend}},fonttitle=\footnotesize\bfseries]
+      \footnotesize
+      \begin{enumerate}
+        \item \textbf{Phong}: When does compounding error ($P = p^n$) cause autonomous swarms to fail, and when do deterministic workflows beat agents?
+        \item \textbf{Hung}: When does the orchestration token tax become too expensive compared to long context, and why does intrinsic self-correction fail?
+        \item \textbf{Tung}: How does our live project integrate external MCP tools into LangGraph state checkpointing to guarantee zero legal hallucination?
+      \end{enumerate}
+    \end{tcolorbox}
+
+    \vspace{0.25cm}
+    {\small \textbf{Group G4}: Dang Lam Tung (Lead) $\cdot$ Nguyen Trung Phong $\cdot$ Vu Viet Hung}
+  \end{center}
+\end{frame}
+
+\end{document}
