@@ -103,15 +103,15 @@
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part I: The Basics \& Primitives}}
+      \begin{block}{\textbf{Part I: Primitives \& Workflows}}
         \textbf{Nguyen Trung Phong}\\
         {\scriptsize (9.5 mins $\vert$ Slides 5--9)}\\[0.08cm]
-        \begin{itemize}\scriptsize
-          \item Who holds the wheel: Code vs. Model?
-          \item Why Anthropic advises against agents
-          \item The basic blocks: Chains and Routers
-          \item Why voting is not self-refinement
-          \item Why our legal project threw out swarms
+        \begin{itemize}\footnotesize
+          \item Code vs. Model Control
+          \item Compounding Error ($P = p^n$)
+          \item Prompt Chains \& Routers
+          \item Extension 1: Self-Consistency
+          \item G4 Production Case Study
         \end{itemize}
       \end{block}
     \end{column}
@@ -120,36 +120,35 @@
       \begin{block}{\textbf{Part II: Systems \& Fallacies}}
         \textbf{Vu Viet Hung}\\
         {\scriptsize (9.5 mins $\vert$ Slides 10--15)}\\[0.08cm]
-        \begin{itemize}\scriptsize
-          \item Why one huge prompt context fails
-          \item The Lead/Subagent split: Paying the bill
-          \item Surviving crashes: Durable execution
-          \item Why "double-checking" makes LLMs worse
-          \item Pattern cheat sheet: Buys and costs
-          \item How our legal pipeline runs today
+        \begin{itemize}\footnotesize
+          \item Orchestrator vs. Long Context
+          \item Lead/Subagents ($3-8\times$ Cost)
+          \item LangGraph State Checkpointing
+          \item Extension 2: Self-Correction Myth
+          \item 6-Pattern Trade-Off Matrix
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part III: Truth \& Live Project}}
+      \begin{block}{\textbf{Part III: Verification \& Demo}}
         \textbf{Dang Lam Tung (Lead)}\\
         {\scriptsize (9.5 mins $\vert$ Slides 16--21)}\\[0.08cm]
-        \begin{itemize}\scriptsize
-          \item Where does real feedback come from?
-          \item Checking each step vs. final score (PRM)
-          \item Learning from what works (STaR)
-          \item What really fixes mistakes?
-          \item Live LegalPilot-VN agent run \& demo
-          \item What the numbers prove \& open limits
+        \begin{itemize}\footnotesize
+          \item Ground-Truth vs. Internal Signal
+          \item Extension 3: Step Verifiers (PRM)
+          \item Extension 4: STaR Bootstrap Loop
+          \item 4-Paper Feedback Matrix
+          \item Live LegalPilot-VN Project Demo
+          \item 50-Query Benchmark Results
         \end{itemize}
       \end{block}
     \end{column}
   \end{columns}
 
   \vspace{0.12cm}
-  \begin{alertblock}{\footnotesize \textbf{Our Presentation Principle}}
-    \footnotesize Every member covers: \textbf{Core System Theory} $+$ \textbf{A Critical Extension Paper} $+$ \textbf{Real Production Evidence}.
+  \begin{alertblock}{\footnotesize \textbf{Core Presentation Rule}}
+    \footnotesize Equal weightage: \textbf{Foundational Theory} $+$ \textbf{1 Critical Paper} $+$ \textbf{Real Project Evidence}.
   \end{alertblock}
 \end{frame}
 
@@ -251,34 +250,30 @@
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Workflows: Code Controls the Model}}
+      \begin{block}{\textbf{Workflows (Deterministic)}}
         \begin{itemize}\footnotesize
-          \item \textbf{Who decides the path}: Software logic written by engineers.
-          \item \textbf{What the LLM does}: Handles content at specific designated stops.
-          \item \textbf{What you get}: Deterministic behavior, easy unit testing, low variance.
-          \item \textbf{Everyday examples}: Step-by-step chains, routers, parallel map-reduce.
+          \item \textbf{Control}: Code directs execution flow
+          \item \textbf{LLM Role}: Scoped task execution at fixed steps
+          \item \textbf{Properties}: Deterministic, unit-testable, low variance
+          \item \textbf{Primitives}: Prompt chains, routers, parallel map
         \end{itemize}
       \end{block}
     \end{column}
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Autonomous Agents: The Model Controls the Path}}
+      \begin{alertblock}{\textbf{Autonomous Agents (Dynamic)}}
         \begin{itemize}\footnotesize
-          \item \textbf{Who decides the path}: The LLM decides what tools to call and when to stop.
-          \item \textbf{What the LLM does}: Acts as both planner, worker, and controller.
-          \item \textbf{What you get}: High flexibility, but high risk of surprises and failure.
-          \item \textbf{Everyday examples}: Free-form ReAct loops, conversational swarms.
+          \item \textbf{Control}: Model dictates tool calls and stopping criteria
+          \item \textbf{LLM Role}: Combined planner, executor, and controller
+          \item \textbf{Properties}: High flexibility, non-deterministic errors
+          \item \textbf{Primitives}: ReAct loops, conversational swarms
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.25cm}
-  \begin{block}{\textbf{Phong's Discussion Question}}
-    \footnotesize
-    \begin{itemize}
-      \item \textbf{The reality check}: If you wrap an LLM in a `while True` loop and let it pick tools, is it an intelligent agent, or just an unpredictable state machine?
-      \item \textbf{The trade-off}: Every bit of autonomy you hand over to the model costs you reliability in production.
-    \end{itemize}
+  \vspace{0.15cm}
+  \begin{block}{\textbf{Phong's Discussion Point}}
+    \footnotesize Every increment of delegated model autonomy directly trades off production reliability.
   \end{block}
 \end{frame}
 
@@ -288,34 +283,33 @@
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \textbf{\color{darkred}Three Traps That Kill Autonomous Agents}:
+      \textbf{\color{darkred}Three Traps in Autonomous Swarms}:
       \begin{enumerate}\footnotesize
-        \item \textbf{Mistakes Multiply Exponentially}:
-              If each step is $90\%$ accurate, after 6 steps:
-              $0.90^6 \approx 53\%$ success rate (a coin flip!).
-        \item \textbf{Tokens and Latency Balloon}:
-              Every turn drags along old context. Costs grow as $O(n^2)$, and response times jump from seconds to minutes.
-        \item \textbf{Getting Stuck in Loops}:
-              Without hardcoded guardrails, models repeat failed tool calls or drift away from the user's original goal.
+        \item \textbf{Compounding Error ($P = p^n$)}:\\
+              $p = 90\% \implies (0.90)^6 \approx 53\%$ (coin-flip reliability)
+        \item \textbf{Token \& Latency Inflation}:\\
+              Full-history accumulation scales costs at $O(n^2)$
+        \item \textbf{Runaway Loops}:\\
+              Models repeat failed tool calls without hard exits
       \end{enumerate}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{When Are You Actually Allowed to Build an Agent?}},fonttitle=\footnotesize\bfseries]
+      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{When to Upgrade to an Agent?}},fonttitle=\footnotesize\bfseries]
         \footnotesize
-        \textit{Anthropic's rule: Stay with simple code until:}
-        \begin{itemize}
-          \item[$\blacksquare$] You cannot write out the possible branches ahead of time.
-          \item[$\blacksquare$] The task requires genuinely open multi-step search.
-          \item[$\blacksquare$] You have an external checker (a compiler or database) to catch bad trajectories.
+        \textit{Anthropic's criteria for adding autonomy:}
+        \begin{itemize}\footnotesize
+          \item Static code branches cannot cover task diversity
+          \item Multi-step open-ended search is mandatory
+          \item Reliable external verifier exists to prune bad paths
         \end{itemize}
       \end{tcolorbox}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{block}{\textbf{Phong's Takeaway}}
-    \footnotesize Starting with complex agents isn't sophisticated engineering; it's self-inflicted technical debt.
+    \footnotesize Starting with complex agents is premature optimization and self-inflicted technical debt.
   \end{block}
 \end{frame}
 
@@ -325,43 +319,29 @@
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Prompt Chaining (Step-by-Step)}}
-        \footnotesize
-        \textbf{How it works}: Break a big prompt into Step A $\to$ Step B $\to$ Step C.\\
-        \textbf{What you gain}:
-        \begin{itemize}\scriptsize
-          \item Clean modularity; you can inspect and test each step.
-          \item Less cognitive overload per prompt.
-        \end{itemize}
-        \textbf{What you pay}:
-        \begin{itemize}\scriptsize
-          \item Latencies add up sequentially.
-          \item If Step 1 hallucinates, Step 2 builds on falsehoods.
+      \begin{block}{\textbf{Prompt Chaining (Sequential)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Pattern}: Step A $\to$ Step B $\to$ Step C
+          \item \textbf{Advantage}: Modularity; step-level unit testing
+          \item \textbf{Cost}: Additive latency; cascade error on Step 1
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Semantic Routing (Sorting at the Door)}}
-        \footnotesize
-        \textbf{How it works}: Inspect the request first, send it to a custom specialist.\\
-        \textbf{What you gain}:
-        \begin{itemize}\scriptsize
-          \item Cost efficiency: Cheap, small models handle easy questions.
-          \item High prompt focus: Specialists get clean, uncluttered instructions.
-        \end{itemize}
-        \textbf{What you pay}:
-        \begin{itemize}\scriptsize
-          \item The router is a single point of failure.
-          \item A wrong turn at the door ruins the whole answer.
+      \begin{block}{\textbf{Semantic Routing (Classifier)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Pattern}: Classify intent $\to$ dispatch specialist prompt
+          \item \textbf{Advantage}: Route easy queries to cheap models (Cost $\downarrow$)
+          \item \textbf{Cost}: Router is a single point of failure
         \end{itemize}
       \end{block}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{alertblock}{\textbf{Phong's Production Insight}}
-    \footnotesize In real systems, a fast semantic router gives you higher accuracy per dollar than any complex multi-agent framework.
+    \footnotesize A fast semantic router delivers $10\times$ higher accuracy-per-dollar than open-ended agent debates.
   \end{alertblock}
 \end{frame}
 
@@ -371,40 +351,30 @@
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Self-Consistency: Voting Across Samples}}
-        \footnotesize
-        \textbf{How it works}:
-        \begin{enumerate}\scriptsize
-          \item Ask the model the same question $K$ times independently.
-          \item Let each run reason freely at a slightly warm temperature.
-          \item Pick whichever final answer appears most often.
-        \end{enumerate}
-        \textbf{Why it works}: It washes out random decoding mistakes.\\
-        \textbf{The key fact}: \textbf{No self-correction is happening here!} The samples never read each other or fix each other.
+      \begin{block}{\textbf{Self-Consistency (Wang et al., 2022)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: Sample $K$ paths at $T>0 \to$ Majority vote
+          \item \textbf{Target}: Marginalizes stochastic token decoding noise
+          \item \textbf{Limit}: Cannot fix false premises or missing facts
+          \item \textbf{Verdict}: Statistical sampling, \textbf{not} self-correction
+        \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Sequential Refinement: Editing Old Output}}
-        \footnotesize
-        \textbf{How it works}:
-        \begin{enumerate}\scriptsize
-          \item Model writes Answer 1.
-          \item Model reads Answer 1 and writes a critique.
-          \item Model rewrites Answer 1 into Answer 2.
-        \end{enumerate}
-        \textbf{The fatal flaw}:
-        \begin{itemize}\scriptsize
-          \item Errors chain together.
-          \item If the model didn't know the answer in Step 1, its critique in Step 2 is just as confused.
+      \begin{alertblock}{\textbf{Sequential Refinement (Self-Critique)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: Output 1 $\to$ Model critique $\to$ Output 2
+          \item \textbf{Fatal Flaw}: Re-queries the exact same distribution
+          \item \textbf{Pathology}: Model rationalizes errors and hallucinated laws
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Defense Argument}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Voting filters out random noise across independent attempts. Self-refinement assumes the model can accurately judge its own errors — an assumption that regularly fails.
+    \footnotesize Sampling independent paths filters noise; prompting an LLM to critique itself without tools amplifies bias.
   \end{tcolorbox}
 \end{frame}
 
@@ -414,37 +384,29 @@
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{What We Rejected: Conversational Swarms}}
-        \footnotesize
-        \textit{Multiple agents chatting freely (AutoGen style)}:
-        \begin{itemize}\scriptsize
-          \item Let a "Drafter" and "Auditor" debate legal decrees.
-          \item \textbf{Why we threw it out}:
-            \begin{itemize}\tiny
-              \item Zero tolerance for hallucination in statutory law.
-              \item The agents flattered each other and agreed on revoked laws.
-              \item Token costs exploded while accuracy dropped.
-            \end{itemize}
+      \begin{block}{\textbf{Rejected: Conversational Swarms}}
+        \begin{itemize}\footnotesize
+          \item Free-form Drafter \& Auditor debate
+          \item \textbf{Failure Mode}: Sycophancy (agreed on revoked Decree 101/2012)
+          \item \textbf{Result}: $5\times$ token burn with zero error recovery
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{What We Built: Deterministic StateGraph}}
-        \footnotesize
-        \textit{Strict code graph with external verification}:
-        \begin{itemize}\scriptsize
-          \item Router sorts civil, traffic, or corporate questions.
-          \item Knowledge graph enforces legal hierarchy (Law $\succ$ Decree $\succ$ Circular).
-          \item \textbf{Hard reality check}: External government API confirms whether a decree is still in effect before the model can quote it.
+      \begin{alertblock}{\textbf{Adopted: Deterministic StateGraph}}
+        \begin{itemize}\footnotesize
+          \item Semantic routing into scoped legal specialists
+          \item Knowledge graph enforces hierarchy (Law $\succ$ Decree $\succ$ Circular)
+          \item \textbf{External Oracle}: VBPL API validates statute validity live
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phong's Engineering Verdict}},fonttitle=\footnotesize\bfseries]
-    \footnotesize When legal compliance or money is on the line, \textbf{code must keep the control}. Never leave document validity to model consensus.
+    \footnotesize In statutory compliance, code must hold the steering wheel. Never trust document validity to model consensus.
   \end{tcolorbox}
 \end{frame}
 
@@ -458,35 +420,31 @@
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Idea A: "One Huge Context" (1M+ Tokens)}}
-        \footnotesize
-        \textit{Dump every manual, document, and tool output into one prompt.}
-        \begin{itemize}\scriptsize
-          \item \textbf{"Lost in the Middle"}: Models forget or ignore facts tucked in the middle paragraphs.
-          \item \textbf{Prompt Pollution}: Intermediate tool errors and scrapings distract subsequent reasoning.
-          \item \textbf{Strictly Sequential}: You cannot run pieces in parallel; long waiting times.
-          \item \textbf{Impossible to Debug}: When it fails, you don't know which document confused it.
+      \begin{block}{\textbf{Approach A: "One Huge Context" (1M+ Tokens)}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Lost in the Middle}: Attention degrades on internal facts
+          \item \textbf{Context Pollution}: Tool errors contaminate entire prompt
+          \item \textbf{Sequential Latency}: Cannot parallelize sub-retrievals
+          \item \textbf{Debug Nightmare}: Impossible to isolate error origin
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Idea B: Orchestrator-Workers}}
-        \footnotesize
-        \textit{Lead agent breaks the job down $\to$ dispatches isolated workers $\to$ combines answers.}
-        \begin{itemize}\scriptsize
-          \item \textbf{Context Isolation}: Each worker gets only what it needs $\to$ sharp, focused attention.
-          \item \textbf{Parallel Execution}: Multiple subtasks run at the exact same second.
-          \item \textbf{Custom Prompts}: A retrieval worker uses different instructions than a calculation worker.
-          \item \textbf{Unit Testable}: You can cache and test each worker independently.
+      \begin{alertblock}{\textbf{Approach B: Orchestrator-Workers}}
+        \begin{itemize}\footnotesize
+          \item \textbf{Context Isolation}: Workers receive only scoped parameters
+          \item \textbf{Parallel Fan-Out}: Concurrent worker execution speeds latency
+          \item \textbf{Specialized Prompts}: Extraction prompt $\neq$ Penalty prompt
+          \item \textbf{Unit Testable}: Workers independently verifiable \& mockable
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Hung's Core Point on the "Orchestration Tax"}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Orchestrators cost extra planning tokens and lose cross-worker context. But they buy you \textbf{clean attention and parallelism} that a single mega-context cannot match.
+    \footnotesize Orchestrators incur a token tax for coordination, but buy \textbf{context isolation and parallelism} that mega-prompts cannot match.
   \end{tcolorbox}
 \end{frame}
 
@@ -496,36 +454,29 @@
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Evaluator-Optimizer: The Review Loop}}
-        \footnotesize
-        \begin{itemize}
-          \item Worker drafts $\to$ Evaluator checks $\to$ Worker rewrites.
-          \item Stops when it meets clear criteria or hits a retry limit.
-          \item \textbf{The Hidden Trap}: If the evaluator uses the same model weights as the worker, both share the exact same blind spots.
+      \begin{block}{\textbf{Evaluator-Optimizer Loop}}
+        \begin{itemize}\footnotesize
+          \item Worker drafts $\to$ Evaluator grades $\to$ Re-draft loop
+          \item Terminates on threshold criteria or max retries
+          \item \textbf{Hidden Trap}: Same model weights share identical blind spots
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
       \begin{alertblock}{\textbf{Lead/Subagents (Anthropic 2025)}}
-        \footnotesize
-        \textit{How Anthropic structured multi-agent research}:
-        \begin{itemize}
-          \item \textbf{Lead Agent}: Keeps the master plan, assigns subtasks, writes the final report.
-          \item \textbf{Subagents}: Deep dive into narrow searches and return short summaries.
-          \item \textbf{The Real Trade-Off}:
-            \begin{itemize}\scriptsize
-              \item \textbf{Capability}: Solves complex multi-hour tasks single agents fail at.
-              \item \textbf{The Price}: $3\times - 8\times$ total token usage; high latency bottleneck at the Lead's synthesis step.
-            \end{itemize}
+        \begin{itemize}\footnotesize
+          \item \textbf{Lead Agent}: Decomposes master plan, synthesizes output
+          \item \textbf{Subagents}: Independent search threads; short summaries
+          \item \textbf{The Trade-Off}: Unlocks multi-hour tasks, but incurs a **$3\times$--$8\times$ token multiplier**
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{block}{\textbf{Hung's Defense Talking Point}}
-    \footnotesize Why did Anthropic reject peer-to-peer chats? Because letting subagents chat without a supervisor creates conversational sycophancy where agents agree with each other's mistakes.
+    \footnotesize Anthropic rejected uncoordinated subagent chats because peer-to-peer swarms converge on mutual agreement over errors.
   \end{block}
 \end{frame}
 
@@ -535,35 +486,34 @@
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \textbf{\color{hcmutblue}The Problem: Long Tasks Always Break}
+      \textbf{\color{hcmutblue}Production Reality: Long Runs Break}
       \begin{itemize}\footnotesize
-        \item When an agent runs a 45-minute task, APIs drop, network connections reset, and rate limits hit.
-        \item \textbf{Without Durable Execution}: The process crashes $\to$ state disappears $\to$ you start over from minute zero and re-pay for every token.
+        \item Network timeouts, rate limits, and server crashes
+        \item Without persistence: State lost $\to$ re-run from scratch (cost $\uparrow$)
       \end{itemize}
       \vspace{0.1cm}
-      \textbf{\color{hcmutblue}How LangGraph Solves This}:
-      \begin{enumerate}\footnotesize
-        \item \textbf{Explicit State Graphs}: State is a clean dictionary modified only through defined reducer functions.
-        \item \textbf{Checkpointing}: After every step, a snapshot is saved directly to PostgreSQL or Redis.
-        \item \textbf{Human-in-the-Loop}: Pause execution, wait for a human click, and resume seamlessly.
-      \end{enumerate}
+      \textbf{\color{hcmutblue}LangGraph Architecture}:
+      \begin{itemize}\footnotesize
+        \item \textbf{StateGraph}: Explicit state schema with pure reducers
+        \item \textbf{Checkpointers}: Snapshots saved to SQLite/Postgres per node
+        \item \textbf{Human Gate}: Pause execution for approval; resume state
+      \end{itemize}
     \end{column}
 
     \begin{column}{0.47\textwidth}
-      \begin{tcolorbox}[colback=boxbg,colframe=darkgreen,title={\textbf{Time-Travel Debugging}},fonttitle=\footnotesize\bfseries]
-        \footnotesize
-        \begin{itemize}
-          \item \textbf{Rewind}: Roll state back to Step 4 after fixing a bad prompt.
-          \item \textbf{Human Edits}: A human fixes a corrupted variable, and the agent continues on the new branch.
-          \item \textbf{Instant Recovery}: When a server reboots, the agent picks up at the exact node it left off.
+      \begin{tcolorbox}[colback=boxbg,colframe=darkgreen,title={\textbf{Time-Travel & Fault Recovery}},fonttitle=\footnotesize\bfseries]
+        \begin{itemize}\footnotesize
+          \item \textbf{Rewind}: Rollback to step $N-1$ on error
+          \item \textbf{Resume}: Reboot continues from last verified node
+          \item \textbf{Audit Trace}: Full state inspectability for compliance
         \end{itemize}
       \end{tcolorbox}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{alertblock}{\textbf{Hung's Takeaway}}
-    \footnotesize Checkpointing isn't an optional devops trick; it is what turns an unreliable demo into production software.
+    \footnotesize Checkpointing turns fragile toy scripts into durable production software.
   \end{alertblock}
 \end{frame}
 
@@ -573,32 +523,31 @@
 
   \begin{columns}[t]
     \begin{column}{0.52\textwidth}
-      \textbf{\color{darkred}What Huang et al. (ICLR 2024) Proved}:
+      \textbf{\color{darkred}Huang et al. (ICLR 2024) Proof}:
       \begin{itemize}\footnotesize
-        \item Across reasoning tests (math, logic, commonsense), \textbf{LLMs cannot fix reasoning errors without external tools}.
-        \item When told: \textit{"Review your work and fix any mistakes"}:
-          \begin{itemize}\scriptsize
-            \item Fixing a Wrong Answer to Right: Barely happened ($< 5\%$).
-            \item Changing a Right Answer to Wrong: Happened often ($15\% - 25\%$).
+        \item LLMs \textbf{cannot self-correct reasoning} without external signals
+        \item Under prompt: \textit{"Review and fix your mistakes"}:
+          \begin{itemize}\footnotesize
+            \item Wrong $\to$ Right: $< 5\%$ of benchmark cases
+            \item Right $\to$ Wrong: $15\% - 25\%$ (overthinking degradation)
           \end{itemize}
-        \item \textbf{Conclusion}: Blind self-correction \textbf{hurts overall accuracy}.
+        \item \textbf{Conclusion}: Intrinsic self-critique degrades net accuracy
       \end{itemize}
     \end{column}
 
     \begin{column}{0.45\textwidth}
-      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Why Does This Happen?}},fonttitle=\footnotesize\bfseries]
-        \footnotesize
-        \begin{enumerate}
-          \item \textbf{Same Brain, Same Blind Spot}: If the model didn't know the logic in turn 1, it doesn't suddenly discover it in turn 2.
-          \item \textbf{Eager to Please}: When you ask "Are you sure?", the model assumes you spotted a mistake, panics, and second-guesses its correct answer.
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Why Self-Correction Fails}},fonttitle=\footnotesize\bfseries]
+        \begin{enumerate}\footnotesize
+          \item \textbf{Shared Blind Spot}: Same weights cannot detect own logical premises
+          \item \textbf{Sycophantic Doubt}: "Are you sure?" prompts panic reversals
         \end{enumerate}
       \end{tcolorbox}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{alertblock}{\textbf{Hung's Provocation for the Committee}}
-    \footnotesize Why did older papers claim self-refinement worked? Because they tested prose writing (editing style) or accidentally leaked correct answers in the critique prompt!
+    \footnotesize Early self-refine papers showed gains only in prose writing, or accidentally leaked answers in critique prompts.
   \end{alertblock}
 \end{frame}
 
@@ -689,37 +638,30 @@
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
       \begin{block}{\textbf{1. Self-Generated Feedback (Internal)}}
-        \footnotesize
-        \textbf{What it is}: The model re-reads its own output and grades itself.\\
-        \textbf{The problem}: It uses the exact same probability distribution that made the error.\\
-        \textbf{What happens}:
-        \begin{itemize}\scriptsize
-          \item Confirms its own misconceptions.
-          \item Generates believable excuses for wrong steps.
-          \item Like a student grading their own test without an answer key.
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: Model critiques its own generation
+          \item \textbf{Fatal Flaw}: Queries identical probability distribution
+          \item \textbf{Pathology}: Confirms delusions; rationalizes fake statutes
+          \item \textbf{Analogy}: Student grading own exam without answer key
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
       \begin{alertblock}{\textbf{2. Environment Feedback (External Oracles)}}
-        \footnotesize
-        \textbf{What it is}: Signal returned by an external system that cannot be fooled.\\
-        \textbf{Real-world examples}:
-        \begin{itemize}\scriptsize
-          \item Code execution (Python errors, compiler output).
-          \item Database responses (Record exists / Revoked).
-          \item Math solvers and formal verification engines.
-          \item A human expert in the loop.
+        \begin{itemize}\footnotesize
+          \item \textbf{Mechanism}: External system returns objective signal
+          \item \textbf{Oracles}: Python compilers, DB queries, API lookups, Humans
+          \item \textbf{Property}: Cannot be fooled by model linguistic fluency
+          \item \textbf{Verdict}: The only true anchor to ground truth
         \end{itemize}
-        \textbf{Why it matters}: It is the only true anchor to reality.
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Tung's Thesis for Defense}},fonttitle=\footnotesize\bfseries]
-    \footnotesize An agent cannot pull itself out of a hallucination by thinking harder. Without an \textbf{external verification tool}, iterative loops are pure theater.
+    \footnotesize An agent cannot think itself out of a hallucination. Without external verification tools, agentic loops are pure theater.
   \end{tcolorbox}
 \end{frame}
 
@@ -729,36 +671,31 @@
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Outcome Models: Scoring the Final Answer (ORM)}}
-        \footnotesize
-        \begin{itemize}
-          \item Only checks if the final answer matches ($0$ or $1$).
-          \item \textbf{The Fatal Flaw}: Rewards broken reasoning that accidentally got lucky.
-          \item Cannot tell you which step went off the rails.
-          \item Cannot guide search trees because credit is only assigned at the end.
+      \begin{block}{\textbf{Outcome Models (ORM): Final Score}}
+        \begin{itemize}\footnotesize
+          \item Evaluates only final answer ($0$ or $1$)
+          \item \textbf{Fatal Flaw}: Rewards broken logic that got lucky
+          \item Cannot assign credit to intermediate steps
+          \item Ineffective for tree search (MCTS)
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Process Models: Scoring Every Single Step (PRM)}}
-        \footnotesize
-        \begin{itemize}
-          \item Evaluates the validity of \textbf{each reasoning step} as it happens.
-          \item \textbf{Why it changes everything}:
-            \begin{itemize}\scriptsize
-              \item Catches the exact moment logic fails.
-              \item Enables tree search (MCTS) to prune bad branches immediately.
-              \item Prevents the model from "faking" alignment.
-            \end{itemize}
+      \begin{alertblock}{\textbf{Process Models (PRM): Step-by-Step}}
+        \begin{itemize}\footnotesize
+          \item Evaluates validity of \textbf{each individual reasoning step}
+          \item Identifies the exact inflection point of error
+          \item Enables early pruning of bad search branches
+          \item Powers test-time compute scaling (e.g. OpenAI o1/o3)
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{What This Means for Agents}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Process supervision is how frontier models (like OpenAI o1/o3) scale inference-time compute. They don't just generate text; they search a path checked at every step.
+  \vspace{0.15cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Significance for Agent Architecture}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Process supervision converts agents from unguided text generators into step-verified tree search systems.
   \end{tcolorbox}
 \end{frame}
 
@@ -769,31 +706,30 @@
   \begin{columns}[c]
     \begin{column}{0.5\textwidth}
       \begin{block}{\textbf{The STaR Bootstrap Loop}}
-        \footnotesize
-        \begin{enumerate}
-          \item \textbf{Generate}: Model tries to solve a problem with step-by-step thinking.
-          \item \textbf{Filter (The Crucial Gate)}: Compare the final answer with the \textbf{Ground-Truth Answer Key}. \textit{Throw out everything that got it wrong.}
-          \item \textbf{Rationalize}: If it failed, give it the right answer and let it re-trace the logic backward.
-          \item \textbf{Finetune}: Train the model only on the reasoning paths that proved correct.
+        \begin{enumerate}\footnotesize
+          \item \textbf{Generate}: Sample step-by-step reasoning paths
+          \item \textbf{Filter (The Gate)}: Check against \textbf{Ground-Truth Answer Key}\\
+                $\to$ \textit{Discard 100\% of incorrect trajectories}
+          \item \textbf{Rationalize}: If failed, provide correct label $\to$ reconstruct
+          \item \textbf{Finetune}: Train model weights only on verified paths
         \end{enumerate}
       \end{block}
     \end{column}
 
     \begin{column}{0.47\textwidth}
-      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Notice Where the Signal Comes From}},fonttitle=\footnotesize\bfseries]
-        \footnotesize
-        \begin{itemize}
-          \item STaR does \textbf{not} magically teach itself.
-          \item The entire improvement relies on the \textbf{Answer Key in Step 2}.
-          \item If you remove ground truth and let the model pick what it "likes", its reasoning collapses into self-reinforcing errors.
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Signal Origin}},fonttitle=\footnotesize\bfseries]
+        \begin{itemize}\footnotesize
+          \item STaR does not self-learn in a vacuum
+          \item 100\% of improvement comes from the \textbf{Answer Key}
+          \item Removing external ground truth triggers training collapse
         \end{itemize}
       \end{tcolorbox}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{block}{\textbf{Tung's Insight}}
-    \footnotesize Self-training is impossible in a vacuum. You always need an external ground-truth filter to separate signal from noise.
+    \footnotesize Self-training without an external ground-truth filter is mathematically impossible.
   \end{block}
 \end{frame}
 
@@ -829,37 +765,36 @@
 
   \begin{columns}[c]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Story A: Free-Form Swarm (Fails)}}
-        \scriptsize
-        \texttt{Task: Licensing an e-wallet for foreign investors.}\\
-        \textbf{What went wrong}:
-        \begin{itemize}
-          \item Model read an old legal corpus.
-          \item Found Decree 101/2012 (old 50B capital rule).
-          \item Missed Decree 52/2024 which fully revoked Decree 101.
-          \item Two agents debated: The Auditor brought up Decree 52, but the Drafter insisted on 101 $\to$ They flattered each other and agreed on the revoked law!
+      \begin{block}{\textbf{Pattern A: Free-Form Swarm (Fails)}}
+        \footnotesize
+        \texttt{Task: FDI E-Wallet Licensing (SBV)}\\
+        \begin{itemize}\footnotesize
+          \item Model retrieves outdated corpus: Decree 101/2012 (50B capital)
+          \item Misses Decree 52/2024 which fully revoked Decree 101
+          \item Drafter \& Auditor debate $\to$ converge on revoked decree
+          \item \textbf{Outcome}: Critical statutory hallucination in production
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Story B: Controlled Graph with MCP Tool (Wins)}}
-        \scriptsize
-        \texttt{Our StateGraph with external checker}:
-        \begin{enumerate}
-          \item \textbf{Planner}: Splits capital requirements and equity limits.
-          \item \textbf{Worker}: Proposes Decree 101/2012.
-          \item \textbf{External Tool}: Calls legal database API \texttt{vbpl\_verify\_status}.
-          \item \textbf{Alert Triggered}: Tool returns \texttt{REVOKED\_BY\_52/2024}.
-          \item \textbf{Graph Re-routes}: State rolls back, switches to Decree 52/2024 $\to$ \textbf{100\% Compliant}.
+      \begin{alertblock}{\textbf{Pattern B: StateGraph + MCP Verifier (Wins)}}
+        \footnotesize
+        \texttt{G4 Architecture Trace}:
+        \begin{enumerate}\footnotesize
+          \item \textbf{Worker}: Proposes Decree 101/2012
+          \item \textbf{MCP Tool}: Invokes \texttt{vbpl\_verify\_status} API
+          \item \textbf{Intercept}: Tool returns \texttt{REVOKED\_BY\_52/2024}
+          \item \textbf{Rollback}: StateGraph rewinds \& routes to Decree 52/2024
+          \item \textbf{Outcome}: \textbf{100\% verified compliance}
         \end{enumerate}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \begin{block}{\textbf{Live Project Demonstration}}
-    \footnotesize Running \texttt{python3 -m src.agents.orchestrator} or \texttt{streamlit run src/ui/app.py} executes our full multi-agent pipeline live, demonstrating external MCP status checks intercepting revoked decrees in milliseconds.
+    \footnotesize Run \texttt{python3 -m src.agents.orchestrator} or \texttt{streamlit run src/ui/app.py} to inspect live MCP intercept and state rollback in real time.
   \end{block}
 \end{frame}
 
@@ -889,11 +824,10 @@
 
     \begin{column}{0.48\textwidth}
       \begin{block}{\textbf{Three Unsolved Frontiers}}
-        \footnotesize
-        \begin{itemize}\scriptsize
-          \item \textbf{Auto-Switching Patterns}: Can a model detect query difficulty and choose whether to call a simple chain or launch an orchestrator?
-          \item \textbf{Step Verifiers for Law and Medicine}: PRMs work in math where equations have proofs. How do we score steps in nuanced legal analysis?
-          \item \textbf{Open Standards (MCP)}: Decoupling tools so agents don't need custom prompt hacks for every API.
+        \begin{itemize}\footnotesize
+          \item \textbf{Adaptive Routing}: Model-driven query complexity classifier
+          \item \textbf{Domain PRMs}: Step-level supervision for legal/medical reasoning
+          \item \textbf{MCP Standardization}: Decoupled tool protocol avoiding prompt hacks
         \end{itemize}
       \end{block}
     \end{column}
