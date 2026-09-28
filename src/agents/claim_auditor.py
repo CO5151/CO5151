@@ -7,12 +7,14 @@ Compliant with Google ADK.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from src.agents.base import ADKAgent
 from src.core.logger import logger
-from src.memory.sqlite_manager import SQLiteMemoryManager
 from src.memory.state_models import AtomicClaim, AuditReport
+
+if TYPE_CHECKING:
+    from src.memory.sqlite_manager import SQLiteMemoryManager
 
 
 class ClaimAuditorAgent(ADKAgent):
@@ -64,7 +66,7 @@ class ClaimAuditorAgent(ADKAgent):
                     note += f" (đã bị bãi bỏ bởi {revoked_by})"
 
             claim = AtomicClaim(
-                claim_id=f"claim_{idx+1:03d}",
+                claim_id=f"claim_{idx + 1:03d}",
                 text=f"Căn cứ {doc_id} ({article}): {clause.get('article_title', '')}",
                 cited_statute=doc_id,
                 cited_article=article,

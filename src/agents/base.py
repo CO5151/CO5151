@@ -12,7 +12,10 @@ from __future__ import annotations
 import time
 import uuid
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @dataclass
@@ -103,7 +106,9 @@ class ADKRunner:
         """Registers an agent into the runner pipeline."""
         self.agents[agent.name] = agent
 
-    def dispatch(self, agent_name: str, input_data: Any, context: dict[str, Any] | None = None) -> AgentResult:
+    def dispatch(
+        self, agent_name: str, input_data: Any, context: dict[str, Any] | None = None
+    ) -> AgentResult:
         """Dispatches an execution step to a registered agent and logs the trace."""
         agent = self.agents.get(agent_name)
         if not agent:

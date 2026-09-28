@@ -19,7 +19,12 @@ from src.agents.drafter import DrafterAgent
 from src.agents.lawgraph import LawGraphAgent
 from src.core.logger import logger
 from src.memory.sqlite_manager import SQLiteMemoryManager
-from src.memory.state_models import AuditHistoryRecord, AuditReport, EnterpriseProfile, LegalAgentState
+from src.memory.state_models import (
+    AuditHistoryRecord,
+    AuditReport,
+    EnterpriseProfile,
+    LegalAgentState,
+)
 
 
 class LegalOrchestrator(ADKAgent):
@@ -71,7 +76,12 @@ class LegalOrchestrator(ADKAgent):
                 "Subgoal 1: Xác định điều kiện cấp phép cung ứng dịch vụ Ví điện tử",
                 "Subgoal 2: Kiểm tra tỷ lệ sở hữu tối đa và điều kiện cho nhà đầu tư nước ngoài",
             ]
-            keywords = ["ví điện tử", "thanh toán không dùng tiền mặt", "điều kiện cung ứng", "nhà đầu tư nước ngoài"]
+            keywords = [
+                "ví điện tử",
+                "thanh toán không dùng tiền mặt",
+                "điều kiện cung ứng",
+                "nhà đầu tư nước ngoài",
+            ]
         elif "đèn đỏ" in q_lower or "giao thông" in q_lower or "xe máy" in q_lower:
             subgoals = [
                 "Subgoal 1: Tra cứu mức xử phạt vi phạm hành vi vượt đèn đỏ",
@@ -124,7 +134,9 @@ class LegalOrchestrator(ADKAgent):
         audit_report: AuditReport = (
             audit_res.data
             if audit_res.success and audit_res.data
-            else AuditReport(total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False)
+            else AuditReport(
+                total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False
+            )
         )
         state.audit_report = audit_report
         state.current_step = 3
@@ -132,7 +144,9 @@ class LegalOrchestrator(ADKAgent):
         # 4. Error recovery / Re-routing loop (if revoked documents are found)
         active_clauses = [c for c in retrieved if c.get("status") == "active"]
         if not audit_report.is_fully_verified and state.retry_count < self.max_retries:
-            logger.warning("LegalOrchestrator: Revoked document detected! Triggering Re-route edge...")
+            logger.warning(
+                "LegalOrchestrator: Revoked document detected! Triggering Re-route edge..."
+            )
             state.retry_count += 1
 
             # Prune revoked clauses and enforce active replacement
@@ -145,7 +159,9 @@ class LegalOrchestrator(ADKAgent):
                     old_doc_info = LawGraphAgent.STATUTE_CATALOG.get(uc.cited_statute)
                     if old_doc_info and old_doc_info.get("revoked_by"):
                         successor_id = old_doc_info["revoked_by"]
-                        logger.info(f"LegalOrchestrator: Following revocation chain to successor: {successor_id}")
+                        logger.info(
+                            f"LegalOrchestrator: Following revocation chain to successor: {successor_id}"
+                        )
                         successor_doc = LawGraphAgent.STATUTE_CATALOG.get(successor_id)
                         if successor_doc:
                             for art in successor_doc.get("articles", []):
@@ -166,7 +182,9 @@ class LegalOrchestrator(ADKAgent):
             audit_report = (
                 re_audit_res.data
                 if re_audit_res.success and re_audit_res.data
-                else AuditReport(total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False)
+                else AuditReport(
+                    total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False
+                )
             )
             state.audit_report = audit_report
             state.retrieved_clauses = active_clauses
@@ -196,7 +214,9 @@ class LegalOrchestrator(ADKAgent):
                 auditor_score=audit_report.grounding_rate,
             )
             self.memory_manager.log_audit_history(record)
-            logger.info(f"LegalOrchestrator: Audit record logged to SQLite for session {session_id}")
+            logger.info(
+                f"LegalOrchestrator: Audit record logged to SQLite for session {session_id}"
+            )
         except Exception as e:
             logger.warning(f"Could not persist audit record: {e}")
 
@@ -221,5 +241,8 @@ if __name__ == "__main__":
 
     result_state = orchestrator.run(test_query, enterprise_profile=profile)
     print("\n" + str(result_state.final_compliance_dossier))
-    print("\n[Audit Status]:", "100% Grounded" if result_state.audit_report.is_fully_verified else "Warning")
+    print(
+        "\n[Audit Status]:",
+        "100% Grounded" if result_state.audit_report.is_fully_verified else "Warning",
+    )
     print("[Session ID]:", result_state.session_id)

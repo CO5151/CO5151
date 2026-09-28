@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 from src.core.logger import logger
 from src.evaluation.baselines import (
@@ -36,7 +36,7 @@ class SBVLawGraphEvaluator:
     """Benchmark runner executing SBV legal questions across RAG baselines."""
 
     # Pricing reference table ($ per 1,000 tokens)
-    PRICING_TABLE: dict[str, dict[str, float]] = {
+    PRICING_TABLE: ClassVar[dict[str, dict[str, float]]] = {
         "deepseek_v3": {
             "input_per_1k": 0.00014,
             "output_per_1k": 0.00028,
@@ -75,7 +75,7 @@ class SBVLawGraphEvaluator:
             logger.warning(f"Dataset path {self.dataset_path} does not exist. Initializing empty.")
             return []
         try:
-            with open(self.dataset_path, "r", encoding="utf-8") as f:
+            with open(self.dataset_path, encoding="utf-8") as f:
                 data = json.load(f)
             logger.info(f"Loaded {len(data)} SBV benchmark test queries from {self.dataset_path}")
             return data
@@ -142,10 +142,9 @@ class SBVLawGraphEvaluator:
             grounding_list.append(gr)
             latencies.append(pred.latency_ms)
 
-            cost = (
-                (pred.input_tokens / 1000) * self.pricing["input_per_1k"]
-                + (pred.output_tokens / 1000) * self.pricing["output_per_1k"]
-            )
+            cost = (pred.input_tokens / 1000) * self.pricing["input_per_1k"] + (
+                pred.output_tokens / 1000
+            ) * self.pricing["output_per_1k"]
             costs.append(cost)
 
         n = len(questions)
@@ -238,13 +237,15 @@ class SBVLawGraphEvaluator:
         breakdown = []
         for name, tin, tout, runs in tracks:
             c = (tin / 1000) * effective_in_rate + (tout / 1000) * out_p
-            breakdown.append({
-                "track": name,
-                "runs": runs,
-                "input_tokens": tin,
-                "output_tokens": tout,
-                "cost_usd": round(c, 4),
-            })
+            breakdown.append(
+                {
+                    "track": name,
+                    "runs": runs,
+                    "input_tokens": tin,
+                    "output_tokens": tout,
+                    "cost_usd": round(c, 4),
+                }
+            )
 
         return {
             "provider": pricing_provider,
@@ -256,4 +257,3 @@ class SBVLawGraphEvaluator:
             "cache_hit_ratio": cache_hit_ratio,
             "breakdown": breakdown,
         }
-

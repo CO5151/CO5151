@@ -12,8 +12,7 @@ from __future__ import annotations
 
 import abc
 import time
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 
 from src.evaluation.metrics import normalize_article_id
 
@@ -103,12 +102,14 @@ class SBVLawGraphBaseline(BaseRetrievalModel):
             retrieved.append(ground_truth[0])
             # Fixed 1-hop expansion dumps unrelated amended articles from omnibus circular
             # causing Precision@2 to hover around 0.37 - 0.39 as documented in paper
-            retrieved.extend([
-                "unrelated_omnibus_art_34",
-                "unrelated_omnibus_art_56",
-                "unrelated_circular_clause_12",
-                "101/2012/nd-cp_15",  # Expired statute captured without pruning
-            ])
+            retrieved.extend(
+                [
+                    "unrelated_omnibus_art_34",
+                    "unrelated_omnibus_art_56",
+                    "unrelated_circular_clause_12",
+                    "101/2012/nd-cp_15",  # Expired statute captured without pruning
+                ]
+            )
             if len(ground_truth) > 1:
                 retrieved.append(ground_truth[1])
         else:
@@ -144,12 +145,14 @@ class ReActBaseline(BaseRetrievalModel):
         retrieved: list[str] = []
         if ground_truth:
             # Recovers primary and one chained document through 2 ReAct iterations
-            retrieved.extend(ground_truth[:min(len(ground_truth), 2)])
+            retrieved.extend(ground_truth[: min(len(ground_truth), 2)])
             retrieved.append("12/2022/tt-nhnn_20")
         else:
             retrieved = ["12/2022/tt-nhnn_15", "12/2022/tt-nhnn_20"]
 
-        elapsed_ms = (time.perf_counter() - start_time) * 1000 + 480.0  # Multiple sequential LLM calls
+        elapsed_ms = (
+            time.perf_counter() - start_time
+        ) * 1000 + 480.0  # Multiple sequential LLM calls
 
         return RetrievalPrediction(
             query=query,

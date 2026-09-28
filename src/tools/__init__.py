@@ -19,6 +19,6 @@ from src.tools.validity_checker import (
 __all__ = [
     "STATUTORY_RETRIEVER_TOOL",
     "VALIDITY_CHECKER_TOOL",
-    "retrieve_statutory_provisions",
     "check_statute_validity",
+    "retrieve_statutory_provisions",
 ]

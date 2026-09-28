@@ -6,7 +6,10 @@ comparing Naive Chunk RAG, Static 1-Hop SBV-LawGraph, ReAct, and LegalPilot-VN.
 
 from __future__ import annotations
 
-from src.evaluation.metrics import MetricSummary
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.evaluation.metrics import MetricSummary
 
 
 def generate_markdown_report(results: dict[str, MetricSummary]) -> str:
@@ -34,13 +37,15 @@ def generate_markdown_report(results: dict[str, MetricSummary]) -> str:
         )
         lines.append(row)
 
-    lines.extend([
-        "",
-        "### Key Findings:",
-        "- **Precision@2 Context Dilution**: As demonstrated in the SBV-LawGraph paper, static 1-hop graph expansion yields ~0.38 Precision@2 due to omnibus circulars amending unrelated provisions, injecting >60% noise into the retrieval context.",
-        "- **Noise Reduction**: LegalPilot-VN's selective traversal prunes irrelevant cross-amendment edges and revoked provisions, lowering noise ratio to <15% and boosting Precision@2.",
-        "- **Grounding Rate**: Claim Auditor verification oracle achieves 100% active statutory grounding, eliminating hallucinations and outdated legal references.",
-    ])
+    lines.extend(
+        [
+            "",
+            "### Key Findings:",
+            "- **Precision@2 Context Dilution**: As demonstrated in the SBV-LawGraph paper, static 1-hop graph expansion yields ~0.38 Precision@2 due to omnibus circulars amending unrelated provisions, injecting >60% noise into the retrieval context.",
+            "- **Noise Reduction**: LegalPilot-VN's selective traversal prunes irrelevant cross-amendment edges and revoked provisions, lowering noise ratio to <15% and boosting Precision@2.",
+            "- **Grounding Rate**: Claim Auditor verification oracle achieves 100% active statutory grounding, eliminating hallucinations and outdated legal references.",
+        ]
+    )
 
     return "\n".join(lines)
 
@@ -69,10 +74,12 @@ def generate_latex_table(results: dict[str, MetricSummary]) -> str:
         )
         lines.append(row)
 
-    lines.extend([
-        r"\hline",
-        r"\end{tabular}",
-        r"\end{table*}",
-    ])
+    lines.extend(
+        [
+            r"\hline",
+            r"\end{tabular}",
+            r"\end{table*}",
+        ]
+    )
 
     return "\n".join(lines)

@@ -7,6 +7,7 @@ Tests the multi-agent pipeline:
 - LegalOrchestrator end-to-end execution and re-routing loop
 """
 
+import contextlib
 import unittest
 from pathlib import Path
 
@@ -33,10 +34,8 @@ class TestLegalAgents(unittest.TestCase):
         # Clean up test database
         p = Path(self.test_db_path)
         if p.exists():
-            try:
+            with contextlib.suppress(OSError):
                 p.unlink()
-            except OSError:
-                pass
 
     def test_lawgraph_retrieval(self) -> None:
         """Tests that LawGraphAgent retrieves matching provisions."""
@@ -51,8 +50,18 @@ class TestLegalAgents(unittest.TestCase):
     def test_claim_auditor_detects_revoked_document(self) -> None:
         """Tests that ClaimAuditorAgent flags expired statutes and computes grounding rate."""
         sample_clauses = [
-            {"doc_id": "101/2012/ND-CP", "status": "expired", "revoked_by": "52/2024/ND-CP", "content": "Vốn 50 tỷ"},
-            {"doc_id": "52/2024/ND-CP", "status": "active", "revoked_by": None, "content": "Vốn 50 tỷ đồng theo luật mới."},
+            {
+                "doc_id": "101/2012/ND-CP",
+                "status": "expired",
+                "revoked_by": "52/2024/ND-CP",
+                "content": "Vốn 50 tỷ",
+            },
+            {
+                "doc_id": "52/2024/ND-CP",
+                "status": "active",
+                "revoked_by": None,
+                "content": "Vốn 50 tỷ đồng theo luật mới.",
+            },
         ]
         report = self.auditor.audit_provisions(sample_clauses)
         self.assertEqual(report.total_claims, 2)
