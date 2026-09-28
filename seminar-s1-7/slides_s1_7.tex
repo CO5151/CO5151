@@ -5,7 +5,7 @@
 %  Group G4: Dang Lam Tung (Lead) - Nguyen Trung Phong - Vu Viet Hung
 %  EXACTLY 22 SLIDES | HUMAN LANGUAGE TITLES | DEADLINE & SUBMISSION SLIDE INCLUDED
 % =====================================================================
-\documentclass[aspectratio=169,10pt]{beamer}
+\documentclass[aspectratio=169,10pt,xcolor={table}]{beamer}
 
 % ---- Fonts & Encoding ----
 \usepackage[utf8]{inputenc}
@@ -18,8 +18,6 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{tabularx}
-\usepackage{xcolor}
-\usepackage{colortbl}
 \usepackage{graphicx}
 \usepackage{tcolorbox}
 
@@ -36,6 +34,8 @@
 \setbeamertemplate{navigation symbols}{}
 \setbeamercolor{frametitle}{bg=hcmutblue, fg=white}
 \setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamercolor{framesubtitle}{fg=white!80!hcmutblue}
+\setbeamerfont{framesubtitle}{size=\scriptsize, series=\normalfont}
 \setbeamercolor{footline}{bg=hcmutblue!85!black, fg=white}
 \setbeamerfont{footline}{size=\tiny}
 \setbeamercolor{itemize item}{fg=hcmutblue}
@@ -47,10 +47,11 @@
 \makeatletter
 \setbeamertemplate{frametitle}{%
   \nointerlineskip%
-  \begin{beamercolorbox}[wd=\paperwidth,ht=2.9ex,dp=1.3ex,leftskip=0.5cm,rightskip=0.5cm]{frametitle}%
-    \usebeamerfont{frametitle}\insertframetitle%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=0.55cm,rightskip=0.55cm,sep=0.15cm]{frametitle}%
+    {\usebeamerfont{frametitle}\insertframetitle}\par%
     \ifx\insertframesubtitle\@empty\else%
-      \hfill{\footnotesize\normalfont\color{white!85}\textit{\insertframesubtitle}}%
+      \vspace{0.04cm}%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\textit{\insertframesubtitle}}\par%
     \fi%
   \end{beamercolorbox}%
 }
@@ -104,7 +105,7 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Part I: The Basics \& Primitives}}
         \textbf{Nguyen Trung Phong}\\
-        {\scriptsize (9.5 mins $\vert$ Slides 5--9)}\\[0.2cm]
+        {\scriptsize (9.5 mins $\vert$ Slides 5--9)}\\[0.08cm]
         \begin{itemize}\scriptsize
           \item Who holds the wheel: Code vs. Model?
           \item Why Anthropic advises against agents
@@ -118,7 +119,7 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Part II: Systems \& Fallacies}}
         \textbf{Vu Viet Hung}\\
-        {\scriptsize (9.5 mins $\vert$ Slides 10--15)}\\[0.2cm]
+        {\scriptsize (9.5 mins $\vert$ Slides 10--15)}\\[0.08cm]
         \begin{itemize}\scriptsize
           \item Why one huge prompt context fails
           \item The Lead/Subagent split: Paying the bill
@@ -133,7 +134,7 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Part III: Truth \& Live Project}}
         \textbf{Dang Lam Tung (Lead)}\\
-        {\scriptsize (9.5 mins $\vert$ Slides 16--21)}\\[0.2cm]
+        {\scriptsize (9.5 mins $\vert$ Slides 16--21)}\\[0.08cm]
         \begin{itemize}\scriptsize
           \item Where does real feedback come from?
           \item Checking each step vs. final score (PRM)
@@ -146,7 +147,7 @@
     \end{column}
   \end{columns}
 
-  \vspace{0.25cm}
+  \vspace{0.12cm}
   \begin{alertblock}{\footnotesize \textbf{Our Presentation Principle}}
     \footnotesize Every member covers: \textbf{Core System Theory} $+$ \textbf{A Critical Extension Paper} $+$ \textbf{Real Production Evidence}.
   \end{alertblock}
@@ -634,6 +635,7 @@
   \framesubtitle{Presenter: Vu Viet Hung $\vert$ Group G4's Production Architecture for Vietnamese Law}
 
   \begin{center}
+    \resizebox{0.92\textwidth}{!}{%
     \begin{tikzpicture}[node distance=0.8cm and 0.9cm, >=Stealth, auto,
       block/.style={rectangle, draw=hcmutblue, fill=hcmutgray, thick, rounded corners, minimum height=0.7cm, font=\scriptsize\bfseries, align=center},
       tool/.style={rectangle, draw=darkred, fill=red!10, thick, rounded corners, minimum height=0.7cm, font=\scriptsize, align=center},
@@ -655,7 +657,8 @@
       \draw[->, thick] (db) -- (verifier);
       \draw[->, thick] (verifier) -- node[above]{\tiny Active} (synth);
       \draw[->, thick, dashed, darkred] (verifier) -- ++(0,-1.0cm) -| node[near start, below]{\tiny Revoked $\to$ Re-route} (router);
-    \end{tikzpicture}
+    \end{tikzpicture}%
+    }
   \end{center}
 
   \vspace{0.1cm}
