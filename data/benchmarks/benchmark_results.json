@@ -13,7 +13,7 @@
     "noise_ratio": 0.7483,
     "grounding_rate": 0.6667,
     "avg_latency_ms": 45.0,
-    "est_cost_usd_per_query": 0.000244
+    "est_cost_usd_per_query": 0.000238
   },
   "Static 1-Hop SBV-LawGraph": {
     "model_name": "Static 1-Hop SBV-LawGraph",
@@ -29,7 +29,7 @@
     "noise_ratio": 0.788,
     "grounding_rate": 0.3333,
     "avg_latency_ms": 120.0,
-    "est_cost_usd_per_query": 0.000508
+    "est_cost_usd_per_query": 0.00051
   },
   "Single-Agent ReAct": {
     "model_name": "Single-Agent ReAct",
@@ -45,7 +45,7 @@
     "noise_ratio": 0.4783,
     "grounding_rate": 0.75,
     "avg_latency_ms": 480.0,
-    "est_cost_usd_per_query": 0.000742
+    "est_cost_usd_per_query": 0.000736
   },
   "LegalPilot-VN Agentic (Ours)": {
     "model_name": "LegalPilot-VN Agentic (Ours)",
@@ -61,6 +61,6 @@
     "noise_ratio": 0.455,
     "grounding_rate": 1.0,
     "avg_latency_ms": 185.0,
-    "est_cost_usd_per_query": 0.000418
+    "est_cost_usd_per_query": 0.000414
   }
 }

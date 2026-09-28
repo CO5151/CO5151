@@ -30,7 +30,12 @@ class ClaimAuditorAgent(ADKAgent):
 
     def _run(self, input_data: Any, context: dict[str, Any]) -> Any:
         """Executes verification audit via standard ADK interface."""
-        clauses = input_data if isinstance(input_data, list) else input_data.get("clauses", [])
+        if isinstance(input_data, list):
+            clauses = input_data
+        elif isinstance(input_data, dict):
+            clauses = input_data.get("clauses", [])
+        else:
+            clauses = []
         return self.audit_provisions(clauses)
 
     def audit_provisions(self, clauses: list[dict[str, Any]]) -> AuditReport:
@@ -48,7 +53,8 @@ class ClaimAuditorAgent(ADKAgent):
 
             # Check if active
             is_active = (status == "active") and (revoked_by is None)
-            is_grounded = is_active and len(clause.get("content", "")) > 10
+            content_str = str(clause.get("content") or "")
+            is_grounded = is_active and len(content_str) > 10
 
             note = None
             if not is_active:

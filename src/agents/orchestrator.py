@@ -19,7 +19,7 @@ from src.agents.drafter import DrafterAgent
 from src.agents.lawgraph import LawGraphAgent
 from src.core.logger import logger
 from src.memory.sqlite_manager import SQLiteMemoryManager
-from src.memory.state_models import EnterpriseProfile, LegalAgentState
+from src.memory.state_models import AuditHistoryRecord, AuditReport, EnterpriseProfile, LegalAgentState
 
 
 class LegalOrchestrator(ADKAgent):
@@ -121,7 +121,11 @@ class LegalOrchestrator(ADKAgent):
 
         # 3. Audit phase (Worker 2: Claim Auditor - Verification Oracle via ADK Runner)
         audit_res = self.runner.dispatch("ClaimAuditorAgent", retrieved)
-        audit_report = audit_res.data
+        audit_report: AuditReport = (
+            audit_res.data
+            if audit_res.success and audit_res.data
+            else AuditReport(total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False)
+        )
         state.audit_report = audit_report
         state.current_step = 3
 
@@ -135,9 +139,35 @@ class LegalOrchestrator(ADKAgent):
             revoked_docs = [c.cited_statute for c in audit_report.unsupported_claims]
             logger.info(f"LegalOrchestrator: Pruning revoked documents: {revoked_docs}")
 
-            # Re-audit with only active verified clauses
+            # If all retrieved clauses were revoked, attempt successor traversal from catalog
+            if not active_clauses and audit_report.unsupported_claims:
+                for uc in audit_report.unsupported_claims:
+                    old_doc_info = LawGraphAgent.STATUTE_CATALOG.get(uc.cited_statute)
+                    if old_doc_info and old_doc_info.get("revoked_by"):
+                        successor_id = old_doc_info["revoked_by"]
+                        logger.info(f"LegalOrchestrator: Following revocation chain to successor: {successor_id}")
+                        successor_doc = LawGraphAgent.STATUTE_CATALOG.get(successor_id)
+                        if successor_doc:
+                            for art in successor_doc.get("articles", []):
+                                active_clauses.append(
+                                    {
+                                        "doc_id": successor_doc["doc_id"],
+                                        "title": successor_doc["title"],
+                                        "status": successor_doc["status"],
+                                        "effective_date": successor_doc["effective_date"],
+                                        "article": art["article"],
+                                        "article_title": art["title"],
+                                        "content": art["content"],
+                                    }
+                                )
+
+            # Re-audit with active verified clauses
             re_audit_res = self.runner.dispatch("ClaimAuditorAgent", active_clauses)
-            audit_report = re_audit_res.data
+            audit_report = (
+                re_audit_res.data
+                if re_audit_res.success and re_audit_res.data
+                else AuditReport(total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False)
+            )
             state.audit_report = audit_report
             state.retrieved_clauses = active_clauses
 
@@ -151,7 +181,7 @@ class LegalOrchestrator(ADKAgent):
                 "profile": enterprise_profile,
             },
         )
-        dossier = draft_res.data if draft_res.success else ""
+        dossier = draft_res.data if draft_res.success and draft_res.data else ""
         state.candidate_draft = dossier
         state.final_compliance_dossier = dossier
         state.is_completed = True
@@ -159,8 +189,6 @@ class LegalOrchestrator(ADKAgent):
 
         # 6. Persistent Memory / Audit logging (SQLite)
         try:
-            from src.memory.state_models import AuditHistoryRecord
-
             record = AuditHistoryRecord(
                 session_id=session_id,
                 query=query,

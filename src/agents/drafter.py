@@ -57,11 +57,13 @@ class DrafterAgent(ADKAgent):
         ]
 
         if profile:
+            capital_str = f"{profile.charter_capital:,.0f} VNĐ" if profile.charter_capital is not None else "Chưa xác định"
+            ratio_str = f"{profile.foreign_ownership_ratio * 100:.1f}%" if profile.foreign_ownership_ratio is not None else "0.0%"
             lines.extend(
                 [
                     f"DOANH NGHIỆP: {profile.company_name} ({profile.entity_type})",
-                    f"VỐN ĐIỀU LỆ HIỆN CÓ: {profile.charter_capital:,.0f} VNĐ",
-                    f"TỶ LỆ SỞ HỮU NƯỚC NGOÀI: {profile.foreign_ownership_ratio * 100:.1f}%",
+                    f"VỐN ĐIỀU LỆ HIỆN CÓ: {capital_str}",
+                    f"TỶ LỆ SỞ HỮU NƯỚC NGOÀI: {ratio_str}",
                 ]
             )
 
