@@ -10,7 +10,6 @@ from typing import Any
 
 from src.agents.base import ADKAgent
 from src.core.logger import logger
-from src.tools.statutory_retriever import STATUTORY_RETRIEVER_TOOL
 
 
 class LawGraphAgent(ADKAgent):
@@ -118,6 +117,8 @@ class LawGraphAgent(ADKAgent):
     }
 
     def __init__(self, traversal_engine: Any | None = None) -> None:
+        from src.tools.statutory_retriever import STATUTORY_RETRIEVER_TOOL
+
         super().__init__(
             name="LawGraphAgent",
             description="Truy vấn văn bản luật, nghị định, thông tư và duyệt đồ thị quan hệ sửa đổi/bổ sung.",

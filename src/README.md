@@ -149,9 +149,10 @@ print(json.dumps(cost_summary, indent=2))
 
 ---
 
-### C. Run the Interactive Streamlit Web UI
+### C. Run the Web Interfaces to Test the Agent
 
-Launch the visual compliance consultation dashboard:
+#### 1. Interactive Legal Compliance Dashboard (Streamlit - Recommended)
+Launch the visual compliance consultation dashboard with real-time agent trace, active vs. revoked statutes matrix, and dossier synthesis:
 ```bash
 streamlit run src/ui/app.py
 ```
@@ -159,6 +160,14 @@ Or use the convenience startup script:
 ```bash
 ./run.sh ui
 ```
+Open **`http://localhost:8501`** in your browser.
+
+#### 2. Official Google ADK Web UI (`adk web`)
+Launch the official Google Agent Development Kit Web server and interactive chat UI:
+```bash
+adk web adk_agents
+```
+Open **`http://127.0.0.1:8000`** in your browser to interact directly with the `legalpilot` root agent.
 
 ---
 

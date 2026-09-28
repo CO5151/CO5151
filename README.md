@@ -170,13 +170,46 @@ For the entire evaluation suite (**1,180 total runs**, **~8.37M input tokens**, 
 
 ## 6. How to Run the Project
 
-### A. Environment Setup
+### A. Environment Setup & Creating `.env`
 
-Ensure Python 3.10+ (tested on Python 3.13) is active:
-```bash
-pip install -r requirements.txt
-pip install pytest pytest-asyncio
-```
+1. **Ensure Python 3.10+ (tested on Python 3.13) is active**:
+   ```bash
+   pip install -r requirements.txt
+   pip install pytest pytest-asyncio
+   ```
+
+2. **Create and configure `.env` from the template**:
+   ```bash
+   cp .env.example .env
+   ```
+
+   **Key `.env` Configurations**:
+   ```env
+   # 1. LLM Provider (Google Gemini / Vertex AI or DeepSeek / Ollama)
+   GEMINI_API_KEY="your-gemini-api-key"
+   DEFAULT_MODEL="gemini-2.5-flash"
+   # Or for DeepSeek / local endpoints:
+   DEEPSEEK_API_KEY="your-deepseek-api-key"
+
+   # 2. Database Connections (Optional for standalone in-memory catalog mode)
+   NEO4J_URI="bolt://localhost:7687"
+   NEO4J_PASSWORD="legalpilot2026"
+   QDRANT_HOST="localhost"
+   QDRANT_PORT=6333
+   SQLITE_DB_PATH="data/enterprise_compliance.db"
+
+   # 3. Security & Operational Guardrails
+   MAX_REFINE_LOOPS=3
+   DOS_QUERY_TIMEOUT_SECONDS=12
+   LOG_LEVEL="INFO"
+   ```
+
+3. **(Optional) Start Docker databases for live Neo4j and Qdrant**:
+   ```bash
+   docker compose up -d
+   ```
+
+---
 
 ### B. Run the Evaluation Benchmark
 
@@ -192,12 +225,16 @@ print(generate_markdown_report(results))
 "
 ```
 
-### C. Run the Multi-Agent Pipeline Demo
+---
+
+### C. Run the Multi-Agent Pipeline (CLI)
 
 Execute an end-to-end multi-agent consultation trace (with automatic re-routing on expired statutes):
 ```bash
-python3 src/agents/orchestrator.py
+python3 -m src.agents.orchestrator
 ```
+
+---
 
 ### D. Run the Automated Test Suite
 
@@ -206,13 +243,31 @@ Execute all 45 unit tests covering agents, metrics, security guardrails, memory,
 pytest tests
 ```
 
-### E. Run the Interactive UI Dashboard
+---
 
-Launch the Streamlit compliance dashboard:
+### E. Run the Web Interface to Test the Agent
+
+You can test the multi-agent system using either of two web interfaces:
+
+#### Option 1: Interactive Legal Compliance Dashboard (Streamlit - Recommended)
+Features real-time Enterprise Profile editing, pre-filled scenario buttons (Ví điện tử FDI, Vượt đèn đỏ xe máy, Chuyên gia nước ngoài), visual agent execution traces, active vs. revoked statutes matrix, and compliance dossier synthesis:
 ```bash
 streamlit run src/ui/app.py
 ```
+*Or use the startup script:*
+```bash
+./run.sh ui
+```
+Open **`http://localhost:8501`** in your browser.
 
+#### Option 2: Official Google ADK Web UI (`adk web`)
+Launch the official Google Agent Development Kit Web server and interactive chat UI with live agent tool invocation cards:
+```bash
+adk web adk_agents
+```
+Open **`http://127.0.0.1:8000`** in your browser to interact directly with the `legalpilot` root agent.
+
+---
 ---
 
 ## 7. License & Citation

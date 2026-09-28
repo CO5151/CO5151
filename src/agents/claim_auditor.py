@@ -13,13 +13,14 @@ from src.agents.base import ADKAgent
 from src.core.logger import logger
 from src.memory.sqlite_manager import SQLiteMemoryManager
 from src.memory.state_models import AtomicClaim, AuditReport
-from src.tools.validity_checker import VALIDITY_CHECKER_TOOL
 
 
 class ClaimAuditorAgent(ADKAgent):
     """Agent responsible for verification and citation auditing of candidate drafts."""
 
     def __init__(self, memory_manager: SQLiteMemoryManager | None = None) -> None:
+        from src.tools.validity_checker import VALIDITY_CHECKER_TOOL
+
         super().__init__(
             name="ClaimAuditorAgent",
             description="Kiểm định tính xác thực của căn cứ pháp lý, phát hiện các điều khoản/văn bản đã hết hiệu lực.",
