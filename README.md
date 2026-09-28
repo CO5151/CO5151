@@ -3,6 +3,8 @@
 > **High-Assurance Multi-Agent Legal Compliance System for Vietnamese Statutory Instruments.**  
 > Powered by **Google ADK (Agent Development Kit)**, **Selective Edge Traversal**, and **Claim Auditor Verification Oracles**.
 
+> **Documentation**: Explore the complete [LegalPilot-VN Documentation](docs/README.md) for [Architecture Decision Records (ADRs)](docs/adr/README.md), [Architecture Overview](docs/architecture/overview.md), and [Developer Guides](docs/development/getting-started.md).
+
 ---
 
 ## 1. Project Overview
