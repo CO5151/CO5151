@@ -35,12 +35,38 @@ from src.evaluation.metrics import (
 class SBVLawGraphEvaluator:
     """Benchmark runner executing SBV legal questions across RAG baselines."""
 
-    # Google Cloud Vertex AI standard pricing for Gemini 1.5 Flash / Pro
-    PRICE_PER_1K_INPUT_TOKENS = 0.000125
-    PRICE_PER_1K_OUTPUT_TOKENS = 0.000375
+    # Pricing reference table ($ per 1,000 tokens)
+    PRICING_TABLE: dict[str, dict[str, float]] = {
+        "deepseek_v3": {
+            "input_per_1k": 0.00014,
+            "output_per_1k": 0.00028,
+            "cached_input_per_1k": 0.000014,
+        },
+        "deepseek_r1": {
+            "input_per_1k": 0.00055,
+            "output_per_1k": 0.00219,
+            "cached_input_per_1k": 0.00014,
+        },
+        "vertex_ai": {
+            "input_per_1k": 0.000125,
+            "output_per_1k": 0.000375,
+            "cached_input_per_1k": 0.000030,
+        },
+        "ollama_local": {
+            "input_per_1k": 0.0,
+            "output_per_1k": 0.0,
+            "cached_input_per_1k": 0.0,
+        },
+    }
 
-    def __init__(self, dataset_path: str = "data/benchmarks/sbv_testset_tvpl.json") -> None:
+    def __init__(
+        self,
+        dataset_path: str = "data/benchmarks/sbv_testset_tvpl.json",
+        pricing_provider: str = "deepseek_v3",
+    ) -> None:
         self.dataset_path = Path(dataset_path)
+        self.pricing_provider = pricing_provider
+        self.pricing = self.PRICING_TABLE.get(pricing_provider, self.PRICING_TABLE["deepseek_v3"])
         self.dataset: list[dict[str, Any]] = self._load_dataset()
 
     def _load_dataset(self) -> list[dict[str, Any]]:
@@ -117,8 +143,8 @@ class SBVLawGraphEvaluator:
             latencies.append(pred.latency_ms)
 
             cost = (
-                (pred.input_tokens / 1000) * self.PRICE_PER_1K_INPUT_TOKENS
-                + (pred.output_tokens / 1000) * self.PRICE_PER_1K_OUTPUT_TOKENS
+                (pred.input_tokens / 1000) * self.pricing["input_per_1k"]
+                + (pred.output_tokens / 1000) * self.pricing["output_per_1k"]
             )
             costs.append(cost)
 
@@ -169,3 +195,65 @@ class SBVLawGraphEvaluator:
         logger.info(f"Saved benchmark results to {out_file}")
 
         return results
+
+    @classmethod
+    def estimate_suite_cost(
+        cls,
+        pricing_provider: str = "deepseek_v3",
+        cache_hit_ratio: float = 0.5,
+    ) -> dict[str, Any]:
+        """Calculates token and budget estimation for the 1,180-run evaluation suite.
+
+        Tracks (Section 9.2 in D1 Proposal):
+        1. SBV 100-QA Benchmark: 100 Qs * 3 seeds = 300 runs (2.82M in, 0.51M out)
+        2. Scenario Audit Tasks: 10 tasks * 3 seeds = 30 runs (0.35M in, 0.065M out)
+        3. ALQAC 2025 Retrieval: 150 Qs * 3 seeds = 450 runs (2.25M in, 0.315M out)
+        4. Ablation Suite: 100 Qs * 3 seeds = 300 runs (2.10M in, 0.42M out)
+        5. Ragas LLM-as-a-Judge: 100 Qs = 100 runs (0.85M in, 0.12M out)
+        Total: 1,180 runs | ~8.37M input tokens | ~1.43M output tokens
+        """
+        pricing = cls.PRICING_TABLE.get(pricing_provider, cls.PRICING_TABLE["deepseek_v3"])
+
+        tracks = [
+            ("SBV 100-QA Benchmark", 2_820_000, 510_000, 300),
+            ("Scenario Audit Tasks", 350_000, 65_000, 30),
+            ("ALQAC 2025 Retrieval Subset", 2_250_000, 315_000, 450),
+            ("Ablation Suite", 2_100_000, 420_000, 300),
+            ("Ragas LLM-as-a-Judge", 850_000, 120_000, 100),
+        ]
+
+        total_input = sum(t[1] for t in tracks)
+        total_output = sum(t[2] for t in tracks)
+        total_runs = sum(t[3] for t in tracks)
+
+        in_p = pricing["input_per_1k"]
+        out_p = pricing["output_per_1k"]
+        cached_in_p = pricing.get("cached_input_per_1k", in_p)
+
+        effective_in_rate = (1.0 - cache_hit_ratio) * in_p + cache_hit_ratio * cached_in_p
+
+        cost_without_cache = (total_input / 1000) * in_p + (total_output / 1000) * out_p
+        cost_with_cache = (total_input / 1000) * effective_in_rate + (total_output / 1000) * out_p
+
+        breakdown = []
+        for name, tin, tout, runs in tracks:
+            c = (tin / 1000) * effective_in_rate + (tout / 1000) * out_p
+            breakdown.append({
+                "track": name,
+                "runs": runs,
+                "input_tokens": tin,
+                "output_tokens": tout,
+                "cost_usd": round(c, 4),
+            })
+
+        return {
+            "provider": pricing_provider,
+            "total_runs": total_runs,
+            "total_input_tokens": total_input,
+            "total_output_tokens": total_output,
+            "cost_without_cache_usd": round(cost_without_cache, 4),
+            "cost_with_cache_usd": round(cost_with_cache, 4),
+            "cache_hit_ratio": cache_hit_ratio,
+            "breakdown": breakdown,
+        }
+

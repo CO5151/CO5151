@@ -147,6 +147,25 @@ In [`src/evaluation/baselines.py`](src/evaluation/baselines.py), four baseline p
 | **Single-Agent ReAct** | 0.545 | 0.222 | 0.987 | 0.990 | 0.689 | 0.837 | 1.000 | 1.000 | 47.8% | 75.0% | 480 ms | $0.00074 |
 | **LegalPilot-VN Agentic (Ours)** | **0.545** | **0.226** | **0.987** | **1.000** | **0.689** | **0.837** | **1.000** | **1.000** | **45.5%** | **100.0%** | 185 ms | $0.00042 |
 
+### Cost & Compute Estimation: DeepSeek vs. Vertex AI vs. Local Ollama
+
+For the entire evaluation suite (**1,180 total runs**, **~8.37M input tokens**, **~1.43M output tokens** across 3 seeds):
+
+| Evaluation Track | Queries | Runs (3 Seeds) | Input Tokens | Output Tokens | DeepSeek-V3 (Cache Hit 60%) | DeepSeek-R1 (Reasoning) | Google Cloud Vertex AI |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **SBV 100-QA Benchmark** [1] | 100 | 300 | 2,820,000 | 510,000 | **$0.323** | $2.668 | $0.360 |
+| **Scenario Audit Tasks** (Sec. 2) | 10 | 30 | 350,000 | 65,000 | **$0.040** | $0.335 | $0.050 |
+| **ALQAC 2025 Retrieval Subset** [8] | 150 | 450 | 2,250,000 | 315,000 | **$0.242** | $1.927 | $0.260 |
+| **Ablation Suite** (3 Configs) | 100 | 300 | 2,100,000 | 420,000 | **$0.247** | $2.075 | $0.280 |
+| **Ragas LLM-as-a-Judge** | 100 | 100 | 850,000 | 120,000 | **$0.092** | $0.730 | $1.660 |
+| **Total Benchmark Suite** | -- | **1,180 runs** | **8.37M tokens** | **1.43M tokens** | **$0.944 (~$0.94)** | **$7.735 (~$7.74)** | **$2.610 (~$2.61)** |
+
+> **Takeaway**:
+> - **DeepSeek-V3** reduces the full benchmark cost to **~$0.94** (utilizing $<4\%$ of the $\$25.00$ course budget) thanks to its prompt caching ($0.014 / 1M cached in).
+> - **DeepSeek-R1** (full CoT reasoning for complex legal compliance auditing) costs **~$7.74** (well within the $\$25.00$ limit).
+> - **Hybrid Strategy (Recommended)**: Use **DeepSeek-V3** for retrieval, planning, and drafting + **DeepSeek-R1** as the Claim Auditor / Judge $\rightarrow$ **Total: ~$1.53**.
+> - **Local Ollama (Qwen 2.5 7B / Llama 3.2)**: **$0.00** cost for iterative daily development.
+
 ---
 
 ## 6. How to Run the Project
