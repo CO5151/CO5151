@@ -117,7 +117,6 @@ class TestLegalAgents(unittest.TestCase):
         self.assertTrue(state.audit_report.is_fully_verified)
         self.assertIn("Nghị định 52/2024/NĐ-CP", state.final_compliance_dossier)
 
-
     def test_lawgraph_trace_selective_edge_tool(self) -> None:
         """Tests that trace_selective_edge tool returns structured traversal output."""
         from src.tools.lawgraph_tool import trace_selective_edge
