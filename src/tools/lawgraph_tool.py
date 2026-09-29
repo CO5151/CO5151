@@ -36,7 +36,11 @@ def trace_selective_edge(
     logger.info("Executing trace_selective_edge tool for doc: %s", seed_doc_id)
     try:
         engine = SelectiveTraversalEngine()
-        context = TraversalContext(reference_date=reference_date) if reference_date else TraversalContext()
+        context = (
+            TraversalContext(reference_date=reference_date)
+            if reference_date
+            else TraversalContext()
+        )
         result = engine.traverse(seed_doc_id=seed_doc_id, context=context)
         return {
             "seed_doc_id": result.seed_doc_id,
@@ -63,7 +67,9 @@ def trace_selective_edge(
                 "reference_date": reference_date or doc.get("effective_date", ""),
                 "active_articles": doc.get("articles", []),
                 "amendment_chains": [],
-                "repealed_provisions": [{"doc_id": doc.get("revoked_by")}] if doc.get("revoked_by") else [],
+                "repealed_provisions": [{"doc_id": doc.get("revoked_by")}]
+                if doc.get("revoked_by")
+                else [],
                 "traversed_nodes_count": 1,
                 "pruned_nodes_count": 0,
                 "noise_reduction_ratio": 0.0,

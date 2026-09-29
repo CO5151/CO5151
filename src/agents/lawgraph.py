@@ -179,7 +179,11 @@ class LawGraphAgent(ADKAgent):
             from src.knowledge.selective_traversal import SelectiveTraversalEngine, TraversalContext
 
             engine = self.traversal_engine or SelectiveTraversalEngine()
-            context = TraversalContext(reference_date=reference_date) if reference_date else TraversalContext()
+            context = (
+                TraversalContext(reference_date=reference_date)
+                if reference_date
+                else TraversalContext()
+            )
 
             doc_candidates: set[str] = set()
             pattern = re.compile(r"\b\d+/\d{4}/[A-Za-z0-9Đđ/-]+\b", re.IGNORECASE)
@@ -219,7 +223,9 @@ class LawGraphAgent(ADKAgent):
                                 "article_title": art.get("title", ""),
                                 "content": art.get("content", ""),
                                 "amended_by": art.get("amended_by"),
-                                "supersedes": [r.get("repealer_doc_id") for r in res.repealed_provisions],
+                                "supersedes": [
+                                    r.get("repealer_doc_id") for r in res.repealed_provisions
+                                ],
                                 "revoked_by": None,
                             }
                         )
