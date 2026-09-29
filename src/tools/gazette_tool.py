@@ -126,7 +126,9 @@ def verify_vbpl_status(
                 if title_match:
                     resolved_title = title_match.group(1).strip()
     except Exception as e:
-        logger.warning("Live VBPL query for %s timed out or failed (%s). Using catalog fallback.", clean_id, e)
+        logger.warning(
+            "Live VBPL query for %s timed out or failed (%s). Using catalog fallback.", clean_id, e
+        )
 
     if resolved_status == "unknown":
         resolved_status = "active"
