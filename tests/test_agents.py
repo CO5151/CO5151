@@ -145,6 +145,38 @@ class TestLegalAgents(unittest.TestCase):
         )
         self.assertIsInstance(provisions, list)
 
+    def test_claim_auditor_live_vbpl_verification(self) -> None:
+        """Tests that ClaimAuditorAgent queries live VBPL status and populates verifications."""
+        sample_clauses: list[dict[str, Any]] = [
+            {
+                "doc_id": "52/2024/ND-CP",
+                "status": "active",
+                "revoked_by": None,
+                "content": "Quy định về thanh toán không dùng tiền mặt vốn tối thiểu 50 tỷ.",
+            }
+        ]
+        # Test with enable_live_vbpl=True
+        report_live = self.auditor.audit_provisions(sample_clauses, enable_live_vbpl=True)
+        self.assertGreater(len(report_live.live_verifications), 0)
+        v = report_live.live_verifications[0]
+        self.assertEqual(v["doc_id"], "52/2024/ND-CP")
+        self.assertIn(v["source"], ("statute_cache", "vbpl.vn", "offline_catalog"))
+        self.assertTrue(report_live.claims[0].live_verification is not None)
+
+        # Test with enable_live_vbpl=False
+        report_disabled = self.auditor.audit_provisions(sample_clauses, enable_live_vbpl=False)
+        self.assertEqual(len(report_disabled.live_verifications), 0)
+        self.assertIsNone(report_disabled.claims[0].live_verification)
+
+    def test_orchestrator_live_vbpl_pipeline(self) -> None:
+        """Tests that LegalOrchestrator records live_verifications in state."""
+        query = "Điều kiện cấp phép ví điện tử năm 2024"
+        state = self.orchestrator.run(query=query, enable_live_vbpl=True)
+        self.assertTrue(state.is_completed)
+        self.assertGreater(len(state.live_verifications), 0)
+        doc_ids = [v["doc_id"] for v in state.live_verifications]
+        self.assertTrue(any("52/2024" in d or "101/2012" in d for d in doc_ids))
+
 
 if __name__ == "__main__":
     unittest.main()
