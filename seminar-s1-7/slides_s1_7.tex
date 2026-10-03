@@ -73,19 +73,19 @@
   \begin{tikzpicture}[remember picture, overlay]
     \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
     \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
-      {HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY (HCMUT-VNU) -- FACULTY OF CSE};
+      {TRƯỜNG ĐẠI HỌC BÁCH KHOA (ĐHQG-HCM) -- KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH};
   \end{tikzpicture}
 
   \vspace{0.8cm}
   \begin{center}
     {\large \textbf{SEMINAR S1-7 (CO5151 -- ADVANCED AGENTIC AI)}}\\[0.25cm]
     {\LARGE \textbf{\color{hcmutblue}Agent Design Patterns \& Orchestration}}\\[0.15cm]
-    {\normalsize \textit{Workflows vs. Autonomous Agents: Why the simplest pattern that works is usually the right one}}\\[0.45cm]
+    {\normalsize \textit{Workflows vs. Autonomous Agents: Vì sao mẫu thiết kế đơn giản nhất luôn là lựa chọn tối ưu}}\\[0.45cm]
 
     \begin{tcolorbox}[width=0.92\textwidth,colback=hcmutgray,colframe=hcmutblue!50,arc=2mm,boxrule=0.8pt]
       \centering\small
       \textbf{Nhóm Thuyết Trình G4 (Thời lượng cân bằng 9.5 phút/thành viên):}\\
-      \textbf{Đặng Lâm Tùng} (Group Lead) $\quad\cdot\quad$
+      \textbf{Đặng Lâm Tùng} (Trưởng nhóm) $\quad\cdot\quad$
       \textbf{Nguyễn Trung Phong} $\quad\cdot\quad$
       \textbf{Vũ Việt Hưng}\\[0.1cm]
       {\footnotesize Giảng viên hướng dẫn: \textbf{TS. Lê Xuân Bách} $\vert$ Ngày báo cáo: 21/10/2026}
@@ -99,50 +99,50 @@
 % =====================================================================
 % SLIDE 2: PHÂN CHIA VAI TRÒ & THỜI LƯỢNG
 % =====================================================================
-\begin{frame}{Phân Chia Vai Trò: Equal Roles, Equal Stakes}
-  \framesubtitle{Thời lượng nói 9.5 phút/thành viên $\vert$ Phân bổ trọng số học thuật và dẫn chứng thực nghiệm đồng đều}
+\begin{frame}{Phân Chia Vai Trò Thuyết Trình: Đồng Đều Trọng Số Học Thuật}
+  \framesubtitle{Thời lượng nói 9.5 phút/thành viên $\vert$ Phân bổ chuyên sâu lý thuyết và dẫn chứng thực nghiệm}
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part I: Primitives \& Simplicity}}
+      \begin{block}{\textbf{Phần I: Khái Niệm Cơ Bản \& Sự Tinh Giản}}
         \textbf{Nguyễn Trung Phong}\\
         {\scriptsize (9.5 phút $\vert$ Slides 5--9)}\\[0.08cm]
         \begin{itemize}\footnotesize
           \item Fixed Code Paths vs. Model Control
-          \item Why Anthropic Recommends Against Agents
+          \item Vì sao Anthropic khuyên bắt đầu đơn giản
           \item Prompt Chaining \& Routing
           \item Evaluator-Optimizer Feedback Loops
-          \item Simplicity-First Decision Framework
+          \item Khung ra quyết định Simplicity-First
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part II: Systems \& Orchestration}}
+      \begin{block}{\textbf{Phần II: Hệ Thống \& Điều Phối Động}}
         \textbf{Vũ Việt Hưng}\\
         {\scriptsize (9.5 phút $\vert$ Slides 10--14)}\\[0.08cm]
         \begin{itemize}\footnotesize
           \item Orchestrator-Workers vs. Long Context
-          \item Anthropic 2025: Lead/Subagent ($3-8\times$ Cost)
-          \item OpenAI Practical Guide: Loops \& Evals
-          \item LangGraph Cyclic State Graphs
+          \item Anthropic 2025: Mô hình Lead/Subagent
+          \item OpenAI 2025: Tool Loops, Guardrails \& Evals
+          \item LangGraph: Cyclic State Graphs
           \item Durable Execution \& Checkpointing
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part III: Systems Architecture}}
-        \textbf{Đặng Lâm Tùng (Lead)}\\
+      \begin{block}{\textbf{Phần III: Kiến Trúc Hệ Thống \& Design Patterns}}
+        \textbf{Đặng Lâm Tùng (Trưởng nhóm)}\\
         {\scriptsize (11 phút $\vert$ Slides 15--21)}\\[0.08cm]
         \begin{itemize}\footnotesize
-          \item Architectural Trade-Off Matrix
-          \item Dynamic Orchestration Topology
-          \item Pattern Selection \& Pruning
-          \item Fault-Tolerant Oracles Architecture
-          \item State Persistence \& Recovery Loops
-          \item Orchestration Topologies \& Swarms
-          \item Production Engineering Principles
+          \item Ma trận đánh đổi các Design Patterns
+          \item Kiến trúc Dynamic Orchestration
+          \item Chọn lựa và cắt tỉa (pruning) kiến trúc
+          \item External Deterministic Oracles
+          \item Cơ chế phục hồi State Persistence
+          \item Phân tích Topologies \& Swarms
+          \item Nguyên lý kỹ thuật triển khai thực tế
         \end{itemize}
       \end{block}
     \end{column}
@@ -165,27 +165,27 @@
       \begin{block}{\textbf{Tiến độ thực hiện \& Mốc hạn chót}}
         \footnotesize
         \begin{enumerate}
-          \item \textbf{Sunday, Oct 18, 2026 -- 23:59}\\
-                $\to$ \textbf{Hard Submission Deadline} qua email.\\
-                $\to$ Email Subject: \texttt{[CO5151][G4] Seminar S1-7}.
-          \item \textbf{Monday \& Tuesday (Oct 19--20)}\\
+          \item \textbf{Chủ Nhật, 18/10/2026 -- 23:59}\\
+                $\to$ \textbf{Hạn chót nộp bài chính thức} qua email.\\
+                $\to$ Tiêu đề email: \texttt{[CO5151][G4] Seminar S1-7}.
+          \item \textbf{Thứ Hai \& Thứ Ba (19--20/10)}\\
                 $\to$ \textbf{Faculty Audit Window}: Giảng viên rà soát slide và chỉ ra các điểm nghẽn kỹ thuật / số liệu.\\
                 $\to$ \textit{Nộp muộn sẽ mất quyền nhận pre-defense feedback!}
-          \item \textbf{Wednesday, Oct 21, 2026}\\
-                $\to$ \textbf{Official In-Class Seminar Defense} (30 phút).
+          \item \textbf{Thứ Tư, 21/10/2026}\\
+                $\to$ \textbf{Buổi bảo vệ Seminar chính thức trên lớp} (30 phút).
         \end{enumerate}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{4 Mandatory Submission Deliverables}}
+      \begin{alertblock}{\textbf{4 Sản Phẩm Nộp Bắt Buộc}}
         \footnotesize
         \begin{enumerate}
           \item \textbf{\texttt{slides\_s1\_7.pdf}}\\
                 $\to$ Đúng 22 slide chuẩn học thuật.
           \item \textbf{\texttt{annotated\_bibliography.pdf}}\\
                 $\to$ Đúng 1 trang: 1 Core Reading + 3 Extension Readings (mỗi bài đúng 1 câu critical reflection).
-          \item \textbf{\texttt{demo\_orchestration\_trace.py} \& Code}\\
+          \item \textbf{\texttt{demo\_orchestration_trace.py} \& Code}\\
                 $\to$ Script đo lường token, latency, và durable checkpoint recovery khi luật bãi bỏ.
           \item \textbf{\texttt{ai\_use\_statement.pdf}}\\
                 $\to$ Bản tuyên bố sử dụng AI minh bạch theo quy chế ĐHBK.
@@ -197,8 +197,8 @@
 
 % =====================================================================
 % SLIDE 4: DANH MỤC TÀI LIỆU CHÍNH THỨC TRONG ĐỀ CƯƠNG
-% =====================================================================
-\begin{frame}{Literature Roadmap: The Foundation and Extension Readings}
+% SLIDE 4: DANH MỤC TÀI LIỆU CHÍNH THỨC
+\begin{frame}{Lộ Trình Tài Liệu Nghiên Cứu: Nền Tảng \& Mở Rộng}
   \framesubtitle{Tất cả thành viên $\vert$ Đúng 1 Core Reading + 3 Extension Readings trong Đề Cương S1-7}
 
   \begin{columns}[t]
@@ -231,8 +231,8 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{The Core Research Question of S1-7}},fonttitle=\footnotesize\bfseries]
-    \footnotesize \textit{"Why does Anthropic argue that the simplest pattern is usually the right one, and what exact architectural triggers justify paying the 3--8x cost multiplier of multi-agent orchestration?"}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Câu Hỏi Nghiên Cứu Cốt Lõi Của Seminar S1-7}},fonttitle=\footnotesize\bfseries]
+    \footnotesize \textit{"Vì sao Anthropic khẳng định mẫu thiết kế đơn giản nhất luôn là lựa chọn đúng đắn, và chính xác ranh giới kiến trúc nào biện minh cho chi phí token gấp 3--8 lần của multi-agent orchestration?"}
   \end{tcolorbox}
 \end{frame}
 
@@ -241,118 +241,118 @@
 % =====================================================================
 
 % SLIDE 5: WORKFLOWS VS AUTONOMOUS AGENTS
-\begin{frame}{Workflows vs. Autonomous Agents: Who Holds the Wheel?}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Fixed Code Paths vs. Model-Directed Control Flow}
+\begin{frame}{Workflows vs. Autonomous Agents: Ai Nắm Quyền Điều Khiển?}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Luồng Code Cố Định vs. Điều Khiển Dẫn Dắt Bởi Mô Hình}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Workflows: Fixed Code Paths}}
+      \begin{block}{\textbf{Workflows: Luồng Code Cố Định}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Control Flow:} Hard-coded bằng code truyền thống (Python, Go).
-          \item \textbf{Role of LLM:} Atomic reasoning step bên trong các pipeline stages định sẵn.
-          \item \textbf{Routing:} Logic if-else, deterministic schema validation, deterministic state transitions.
-          \item \textbf{Key Advantages:} Highly predictable, reproducible, latency thấp, token overhead tối thiểu ($1.0\times$).
+          \item \textbf{Vai trò của LLM:} Bước suy luận nguyên tử (atomic step) bên trong pipeline định sẵn.
+          \item \textbf{Routing:} Logic if-else, kiểm tra schema xác định, chuyển đổi trạng thái tiền định.
+          \item \textbf{Ưu điểm cốt lõi:} Độ dự đoán cao, tái lập 100\%, latency thấp, token overhead tối thiểu ($1.0\times$).
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Autonomous Agents: Model-Directed Control}}
+      \begin{alertblock}{\textbf{Autonomous Agents: Điều Khiển Do Mô Hình Dẫn Dắt}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Control Flow:} Do vòng lặp suy luận của LLM dẫn dắt (ReAct loop, Tool Calling).
-          \item \textbf{Role of LLM:} Mô hình tự quyết định gọi tool nào, khi nào dừng lại và rẽ nhánh về đâu.
-          \item \textbf{Routing:} Động hoàn toàn dựa trên quan sát (observations) ở runtime.
-          \item \textbf{Key Trade-off:} Linh hoạt cao với bài toán mở, nhưng dễ tích lũy sai số và bùng nổ chi phí ngoài kiểm soát.
+          \item \textbf{Control Flow:} Do vòng lặp suy luận của LLM quyết định (ReAct loop, Tool Calling).
+          \item \textbf{Vai trò của LLM:} Tự chọn gọi tool nào, khi nào dừng lại và rẽ nhánh về đâu.
+          \item \textbf{Routing:} Hoàn toàn động dựa trên quan sát (observations) ở runtime.
+          \item \textbf{Đánh đổi lớn:} Linh hoạt với bài toán mở, nhưng dễ tích lũy sai số và bùng nổ chi phí.
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Anthropic's Exact Definition (2024)}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Định Nghĩa Chuẩn Xác Của Anthropic (2024)}},fonttitle=\footnotesize\bfseries]
     \footnotesize \textit{"Workflows are systems where LLMs and tools are orchestrated through predefined code paths. Agents, on the other hand, are systems where LLMs dynamically direct their own processes and tool usage."}
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 6: VÌ SAO ANTHROPIC KHUYÊN BỎ AGENT
-\begin{frame}{The Defense Question: Why Anthropic Recommends Against Agents}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Compounding Error ($P = p^n$), Cost Inflation, và Debugging Friction}
+\begin{frame}{Câu Hỏi Phản Biện: Vì Sao Anthropic Khuyên Bỏ Agent?}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Lỗi Tích Lũy Compounding Error ($P = p^n$), Lạm Phát Chi Phí \& Khó Debug}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{The Compounding Error Trap ($P = p^n$)}}
+      \begin{block}{\textbf{Bẫy Lỗi Tích Lũy Compounding Error ($P = p^n$)}}
         \footnotesize
         Giả sử mỗi bước gọi tool mô hình đạt độ chính xác $p \in [0.90, 0.95]$:
         \begin{itemize}\scriptsize
-          \item \textbf{3-step workflow:} $P_{\text{success}} = 0.95^3 \approx \mathbf{85.7\%}$
-          \item \textbf{8-step autonomous loop:} $P_{\text{success}} = 0.95^8 \approx \mathbf{66.3\%}$
-          \item \textbf{15-step agent loop:} $P_{\text{success}} = 0.95^{15} \approx \mathbf{46.3\%}$
+          \item \textbf{Workflow 3 bước:} $P_{\text{success}} = 0.95^3 \approx \mathbf{85.7\%}$
+          \item \textbf{Vòng lặp agent 8 bước:} $P_{\text{success}} = 0.95^8 \approx \mathbf{66.3\%}$
+          \item \textbf{Vòng lặp agent 15 bước:} $P_{\text{success}} = 0.95^{15} \approx \mathbf{46.3\%}$
         \end{itemize}
         \vspace{0.1cm}
-        \alert{\textbf{Key Finding:}} Trong unconstrained agent loop, độ tin cậy của toàn hệ thống giảm theo exponential ($P = p^n$) khi số bước thực thi (trajectory steps) tăng.
+        \alert{\textbf{Phát hiện cốt lõi:}} Trong unconstrained agent loop, độ tin cậy của toàn hệ thống giảm theo exponential ($P = p^n$) khi số bước thực thi (trajectory steps) tăng.
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{The Four Hidden Costs of Premature Autonomy}}
+      \begin{alertblock}{\textbf{Bốn Chi Phí Ẩn Khi Áp Dụng Tự Trị Quá Sớm}}
         \footnotesize
         \begin{enumerate}
-          \item \textbf{Unbounded Latency:} Số turns do LLM quyết định; thời gian phản hồi biến thiên khôn lường.
-          \item \textbf{Runaway Token Costs:} Lịch sử hội thoại tích lũy liên tục gây quadratic prompt bloat.
-          \item \textbf{Debugging Nightmare:} Hành vi non-deterministic khiến việc tái hiện edge-case bugs cực kỳ khó khăn.
-          \item \textbf{Context Drift:} Các phản hồi tool rác làm bẩn context memory, gây ra hallucination cascades.
+          \item \textbf{Độ trễ không giới hạn (Unbounded Latency):} Số turns do LLM quyết định; thời gian phản hồi biến thiên khôn lường.
+          \item \textbf{Chi phí Token bùng nổ:} Lịch sử hội thoại tích lũy liên tục gây quadratic prompt bloat.
+          \item \textbf{Bế tắc khi Debug:} Hành vi non-deterministic khiến việc tái hiện edge-case bugs cực kỳ khó khăn.
+          \item \textbf{Trôi lệch ngữ cảnh (Context Drift):} Phản hồi tool rác làm bẩn bộ nhớ, gây ra ảo giác dây chuyền.
         \end{enumerate}
       \end{alertblock}
     \end{column}
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Direct Defense for Q\&A}},fonttitle=\footnotesize\bfseries]
-    \footnotesize \textbf{Why does Anthropic recommend against agents for many tasks?} Because for 90\% of production applications, workflows provide higher reliability, lower latency, 3--8x lower cost, and simpler debugging than autonomous agents.
+  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Luận Điểm Trực Tiếp Cho Phiên Phản Biện Q\&A}},fonttitle=\footnotesize\bfseries]
+    \footnotesize \textbf{Vì sao Anthropic khuyến cáo không dùng agent cho phần lớn bài toán?} Vì đối với 90\% ứng dụng thực tế, workflows đem lại độ tin cậy cao hơn, độ trễ thấp hơn, chi phí rẻ hơn 3--8 lần và dễ debug hơn nhiều so với autonomous agents.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 7: PROMPT CHAINING & ROUTING
-\begin{frame}{Concrete Patterns 1 \& 2: Prompt Chaining and Routing}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Foundational Workflow Primitives: What Each Buys and Costs}
+\begin{frame}{Mẫu Thiết Kế 1 \& 2: Prompt Chaining và Routing}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Các Khối Dựng Cơ Bản: Lợi Ích Mang Lại \& Chi Phí Đánh Đổi}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Pattern 1: Prompt Chaining}}
+      \begin{block}{\textbf{Mẫu 1: Prompt Chaining}}
         \footnotesize
         \textbf{Cơ chế:} Chia nhỏ bài toán phức tạp thành chuỗi các lệnh gọi LLM tuần tự; bước sau tiêu thụ đầu ra của bước trước.\\
         \vspace{0.1cm}
-        \textbf{What It Buys:}
+        \textbf{Lợi ích mang lại (What It Buys):}
         \begin{itemize}\scriptsize
-          \item Giảm tải cognitive load trên mỗi prompt.
+          \item Giảm tải áp lực nhận thức (cognitive load) trên mỗi prompt.
           \item Cho phép chèn programmatic validation giữa các bước.
-          \item Cho phép dùng mô hình nhỏ, rẻ hơn cho intermediate steps.
+          \item Dùng mô hình nhỏ, rẻ hơn cho các bước trung gian.
         \end{itemize}
-        \textbf{What It Costs:}
+        \textbf{Chi phí đánh đổi (What It Costs):}
         \begin{itemize}\scriptsize
-          \item Linear latency penalty ($T = \sum t_i$).
-          \item Inflexible: Không thể tự phục hồi nếu bước trước sinh ra lỗi ngoài dự tính mà không có explicit branching code.
+          \item Độ trễ tăng tuyến tính theo số bước ($T = \sum t_i$).
+          \item Kém linh hoạt: Không tự phục hồi nếu bước trước sinh lỗi mà không có explicit branching code.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Pattern 2: Routing}}
+      \begin{block}{\textbf{Mẫu 2: Routing}}
         \footnotesize
-        \textbf{Cơ chế:} Một classifier (LLM hoặc regex/embedding) nhận diện input intent để dẫn hướng tới specialized downstream path.\\
+        \textbf{Cơ chế:} Bộ phân loại (LLM hoặc regex/embedding) nhận diện input intent để dẫn hướng tới nhánh xử lý chuyên biệt.\\
         \vspace{0.1cm}
-        \textbf{What It Buys:}
+        \textbf{Lợi ích mang lại (What It Buys):}
         \begin{itemize}\scriptsize
-          \item Domain specialization: Mỗi nhánh có tailored system prompt và narrow tools.
+          \item Chuyên môn hóa: Mỗi nhánh có system prompt và tools hẹp, tối ưu riêng.
           \item Ngăn ngừa prompt bloat (tránh nhồi 50 tools vào 1 prompt).
           \item Tối ưu chi phí: Route các truy vấn đơn giản sang small models.
         \end{itemize}
-        \textbf{What It Costs:}
+        \textbf{Chi phí đánh đổi (What It Costs):}
         \begin{itemize}\scriptsize
-          \item Router misclassification sẽ làm hỏng toàn bộ pipeline con.
-          \item Maintenance overhead: Thêm danh mục mới đòi hỏi cập nhật router và downstream handlers.
+          \item Bộ phân loại router đoán sai sẽ làm hỏng toàn bộ pipeline con.
+          \item Chi phí bảo trì: Thêm nhánh mới đòi hỏi cập nhật cả router và downstream handlers.
         \end{itemize}
       \end{block}
     \end{column}
@@ -360,21 +360,21 @@
 \end{frame}
 
 % SLIDE 8: EVALUATOR-OPTIMIZER PATTERN
-\begin{frame}{Concrete Pattern 3: Evaluator-Optimizer Feedback Loops}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Iterative Refinement: What It Buys, What It Costs, and Failure Modes}
+\begin{frame}{Mẫu Thiết Kế 3: Vòng Lặp Phản Hồi Evaluator-Optimizer}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Tinh Chỉnh Lặp: Lợi Ích, Chi Phí Đánh Đổi \& Bẫy Phục Tùng (Sycophancy)}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Evaluator-Optimizer Mechanism}}
+      \begin{block}{\textbf{Cơ Chế Evaluator-Optimizer}}
         \footnotesize
         \textbf{Hai vai trò tách biệt rõ rệt:}
         \begin{enumerate}\scriptsize
-          \item \textbf{Generator LLM:} Tạo ra candidate output dựa trên yêu cầu.
-          \item \textbf{Evaluator (LLM hoặc Tool):} Đánh giá candidate dựa trên explicit criteria và trả về structured feedback.
-          \item \textbf{Refinement Loop:} Generator điều chỉnh lại output dựa trên feedback cho đến khi vượt qua threshold.
+          \item \textbf{Generator LLM:} Tạo ra candidate output dựa trên yêu cầu ban đầu.
+          \item \textbf{Evaluator (LLM hoặc Tool):} Đánh giá output dựa trên tiêu chí rõ ràng và trả về structured feedback.
+          \item \textbf{Refinement Loop:} Generator điều chỉnh lại output dựa trên feedback cho đến khi đạt chuẩn.
         \end{enumerate}
         \vspace{0.1cm}
-        \textbf{What It Buys:}
+        \textbf{Lợi ích mang lại (What It Buys):}
         \begin{itemize}\scriptsize
           \item Cải thiện output quality rõ rệt trong code generation, translation, và formal drafting.
           \item Mô phỏng quy trình drafting và peer-review của con người.
@@ -383,13 +383,13 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Critical Costs \& Failure Modes}}
+      \begin{alertblock}{\textbf{Chi Phí Đánh Đổi \& Các Dạng Thất Bại}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Token Explosion:} $K$ iterations làm tăng token consumption lên $K \times$, độ trễ kéo dài tương ứng.
-          \item \textbf{Sycophantic Agreement Trap:} Nếu Evaluator là LLM cùng base weights, nó thường nịnh bợ Generator và chấp thuận hallucinations tinh vi.
-          \item \textbf{Diminishing Returns:} Chất lượng tăng mạnh nhất ở loop 1; các loops sau dễ bị circular regression.
-          \item \textbf{Remedy:} Bắt buộc tích hợp \textbf{external deterministic tools} (linters, test suites, API checkers) thay vì pure LLM self-reflection.
+          \item \textbf{Bùng nổ Token:} $K$ vòng lặp làm tăng token tiêu thụ lên $K \times$, độ trễ kéo dài tương ứng.
+          \item \textbf{Bẫy nịnh bợ (Sycophancy Trap):} Nếu Evaluator là LLM cùng base weights, nó thường có xu hướng đồng thuận với Generator và bỏ qua lỗi tinh vi.
+          \item \textbf{Lợi ích biên giảm dần:} Chất lượng tăng mạnh nhất ở loop 1; các loops sau dễ bị thoái lui luẩn quẩn.
+          \item \textbf{Giải pháp:} Bắt buộc tích hợp \textbf{external deterministic tools} (linters, unit tests, API checkers) thay vì pure LLM self-reflection.
         \end{itemize}
       \end{alertblock}
     \end{column}
@@ -397,8 +397,8 @@
 \end{frame}
 
 % SLIDE 9: KHUNG RA QUYẾT ĐỊNH: ƯU TIÊN SỰ TINH GIẢN
-\begin{frame}{Decision Framework: When to Stick with Simple Code}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ The Architectural Progression: What Triggers Moving to Complex Patterns}
+\begin{frame}{Khung Ra Quyết Định: Khi Nào Nên Giữ Code Đơn Giản?}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Tiến Trình Kiến Trúc: Tín Hiệu Nào Kích Hoạt Nâng Cấp Lên Mẫu Phức Tạp?}
 
   \begin{center}
     \begin{tikzpicture}[node distance=1.1cm, auto,
@@ -426,7 +426,7 @@
   \vspace{0.15cm}
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Stick with Simple Code If:}}
+      \begin{block}{\textbf{Nên Giữ Workflow Đơn Giản Nếu:}}
         \scriptsize
         $\checkmark$ Input-output schema được định nghĩa chặt chẽ.\\
         $\checkmark$ Failure modes có thể chặn đứng bằng regex hoặc Pydantic schema.\\
@@ -434,7 +434,7 @@
       \end{block}
     \end{column}
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Trigger Orchestrator / Agents Only When:}}
+      \begin{alertblock}{\textbf{Chỉ Kích Hoạt Orchestrator / Agents Khi:}}
         \scriptsize
         $\blacktriangleright$ Số lượng và phạm vi subtasks không thể biết trước runtime.\\
         $\blacktriangleright$ Subtasks đòi hỏi cô lập cửa sổ ngữ cảnh (\textbf{Context Isolation}).\\
@@ -449,30 +449,30 @@
 % =====================================================================
 
 % SLIDE 10: ORCHESTRATOR-WORKERS VS NGỮ CẢNH KHỔNG LỒ
-\begin{frame}{Concrete Pattern 4: Orchestrator-Workers vs. One Giant Context}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Why Not Just Stuff Everything into a 2M-Token Window?}
+\begin{frame}{Mẫu Thiết Kế 4: Orchestrator-Workers vs. Một Ngữ Cảnh Khổng Lồ}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Vì Sao Không Nên Nhồi Mọi Thứ Vào Cửa Sổ Ngữ Cảnh 2 Triệu Tokens?}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{The Failure of the Single Giant Context}}
+      \begin{alertblock}{\textbf{Thất Bại Của Cửa Sổ Ngữ Cảnh Khổng Lồ}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Attention Dilution ("Lost in the Middle"):} Khi context vượt quá 30k tokens, attention score trên các đoạn ở giữa suy giảm rõ rệt.
-          \item \textbf{Context Pollution:} Intermediate scratchpad notes và stale tool outputs làm nhiễu prompt, kích hoạt hallucinations.
-          \item \textbf{Quadratic Cost \& Latency:} Xử lý 100k+ tokens ở mọi turn khiến execution chậm và cực kỳ đắt đỏ.
-          \item \textbf{All-or-Nothing Failure:} Nếu step 7 crash, toàn bộ context phải re-process từ đầu.
+          \item \textbf{Thoái hóa chú ý ("Lost in the Middle"):} Khi context vượt quá 30k tokens, attention score trên các đoạn ở giữa suy giảm rõ rệt.
+          \item \textbf{Ô nhiễm ngữ cảnh (Context Pollution):} Intermediate scratchpads và stale tool outputs làm nhiễu prompt, kích hoạt hallucinations.
+          \item \textbf{Độ trễ và chi phí bậc hai (Quadratic Cost):} Xử lý 100k+ tokens ở mọi turn khiến execution chậm và cực kỳ đắt đỏ.
+          \item \textbf{Sụp đổ toàn bộ (All-or-Nothing Failure):} Nếu step 7 crash, toàn bộ context phải re-process từ đầu.
         \end{itemize}
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{The Orchestrator-Worker Solution}}
+      \begin{block}{\textbf{Giải Pháp Orchestrator-Workers}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Dynamic Planning:} Orchestrator phân rã bài toán và dynamically instantiate specialized workers.
-          \item \textbf{Context Isolation:} Mỗi worker \textbf{chỉ nhận đúng thông tin phục vụ subtask} của nó.
-          \item \textbf{Parallel Execution:} Independent workers chạy song song (tra cứu charter capital song song với foreign ownership cap).
-          \item \textbf{Synthesized Handoff:} Workers trả về concise structured summaries cho Orchestrator, giữ top-level context luôn sạch.
+          \item \textbf{Lập kế hoạch động (Dynamic Planning):} Orchestrator phân rã bài toán và khởi tạo specialized workers theo nhu cầu.
+          \item \textbf{Cô lập ngữ cảnh (Context Isolation):} Mỗi worker \textbf{chỉ nhận đúng thông tin phục vụ subtask} của nó.
+          \item \textbf{Thực thi song song (Parallel Execution):} Independent workers chạy song song (tra cứu vốn điều lệ song song với trần sở hữu ngoại).
+          \item \textbf{Bàn giao tổng hợp (Synthesized Handoff):} Workers trả về concise structured summaries cho Orchestrator, giữ top-level context luôn sạch.
         \end{itemize}
       \end{block}
     \end{column}
@@ -480,12 +480,12 @@
 \end{frame}
 
 % SLIDE 11: ANTHROPIC 2025 MULTI-AGENT RESEARCH SYSTEM
-\begin{frame}{Anthropic (2025): The Lead/Subagent Cost and Latency Reality}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 1: How Lead/Subagent Split Changes Cost \& Latency, Not Just Capability}
+\begin{frame}{Anthropic (2025): Thực Tế Chi Phí \& Độ Trễ Của Lead/Subagent}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 1: Mô Hình Phân Cấp Đánh Đổi Chi Phí \& Độ Trễ Ra Sao}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Anthropic's Lead/Subagent Architecture}}
+      \begin{block}{\textbf{Kiến Trúc Lead/Subagent Của Anthropic}}
         \footnotesize
         Từ whitepaper tháng 2/2025 về multi-agent research systems của Anthropic:
         \begin{itemize}\scriptsize
@@ -494,50 +494,50 @@
           \item \textbf{Context Hygiene:} Loại bỏ toàn bộ raw scratchpads của subagents sau khi trích xuất kết quả.
         \end{itemize}
         \vspace{0.1cm}
-        \textbf{Capability Gain:} Giải quyết thành công các complex open-ended tasks mà single agents hoàn toàn thất bại.
+        \textbf{Năng lực đạt được:} Giải quyết thành công các complex open-ended tasks mà single agents hoàn toàn thất bại.
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{The Economic \& Latency Trade-Off}}
+      \begin{alertblock}{\textbf{Đánh Đổi Về Mặt Chi Phí \& Độ Trễ}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{$3\times$--$8\times$ Token Inflation:} Việc điều phối, truyền task prompts và tổng hợp reports làm bùng nổ token consumption từ 300\% đến 800\% so với single agent.
-          \item \textbf{Wall-Clock Latency Bottleneck:} Dù subagents chạy parallel, Lead Agent vẫn phải đợi subagent chậm nhất (\textbf{straggler effect}) và tốn thêm sequential planning turns.
-          \item \textbf{Synthesis Loss:} Lead Agent đôi khi vô tình bỏ qua các mâu thuẫn then chốt giữa các subagents.
+          \item \textbf{Lạm phát token $3\times$--$8\times$:} Việc điều phối, truyền task prompts và tổng hợp reports làm bùng nổ token consumption từ 300\% đến 800\% so với single agent.
+          \item \textbf{Nút thắt độ trễ (Wall-Clock Latency):} Dù subagents chạy parallel, Lead Agent vẫn phải đợi subagent chậm nhất (\textbf{straggler effect}) và tốn thêm sequential planning turns.
+          \item \textbf{Mất mát khi tổng hợp (Synthesis Loss):} Lead Agent đôi khi vô tình bỏ qua các mâu thuẫn then chốt giữa các subagents.
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Mandatory Syllabus Takeaway}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Multi-agent systems do not just boost capability—they impose a steep \textbf{$3-8\times$ token multiplier and latency overhead}. They are an engineering investment justified only when single context windows fail.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Kết Luận Trọng Tâm Theo Đề Cương}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Hệ thống multi-agent không chỉ tăng năng lực giải quyết tác vụ mà còn kéo theo \textbf{chi phí token gấp 3--8 lần và nút thắt độ trễ}. Đây là một khoản đầu tư kỹ thuật chỉ được biện minh khi cửa sổ ngữ cảnh đơn bị quá tải.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 12: OPENAI PRACTICAL GUIDE 2025
-\begin{frame}{OpenAI (2025): Tool-Calling Loops, Guardrails \& Evaluation}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 2: A Practical Guide to Building Agents}
+\begin{frame}{OpenAI (2025): Vòng Lặp Gọi Tool, Guardrails \& Đánh Giá}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 2: Cẩm Nang Thực Chiến Xây Dựng Agent}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Tool Calling Loops \& Progressive Autonomy}}
+      \begin{block}{\textbf{Vòng Lặp Gọi Tool \& Quyền Tự Trị Tăng Dần}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Model-Directed Loop:} Model generates tool call $\to$ system executes tool $\to$ observation appended to context $\to$ model continues until stop token.
-          \item \textbf{Strict Schemas:} Enforce JSON schemas with Pydantic; reject malformed tool inputs before execution.
-          \item \textbf{Progressive Handoffs:} Bắt đầu với narrow tools, chỉ escalate quyền tự trị rộng hơn sau khi pass validation checks.
+          \item \textbf{Vòng lặp do Model dẫn dắt:} Model sinh tool call $\to$ hệ thống thực thi tool $\to$ observation được thêm vào context $\to$ model lặp lại cho đến stop token.
+          \item \textbf{Strict Schemas:} Thực thi JSON schemas với Pydantic; chặn đứng các tham số gọi tool sai trước khi execute.
+          \item \textbf{Chuyển giao tăng dần (Progressive Handoffs):} Bắt đầu với narrow tools, chỉ escalate quyền tự trị rộng hơn sau khi pass validation checks.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Guardrails \& Rigorous Evaluations}}
+      \begin{alertblock}{\textbf{Hàng Rào Guardrails \& Đánh Giá Nghiêm Ngặt}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Input/Output Guardrails:} Independent validator models hoặc deterministic rules filter unsafe prompts và malformed agent plans.
-          \item \textbf{The Necessity of Evals:} OpenAI nhấn mạnh việc xây dựng agent bắt buộc phải có quantitative evaluation harness để đo lường độ tin cậy thay vì đánh giá cảm tính.
+          \item \textbf{Yêu cầu tất yếu của Evals:} OpenAI nhấn mạnh việc xây dựng agent bắt buộc phải có quantitative evaluation harness để đo lường độ tin cậy thay vì đánh giá cảm tính.
           \item \textbf{Ground-Truth Oracles:} Không cho model tự chấm điểm tự do; bắt buộc score bằng deterministic unit tests hoặc ground-truth APIs.
         \end{itemize}
       \end{alertblock}
@@ -545,18 +545,18 @@
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{OpenAI's Core Principle Quote (2025)}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Nguyên Lý Cốt Lõi Của OpenAI (2025)}},fonttitle=\footnotesize\bfseries]
     \footnotesize \textit{"Evaluate early and often. Without systematic evaluations, you cannot measure whether an agentic loop improves or degrades reliability... Always apply strict schema validation and circuit-breakers."}
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 13: LANGGRAPH STATE GRAPHS
-\begin{frame}{LangGraph: Multi-Agent Workflows as Cyclic State Graphs}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 3: State Graphs, Reducers, and Conditional Routing}
+\begin{frame}{LangGraph: Luồng Đa Tác Tử Dưới Dạng Đồ Thị Trạng Thái Chu Trình}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 3: State Graphs, Reducers \& Rẽ Nhánh Có Điều Kiện}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{LangGraph Core Concepts}}
+      \begin{block}{\textbf{Các Khái Niệm Cốt Lõi Của LangGraph}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Centralized State Schema:} Shared, typed state dictionary được truyền xuyên suốt qua tất cả các nodes.
@@ -568,36 +568,36 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Why Cyclic State Graphs Matter}}
+      \begin{alertblock}{\textbf{Vì Sao Đồ Thị Trạng Thái Chu Trình Lại Quan Trọng}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Traditional DAGs are strictly forward-only:} Nếu retrieval lấy phải revoked statute, DAG không thể backtrack.
-          \item \textbf{Cyclic State Graphs allow loops:} Graph có thể route back về planning node để tìm văn bản thay thế kèm retry counter.
-          \item \textbf{Bounded Loops:} Graph edges enforce max retry limits (FSM circuit breaker) để triệt tiêu hoàn toàn infinite loops.
+          \item \textbf{DAG truyền thống chỉ đi một chiều:} Nếu retrieval lấy phải revoked statute, DAG không thể quay ngược lại (backtrack).
+          \item \textbf{Đồ thị chu trình cho phép vòng lặp:} Graph có thể route back về planning node để tìm văn bản thay thế kèm retry counter.
+          \item \textbf{Vòng lặp có chặn trên (Bounded Loops):} Graph edges thực thi max retry limits (FSM circuit breaker) để triệt tiêu hoàn toàn infinite loops.
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Engineering Value}},fonttitle=\footnotesize\bfseries]
-    \footnotesize LangGraph bridges the gap between rigid deterministic workflows and unconstrained agents by providing \textbf{structured, inspectable state transitions}.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Giá Trị Kỹ Thuật Cốt Lõi}},fonttitle=\footnotesize\bfseries]
+    \footnotesize LangGraph bắc cầu giữa workflow tiền định cứng nhắc và autonomous agents tự do nhờ cung cấp \textbf{các bước chuyển trạng thái có cấu trúc, có thể kiểm toán (inspectable)}.
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 14: DURABLE EXECUTION & CHECKPOINTING
-\begin{frame}{Durable Execution \& Checkpointing: Surviving Production Failures}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 3: State Checkpointing, Failure Recovery, and Human-in-the-Loop}
+% SLIDE 14: THỰC THI BỀN BỈ & CHECKPOINTING
+\begin{frame}{Thực Thi Bền Bỉ \& Checkpointing: Vượt Qua Sự Cố Trong Môi Trường Production}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 3: State Checkpointing, Phục Hồi Lỗi và Human-in-the-Loop}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{What is "Durable Execution"?}}
+      \begin{block}{\textbf{Thực Thi Bền Bỉ (Durable Execution) Là Gì?}}
         \footnotesize
         \begin{itemize}
-          \item Long-running agents (chạy từ 10 phút tới nhiều giờ) \textbf{chắc chắn sẽ gặp sự cố}: network timeout, rate limit, container crash.
-          \item \textbf{Without Checkpointing:} Crash ở Step 9 đồng nghĩa phải re-run từ Step 1 $\to$ lãng phí tiền bạc và thời gian.
-          \item \textbf{With LangGraph Checkpointing:} State tự động persist xuống SQLite/Postgres sau mỗi node transition.
-          \item \textbf{Fault Recovery:} Execution resume mượt mà từ latest saved checkpoint.
+          \item Các agent chạy tác vụ dài (từ vài phút đến nhiều giờ) \textbf{chắc chắn sẽ gặp sự cố}: rớt mạng, chạm rate limit, container sập.
+          \item \textbf{Nếu không có Checkpointing:} Sự cố ở Bước 9 đồng nghĩa phải chạy lại toàn bộ từ Bước 1 $\to$ lãng phí chi phí token và thời gian.
+          \item \textbf{Cơ chế Checkpointing của LangGraph:} Tự động lưu trạng thái (state persistence) xuống SQLite/Postgres sau mỗi node transition.
+          \item \textbf{Phục hồi sau sự cố (Fault Recovery):} Tiếp tục thực thi mượt mà từ checkpoint hợp lệ gần nhất.
         \end{itemize}
       \end{block}
     \end{column}
@@ -606,17 +606,17 @@
       \begin{alertblock}{\textbf{Time-Travel \& Human-in-the-Loop (HITL)}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Interrupts:} Graph có thể pause execution trước các high-risk actions (e.g., trước khi submit legal dossier).
-          \item \textbf{Human Review:} Human expert inspects state, chỉnh sửa dữ liệu nếu cần, và approve resumption.
-          \item \textbf{Time-Travel Debugging:} Developers có thể fork execution từ bất kỳ historical checkpoint nào để test prompt variants hoặc trace errors.
+          \item \textbf{Ngắt luồng (Interrupts):} Đồ thị có thể tạm dừng trước các hành vi rủi ro cao (ví dụ: trước khi gửi hồ sơ pháp lý).
+          \item \textbf{Chuyên gia đánh giá (Human Review):} Con người kiểm tra trạng thái, hiệu chỉnh dữ liệu nếu cần, rồi phê duyệt chạy tiếp.
+          \item \textbf{Gỡ lỗi Time-Travel:} Kỹ sư có thể phân nhánh (fork) thực thi từ bất kỳ checkpoint quá khứ nào để kiểm thử hoặc truy vết lỗi.
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=darkgreen,title={\textbf{Mandatory Syllabus Takeaway}},fonttitle=\footnotesize\bfseries]
-    \footnotesize \textbf{Durable execution transforms fragile agent prototypes into enterprise-grade infrastructure} by guaranteeing zero loss of completed work.
+  \begin{tcolorbox}[colback=boxbg,colframe=darkgreen,title={\textbf{Bài Học Bắt Buộc Theo Đề Cương}},fonttitle=\footnotesize\bfseries]
+    \footnotesize \textbf{Thực thi bền bỉ (Durable execution) biến các bản thử nghiệm agent mong manh thành hạ tầng cấp doanh nghiệp} nhờ bảo đảm không làm thất thoát kết quả tính toán đã hoàn thành.
   \end{tcolorbox}
 \end{frame}
 
@@ -625,41 +625,41 @@
 % =====================================================================
 
 % SLIDE 15: MA TRẬN SO SÁNH TOÀN DIỆN CÁC MẪU THIẾT KẾ
-\begin{frame}{Comprehensive Architectural Trade-Off Matrix \& Pattern Taxonomy}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Evaluating Control Flow Topologies on Latency, Cost, Reliability \& Error Bounds}
+\begin{frame}{Ma Trận Đánh Đổi Kiến Trúc Toàn Diện \& Phân Loại Pattern}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Đánh Giá Topologies Điều Khiển Về Độ Trễ, Chi Phí, Độ Tin Cậy \& Biên Sai Số}
 
   \centering\scriptsize
   \begin{tabularx}{\textwidth}{p{2.3cm}p{1.9cm}p{1.7cm}p{2.2cm}p{2.3cm}p{2.6cm}}
     \toprule
-    \textbf{Design Pattern} & \textbf{Control Flow} & \textbf{Relative Cost} & \textbf{Latency Profile} & \textbf{Reliability Risk} & \textbf{Ideal Production Use Case} \\
+    \textbf{Mẫu Thiết Kế} & \textbf{Điều Khiển Luồng} & \textbf{Chi Phí Tương Đối} & \textbf{Đặc Tính Độ Trễ} & \textbf{Rủi Ro Tin Cậy} & \textbf{Ca Ứng Dụng Lý Tưởng} \\
     \midrule
-    \textbf{1. Prompt Chaining} & Fixed Code Path & $1.0\times$ (Lowest) & Low (Sequential) & Very Low ($P = p^n$ bounded) & Linear translation, schema parsing. \\
+    \textbf{1. Prompt Chaining} & Fixed Code Path & $1.0\times$ (Thấp nhất) & Thấp (Tuần tự) & Rất thấp ($P = p^n$ bị chặn) & Dịch thuật tuyến tính, trích xuất schema. \\
     \addlinespace
-    \textbf{2. Routing} & Fixed Code Path & $1.0\times$ & Minimal ($+1$ router call) & Low (Router misclassification) & Helpdesk triage, domain dispatching. \\
+    \textbf{2. Routing} & Fixed Code Path & $1.0\times$ & Tối thiểu ($+1$ router call) & Thấp (Router phân loại sai) & Triage hỗ trợ khách hàng, phân luồng nghiệp vụ. \\
     \addlinespace
-    \textbf{3. Parallelization} & Fixed Code Path & $1.2\times--2.5\times$ & Lowest (Concurrent) & Low (Synthesis bottleneck) & Multi-perspective voting, guardrail checks. \\
+    \textbf{3. Parallelization} & Fixed Code Path & $1.2\times--2.5\times$ & Thấp nhất (Song song) & Thấp (Nghẽn tại bước tổng hợp) & Bỏ phiếu đa góc nhìn, kiểm tra guardrails. \\
     \addlinespace
-    \textbf{4. Evaluator-Optimizer} & Cyclic Workflow & $2.0\times--4.0\times$ & Moderate--High & Medium (Sycophancy loop) & Code generation, formal drafting. \\
+    \textbf{4. Evaluator-Optimizer} & Cyclic Workflow & $2.0\times--4.0\times$ & Trung bình--Cao & Trung bình (Bẫy nịnh bợ sycophancy) & Sinh mã nguồn, soạn thảo văn bản học thuật/pháp lý. \\
     \addlinespace
-    \textbf{5. Orchestrator-Workers} & Hierarchical Split & $\mathbf{3.0\times--8.0\times}$ & Moderate (Wait for stragglers) & Medium (Synthesis loss) & \textbf{Complex research, multi-aspect audits.} \\
+    \textbf{5. Orchestrator-Workers} & Hierarchical Split & $\mathbf{3.0\times--8.0\times}$ & Trung bình (Chờ nhánh chậm nhất) & Trung bình (Mất mát khi tổng hợp) & \textbf{Nghiên cứu phức tạp, rà soát đa khía cạnh.} \\
     \addlinespace
-    \textbf{6. Autonomous Agent} & Model-Directed & $5.0\times--15\times+$ & Unpredictable & High (Compounding error drift) & Open-ended web exploration, sandboxes. \\
+    \textbf{6. Autonomous Agent} & Model-Directed & $5.0\times--15\times+$ & Không đoán trước được & Cao (Sai số tích lũy ngoài kiểm soát) & Thám hiểm web mở, môi trường sandbox. \\
     \bottomrule
   \end{tabularx}
 
   \vspace{0.25cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{The Architectural Spectrum: Control vs. Autonomy}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Moving left to right increases reasoning flexibility but exponentially amplifies cost, latency, and failure vectors. Systems engineering demands choosing the leftmost pattern that satisfies the domain specification.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phổ Kiến Trúc: Kiểm Soát (Control) vs. Tự Trị (Autonomy)}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Dịch chuyển từ trái sang phải làm tăng tính linh hoạt suy luận nhưng làm bùng nổ theo hàm mũ chi phí, độ trễ và các điểm nghẽn lỗi. Kỹ thuật hệ thống đòi hỏi phải chọn mẫu thiết kế nằm xa nhất về bên trái mà vẫn giải quyết được trọn vẹn yêu cầu bài toán.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 16: DYNAMIC ORCHESTRATION & SYSTEMS ARCHITECTURE
-\begin{frame}{Dynamic Orchestration: Hierarchical Lead/Subagent Architecture}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Dynamic Task Decomposition, Subagent Dispatching Topology \& Context Isolation}
+\begin{frame}{Dynamic Orchestration: Kiến Trúc Phân Cấp Lead/Subagent}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Phân Rã Tác Vụ Động, Topology Điều Phối \& Cô Lập Ngữ Cảnh}
 
   \begin{columns}[t]
     \begin{column}{0.52\textwidth}
-      \begin{block}{\textbf{Dynamic Orchestration Systems Architecture}}
+      \begin{block}{\textbf{Kiến Trúc Hệ Thống Dynamic Orchestration}}
         \footnotesize
         \begin{enumerate}\scriptsize
           \item \textbf{Lead Orchestrator (Dynamic Planner):}
@@ -677,16 +677,16 @@
     \end{column}
 
     \begin{column}{0.46\textwidth}
-      \begin{alertblock}{\textbf{Why Context Isolation is an Architectural Invariant}}
+      \begin{alertblock}{\textbf{Vì Sao Context Isolation Là Bất Biến Kiến Trúc Bắt Buộc}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Eliminating Quadratic Prompt Bloat:} Thay vì nhồi 15k tokens vào monolithic context, mỗi subagent chạy trong clean window $<1,500$ tokens.
-          \item \textbf{Attention Dilution Defense:} Tránh hiện tượng "Lost in the Middle" và xung đột thông tin giữa các miền nghiệp vụ độc lập.
-          \item \textbf{Zero Hallucination Contamination:} Dữ liệu rác hoặc văn bản hết hiệu lực ở retrieval node bị chặn đứng, không lọt vào context của drafter.
+          \item \textbf{Triệt tiêu phình to Token bậc hai:} Thay vì nhồi 15k tokens vào monolithic context, mỗi subagent chạy trong clean window $<1,500$ tokens.
+          \item \textbf{Bảo vệ chống thoái hóa chú ý:} Tránh hiện tượng "Lost in the Middle" và xung đột thông tin giữa các miền nghiệp vụ độc lập.
+          \item \textbf{Chặn đứng ảo giác lây lan:} Dữ liệu rác hoặc văn bản hết hiệu lực ở retrieval node bị chặn đứng, không lọt vào context của drafter.
         \end{itemize}
       \end{alertblock}
       \vspace{0.08cm}
-      \begin{block}{\scriptsize \textbf{Concrete Case Study Grounding}}
+      \begin{block}{\scriptsize \textbf{Minh Họa Bằng Case Study Thực Nghiệm G4}}
         \tiny Kiến trúc trên được kiểm chứng thực tế trong hệ thống kiểm tra tuân thủ pháp lý đa tác tử của Nhóm G4 (LegalPilot-VN).
       \end{block}
     \end{column}
@@ -694,35 +694,35 @@
 \end{frame}
 
 % SLIDE 17: AGENT DESIGN PATTERNS: ARCHITECTURAL SELECTION & PRUNING
-\begin{frame}{Agent Design Patterns: Architectural Selection \& Pruning}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Why Autonomous Loops Fail in High-Stakes Systems vs. Structured Multi-Agent Topology}
+\begin{frame}{Agent Design Patterns: Lựa Chọn \& Cắt Tỉa Kiến Trúc (Pruning)}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Vì Sao Vòng Lặp Tự Do Thất Bại Trong High-Stakes Systems vs. Multi-Agent Phân Cấp}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Pruned Pattern: Autonomous ReAct Agent Loop}}
+      \begin{alertblock}{\textbf{Mẫu Bị Cắt Tỉa: Vòng Lặp Tự Trị Autonomous ReAct}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Characteristics:} Vòng lặp đơn tự do gọi tools tuần tự dựa trên model-directed observations.
-          \item \textbf{Systemic Failure Vectors in Production:}
+          \item \textbf{Đặc tính:} Vòng lặp đơn tự do gọi tools tuần tự dựa trên quan sát do mô hình dẫn dắt.
+          \item \textbf{Các điểm nghẽn lỗi hệ thống trong production:}
                 \begin{enumerate}\scriptsize
-                  \item \textbf{Compounding Error ($P = p^n$):} Với $n=5$ turns và độ chính xác $p=0.9$, độ tin cậy rơi xuống $59\%$; 1 sai sót làm sụp đổ toàn bộ output.
-                  \item \textbf{Attention Contamination:} Lịch sử gọi tools tích lũy liên tục gây quadratic token expansion ($8,950+$ tokens) và hallucination cascades.
-                  \item \textbf{Zero Durability:} Tiến trình xử lý là in-memory volatile; network glitch hoặc timeout ở turn 4 khiến pipeline chết đứng từ đầu.
+                  \item \textbf{Lỗi tích lũy ($P = p^n$):} Với 5 turns ở độ chính xác $p=0.9$, độ tin cậy rơi xuống $59\%$; chỉ một sai sót nhỏ làm sụp đổ toàn bộ kết quả.
+                  \item \textbf{Ô nhiễm ngữ cảnh (Context Pollution):} Lịch sử gọi tools tích lũy liên tục gây bùng nổ token bậc hai ($8,950+$ tokens) và sinh ảo giác dây chuyền.
+                  \item \textbf{Thiếu tính bền bỉ (Zero Durability):} Tiến trình xử lý nằm hoàn toàn trên bộ nhớ RAM volatile; mất mạng hoặc timeout ở turn 4 khiến pipeline chết đứng từ đầu.
                 \end{enumerate}
         \end{itemize}
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Selected Pattern: Structured Orchestrator-Workers}}
+      \begin{block}{\textbf{Mẫu Được Chọn: Structured Orchestrator-Workers}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Characteristics:} Phân rã phân cấp có kiểm soát; orchestrator điều phối các workers qua state graph có định hướng.
-          \item \textbf{Architectural Advantages:}
+          \item \textbf{Đặc tính:} Phân rã phân cấp có kiểm soát; orchestrator điều phối các workers qua state graph có định hướng.
+          \item \textbf{Lợi thế kiến trúc vượt trội:}
                 \begin{enumerate}\scriptsize
-                  \item \textbf{Bounded Autonomy:} Worker chỉ có thẩm quyền cục bộ trong scope hẹp; kiểm soát chặt chẽ bounds của error propagation.
-                  \item \textbf{Durable State Recovery:} Graph cho phép roll back có chọn lọc về checkpoint trước đó mà không phải re-execute toàn bộ pipeline.
-                  \item \textbf{Predictable Resource Budget:} Token footprint được kiểm soát qua state schemas ($2,410$ tokens vs. $8,950$ tokens trong ReAct).
+                  \item \textbf{Quyền tự trị bị chặn biên (Bounded Autonomy):} Worker chỉ có thẩm quyền cục bộ trong scope hẹp; kiểm soát chặt chẽ bounds của error propagation.
+                  \item \textbf{Phục hồi trạng thái bền bỉ (Durable State Recovery):} Graph cho phép roll back có chọn lọc về checkpoint trước đó mà không phải re-execute toàn bộ pipeline.
+                  \item \textbf{Kiểm soát ngân sách tài nguyên:} Lượng token được giới hạn chặt chẽ qua state schemas ($2,410$ tokens vs. $8,950$ tokens trong ReAct).
                 \end{enumerate}
         \end{itemize}
       \end{block}
@@ -730,35 +730,35 @@
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Pattern Selection Law}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Unconstrained agent autonomy must be pruned in zero-tolerance enterprise systems. The resilient pattern couples \textbf{dynamic task decomposition with deterministic state transitions}.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Quy Luật Lựa Chọn Pattern Trong Thực Tế}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Quyền tự trị không ràng buộc bắt buộc phải bị loại bỏ trong các hệ thống doanh nghiệp đòi hỏi độ chính xác tuyệt đối. Kiến trúc đúng đắn kết hợp \textbf{phân rã tác vụ động với các bước chuyển đổi trạng thái tiền định}.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 18: FAULT-TOLERANT ARCHITECTURE: DETERMINISTIC GROUND-TRUTH ORACLES
-\begin{frame}{Fault-Tolerant Systems: Deterministic Oracles vs. LLM Self-Critique}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Decoupling Generation from Verification via Non-LLM Ground-Truth Oracles}
+\begin{frame}{Hệ Thống Chịu Lỗi: Deterministic Oracles vs. LLM Tự Rà Soát}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Tách Rời Tầng Suy Luận Khỏi Tầng Xác Thực Bằng External Ground-Truth Oracles}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{alertblock}{\textbf{The Architectural Flaw of Pure LLM Self-Critique}}
+      \begin{alertblock}{\textbf{Điểm Nghẽn Bản Chất Khi Để LLM Tự Chấm Điểm (Self-Critique)}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{The Parametric Prior Trap:} Yêu cầu LLM "tự rà soát" (\textit{"Are you sure?"}) không tham chiếu thế giới thực mà chỉ tái lấy mẫu từ cùng một parametric distribution đã sinh lỗi.
-          \item \textbf{Sycophantic Feedback Loops:} Evaluator LLM có xu hướng đồng thuận với Generator nếu chia sẻ cùng base model, dẫn đến confirmation bias nguy hại.
-          \item \textbf{Epistemic Blind Spots:} LLM không thể tự biết một API endpoint, DB record hay văn bản pháp quy đã bị bãi bỏ nếu không truy vấn live external registry.
+          \item \textbf{Bẫy phân phối tiên nghiệm (Parametric Prior):} Yêu cầu LLM "tự rà soát" (\textit{"Are you sure?"}) không tham chiếu thế giới thực mà chỉ tái lấy mẫu từ cùng một parametric distribution đã sinh lỗi.
+          \item \textbf{Vòng lặp nịnh bợ (Sycophantic Feedback):} Evaluator LLM có xu hướng đồng thuận với Generator nếu chia sẻ cùng base model, dẫn đến confirmation bias nguy hại.
+          \item \textbf{Điểm mù tri thức (Epistemic Blind Spots):} LLM không thể tự biết một API endpoint, DB record hay văn bản pháp quy đã bị bãi bỏ nếu không truy vấn live external registry.
         \end{itemize}
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{The Deterministic Oracle Architecture}}
+      \begin{block}{\textbf{Kiến Trúc Deterministic Oracle Độc Lập}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Decoupled Verification Plane:} Tách rời tầng suy luận xác suất (probabilistic reasoning) khỏi tầng xác thực xác định (deterministic validation).
-          \item \textbf{Binary Assertion Gates:} Worker tích hợp các deterministic tools (linter, unit tests, registry API \texttt{vbpl\_verify\_status}) trả về ground truth nhị phân.
-          \item \textbf{Hard Circuit Breakers:} Kết quả từ oracle kích hoạt state transitions tức thì: nếu trạng thái \texttt{REVOKED}, graph tự động ngắt luồng và kích hoạt recovery edge.
-          \item \textbf{Audit Logging:} Lưu trữ binary proof vào durable state record phục vụ compliance auditing.
+          \item \textbf{Tách rời mặt phẳng xác thực (Decoupled Plane):} Tách rời tầng suy luận xác suất (probabilistic reasoning) khỏi tầng xác thực xác định (deterministic validation).
+          \item \textbf{Cổng kiểm tra nhị phân (Binary Assertion Gates):} Worker tích hợp các deterministic tools (linter, unit tests, registry API \texttt{vbpl\_verify\_status}) trả về ground truth nhị phân.
+          \item \textbf{Ngắt mạch cứng (Hard Circuit Breakers):} Kết quả từ oracle kích hoạt state transitions tức thì: nếu trạng thái \texttt{REVOKED}, graph tự động ngắt luồng và kích hoạt recovery edge.
+          \item \textbf{Nhật ký kiểm toán (Audit Logging):} Lưu trữ binary proof vào durable state record phục vụ compliance auditing.
         \end{itemize}
       \end{block}
     \end{column}
@@ -766,37 +766,37 @@
 \end{frame}
 
 % SLIDE 19: STATE PERSISTENCE & RESILIENT GRAPH ROLLBACKS
-\begin{frame}{Durable Execution in Practice: Resilient State Graph Rollbacks}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ LangGraph Engine Mechanics: State Checkpointing, Differential Rollback \& Partial Recovery}
+\begin{frame}{Thực Thi Bền Bỉ Trong Thực Tế: Rollback Đồ Thị Trạng Thái}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Cơ Chế LangGraph: Checkpointing, Differential Rollback \& Phục Hồi Từng Phần}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{State Graph Execution \& Rollback Mechanics}}
+      \begin{block}{\textbf{Cơ Chế Thực Thi Đồ Thị \& Trình Tự Rollback}}
         \footnotesize
         \begin{enumerate}\scriptsize
-          \item \textbf{Snapshot Persistence (Node 1):} Orchestrator phân rã subgoals; state graph lưu snapshot \texttt{chk\_plan\_ready} xuống persistent storage (SQLite/Postgres).
-          \item \textbf{Isolated Execution (Node 2):} Retrieval worker lấy kết quả ban đầu (Decree 101/2012) $\to$ lưu checkpoint \texttt{chk\_retrieval\_done}.
-          \item \textbf{Oracle Circuit-Breaker (Node 3):} Auditor phát hiện văn bản bãi bỏ qua external oracle $\to$ trigger conditional failure edge.
+          \item \textbf{Lưu trữ Snapshot (Node 1):} Orchestrator phân rã subgoals; state graph lưu snapshot \texttt{chk\_plan\_ready} xuống persistent storage (SQLite/Postgres).
+          \item \textbf{Thực thi cô lập (Node 2):} Retrieval worker lấy kết quả ban đầu (Decree 101/2012) $\to$ lưu checkpoint \texttt{chk\_retrieval\_done}.
+          \item \textbf{Bắt lỗi bằng Oracle (Node 3):} Auditor phát hiện văn bản bãi bỏ qua external oracle $\to$ kích hoạt conditional failure edge.
           \item \textbf{Differential Rollback (Recovery Edge):}
                 $\bullet$ Graph phục hồi state về snapshot \texttt{chk\_plan\_ready}.\\
-                $\bullet$ \textbf{Partial State Preservation:} Subgoal B (Foreign ownership) giữ nguyên trong state cache, không chạy lại!\\
+                $\bullet$ \textbf{Giữ nguyên trạng thái hợp lệ:} Subgoal B (Foreign ownership) giữ nguyên trong state cache, không chạy lại!\\
                 $\bullet$ Chỉ có Subgoal A bị vô hiệu hóa được re-routed tới successor 52/2024.
-          \item \textbf{Convergence (Node 4):} Drafter worker hoàn thành final output từ active verified data $\to$ checkpoint \texttt{chk\_final\_dossier}.
+          \item \textbf{Hội tụ kết quả (Node 4):} Drafter worker hoàn thành final output từ active verified data $\to$ checkpoint \texttt{chk\_final\_dossier}.
         \end{enumerate}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{System Architecture Guarantees}}
+      \begin{alertblock}{\textbf{Cam Kết Đảm Bảo Về Mặt Kiến Trúc Hệ Thống}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Zero Cold Pipeline Restarts:} Tránh lãng phí tài nguyên và chi phí token vào việc chạy lại các subtasks hợp lệ đã hoàn tất.
-          \item \textbf{Deterministic Resumption:} Khi gặp network drop hoặc tool crash, runtime resume ngay từ checkpoint gần nhất thay vì chạy lại từ turn 0.
-          \item \textbf{Reproducible State Audit Trace:} Toàn bộ lịch sử transitions và diffs được lưu trữ phục vụ debugging và enterprise compliance.
+          \item \textbf{Không bao giờ Cold Restart:} Tránh lãng phí tài nguyên và chi phí token vào việc chạy lại các subtasks hợp lệ đã hoàn tất.
+          \item \textbf{Tiếp tục thực thi xác định:} Khi gặp network drop hoặc tool crash, runtime resume ngay từ checkpoint gần nhất thay vì chạy lại từ turn 0.
+          \item \textbf{Dấu vết kiểm toán tái lập được:} Toàn bộ lịch sử transitions và diffs được lưu trữ phục vụ debugging và enterprise compliance.
         \end{itemize}
       \end{alertblock}
       \vspace{0.08cm}
-      \begin{block}{\scriptsize \textbf{Trace Demonstration Case}}
+      \begin{block}{\scriptsize \textbf{Minh Họa Bằng Trace Thực Nghiệm}}
         \tiny Dẫn chứng bằng trace thực nghiệm xử lý chuyển giao Nghị định 101/2012 sang Nghị định 52/2024 trong demo S1-7.
       \end{block}
     \end{column}
@@ -804,8 +804,8 @@
 \end{frame}
 
 % SLIDE 20: ORCHESTRATION TOPOLOGIES & COMMUNICATION ARCHITECTURES
-\begin{frame}{Orchestration Topologies: Centralized vs. Swarms vs. Cyclic Graphs}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Comparing Architectural Topologies: Hub-and-Spoke, Decentralized Mesh, and State Graphs}
+\begin{frame}{Các Topologies Điều Phối: Centralized vs. Swarms vs. Cyclic Graphs}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ So Sánh Các Mô Hình Kiến Trúc: Hub-and-Spoke, Decentralized Mesh \& State Graphs}
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
@@ -846,53 +846,53 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Systems Architecture Takeaway on Topologies}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Production enterprise systems strictly avoid unconstrained decentralized swarms. The dominant industry standard combines \textbf{Hub-and-Spoke task delegation} with \textbf{Cyclic State Graphs for fault recovery}.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Bài Học Kiến Trúc Về Topologies Cho Doanh Nghiệp}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Các hệ thống doanh nghiệp nghiêm túc tuyệt đối tránh dùng decentralized swarms tự do. Tiêu chuẩn kiến trúc chiếm ưu thế hiện nay kết hợp \textbf{phân quyền Hub-and-Spoke} với \textbf{Đồ thị trạng thái chu trình (Cyclic State Graphs) để xử lý phục hồi lỗi}.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 21: BÀI HỌC KỸ THUẬT TRIỂN KHAI THỰC CHIẾN
-\begin{frame}{Production Systems Architecture: Engineering Principles for Agentic Systems}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Synthesizing Anthropic (2024/2025), OpenAI (2025), and LangGraph for Real Systems}
+\begin{frame}{Kiến Trúc Hệ Thống Production: Nguyên Lý Kỹ Thuật Cho Agent}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Tổng Hợp Từ Anthropic, OpenAI và LangGraph Cho Hệ Thống Triển Khai Thực Tế}
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{1. Simplicity-First Invariant}}
+      \begin{block}{\textbf{1. Bất Biến Simplicity-First}}
         \footnotesize
         \begin{itemize}
-          \item Default to prompt chaining và deterministic routing.
-          \item Use code for control flow and LLMs only for atomic reasoning.
-          \item Never introduce dynamic orchestration if a fixed DAG suffices.
+          \item Mặc định ưu tiên prompt chaining và deterministic routing.
+          \item Dùng code cho control flow và chỉ dùng LLM cho atomic reasoning.
+          \item Không bao giờ đưa dynamic orchestration vào nếu fixed workflow đã đáp ứng.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{2. Enforce Context Isolation}}
+      \begin{block}{\textbf{2. Bắt Buộc Cô Lập Ngữ Cảnh}}
         \footnotesize
         \begin{itemize}
-          \item Khi bắt buộc dùng multi-agent, adopt Anthropic's Lead/Subagent split.
-          \item Never share a giant messy scratchpad across agents.
-          \item Accept token multiplier $3-8\times$ as the price of context hygiene.
+          \item Khi bắt buộc dùng multi-agent, áp dụng mô hình Lead/Subagent của Anthropic.
+          \item Không bao giờ chia sẻ một scratchpad chung lộn xộn giữa các agents.
+          \item Chấp nhận token multiplier $3-8\times$ như cái giá của context hygiene.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{3. Build for Durability}}
+      \begin{block}{\textbf{3. Xây Dựng Bền Bỉ (Durability)}}
         \footnotesize
         \begin{itemize}
-          \item Persist state transitions with immutable checkpointing.
-          \item Decouple verification via external deterministic oracles.
-          \item Enforce bounded retry edges and circuit-breakers on cycles.
+          \item Lưu trữ mọi bước chuyển trạng thái bằng immutable checkpointing.
+          \item Tách rời kiểm định bằng external deterministic oracles.
+          \item Đặt giới hạn số lần retry có chặn trên (circuit-breakers) cho các chu trình lặp.
         \end{itemize}
       \end{block}
     \end{column}
   \end{columns}
 
   \vspace{0.25cm}
-  \begin{alertblock}{\textbf{The Golden Engineering Rule}}
-    \footnotesize \textbf{Core Takeaway:} The best agent architecture is the simplest one that solves the task reliably; complexity is an engineering cost, not a feature.
+  \begin{alertblock}{\textbf{Nguyên Tắc Vàng Của Kỹ Thuật Hệ Thống}}
+    \footnotesize \textbf{Thông Điệp Cốt Lõi:} Kiến trúc agent tốt nhất là kiến trúc đơn giản nhất giải quyết bài toán một cách tin cậy; độ phức tạp là một khoản chi phí kỹ thuật, không phải là một tính năng.
   \end{alertblock}
 \end{frame}
 
@@ -903,26 +903,26 @@
   \begin{tikzpicture}[remember picture, overlay]
     \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
     \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
-      {HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY (HCMUT-VNU) -- CO5151 SEMINAR S1-7};
+      {TRƯỜNG ĐẠI HỌC BÁCH KHOA (ĐHQG-HCM) -- CO5151 SEMINAR S1-7};
   \end{tikzpicture}
 
   \vspace{0.8cm}
   \begin{center}
-    {\Large \textbf{\color{hcmutblue}Conclusion \& Oral Defense Readiness}}\\[0.2cm]
-    {\normalsize \textit{Summary of Findings for Topic S1-7}}\\[0.35cm]
+    {\Large \textbf{\color{hcmutblue}Tổng Kết \& Sẵn Sàng Cho Phiên Phản Biện}}\\[0.2cm]
+    {\normalsize \textit{Tóm tắt các phát hiện học thuật cho Chủ đề Seminar S1-7}}\\[0.35cm]
 
     \begin{tcolorbox}[width=0.92\textwidth,colback=hcmutgray,colframe=hcmutblue!50,arc=2mm,boxrule=0.8pt]
       \centering\small
-      \textbf{Core Takeaway Defending Anthropic's Thesis:}\\[0.1cm]
+      \textbf{Thông Điệp Cốt Lõi Khẳng Định Luận Điểm Của Anthropic:}\\[0.1cm]
       \footnotesize
-      Autonomous agents are powerful but fragile; simple workflows dominate in reliability and cost efficiency.\\
-      When tasks require dynamic orchestration, the \textbf{Lead/Subagent split with context isolation} and \textbf{LangGraph checkpointing} provide a resilient pattern for production deployment.
+      Autonomous agents rất linh hoạt nhưng mỏng manh; các workflow tiền định áp đảo về độ tin cậy và hiệu quả chi phí.\\
+      Khi bài toán bắt buộc phải điều phối động, mô hình \textbf{Lead/Subagent với ngữ cảnh cô lập} kết hợp \textbf{LangGraph state checkpointing} là phương án bền bỉ nhất để đưa hệ thống vào môi trường doanh nghiệp.
     \end{tcolorbox}
 
     \vspace{0.35cm}
-    {\large \textbf{\color{hcmutblue}Thank You for Your Attention!}}\\[0.15cm]
-    {\small We look forward to questions and academic critique from Dr. Le Xuan Bach and the Committee.}\\[0.25cm]
-    {\scriptsize \textbf{Group G4}: Dang Lam Tung (Lead) $\cdot$ Nguyen Trung Phong $\cdot$ Vu Viet Hung $\vert$ \texttt{CO5151 -- HK261}}
+    {\large \textbf{\color{hcmutblue}Xin Chân Thành Cảm Ơn Sự Theo Dõi Của Thầy Và Các Bạn!}}\\[0.15cm]
+    {\small Nhóm G4 rất mong nhận được câu hỏi và đóng góp học thuật từ TS. Lê Xuân Bách cùng Hội đồng phản biện.}\\[0.25cm]
+    {\scriptsize \textbf{Nhóm G4}: Đặng Lâm Tùng (Trưởng nhóm) $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng $\vert$ \texttt{CO5151 -- HK261}}
   \end{center}
 \end{frame}
 
