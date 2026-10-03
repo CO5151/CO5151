@@ -687,7 +687,55 @@ class LegalIngestionPipeline:
         }
 
     def _ingest_to_neo4j(self, doc: ParsedDocument, cross_refs: list[LegalCrossReference]) -> None:
-        """Upserts document, articles, clauses, and relationships into Neo4j."""
+        """Upserts document, articles, clauses, and relationships into Neo4j (or exports if offline)."""
+        if not self.neo4j_client.verify_connectivity():
+            logger.warning(
+                "Neo4j instance at %s is unreachable. Exporting parsed graph nodes & relations to data/processed/neo4j_graph_export.json for offline fallback.",
+                self.neo4j_client.uri,
+            )
+            export_file = Path("data/processed/neo4j_graph_export.json")
+            export_file.parent.mkdir(parents=True, exist_ok=True)
+            current_data: dict[str, Any] = {}
+            if export_file.exists():
+                try:
+                    current_data = json.loads(export_file.read_text(encoding="utf-8"))
+                except Exception:
+                    current_data = {}
+
+            current_data[doc.doc_id] = {
+                "doc_id": doc.doc_id,
+                "title": doc.title,
+                "doc_type": doc.doc_type,
+                "issuer": doc.issuer,
+                "issue_date": doc.issue_date,
+                "effective_date": doc.effective_date,
+                "status": doc.status,
+                "articles": [
+                    {
+                        "article": f"Điều {art.article_number}",
+                        "title": art.title,
+                        "content": art.content,
+                        "clauses": [
+                            {"clause_number": c.clause_number, "content": c.content}
+                            for c in art.clauses
+                        ],
+                    }
+                    for art in doc.articles
+                ],
+                "cross_references": [
+                    {
+                        "source_doc_id": ref.source_doc_id,
+                        "target_doc_id": ref.target_doc_id,
+                        "rel_type": ref.rel_type,
+                        "scope": ref.scope,
+                        "effective_date": ref.effective_date,
+                    }
+                    for ref in cross_refs
+                ],
+            }
+            export_file.write_text(json.dumps(current_data, ensure_ascii=False, indent=2), encoding="utf-8")
+            return
+
         self.neo4j_client.init_schema()
 
         # Upsert Document
@@ -742,7 +790,25 @@ class LegalIngestionPipeline:
                 )
 
     def _ingest_to_qdrant(self, chunks: list[dict[str, Any]]) -> None:
-        """Initializes collection if needed and upserts legal chunks."""
+        """Initializes collection if needed and upserts legal chunks (or exports if offline)."""
+        if not self.qdrant_manager.health_check():
+            logger.warning(
+                "Qdrant instance at %s:%s is unreachable. Exporting vector chunks to data/processed/qdrant_chunks_export.json for offline fallback.",
+                self.qdrant_manager.host,
+                self.qdrant_manager.port,
+            )
+            export_file = Path("data/processed/qdrant_chunks_export.json")
+            export_file.parent.mkdir(parents=True, exist_ok=True)
+            existing_chunks: list[dict[str, Any]] = []
+            if export_file.exists():
+                try:
+                    existing_chunks = json.loads(export_file.read_text(encoding="utf-8"))
+                except Exception:
+                    existing_chunks = []
+            existing_chunks.extend(chunks)
+            export_file.write_text(json.dumps(existing_chunks, ensure_ascii=False, indent=2), encoding="utf-8")
+            return
+
         self.qdrant_manager.init_collection(
             vector_size=len(chunks[0]["vector"]) if chunks else 768,
             recreate=False,

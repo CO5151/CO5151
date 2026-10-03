@@ -122,6 +122,8 @@ class LawGraphAgent(ADKAgent):
         qdrant_manager: Any | None = None,
         use_live_db: bool = False,
     ) -> None:
+        import json
+        from pathlib import Path
         from src.tools.lawgraph_tool import QUERY_LAWGRAPH_TOOL, TRACE_SELECTIVE_EDGE_TOOL
         from src.tools.statutory_retriever import STATUTORY_RETRIEVER_TOOL
         from src.tools.validity_checker import VALIDITY_CHECKER_TOOL
@@ -140,6 +142,17 @@ class LawGraphAgent(ADKAgent):
         self.traversal_engine = traversal_engine
         self.qdrant_manager = qdrant_manager
         self.use_live_db = use_live_db
+
+        # Dynamically load documents ingested into local processed graph export
+        export_file = Path("data/processed/neo4j_graph_export.json")
+        if export_file.exists():
+            try:
+                exported_data = json.loads(export_file.read_text(encoding="utf-8"))
+                for doc_id, doc in exported_data.items():
+                    if doc_id not in self.STATUTE_CATALOG:
+                        self.STATUTE_CATALOG[doc_id] = doc
+            except Exception as e:
+                logger.warning("Could not load neo4j_graph_export.json: %s", e)
 
     def _run(self, input_data: Any, context: dict[str, Any]) -> Any:
         """Executes statutory retrieval via standard ADK interface."""
