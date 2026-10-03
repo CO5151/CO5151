@@ -279,9 +279,9 @@ def main():
     m3 = run_pattern_orchestrator_checkpointed(query)
 
     print(f"\n\n{BOLD}{'='*86}{RESET}")
-    print(f"{BOLD}{'ARCHITECTURAL COMPARISON: WORKFLOWS VS. MONOLITHIC AGENTS VS. ORCHESTRATOR-WORKERS':^86}{RESET}")
+    print(f"{BOLD}{'TRACE WALKTHROUGH COMPARISON: WORKFLOWS VS. MONOLITHIC AGENT VS. ORCHESTRATOR':^86}{RESET}")
     print(f"{BOLD}{'='*86}{RESET}")
-    print(f"{'Evaluation Metric':<24} | {'1. Deterministic Workflow':<23} | {'2. Monolithic Agent':<23} | {'3. Orchestrator-Workers (G4)':<26}")
+    print(f"{'Trace Metric (Case Demo)':<24} | {'1. Deterministic Workflow':<23} | {'2. Monolithic Agent':<23} | {'3. Orchestrator-Workers (G4)':<26}")
     print(f"{'-'*24}-+-{'-'*23}-+-{'-'*23}-+-{'-'*26}")
     print(f"{'Control Flow':<24} | {'Fixed Code Path':<23} | {'Model-Directed (1 Loop)':<23} | {'Hierarchical Lead/Subagents':<26}")
     print(f"{'Total Tokens Consumed':<24} | {str(m1.total_tokens) + ' tokens (1x)':<23} | {str(m2.total_tokens) + ' tokens (11.7x)':<23} | {str(m3.total_tokens) + ' tokens (3.2x)':<26}")

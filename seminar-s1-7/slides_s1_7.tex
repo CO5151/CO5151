@@ -141,7 +141,7 @@
           \item Pattern Selection \& Pruning
           \item Fault-Tolerant Oracles Architecture
           \item State Persistence \& Recovery Loops
-          \item Empirical Systems Benchmark
+          \item Orchestration Topologies \& Swarms
           \item Production Engineering Principles
         \end{itemize}
       \end{block}
@@ -803,28 +803,51 @@
   \end{columns}
 \end{frame}
 
-% SLIDE 20: ĐO LƯỜNG THỰC NGHIỆM: CHI PHÍ TOKEN & ĐỘ TRỄ
-\begin{frame}{Empirical Systems Benchmark: Validating the Cost-Reliability Frontier}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Quantitative Proof: Token Multiplier, Latency, and Regulatory Grounding Trade-Offs}
+% SLIDE 20: ORCHESTRATION TOPOLOGIES & COMMUNICATION ARCHITECTURES
+\begin{frame}{Orchestration Topologies: Centralized vs. Swarms vs. Cyclic Graphs}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Comparing Architectural Topologies: Hub-and-Spoke, Decentralized Mesh, and State Graphs}
 
-  \centering\footnotesize
-  \begin{tabularx}{\textwidth}{p{3.2cm}p{3.4cm}p{3.4cm}p{3.6cm}}
-    \toprule
-    \textbf{Evaluation Metric} & \textbf{1. Deterministic Workflow} & \textbf{2. Monolithic Agent} & \textbf{3. Orchestrator-Workers (G4)} \\
-    \midrule
-    \textbf{Control Paradigm} & Fixed Code Path & Model-Directed (Single Loop) & Hierarchical Lead/Subagents \\
-    \textbf{Total Tokens Consumed} & \textbf{760 tokens} ($1.0\times$ baseline) & \alert{\textbf{8,950 tokens}} ($11.7\times$) & \textbf{2,410 tokens} ($\mathbf{3.2\times}$ multiplier) \\
-    \textbf{Execution Transitions} & 3 steps (rigid) & 4 turns (looping) & 6 node transitions \\
-    \textbf{Context Hygiene} & Minimal / Rigid & \alert{Diluted / Polluted} & \textbf{Isolated Subagent Contexts} \\
-    \textbf{Compounding Error Risk} & Zero runtime recovery & \alert{High ($P = p^n$ unchecked)} & \textbf{Bounded by State Schema} \\
-    \textbf{Failure Recovery} & None (Fails silently) & Restarts from turn 0 & \textbf{Durable Checkpoint Resume} \\
-    \textbf{Regulatory Compliance} & \alert{\textbf{0\%}} (Cites revoked law) & \alert{\textbf{60\%}} (Hallucinates mix) & \textbf{100\% Verified Grounded} \\
-    \bottomrule
-  \end{tabularx}
+  \begin{columns}[t]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{1. Hub-and-Spoke (Anthropic)}}
+        \footnotesize
+        \textbf{Lead/Subagent Topology:}
+        \begin{itemize}\scriptsize
+          \item Lead điều phối tập trung; subagents hoạt động độc lập và báo cáo về Lead.
+          \item \textbf{Ưu điểm:} Full state visibility, cô lập ngữ cảnh tuyệt đối giữa các subagents.
+          \item \textbf{Hạn chế:} Điểm nghẽn độ trễ tại Lead (\textbf{Straggler Effect}: $\max(t_i)$); chi phí tổng hợp cao ($3-8\times$ tokens).
+        \end{itemize}
+      \end{block}
+    \end{column}
 
-  \vspace{0.25cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Empirical Systems Takeaway}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Our benchmark empirically validates Anthropic's 2025 finding: \textbf{Orchestrator-Workers cost $3.2\times$ tokens compared to simple workflows}, but that $3.2\times$ cost is the mandatory architectural investment for complete context isolation and 100\% verified grounding.
+    \begin{column}{0.32\textwidth}
+      \begin{alertblock}{\textbf{2. Decentralized Swarms}}
+        \footnotesize
+        \textbf{Peer-to-Peer Mesh:}
+        \begin{itemize}\scriptsize
+          \item Tác tử tự do handoff và giao tiếp ngang hàng trực tiếp (e.g. OpenAI Swarm).
+          \item \textbf{Ưu điểm:} Linh hoạt cao trong đàm phán đa bên không cấu trúc.
+          \item \textbf{Fatal Failure Modes:} Dễ rơi vào infinite ping-pong loops; $O(N^2)$ message explosion; bất khả thi trong việc rollback trạng thái bền bỉ.
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{3. Cyclic State Graphs}}
+        \footnotesize
+        \textbf{LangGraph Architecture:}
+        \begin{itemize}\scriptsize
+          \item Điều phối qua đồ thị trạng thái với strict typed schema và conditional edges.
+          \item \textbf{Ưu điểm:} Kiểm soát chặt chẽ bounds vòng lặp, hỗ trợ durable checkpointing và deterministic time-travel.
+          \item \textbf{Hạn chế:} Chi phí phát triển schema ban đầu cao; kém linh hoạt với bài toán mở hoàn toàn.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Systems Architecture Takeaway on Topologies}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Production enterprise systems strictly avoid unconstrained decentralized swarms. The dominant industry standard combines \textbf{Hub-and-Spoke task delegation} with \textbf{Cyclic State Graphs for fault recovery}.
   \end{tcolorbox}
 \end{frame}
 
