@@ -7,6 +7,12 @@ Exports:
 - check_statute_validity: Callable function for statute status checks.
 """
 
+from src.tools.gazette_tool import (
+    SEARCH_GAZETTE_TOOL,
+    VERIFY_VBPL_STATUS_TOOL,
+    search_gazette,
+    verify_vbpl_status,
+)
 from src.tools.lawgraph_tool import (
     QUERY_LAWGRAPH_TOOL,
     TRACE_SELECTIVE_EDGE_TOOL,
@@ -24,11 +30,15 @@ from src.tools.validity_checker import (
 
 __all__ = [
     "QUERY_LAWGRAPH_TOOL",
+    "SEARCH_GAZETTE_TOOL",
     "STATUTORY_RETRIEVER_TOOL",
     "TRACE_SELECTIVE_EDGE_TOOL",
     "VALIDITY_CHECKER_TOOL",
+    "VERIFY_VBPL_STATUS_TOOL",
     "check_statute_validity",
     "query_lawgraph",
     "retrieve_statutory_provisions",
+    "search_gazette",
     "trace_selective_edge",
+    "verify_vbpl_status",
 ]

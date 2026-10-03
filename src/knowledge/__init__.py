@@ -1,6 +1,7 @@
 """Knowledge module: Neo4j client, Qdrant client, ingestion pipeline, and selective traversal."""
 
 from src.knowledge.ingestion import (
+    HTMLParsed,
     LegalCrossReference,
     LegalIngestionPipeline,
     ParsedArticle,
@@ -8,6 +9,8 @@ from src.knowledge.ingestion import (
     ParsedDocument,
     extract_cross_references,
     generate_legal_chunks,
+    normalize_doc_id,
+    parse_html_document,
     parse_legal_document,
 )
 from src.knowledge.neo4j_client import Neo4jClient
@@ -19,6 +22,7 @@ from src.knowledge.selective_traversal import (
 )
 
 __all__ = [
+    "HTMLParsed",
     "LegalCrossReference",
     "LegalIngestionPipeline",
     "Neo4jClient",
@@ -31,5 +35,7 @@ __all__ = [
     "TraversalResult",
     "extract_cross_references",
     "generate_legal_chunks",
+    "normalize_doc_id",
+    "parse_html_document",
     "parse_legal_document",
 ]

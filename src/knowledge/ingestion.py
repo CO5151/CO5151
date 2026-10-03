@@ -68,6 +68,10 @@ class ParsedDocument:
     articles: list[ParsedArticle] = field(default_factory=list)
 
 
+# Alias for backward compatibility / semantic naming
+HTMLParsed = ParsedDocument
+
+
 @dataclass
 class LegalCrossReference:
     """Represents a directional relationship between legal entities."""
