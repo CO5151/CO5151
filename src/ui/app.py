@@ -52,6 +52,11 @@ with st.sidebar:
         "Claim Auditor Oracle (Kiểm định văn bản hết hiệu lực)", value=True
     )
     enable_reroute = st.checkbox("Automated Re-routing Loop (Tự động chuyển hướng)", value=True)
+    enable_live_vbpl = st.checkbox(
+        "Live Gazette Verification (vbpl.vn & SQLite Cache)",
+        value=True,
+        help="Đối soát hiệu lực văn bản thời gian thực trên Cổng vbpl.vn với bộ đệm SQLite 24h",
+    )
 
     st.divider()
     st.subheader("💡 Kịch bản kiểm thử nhanh")
@@ -98,7 +103,9 @@ if run_btn and query:
         "Đang điều phối các Tác tử Google ADK (Planning ➔ LawGraph ➔ Claim Auditor ➔ Re-Routing ➔ Drafter)..."
     ):
         orchestrator = LegalOrchestrator()
-        state = orchestrator.run(query=query, enterprise_profile=profile)
+        state = orchestrator.run(
+            query=query, enterprise_profile=profile, enable_live_vbpl=enable_live_vbpl
+        )
 
     # --------------------------------------------------------------------------
     # Metrics Row
@@ -108,7 +115,7 @@ if run_btn and query:
     grounding_rate_val = audit_report.grounding_rate if audit_report else 0.0
     is_fully_verified = audit_report.is_fully_verified if audit_report else False
 
-    m1, m2, m3, m4 = st.columns(4)
+    m1, m2, m3, m4, m5 = st.columns(5)
     with m1:
         st.metric(
             label="Grounding Rate (Xác thực)",
@@ -127,6 +134,12 @@ if run_btn and query:
             delta="Đã loại bỏ luật bãi bỏ" if state.retry_count > 0 else "Chuẩn",
         )
     with m4:
+        st.metric(
+            label="Đối soát Live VBPL",
+            value=f"{len(state.live_verifications)} văn bản",
+            delta="vbpl.vn & Cache" if enable_live_vbpl else "Tắt",
+        )
+    with m5:
         st.metric(
             label="Mã phiên (Session ID)",
             value=state.session_id,
@@ -170,26 +183,74 @@ if run_btn and query:
         else:
             st.info("Chưa có báo cáo thẩm định từ Auditor.")
 
+        if state.live_verifications:
+            st.markdown("#### 4. Live Gazette Verification (Cổng VBPL Quốc gia & Cache)")
+            for item in state.live_verifications:
+                doc = item.get("doc_id", "")
+                title = item.get("title", "")
+                status_str = item.get("status", "")
+                source_str = item.get("source", "")
+                cached_str = (
+                    " (Bộ đệm SQLite 24h)" if item.get("cached") else " (Truy vấn Trực tiếp)"
+                )
+                badge = (
+                    "🟢 Còn hiệu lực" if item.get("is_in_force") else "🔴 Hết hiệu lực / Bị bãi bỏ"
+                )
+                portal_url = (
+                    item.get("metadata", {}).get("url")
+                    or f"https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={doc}"
+                )
+                st.markdown(
+                    f"- **{doc}** \u2013 {title}\n"
+                    f"  - **Trạng thái:** {badge} (`{status_str}`)\n"
+                    f"  - **Nguồn đối soát:** `{source_str}`{cached_str}\n"
+                    f"  - **Cổng tra cứu:** [{portal_url}]({portal_url})"
+                )
+
         if state.retry_count > 0:
-            st.markdown("#### 4. Re-routing Loop (Tự động khắc phục lỗi)")
+            st.markdown("#### 5. Re-routing Loop (Tự động khắc phục lỗi)")
             st.write(
                 "Tác tử đã phát hiện văn bản bãi bỏ, kích hoạt nhánh Re-route, loại bỏ căn cứ lỗi và hoàn thiện hồ sơ với các văn bản mới nhất."
             )
 
     with tab_clauses:
         st.subheader("Bảng căn cứ pháp lý đã qua kiểm duyệt:")
+        live_map = {v.get("doc_id"): v for v in state.live_verifications}
         clause_data = []
         for c in state.retrieved_clauses:
+            v_info = live_map.get(c.get("doc_id"))
+            source_display = "offline_catalog"
+            if v_info:
+                src = v_info.get("source", "offline_catalog")
+                is_c = v_info.get("cached", False)
+                source_display = f"{src} (Cache 24h)" if is_c else f"{src} (Live)"
+
             clause_data.append(
                 {
                     "Số hiệu VB": c.get("doc_id"),
                     "Tên văn bản": c.get("title"),
                     "Điều khoản": c.get("article"),
                     "Trạng thái": c.get("status"),
+                    "Nguồn đối soát": source_display,
                     "Ngày hiệu lực": c.get("effective_date"),
                 }
             )
         st.dataframe(clause_data, use_container_width=True)
+
+        if state.live_verifications:
+            st.markdown("##### 🌐 Đối soát Hiệu lực Pháp lý Trực tuyến (VBPL Portal Audit):")
+            verified_table = []
+            for v in state.live_verifications:
+                verified_table.append(
+                    {
+                        "Số hiệu": v.get("doc_id"),
+                        "Tiêu đề": v.get("title"),
+                        "Trạng thái": "Còn hiệu lực" if v.get("is_in_force") else "Hết hiệu lực",
+                        "Nguồn đối soát": v.get("source"),
+                        "Cache SQLite": "Đã lưu (24h)" if v.get("cached") else "Mới cập nhật",
+                    }
+                )
+            st.dataframe(verified_table, use_container_width=True)
 
 st.divider()
 st.caption(

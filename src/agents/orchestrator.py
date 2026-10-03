@@ -63,7 +63,10 @@ class LegalOrchestrator(ADKAgent):
         else:
             query = str(input_data)
             profile = None
-        return self.run(query=query, enterprise_profile=profile)
+        enable_live_vbpl = context.get("enable_live_vbpl", True)
+        if isinstance(input_data, dict) and "enable_live_vbpl" in input_data:
+            enable_live_vbpl = input_data["enable_live_vbpl"]
+        return self.run(query=query, enterprise_profile=profile, enable_live_vbpl=enable_live_vbpl)
 
     def plan_subgoals(self, query: str) -> tuple[list[str], list[str]]:
         """Decomposes user query into logical legal subgoals and search keywords."""
@@ -104,6 +107,7 @@ class LegalOrchestrator(ADKAgent):
         query: str,
         enterprise_profile: EnterpriseProfile | None = None,
         session_id: str | None = None,
+        enable_live_vbpl: bool = True,
     ) -> LegalAgentState:
         """Executes the full legal agentic orchestration loop."""
         session_id = session_id or f"sess_{uuid.uuid4().hex[:8]}"
@@ -130,7 +134,11 @@ class LegalOrchestrator(ADKAgent):
         state.current_step = 2
 
         # 3. Audit phase (Worker 2: Claim Auditor - Verification Oracle via ADK Runner)
-        audit_res = self.runner.dispatch("ClaimAuditorAgent", retrieved)
+        audit_res = self.runner.dispatch(
+            "ClaimAuditorAgent",
+            retrieved,
+            context={"enable_live_vbpl": enable_live_vbpl},
+        )
         audit_report: AuditReport = (
             audit_res.data
             if audit_res.success and audit_res.data
@@ -139,6 +147,8 @@ class LegalOrchestrator(ADKAgent):
             )
         )
         state.audit_report = audit_report
+        verified_map = {v["doc_id"]: v for v in audit_report.live_verifications}
+        state.live_verifications = list(verified_map.values())
         state.current_step = 3
 
         # 4. Error recovery / Re-routing loop (if revoked documents are found)
@@ -178,7 +188,11 @@ class LegalOrchestrator(ADKAgent):
                                 )
 
             # Re-audit with active verified clauses
-            re_audit_res = self.runner.dispatch("ClaimAuditorAgent", active_clauses)
+            re_audit_res = self.runner.dispatch(
+                "ClaimAuditorAgent",
+                active_clauses,
+                context={"enable_live_vbpl": enable_live_vbpl},
+            )
             audit_report = (
                 re_audit_res.data
                 if re_audit_res.success and re_audit_res.data
@@ -187,6 +201,9 @@ class LegalOrchestrator(ADKAgent):
                 )
             )
             state.audit_report = audit_report
+            for v in audit_report.live_verifications:
+                verified_map[v["doc_id"]] = v
+            state.live_verifications = list(verified_map.values())
             state.retrieved_clauses = active_clauses
 
         # 5. Drafting phase (Worker 3: Drafter via ADK Runner)

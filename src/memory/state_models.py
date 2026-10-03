@@ -70,6 +70,7 @@ class AtomicClaim(BaseModel):
     is_grounded: bool = False
     is_statute_active: bool = False
     auditor_notes: str | None = None
+    live_verification: dict[str, Any] | None = None
 
 
 class AuditReport(BaseModel):
@@ -77,11 +78,13 @@ class AuditReport(BaseModel):
 
     total_claims: int
     grounded_claims: int
+    claims: list[AtomicClaim] = Field(default_factory=list)
     unsupported_claims: list[AtomicClaim] = Field(default_factory=list)
     grounding_rate: float
     is_fully_verified: bool
     critique_feedback: str | None = None
     auditor_feedback: str | None = None
+    live_verifications: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class LegalAgentState(BaseModel):
@@ -104,3 +107,4 @@ class LegalAgentState(BaseModel):
     final_compliance_dossier: str | None = None
     is_completed: bool = False
     execution_trace: list[dict[str, Any]] = Field(default_factory=list)
+    live_verifications: list[dict[str, Any]] = Field(default_factory=list)
