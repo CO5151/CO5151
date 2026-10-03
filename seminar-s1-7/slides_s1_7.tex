@@ -80,7 +80,7 @@
   \begin{center}
     {\large \textbf{SEMINAR S1-7 (CO5151 -- ADVANCED AGENTIC AI)}}\\[0.25cm]
     {\LARGE \textbf{\color{hcmutblue}Agent Design Patterns \& Orchestration}}\\[0.15cm]
-    {\normalsize \textit{Workflows vs. Autonomous Agents: Vì sao mẫu thiết kế đơn giản nhất luôn là lựa chọn tối ưu}}\\[0.45cm]
+    {\normalsize \textit{Workflows vs. Autonomous Agents: Vì sao kiến trúc đơn giản nhất thường là lựa chọn tối ưu}}\\[0.45cm]
 
     \begin{tcolorbox}[width=0.92\textwidth,colback=hcmutgray,colframe=hcmutblue!50,arc=2mm,boxrule=0.8pt]
       \centering\small
@@ -99,12 +99,12 @@
 % =====================================================================
 % SLIDE 2: PHÂN CHIA VAI TRÒ & THỜI LƯỢNG
 % =====================================================================
-\begin{frame}{Phân Chia Vai Trò Thuyết Trình: Đồng Đều Trọng Số Học Thuật}
-  \framesubtitle{Thời lượng nói 9.5 phút/thành viên $\vert$ Phân bổ chuyên sâu lý thuyết và dẫn chứng thực nghiệm}
+\begin{frame}{Phân Công Nhiệm Vụ \& Thời Lượng Báo Cáo}
+  \framesubtitle{Thời lượng: 9.5 phút/thành viên $\vert$ Kết hợp lý thuyết chuyên sâu và phân tích thực nghiệm}
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Phần I: Khái Niệm Cơ Bản \& Sự Tinh Giản}}
+      \begin{block}{\textbf{Phần I: Khái Niệm \& Mẫu Thiết Kế Cơ Bản}}
         \textbf{Nguyễn Trung Phong}\\
         {\scriptsize (9.5 phút $\vert$ Slides 5--9)}\\[0.08cm]
         \begin{itemize}\footnotesize
@@ -118,7 +118,7 @@
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Phần II: Hệ Thống \& Điều Phối Động}}
+      \begin{block}{\textbf{Phần II: Điều Phối Đa Tác Tử \& Hệ Thống}}
         \textbf{Vũ Việt Hưng}\\
         {\scriptsize (9.5 phút $\vert$ Slides 10--14)}\\[0.08cm]
         \begin{itemize}\footnotesize
@@ -132,7 +132,7 @@
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Phần III: Kiến Trúc Hệ Thống \& Design Patterns}}
+      \begin{block}{\textbf{Phần III: Đánh Đổi Kiến Trúc \& Hệ Thống Chịu Lỗi}}
         \textbf{Đặng Lâm Tùng (Trưởng nhóm)}\\
         {\scriptsize (11 phút $\vert$ Slides 15--21)}\\[0.08cm]
         \begin{itemize}\footnotesize
@@ -149,7 +149,7 @@
   \end{columns}
 
   \vspace{0.12cm}
-  \begin{alertblock}{\footnotesize \textbf{Mục tiêu trọng tâm của bài thuyết trình}}
+  \begin{alertblock}{\footnotesize \textbf{Mục tiêu trọng tâm của buổi báo cáo}}
     \footnotesize Trả lời triệt để toàn bộ 6 câu hỏi bắt buộc trong đề cương của Thầy kèm mã nguồn và số liệu đo đạc thực tế.
   \end{alertblock}
 \end{frame}
@@ -157,8 +157,8 @@
 % =====================================================================
 % SLIDE 3: KẾ HOẠCH NỘP BÀI & QUY TRÌNH PHẢN BIỆN
 % =====================================================================
-\begin{frame}{Kế Hoạch Nộp Bài \& Quy Trình Rà Soát Trước Bảo Vệ}
-  \framesubtitle{Mốc thời gian nghiêm ngặt $\vert$ 48-Hour Faculty Review Window $\vert$ 4 Deliverables Bắt Buộc}
+\begin{frame}{Kế Hoạch Báo Cáo \& Các Mốc Thời Gian}
+  \framesubtitle{Tiến độ thực hiện $\vert$ Thời hạn nộp 4 sản phẩm theo yêu cầu môn học}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -198,8 +198,8 @@
 % =====================================================================
 % SLIDE 4: DANH MỤC TÀI LIỆU CHÍNH THỨC TRONG ĐỀ CƯƠNG
 % SLIDE 4: DANH MỤC TÀI LIỆU CHÍNH THỨC
-\begin{frame}{Lộ Trình Tài Liệu Nghiên Cứu: Nền Tảng \& Mở Rộng}
-  \framesubtitle{Tất cả thành viên $\vert$ Đúng 1 Core Reading + 3 Extension Readings trong Đề Cương S1-7}
+\begin{frame}{Danh Mục Tài Liệu Nghiên Cứu (Core \& Extension Readings)}
+  \framesubtitle{Toàn bộ thành viên $\vert$ Bám sát 1 Core Reading của Anthropic và 3 Extension Readings}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
@@ -231,7 +231,7 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Câu Hỏi Nghiên Cứu Cốt Lõi Của Seminar S1-7}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Câu Hỏi Nghiên Cứu Trọng Tâm Của Seminar S1-7}},fonttitle=\footnotesize\bfseries]
     \footnotesize \textit{"Vì sao Anthropic khẳng định mẫu thiết kế đơn giản nhất luôn là lựa chọn đúng đắn, và chính xác ranh giới kiến trúc nào biện minh cho chi phí token gấp 3--8 lần của multi-agent orchestration?"}
   \end{tcolorbox}
 \end{frame}
@@ -241,8 +241,8 @@
 % =====================================================================
 
 % SLIDE 5: WORKFLOWS VS AUTONOMOUS AGENTS
-\begin{frame}{Workflows vs. Autonomous Agents: Ai Nắm Quyền Điều Khiển?}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Luồng Code Cố Định vs. Điều Khiển Dẫn Dắt Bởi Mô Hình}
+\begin{frame}{Workflows vs. Autonomous Agents: Kiểm Soát Luồng Thực Thi}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Luồng cố định bằng code vs. Luồng do mô hình tự quyết định}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
@@ -258,7 +258,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Autonomous Agents: Điều Khiển Do Mô Hình Dẫn Dắt}}
+      \begin{alertblock}{\textbf{Autonomous Agents: Luồng Do Mô Hình Tự Quyết Định}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Control Flow:} Do vòng lặp suy luận của LLM quyết định (ReAct loop, Tool Calling).
@@ -277,12 +277,12 @@
 \end{frame}
 
 % SLIDE 6: VÌ SAO ANTHROPIC KHUYÊN BỎ AGENT
-\begin{frame}{Câu Hỏi Phản Biện: Vì Sao Anthropic Khuyên Bỏ Agent?}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Lỗi Tích Lũy Compounding Error ($P = p^n$), Lạm Phát Chi Phí \& Khó Debug}
+\begin{frame}{Vì Sao Anthropic Khuyến Cáo Ưu Tiên Workflow Thay Vì Agent?}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Hiện tượng tích lũy sai số ($P = p^n$), bùng nổ token và rủi ro vận hành}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Bẫy Lỗi Tích Lũy Compounding Error ($P = p^n$)}}
+      \begin{block}{\textbf{Hiện Tượng Tích Lũy Sai Số ($P = p^n$)}}
         \footnotesize
         Giả sử mỗi bước gọi tool mô hình đạt độ chính xác $p \in [0.90, 0.95]$:
         \begin{itemize}\scriptsize
@@ -296,7 +296,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Bốn Chi Phí Ẩn Khi Áp Dụng Tự Trị Quá Sớm}}
+      \begin{alertblock}{\textbf{Bốn Rủi Ro Khi Lạm Dụng Quyền Tự Trị Quá Sớm}}
         \footnotesize
         \begin{enumerate}
           \item \textbf{Độ trễ không giới hạn (Unbounded Latency):} Số turns do LLM quyết định; thời gian phản hồi biến thiên khôn lường.
@@ -309,14 +309,14 @@
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Luận Điểm Trực Tiếp Cho Phiên Phản Biện Q\&A}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Luận Điểm Trọng Tâm Trả Lời Đề Cương}},fonttitle=\footnotesize\bfseries]
     \footnotesize \textbf{Vì sao Anthropic khuyến cáo không dùng agent cho phần lớn bài toán?} Vì đối với 90\% ứng dụng thực tế, workflows đem lại độ tin cậy cao hơn, độ trễ thấp hơn, chi phí rẻ hơn 3--8 lần và dễ debug hơn nhiều so với autonomous agents.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 7: PROMPT CHAINING & ROUTING
-\begin{frame}{Mẫu Thiết Kế 1 \& 2: Prompt Chaining và Routing}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Các Khối Dựng Cơ Bản: Lợi Ích Mang Lại \& Chi Phí Đánh Đổi}
+\begin{frame}{Mẫu Thiết Kế Cơ Bản: Prompt Chaining và Routing}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Nguyên lý hoạt động, ưu điểm kỹ thuật và chi phí đánh đổi}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
@@ -360,8 +360,8 @@
 \end{frame}
 
 % SLIDE 8: EVALUATOR-OPTIMIZER PATTERN
-\begin{frame}{Mẫu Thiết Kế 3: Vòng Lặp Phản Hồi Evaluator-Optimizer}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Tinh Chỉnh Lặp: Lợi Ích, Chi Phí Đánh Đổi \& Bẫy Phục Tùng (Sycophancy)}
+\begin{frame}{Mẫu Thiết Kế Phản Hồi: Evaluator-Optimizer}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Tinh chỉnh lặp, chi phí đánh đổi và bẫy nịnh bợ (Sycophancy)}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -383,7 +383,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Chi Phí Đánh Đổi \& Các Dạng Thất Bại}}
+      \begin{alertblock}{\textbf{Chi Phí Đánh Đổi \& Các Dạng Lỗi Thường Gặp}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Bùng nổ Token:} $K$ vòng lặp làm tăng token tiêu thụ lên $K \times$, độ trễ kéo dài tương ứng.
@@ -397,8 +397,8 @@
 \end{frame}
 
 % SLIDE 9: KHUNG RA QUYẾT ĐỊNH: ƯU TIÊN SỰ TINH GIẢN
-\begin{frame}{Khung Ra Quyết Định: Khi Nào Nên Giữ Code Đơn Giản?}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Tiến Trình Kiến Trúc: Tín Hiệu Nào Kích Hoạt Nâng Cấp Lên Mẫu Phức Tạp?}
+\begin{frame}{Khung Ra Quyết Định: Khi Nào Dùng Workflow, Khi Nào Dùng Agent?}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Tiêu chuẩn kỹ thuật để chuyển từ Workflow sang Agent}
 
   \begin{center}
     \begin{tikzpicture}[node distance=1.1cm, auto,
@@ -449,12 +449,12 @@
 % =====================================================================
 
 % SLIDE 10: ORCHESTRATOR-WORKERS VS NGỮ CẢNH KHỔNG LỒ
-\begin{frame}{Mẫu Thiết Kế 4: Orchestrator-Workers vs. Một Ngữ Cảnh Khổng Lồ}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Vì Sao Không Nên Nhồi Mọi Thứ Vào Cửa Sổ Ngữ Cảnh 2 Triệu Tokens?}
+\begin{frame}{Mẫu Orchestrator-Workers vs. Cửa Sổ Ngữ Cảnh Lớn (Long Context)}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Giới hạn của việc nhồi ngữ cảnh và sự cần thiết của phân rã tác vụ}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Thất Bại Của Cửa Sổ Ngữ Cảnh Khổng Lồ}}
+      \begin{alertblock}{\textbf{Hạn Chế Của Long Context Window (2M Tokens)}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Thoái hóa chú ý ("Lost in the Middle"):} Khi context vượt quá 30k tokens, attention score trên các đoạn ở giữa suy giảm rõ rệt.
@@ -480,8 +480,8 @@
 \end{frame}
 
 % SLIDE 11: ANTHROPIC 2025 MULTI-AGENT RESEARCH SYSTEM
-\begin{frame}{Anthropic (2025): Thực Tế Chi Phí \& Độ Trễ Của Lead/Subagent}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 1: Mô Hình Phân Cấp Đánh Đổi Chi Phí \& Độ Trễ Ra Sao}
+\begin{frame}{Anthropic (2025): Đánh Đổi Chi Phí \& Độ Trễ Trong Mô Hình Lead/Subagent}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Đánh giá thực nghiệm hệ thống nghiên cứu đa tác tử của Anthropic}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -499,7 +499,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Đánh Đổi Về Mặt Chi Phí \& Độ Trễ}}
+      \begin{alertblock}{\textbf{Chi Phí Token Và Nút Thắt Độ Trễ}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Lạm phát token $3\times$--$8\times$:} Việc điều phối, truyền task prompts và tổng hợp reports làm bùng nổ token consumption từ 300\% đến 800\% so với single agent.
@@ -517,12 +517,12 @@
 \end{frame}
 
 % SLIDE 12: OPENAI PRACTICAL GUIDE 2025
-\begin{frame}{OpenAI (2025): Vòng Lặp Gọi Tool, Guardrails \& Đánh Giá}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 2: Cẩm Nang Thực Chiến Xây Dựng Agent}
+\begin{frame}{OpenAI (2025): Tool Loops, Guardrails và Đánh Giá Hệ Thống}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Hướng dẫn thực hành: Kiểm soát vòng lặp, thiết lập rào chắn và Evals}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Vòng Lặp Gọi Tool \& Quyền Tự Trị Tăng Dần}}
+      \begin{block}{\textbf{Vòng Lặp Gọi Tool \& Mức Độ Tự Chủ Tăng Dần}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Vòng lặp do Model dẫn dắt:} Model sinh tool call $\to$ hệ thống thực thi tool $\to$ observation được thêm vào context $\to$ model lặp lại cho đến stop token.
@@ -533,7 +533,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Hàng Rào Guardrails \& Đánh Giá Nghiêm Ngặt}}
+      \begin{alertblock}{\textbf{Thiết Lập Guardrails \& Khung Đánh Giá (Evals)}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Input/Output Guardrails:} Independent validator models hoặc deterministic rules filter unsafe prompts và malformed agent plans.
@@ -551,8 +551,8 @@
 \end{frame}
 
 % SLIDE 13: LANGGRAPH STATE GRAPHS
-\begin{frame}{LangGraph: Luồng Đa Tác Tử Dưới Dạng Đồ Thị Trạng Thái Chu Trình}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 3: State Graphs, Reducers \& Rẽ Nhánh Có Điều Kiện}
+\begin{frame}{LangGraph: Điều Phối Đa Tác Tử Bằng Cyclic State Graphs}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Cấu trúc đồ thị trạng thái, State Reducers và rẽ nhánh có điều kiện}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -586,8 +586,8 @@
 \end{frame}
 
 % SLIDE 14: THỰC THI BỀN BỈ & CHECKPOINTING
-\begin{frame}{Thực Thi Bền Bỉ \& Checkpointing: Vượt Qua Sự Cố Trong Môi Trường Production}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Extension Reading 3: State Checkpointing, Phục Hồi Lỗi và Human-in-the-Loop}
+\begin{frame}{Durable Execution \& Checkpointing: Xử Lý Lỗi Trong Hệ Thống Production}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Lưu trữ trạng thái (State Persistence), phục hồi lỗi và Human-in-the-Loop}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
@@ -625,8 +625,8 @@
 % =====================================================================
 
 % SLIDE 15: MA TRẬN SO SÁNH TOÀN DIỆN CÁC MẪU THIẾT KẾ
-\begin{frame}{Ma Trận Đánh Đổi Kiến Trúc Toàn Diện \& Phân Loại Pattern}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Đánh Giá Topologies Điều Khiển Về Độ Trễ, Chi Phí, Độ Tin Cậy \& Biên Sai Số}
+\begin{frame}{Ma Trận So Sánh \& Đánh Đổi Giữa Các Kiến Trúc Agent}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Đánh giá độ trễ, chi phí token, độ tin cậy và khả năng kiểm soát lỗi}
 
   \centering\scriptsize
   \begin{tabularx}{\textwidth}{p{2.3cm}p{1.9cm}p{1.7cm}p{2.2cm}p{2.3cm}p{2.6cm}}
@@ -648,14 +648,14 @@
   \end{tabularx}
 
   \vspace{0.25cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Phổ Kiến Trúc: Kiểm Soát (Control) vs. Tự Trị (Autonomy)}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Đánh Đổi Kỹ Thuật: Kiểm Soát (Control) vs. Tự Trị (Autonomy)}},fonttitle=\footnotesize\bfseries]
     \footnotesize Dịch chuyển từ trái sang phải làm tăng tính linh hoạt suy luận nhưng làm bùng nổ theo hàm mũ chi phí, độ trễ và các điểm nghẽn lỗi. Kỹ thuật hệ thống đòi hỏi phải chọn mẫu thiết kế nằm xa nhất về bên trái mà vẫn giải quyết được trọn vẹn yêu cầu bài toán.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 16: DYNAMIC ORCHESTRATION & SYSTEMS ARCHITECTURE
 \begin{frame}{Dynamic Orchestration: Kiến Trúc Phân Cấp Lead/Subagent}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Phân Rã Tác Vụ Động, Topology Điều Phối \& Cô Lập Ngữ Cảnh}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Phân rã tác vụ động, mô hình điều phối và nguyên tắc cô lập ngữ cảnh}
 
   \begin{columns}[t]
     \begin{column}{0.52\textwidth}
@@ -677,7 +677,7 @@
     \end{column}
 
     \begin{column}{0.46\textwidth}
-      \begin{alertblock}{\textbf{Vì Sao Context Isolation Là Bất Biến Kiến Trúc Bắt Buộc}}
+      \begin{alertblock}{\textbf{Tầm Quan Trọng Của Cô Lập Ngữ Cảnh (Context Isolation)}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Triệt tiêu phình to Token bậc hai:} Thay vì nhồi 15k tokens vào monolithic context, mỗi subagent chạy trong clean window $<1,500$ tokens.
@@ -694,12 +694,12 @@
 \end{frame}
 
 % SLIDE 17: AGENT DESIGN PATTERNS: ARCHITECTURAL SELECTION & PRUNING
-\begin{frame}{Agent Design Patterns: Lựa Chọn \& Cắt Tỉa Kiến Trúc (Pruning)}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Vì Sao Vòng Lặp Tự Do Thất Bại Trong High-Stakes Systems vs. Multi-Agent Phân Cấp}
+\begin{frame}{Lựa Chọn \& Cắt Tỉa (Pruning) Kiến Trúc Agent}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Vì sao vòng lặp ReAct tự do thất bại trong các bài toán yêu cầu độ tin cậy cao}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Mẫu Bị Cắt Tỉa: Vòng Lặp Tự Trị Autonomous ReAct}}
+      \begin{alertblock}{\textbf{Mẫu Kiến Trúc Bị Loại Bỏ: Vòng Lặp ReAct Tự Do}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Đặc tính:} Vòng lặp đơn tự do gọi tools tuần tự dựa trên quan sát do mô hình dẫn dắt.
@@ -714,7 +714,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Mẫu Được Chọn: Structured Orchestrator-Workers}}
+      \begin{block}{\textbf{Mẫu Kiến Trúc Được Chọn: Orchestrator-Workers}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Đặc tính:} Phân rã phân cấp có kiểm soát; orchestrator điều phối các workers qua state graph có định hướng.
@@ -730,18 +730,18 @@
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Quy Luật Lựa Chọn Pattern Trong Thực Tế}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Nguyên Tắc Lựa Chọn Kiến Trúc Trong Thực Tế}},fonttitle=\footnotesize\bfseries]
     \footnotesize Quyền tự trị không ràng buộc bắt buộc phải bị loại bỏ trong các hệ thống doanh nghiệp đòi hỏi độ chính xác tuyệt đối. Kiến trúc đúng đắn kết hợp \textbf{phân rã tác vụ động với các bước chuyển đổi trạng thái tiền định}.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 18: FAULT-TOLERANT ARCHITECTURE: DETERMINISTIC GROUND-TRUTH ORACLES
-\begin{frame}{Hệ Thống Chịu Lỗi: Deterministic Oracles vs. LLM Tự Rà Soát}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Tách Rời Tầng Suy Luận Khỏi Tầng Xác Thực Bằng External Ground-Truth Oracles}
+\begin{frame}{Thiết Kế Hệ Thống Chịu Lỗi: Deterministic Oracles vs. LLM Self-Critique}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Tách biệt tầng suy luận khỏi tầng kiểm định bằng các công cụ tiền định độc lập}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{alertblock}{\textbf{Điểm Nghẽn Bản Chất Khi Để LLM Tự Chấm Điểm (Self-Critique)}}
+      \begin{alertblock}{\textbf{Hạn Chế Khi Để LLM Tự Đánh Giá (LLM-as-a-Judge)}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Bẫy phân phối tiên nghiệm (Parametric Prior):} Yêu cầu LLM "tự rà soát" (\textit{"Are you sure?"}) không tham chiếu thế giới thực mà chỉ tái lấy mẫu từ cùng một parametric distribution đã sinh lỗi.
@@ -752,7 +752,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Kiến Trúc Deterministic Oracle Độc Lập}}
+      \begin{block}{\textbf{Cơ Chế Kiểm Định Bằng Deterministic Oracles}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Tách rời mặt phẳng xác thực (Decoupled Plane):} Tách rời tầng suy luận xác suất (probabilistic reasoning) khỏi tầng xác thực xác định (deterministic validation).
@@ -766,12 +766,12 @@
 \end{frame}
 
 % SLIDE 19: STATE PERSISTENCE & RESILIENT GRAPH ROLLBACKS
-\begin{frame}{Thực Thi Bền Bỉ Trong Thực Tế: Rollback Đồ Thị Trạng Thái}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Cơ Chế LangGraph: Checkpointing, Differential Rollback \& Phục Hồi Từng Phần}
+\begin{frame}{Xử Lý Lỗi \& Cơ Chế Rollback Trạng Thái Trong Đồ Thị Thực Thi}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Kiểm soát lỗi từng phần và quay lui trạng thái dựa trên Checkpointing}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Cơ Chế Thực Thi Đồ Thị \& Trình Tự Rollback}}
+      \begin{block}{\textbf{Trình Tự Thực Thi Đồ Thị \& Cơ Chế Rollback}}
         \footnotesize
         \begin{enumerate}\scriptsize
           \item \textbf{Lưu trữ Snapshot (Node 1):} Orchestrator phân rã subgoals; state graph lưu snapshot \texttt{chk\_plan\_ready} xuống persistent storage (SQLite/Postgres).
@@ -787,7 +787,7 @@
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Cam Kết Đảm Bảo Về Mặt Kiến Trúc Hệ Thống}}
+      \begin{alertblock}{\textbf{Đặc Tính Đảm Bảo Của Hệ Thống}}
         \footnotesize
         \begin{itemize}
           \item \textbf{Không bao giờ Cold Restart:} Tránh lãng phí tài nguyên và chi phí token vào việc chạy lại các subtasks hợp lệ đã hoàn tất.
@@ -804,8 +804,8 @@
 \end{frame}
 
 % SLIDE 20: ORCHESTRATION TOPOLOGIES & COMMUNICATION ARCHITECTURES
-\begin{frame}{Các Topologies Điều Phối: Centralized vs. Swarms vs. Cyclic Graphs}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ So Sánh Các Mô Hình Kiến Trúc: Hub-and-Spoke, Decentralized Mesh \& State Graphs}
+\begin{frame}{So Sánh Các Mô Hình Điều Phối: Centralized, Swarms \& Cyclic Graphs}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Đánh giá ba kiến trúc điều phối: Hub-and-Spoke, Decentralized Swarms và State Graphs}
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
@@ -846,18 +846,18 @@
   \end{columns}
 
   \vspace{0.2cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Bài Học Kiến Trúc Về Topologies Cho Doanh Nghiệp}},fonttitle=\footnotesize\bfseries]
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Đúc Kết Về Lựa Chọn Mô Hình Điều Phối Doanh Nghiệp}},fonttitle=\footnotesize\bfseries]
     \footnotesize Các hệ thống doanh nghiệp nghiêm túc tuyệt đối tránh dùng decentralized swarms tự do. Tiêu chuẩn kiến trúc chiếm ưu thế hiện nay kết hợp \textbf{phân quyền Hub-and-Spoke} với \textbf{Đồ thị trạng thái chu trình (Cyclic State Graphs) để xử lý phục hồi lỗi}.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 21: BÀI HỌC KỸ THUẬT TRIỂN KHAI THỰC CHIẾN
-\begin{frame}{Kiến Trúc Hệ Thống Production: Nguyên Lý Kỹ Thuật Cho Agent}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Tổng Hợp Từ Anthropic, OpenAI và LangGraph Cho Hệ Thống Triển Khai Thực Tế}
+\begin{frame}{Nguyên Lý Thiết Kế Hệ Thống Agent Trong Môi Trường Production}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Tổng hợp bài học kỹ thuật từ Anthropic, OpenAI và LangGraph}
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{1. Bất Biến Simplicity-First}}
+      \begin{block}{\textbf{1. Nguyên Tắc Simplicity-First}}
         \footnotesize
         \begin{itemize}
           \item Mặc định ưu tiên prompt chaining và deterministic routing.
@@ -868,7 +868,7 @@
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{2. Bắt Buộc Cô Lập Ngữ Cảnh}}
+      \begin{block}{\textbf{2. Cô Lập Ngữ Cảnh (Context Isolation)}}
         \footnotesize
         \begin{itemize}
           \item Khi bắt buộc dùng multi-agent, áp dụng mô hình Lead/Subagent của Anthropic.
@@ -879,7 +879,7 @@
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{3. Xây Dựng Bền Bỉ (Durability)}}
+      \begin{block}{\textbf{3. Thiết Kế Bền Bỉ (Durable Execution)}}
         \footnotesize
         \begin{itemize}
           \item Lưu trữ mọi bước chuyển trạng thái bằng immutable checkpointing.
@@ -891,7 +891,7 @@
   \end{columns}
 
   \vspace{0.25cm}
-  \begin{alertblock}{\textbf{Nguyên Tắc Vàng Của Kỹ Thuật Hệ Thống}}
+  \begin{alertblock}{\textbf{Đúc Kết Nguyên Lý Kỹ Thuật Hệ Thống}}
     \footnotesize \textbf{Thông Điệp Cốt Lõi:} Kiến trúc agent tốt nhất là kiến trúc đơn giản nhất giải quyết bài toán một cách tin cậy; độ phức tạp là một khoản chi phí kỹ thuật, không phải là một tính năng.
   \end{alertblock}
 \end{frame}
@@ -908,8 +908,8 @@
 
   \vspace{0.8cm}
   \begin{center}
-    {\Large \textbf{\color{hcmutblue}Tổng Kết \& Sẵn Sàng Cho Phiên Phản Biện}}\\[0.2cm]
-    {\normalsize \textit{Tóm tắt các phát hiện học thuật cho Chủ đề Seminar S1-7}}\\[0.35cm]
+    {\Large \textbf{\color{hcmutblue}Tổng Kết Báo Cáo \& Thảo Luận}}\\[0.2cm]
+    {\normalsize \textit{Tóm tắt các kết luận chính cho Chủ đề Seminar S1-7}}\\[0.35cm]
 
     \begin{tcolorbox}[width=0.92\textwidth,colback=hcmutgray,colframe=hcmutblue!50,arc=2mm,boxrule=0.8pt]
       \centering\small
@@ -920,7 +920,7 @@
     \end{tcolorbox}
 
     \vspace{0.35cm}
-    {\large \textbf{\color{hcmutblue}Xin Chân Thành Cảm Ơn Sự Theo Dõi Của Thầy Và Các Bạn!}}\\[0.15cm]
+    {\large \textbf{\color{hcmutblue}Xin Chân Thành Cảm Ơn Thầy Và Các Bạn Đã Theo Dõi!}}\\[0.15cm]
     {\small Nhóm G4 rất mong nhận được câu hỏi và đóng góp học thuật từ TS. Lê Xuân Bách cùng Hội đồng phản biện.}\\[0.25cm]
     {\scriptsize \textbf{Nhóm G4}: Đặng Lâm Tùng (Trưởng nhóm) $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng $\vert$ \texttt{CO5151 -- HK261}}
   \end{center}
