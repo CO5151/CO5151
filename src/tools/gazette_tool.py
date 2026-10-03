@@ -8,24 +8,22 @@ Provides ADK tools for:
 
 from __future__ import annotations
 
+import contextlib
+import os
 import re
 from typing import Any
 
 import httpx
+from bs4 import BeautifulSoup
 
 from src.agents.base import ToolDefinition
+from src.core.config import settings
 from src.core.logger import logger
+from src.knowledge.ingestion import HTMLParsed, normalize_doc_id, parse_html_document
 from src.memory.sqlite_manager import SQLiteMemoryManager
 from src.memory.state_models import StatuteCacheEntry
 
-
-def _normalize_doc_id(doc_id_raw: str) -> str:
-    """Normalizes document ID (e.g. '152/2020/NĐ-CP' -> '152/2020/ND-CP')."""
-    cleaned = doc_id_raw.strip().replace(" ", "").upper()
-    replacements = {"Đ": "D", "\u2013": "-", "\u2014": "-"}
-    for k, v in replacements.items():
-        cleaned = cleaned.replace(k, v)
-    return cleaned
+_normalize_doc_id = normalize_doc_id
 
 
 def _normalize_status(raw_status: str) -> str:
@@ -79,8 +77,31 @@ def verify_vbpl_status(
                 "cached": True,
             }
 
-    # 2. Query vbpl.vn live search portal
-    target_url = f"https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={clean_id}"
+    # 2. Query vbpl.vn live search portal (configurable via env or system settings)
+    raw_template = (
+        os.getenv("VBPL_TARGET_QUERY")
+        or os.getenv("VBPL_SEARCH_URL")
+        or getattr(settings, "VBPL_TARGET_QUERY", None)
+        or getattr(
+            settings,
+            "VBPL_SEARCH_URL",
+            "https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={keyword}",
+        )
+    )
+    target_query_template: str = str(
+        raw_template or "https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={keyword}"
+    )
+    if "{keyword}" in target_query_template:
+        target_url = target_query_template.format(keyword=clean_id)
+    elif "{clean_id}" in target_query_template:
+        target_url = target_query_template.format(clean_id=clean_id)
+    elif "{doc_id}" in target_query_template:
+        target_url = target_query_template.format(doc_id=clean_id)
+    elif target_query_template.endswith("="):
+        target_url = f"{target_query_template}{clean_id}"
+    else:
+        target_url = f"{target_query_template}?Keyword={clean_id}"
+
     logger.info("Querying live portal for %s at %s", clean_id, target_url)
 
     from src.agents.lawgraph import LawGraphAgent
@@ -110,21 +131,53 @@ def verify_vbpl_status(
             # Ensure response is not a generic redirect to homepage and actually mentions doc ID
             final_url = str(resp.url).rstrip("/")
             is_homepage = final_url in ("https://vbpl.vn", "http://vbpl.vn")
-            if resp.status_code == 200 and resp.text and not is_homepage and clean_id in resp.text:
+            normalized_resp = _normalize_doc_id(resp.text)
+            if (
+                resp.status_code == 200
+                and resp.text
+                and not is_homepage
+                and (clean_id in normalized_resp or clean_id in resp.text)
+            ):
                 html = resp.text
-                if "Hết hiệu lực một phần" in html:
+                soup = BeautifulSoup(html, "html.parser")
+
+                # Extract title from search result anchor tag or header
+                title_elem = soup.find(
+                    ["a", "h1", "h2", "div"],
+                    class_=re.compile(r"title|vbTitle|header", re.I),
+                )
+                if title_elem and title_elem.get_text(strip=True):
+                    resolved_title = re.sub(r"\s+", " ", title_elem.get_text(strip=True))
+
+                # Check status via HTML text / class indicators
+                text_content = soup.get_text(" ")
+                if "Hết hiệu lực một phần" in text_content:
                     resolved_status = "partially_expired"
                     resolved_source = "vbpl.vn"
-                elif "Hết hiệu lực" in html:
+                elif "Hết hiệu lực" in text_content or "bãi bỏ" in text_content.lower():
                     resolved_status = "expired"
                     resolved_source = "vbpl.vn"
-                elif "Còn hiệu lực" in html:
+                elif "Còn hiệu lực" in text_content:
                     resolved_status = "active"
                     resolved_source = "vbpl.vn"
 
-                title_match = re.search(r'<a[^>]+class="title"[^>]*>([^<]+)</a>', html)
-                if title_match:
-                    resolved_title = title_match.group(1).strip()
+                # Leverage parse_html_document / HTMLParsed if full statutory document structure is present
+                with contextlib.suppress(Exception):
+                    parsed_doc, _ = parse_html_document(
+                        html,
+                        default_metadata={
+                            "doc_id": clean_id,
+                            "title": resolved_title,
+                            "effective_date": resolved_date,
+                        },
+                    )
+                    if isinstance(parsed_doc, HTMLParsed) and parsed_doc.title:
+                        if not parsed_doc.title.startswith(
+                            ("Nghị định số", "Thông tư số", "Luật số")
+                        ):
+                            resolved_title = parsed_doc.title
+                        if parsed_doc.effective_date:
+                            resolved_date = parsed_doc.effective_date
     except Exception as e:
         logger.warning(
             "Live VBPL query for %s timed out or failed (%s). Using catalog fallback.", clean_id, e

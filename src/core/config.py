@@ -114,6 +114,10 @@ class Settings(BaseSettings):
     HUMAN_GATE_REQUIRE_TOKEN: bool = True
     DOS_QUERY_TIMEOUT_SECONDS: int = 12
 
+    # External Portals & Gazette
+    VBPL_SEARCH_URL: str = "https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={keyword}"
+    VBPL_TARGET_QUERY: str | None = None
+
     # Nested Typed Configs
     llm: LLMConfig = Field(default_factory=LLMConfig)
     agent_orchestration: AgentOrchestrationConfig = Field(default_factory=AgentOrchestrationConfig)
@@ -140,6 +144,12 @@ class Settings(BaseSettings):
                     self.memory = MemoryConfig(**data["memory"])
                 if "security" in data:
                     self.security = SecurityConfig(**data["security"])
+                if "external_portals" in data:
+                    portals = data["external_portals"]
+                    if "vbpl_search_url" in portals:
+                        self.VBPL_SEARCH_URL = portals["vbpl_search_url"]
+                    if "vbpl_target_query" in portals:
+                        self.VBPL_TARGET_QUERY = portals["vbpl_target_query"]
             except Exception:
                 pass
 

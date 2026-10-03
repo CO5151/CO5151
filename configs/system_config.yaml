@@ -35,3 +35,7 @@ security:
   max_input_length: 8000
   allowed_export_dir: "./workspace/dossiers"
   guarded_action_requires_token: true
+
+external_portals:
+  vbpl_search_url: "https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={keyword}"
+  vbpl_target_query: "https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={keyword}"
