@@ -132,17 +132,17 @@
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Part III: G4 Project \& Benchmark}}
+      \begin{block}{\textbf{Part III: Systems Architecture}}
         \textbf{Đặng Lâm Tùng (Lead)}\\
         {\scriptsize (11 phút $\vert$ Slides 15--21)}\\[0.08cm]
         \begin{itemize}\footnotesize
-          \item Comprehensive Trade-Off Matrix
-          \item G4 Architecture (LegalPilot-VN)
-          \item Design Decision Made vs. Rejected
-          \item External Ground-Truth Oracles
-          \item State Recovery in Action (Decree 52)
-          \item Empirical Trace Benchmark Metrics
-          \item Production Engineering Takeaways
+          \item Architectural Trade-Off Matrix
+          \item Dynamic Orchestration Topology
+          \item Pattern Selection \& Pruning
+          \item Fault-Tolerant Oracles Architecture
+          \item State Persistence \& Recovery Loops
+          \item Empirical Systems Benchmark
+          \item Production Engineering Principles
         \end{itemize}
       \end{block}
     \end{column}
@@ -625,8 +625,8 @@
 % =====================================================================
 
 % SLIDE 15: MA TRẬN SO SÁNH TOÀN DIỆN CÁC MẪU THIẾT KẾ
-\begin{frame}{Comprehensive Architectural Trade-Off Matrix}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Comparing All Core Patterns on Latency, Cost, Reliability \& Complexity}
+\begin{frame}{Comprehensive Architectural Trade-Off Matrix \& Pattern Taxonomy}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Evaluating Control Flow Topologies on Latency, Cost, Reliability \& Error Bounds}
 
   \centering\scriptsize
   \begin{tabularx}{\textwidth}{p{2.3cm}p{1.9cm}p{1.7cm}p{2.2cm}p{2.3cm}p{2.6cm}}
@@ -648,76 +648,81 @@
   \end{tabularx}
 
   \vspace{0.25cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{The Architectural Spectrum}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Moving left to right increases flexibility but exponentially increases cost, latency, and failure vectors. Choose the leftmost pattern that satisfies requirements.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{The Architectural Spectrum: Control vs. Autonomy}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Moving left to right increases reasoning flexibility but exponentially amplifies cost, latency, and failure vectors. Systems engineering demands choosing the leftmost pattern that satisfies the domain specification.
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 16: KIẾN TRÚC DỰ ÁN G4 (LEGALPILOT-VN)
-\begin{frame}{Group G4 Project Architecture: LegalPilot-VN (Theme 9)}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Production Orchestrator-Worker Implementation with LangGraph State Checkpointing}
+% SLIDE 16: DYNAMIC ORCHESTRATION & SYSTEMS ARCHITECTURE
+\begin{frame}{Dynamic Orchestration: Hierarchical Lead/Subagent Architecture}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Dynamic Task Decomposition, Subagent Dispatching Topology \& Context Isolation}
 
   \begin{columns}[t]
     \begin{column}{0.52\textwidth}
-      \begin{block}{\textbf{System Pipeline Components}}
+      \begin{block}{\textbf{Dynamic Orchestration Systems Architecture}}
         \footnotesize
         \begin{enumerate}\scriptsize
-          \item \textbf{Legal Orchestrator (Lead Agent):}
-                Decompose user query thành 2 subgoals (Charter capital vs. Foreign ownership cap).
-          \item \textbf{Subagent 1 (LawGraph Retrieval Worker):}
-                Traverse statutory knowledge graph trong isolated clean context.
-          \item \textbf{Subagent 2 (Claim Auditor Worker):}
-                Cross-reference retrieved statutes với external ground-truth oracle \texttt{vbpl\_verify\_status}.
-          \item \textbf{Subagent 3 (Drafter Worker):}
-                Compile final compliance dossier dựa trên 100\% verified active clauses.
-          \item \textbf{SQLite Checkpoint Manager:}
-                Persist state transitions cho durable execution và instant rollback recovery.
+          \item \textbf{Lead Orchestrator (Dynamic Planner):}
+                Phân tích truy vấn mở ở runtime; tự động phân rã thành các subgoals độc lập (vốn điều lệ vs. tỷ lệ sở hữu nước ngoài).
+          \item \textbf{Isolated Subagent Workers:}
+                Khởi tạo các ephemeral worker chuyên biệt (Retrieval Worker, Auditor Worker, Drafter Worker) chạy trong execution context riêng.
+          \item \textbf{Context Boundary Isolation:}
+                Subagents chỉ nhận input tối thiểu; raw search traces và chain-of-thought nội bộ bị purge sau khi synthesize.
+          \item \textbf{Typed State Handoff Protocols:}
+                Giao tiếp liên tác tử qua strict typed schemas (Pydantic), ngăn ngừa context drift lan truyền giữa các workers.
+          \item \textbf{Persistent State Graph Engine:}
+                Centralized State Checkpointer lưu trữ mọi transition, bảo đảm tính xác định và phục hồi sự cố.
         \end{enumerate}
       \end{block}
     \end{column}
 
     \begin{column}{0.46\textwidth}
-      \begin{alertblock}{\textbf{Context Isolation in Action}}
+      \begin{alertblock}{\textbf{Why Context Isolation is an Architectural Invariant}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{No Shared Chat History:} Drafter Worker không bao giờ thấy raw search logs hay internal auditor debate.
-          \item \textbf{Token Economy:} Giữ subagent prompts luôn sạch ($<1,500$ tokens) thay vì 1 giant context phình to 15k tokens.
-          \item \textbf{Zero Hallucination Bleed:} Revoked statutes bị Auditor loại bỏ sẽ không bao giờ lọt vào attention window của Drafter.
+          \item \textbf{Eliminating Quadratic Prompt Bloat:} Thay vì nhồi 15k tokens vào monolithic context, mỗi subagent chạy trong clean window $<1,500$ tokens.
+          \item \textbf{Attention Dilution Defense:} Tránh hiện tượng "Lost in the Middle" và xung đột thông tin giữa các miền nghiệp vụ độc lập.
+          \item \textbf{Zero Hallucination Contamination:} Dữ liệu rác hoặc văn bản hết hiệu lực ở retrieval node bị chặn đứng, không lọt vào context của drafter.
         \end{itemize}
       \end{alertblock}
+      \vspace{0.08cm}
+      \begin{block}{\scriptsize \textbf{Concrete Case Study Grounding}}
+        \tiny Kiến trúc trên được kiểm chứng thực tế trong hệ thống kiểm tra tuân thủ pháp lý đa tác tử của Nhóm G4 (LegalPilot-VN).
+      \end{block}
     \end{column}
   \end{columns}
 \end{frame}
 
-% SLIDE 17: QUYẾT ĐỊNH CHỌN KIẾN TRÚC VS PHƯƠNG ÁN BÁC BỎ
-\begin{frame}{Design-Pattern Decision Made vs. Alternative Rejected}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Mandatory Syllabus Requirement: Defending Our Architectural Choice}
+% SLIDE 17: AGENT DESIGN PATTERNS: ARCHITECTURAL SELECTION & PRUNING
+\begin{frame}{Agent Design Patterns: Architectural Selection \& Pruning}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Why Autonomous Loops Fail in High-Stakes Systems vs. Structured Multi-Agent Topology}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Rejected Alternative: Autonomous ReAct Loop}}
+      \begin{alertblock}{\textbf{Pruned Pattern: Autonomous ReAct Agent Loop}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Why Considered:} Dễ code prototype; single agent loop qua tools cho đến khi satisfied.
-          \item \textbf{Why Explicitly Rejected:}
+          \item \textbf{Characteristics:} Vòng lặp đơn tự do gọi tools tuần tự dựa trên model-directed observations.
+          \item \textbf{Systemic Failure Vectors in Production:}
                 \begin{enumerate}\scriptsize
-                  \item \textbf{Compounding Error:} Trong pháp lý, trích dẫn sót 1 điều luật bãi bỏ sẽ làm vô giá trị toàn bộ hồ sơ.
-                  \item \textbf{Context Bloat:} Lịch sử tra cứu 5 bộ luật làm loãng context ($8,950+$ tokens), sinh ảo giác ghép luật cũ với luật mới.
-                  \item \textbf{Lack of Durability:} Timeout ở turn 4 khiến process crash với zero checkpoint recovery.
+                  \item \textbf{Compounding Error ($P = p^n$):} Với $n=5$ turns và độ chính xác $p=0.9$, độ tin cậy rơi xuống $59\%$; 1 sai sót làm sụp đổ toàn bộ output.
+                  \item \textbf{Attention Contamination:} Lịch sử gọi tools tích lũy liên tục gây quadratic token expansion ($8,950+$ tokens) và hallucination cascades.
+                  \item \textbf{Zero Durability:} Tiến trình xử lý là in-memory volatile; network glitch hoặc timeout ở turn 4 khiến pipeline chết đứng từ đầu.
                 \end{enumerate}
         \end{itemize}
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Accepted Decision: Orchestrator-Workers + LangGraph}}
+      \begin{block}{\textbf{Selected Pattern: Structured Orchestrator-Workers}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Why Chosen:}
+          \item \textbf{Characteristics:} Phân rã phân cấp có kiểm soát; orchestrator điều phối các workers qua state graph có định hướng.
+          \item \textbf{Architectural Advantages:}
                 \begin{enumerate}\scriptsize
-                  \item \textbf{Context Hygiene:} Tách biệt hoàn toàn retrieval khỏi drafting, triệt tiêu hybrid hallucinations.
-                  \item \textbf{Durable State Recovery:} Bắt được revoked statute, hệ thống roll back về retrieval checkpoint và re-route mà không restart pipeline.
-                  \item \textbf{Predictable Economics:} Bounded token consumption ($2,410$ tokens vs. $8,950$ tokens trong ReAct loop).
+                  \item \textbf{Bounded Autonomy:} Worker chỉ có thẩm quyền cục bộ trong scope hẹp; kiểm soát chặt chẽ bounds của error propagation.
+                  \item \textbf{Durable State Recovery:} Graph cho phép roll back có chọn lọc về checkpoint trước đó mà không phải re-execute toàn bộ pipeline.
+                  \item \textbf{Predictable Resource Budget:} Token footprint được kiểm soát qua state schemas ($2,410$ tokens vs. $8,950$ tokens trong ReAct).
                 \end{enumerate}
         \end{itemize}
       \end{block}
@@ -725,80 +730,82 @@
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Summary Defense}},fonttitle=\footnotesize\bfseries]
-    \footnotesize We rejected unconstrained agent autonomy because Vietnamese legal compliance demands \textbf{zero tolerance for compounding hallucinations}. We adopted Orchestrator-Workers for context isolation and LangGraph for durable recovery.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Pattern Selection Law}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Unconstrained agent autonomy must be pruned in zero-tolerance enterprise systems. The resilient pattern couples \textbf{dynamic task decomposition with deterministic state transitions}.
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 18: GROUND-TRUTH ORACLES
-\begin{frame}{External Verification: Why Self-Correction Fails in Law}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Deterministic Oracles vs. Model Self-Critique in High-Stakes Domains}
+% SLIDE 18: FAULT-TOLERANT ARCHITECTURE: DETERMINISTIC GROUND-TRUTH ORACLES
+\begin{frame}{Fault-Tolerant Systems: Deterministic Oracles vs. LLM Self-Critique}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Decoupling Generation from Verification via Non-LLM Ground-Truth Oracles}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{alertblock}{\textbf{The Fallacy of Pure LLM Self-Critique}}
+      \begin{alertblock}{\textbf{The Architectural Flaw of Pure LLM Self-Critique}}
         \footnotesize
         \begin{itemize}
-          \item Việc prompt LLM: \textit{"Are you sure this statute is still in effect?"} hoàn toàn không tham vấn legal reality.
-          \item Model chỉ sample lại từ chính parametric weights đã sinh ra hallucination ban đầu.
-          \item Dẫn tới \textbf{sycophantic doubling-down} hoặc xin lỗi và lật ngược cả những điều khoản đúng.
-          \item LLM không thể tự biết Decree 101/2012/ND-CP đã bị bãi bỏ ngày 01/07/2024 nếu không có tool tra cứu live legal registry.
+          \item \textbf{The Parametric Prior Trap:} Yêu cầu LLM "tự rà soát" (\textit{"Are you sure?"}) không tham chiếu thế giới thực mà chỉ tái lấy mẫu từ cùng một parametric distribution đã sinh lỗi.
+          \item \textbf{Sycophantic Feedback Loops:} Evaluator LLM có xu hướng đồng thuận với Generator nếu chia sẻ cùng base model, dẫn đến confirmation bias nguy hại.
+          \item \textbf{Epistemic Blind Spots:} LLM không thể tự biết một API endpoint, DB record hay văn bản pháp quy đã bị bãi bỏ nếu không truy vấn live external registry.
         \end{itemize}
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{The External Oracle Architecture}}
+      \begin{block}{\textbf{The Deterministic Oracle Architecture}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Deterministic API Tool:} Subagent Auditor gọi \texttt{external\_vbpl\_verify\_oracle(doc\_id)}.
-          \item \textbf{Binary Ground-Truth:} Tra cứu trực tiếp Cổng VBPL Quốc gia (\texttt{vbpl.vn}).
-          \item \textbf{Strict Fact Ingestion:} Trả về chính xác validity status, revocation date, và successor ID (Decree 52/2024/ND-CP).
-          \item \textbf{Hard Circuit Breaker:} Lập tức halt execution và route sang recovery edge.
+          \item \textbf{Decoupled Verification Plane:} Tách rời tầng suy luận xác suất (probabilistic reasoning) khỏi tầng xác thực xác định (deterministic validation).
+          \item \textbf{Binary Assertion Gates:} Worker tích hợp các deterministic tools (linter, unit tests, registry API \texttt{vbpl\_verify\_status}) trả về ground truth nhị phân.
+          \item \textbf{Hard Circuit Breakers:} Kết quả từ oracle kích hoạt state transitions tức thì: nếu trạng thái \texttt{REVOKED}, graph tự động ngắt luồng và kích hoạt recovery edge.
+          \item \textbf{Audit Logging:} Lưu trữ binary proof vào durable state record phục vụ compliance auditing.
         \end{itemize}
       \end{block}
     \end{column}
   \end{columns}
 \end{frame}
 
-% SLIDE 19: THỰC THI BỀN BỈ TRONG THỰC TẾ: TRACE DEMO
-\begin{frame}{Durable Execution in Action: Handling Revoked Law}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Trace Walkthrough: Intercepting Decree 101/2012 and Re-Routing to Decree 52/2024}
+% SLIDE 19: STATE PERSISTENCE & RESILIENT GRAPH ROLLBACKS
+\begin{frame}{Durable Execution in Practice: Resilient State Graph Rollbacks}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ LangGraph Engine Mechanics: State Checkpointing, Differential Rollback \& Partial Recovery}
 
   \begin{columns}[t]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Step-by-Step Failure Recovery Trace}}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\textbf{State Graph Execution \& Rollback Mechanics}}
         \footnotesize
         \begin{enumerate}\scriptsize
-          \item \textbf{Node 1 (Orchestrator):} Plans subgoals. Saves checkpoint \texttt{chk\_plan\_ready}.
-          \item \textbf{Node 2 (LawGraph Worker):} Retrieves candidate: \texttt{101/2012/ND-CP}. Saves checkpoint \texttt{chk\_retrieval\_done}.
-          \item \textbf{Node 3 (Claim Auditor):} Calls external oracle $\to$ \alert{\textbf{REVOKED BY DECREE 52/2024/ND-CP!}}
-          \item \textbf{Durable Recovery Edge:}
-                $\bullet$ State rolls back về \texttt{chk\_plan\_ready}.\\
-                $\bullet$ Subgoal B (Foreign ownership) remains cached!\\
-                $\bullet$ Subgoal A re-dispatched to successor \texttt{52/2024}.
-          \item \textbf{Node 4 (Drafter Worker):} Compiles final dossier using verified Decree 52/2024. Saves \texttt{chk\_final\_dossier}.
+          \item \textbf{Snapshot Persistence (Node 1):} Orchestrator phân rã subgoals; state graph lưu snapshot \texttt{chk\_plan\_ready} xuống persistent storage (SQLite/Postgres).
+          \item \textbf{Isolated Execution (Node 2):} Retrieval worker lấy kết quả ban đầu (Decree 101/2012) $\to$ lưu checkpoint \texttt{chk\_retrieval\_done}.
+          \item \textbf{Oracle Circuit-Breaker (Node 3):} Auditor phát hiện văn bản bãi bỏ qua external oracle $\to$ trigger conditional failure edge.
+          \item \textbf{Differential Rollback (Recovery Edge):}
+                $\bullet$ Graph phục hồi state về snapshot \texttt{chk\_plan\_ready}.\\
+                $\bullet$ \textbf{Partial State Preservation:} Subgoal B (Foreign ownership) giữ nguyên trong state cache, không chạy lại!\\
+                $\bullet$ Chỉ có Subgoal A bị vô hiệu hóa được re-routed tới successor 52/2024.
+          \item \textbf{Convergence (Node 4):} Drafter worker hoàn thành final output từ active verified data $\to$ checkpoint \texttt{chk\_final\_dossier}.
         \end{enumerate}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{\textbf{Why This Proves Durable Checkpointing}}
+      \begin{alertblock}{\textbf{System Architecture Guarantees}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{No Cold Restarts:} Không cần re-run planning hay independent subgoals.
-          \item \textbf{Saved Work Preserved:} Chỉ có invalidated branch được re-executed.
-          \item \textbf{Audit Trail Maintained:} Mọi oracle response và intermediate transitions được lưu vĩnh viễn trong SQLite.
-          \item \textbf{100\% Legal Compliance:} Loại bỏ rủi ro trích dẫn văn bản quy phạm pháp luật đã hết hiệu lực.
+          \item \textbf{Zero Cold Pipeline Restarts:} Tránh lãng phí tài nguyên và chi phí token vào việc chạy lại các subtasks hợp lệ đã hoàn tất.
+          \item \textbf{Deterministic Resumption:} Khi gặp network drop hoặc tool crash, runtime resume ngay từ checkpoint gần nhất thay vì chạy lại từ turn 0.
+          \item \textbf{Reproducible State Audit Trace:} Toàn bộ lịch sử transitions và diffs được lưu trữ phục vụ debugging và enterprise compliance.
         \end{itemize}
       \end{alertblock}
+      \vspace{0.08cm}
+      \begin{block}{\scriptsize \textbf{Trace Demonstration Case}}
+        \tiny Dẫn chứng bằng trace thực nghiệm xử lý chuyển giao Nghị định 101/2012 sang Nghị định 52/2024 trong demo S1-7.
+      \end{block}
     \end{column}
   \end{columns}
 \end{frame}
 
 % SLIDE 20: ĐO LƯỜNG THỰC NGHIỆM: CHI PHÍ TOKEN & ĐỘ TRỄ
-\begin{frame}{Empirical Benchmark: Token Costs, Latency \& Failure Recovery}
-  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Real Execution Trace Metrics: Validating Anthropic's $3\times-8\times$ Multi-Agent Multiplier}
+\begin{frame}{Empirical Systems Benchmark: Validating the Cost-Reliability Frontier}
+  \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Quantitative Proof: Token Multiplier, Latency, and Regulatory Grounding Trade-Offs}
 
   \centering\footnotesize
   \begin{tabularx}{\textwidth}{p{3.2cm}p{3.4cm}p{3.4cm}p{3.6cm}}
@@ -816,34 +823,34 @@
   \end{tabularx}
 
   \vspace{0.25cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Empirical Takeaway}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Our benchmark empirically confirms Anthropic's 2025 finding: \textbf{Orchestrator-Workers cost $3.2\times$ tokens compared to simple workflows}, but that $3.2\times$ cost buys complete context isolation and 100\% regulatory compliance that simple workflows cannot achieve.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Empirical Systems Takeaway}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Our benchmark empirically validates Anthropic's 2025 finding: \textbf{Orchestrator-Workers cost $3.2\times$ tokens compared to simple workflows}, but that $3.2\times$ cost is the mandatory architectural investment for complete context isolation and 100\% verified grounding.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 21: BÀI HỌC KỸ THUẬT TRIỂN KHAI THỰC CHIẾN
-\begin{frame}{Production Engineering Guidelines: Lessons from Industry}
+\begin{frame}{Production Systems Architecture: Engineering Principles for Agentic Systems}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Lead) $\vert$ Synthesizing Anthropic (2024/2025), OpenAI (2025), and LangGraph for Real Systems}
 
   \begin{columns}[t]
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{1. Start with Workflows}}
+      \begin{block}{\textbf{1. Simplicity-First Invariant}}
         \footnotesize
         \begin{itemize}
-          \item Default to prompt chaining và routing.
-          \item Write deterministic code cho state transitions.
-          \item Don't delegate routing to an LLM if an if-else statement suffices.
+          \item Default to prompt chaining và deterministic routing.
+          \item Use code for control flow and LLMs only for atomic reasoning.
+          \item Never introduce dynamic orchestration if a fixed DAG suffices.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{2. Isolate Contexts}}
+      \begin{block}{\textbf{2. Enforce Context Isolation}}
         \footnotesize
         \begin{itemize}
           \item Khi bắt buộc dùng multi-agent, adopt Anthropic's Lead/Subagent split.
           \item Never share a giant messy scratchpad across agents.
-          \item Chấp nhận token multiplier $3-8\times$ như cái giá của context hygiene.
+          \item Accept token multiplier $3-8\times$ as the price of context hygiene.
         \end{itemize}
       \end{block}
     \end{column}
@@ -852,9 +859,9 @@
       \begin{block}{\textbf{3. Build for Durability}}
         \footnotesize
         \begin{itemize}
-          \item Always implement state checkpointing (LangGraph style).
-          \item Anchor agent actions to external ground-truth oracles.
-          \item Design explicit re-route edges với bounded retry limits.
+          \item Persist state transitions with immutable checkpointing.
+          \item Decouple verification via external deterministic oracles.
+          \item Enforce bounded retry edges and circuit-breakers on cycles.
         \end{itemize}
       \end{block}
     \end{column}
