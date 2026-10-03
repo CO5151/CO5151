@@ -629,27 +629,27 @@
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Đánh giá độ trễ, chi phí token, độ tin cậy và khả năng kiểm soát lỗi}
 
   \centering\scriptsize
-  \begin{tabularx}{\textwidth}{p{2.3cm}p{1.9cm}p{1.7cm}p{2.2cm}p{2.3cm}p{2.6cm}}
+  \begin{tabularx}{\textwidth}{p{2.2cm}p{1.9cm}p{1.7cm}p{2.1cm}p{2.4cm}p{2.8cm}}
     \toprule
-    \textbf{Mẫu Thiết Kế} & \textbf{Điều Khiển Luồng} & \textbf{Chi Phí Tương Đối} & \textbf{Đặc Tính Độ Trễ} & \textbf{Rủi Ro Tin Cậy} & \textbf{Ca Ứng Dụng Lý Tưởng} \\
+    \textbf{Kiến Trúc} & \textbf{Kiểm Soát Luồng} & \textbf{Chi Phí Token} & \textbf{Độ Trễ Thực Thi} & \textbf{Điểm Nghẽn Lỗi Hệ Thống} & \textbf{Phạm Vi Ứng Dụng Tối Ưu} \\
     \midrule
-    \textbf{1. Prompt Chaining} & Fixed Code Path & $1.0\times$ (Thấp nhất) & Thấp (Tuần tự) & Rất thấp ($P = p^n$ bị chặn) & Dịch thuật tuyến tính, trích xuất schema. \\
+    \textbf{1. Prompt Chaining} & Fixed Code Path & $1.0\times$ (Cơ sở) & Thấp (Tuần tự) & Sai số tích lũy bị chặn ($P = p^n$) & Quy trình tuyến tính, trích xuất schema cố định. \\
     \addlinespace
-    \textbf{2. Routing} & Fixed Code Path & $1.0\times$ & Tối thiểu ($+1$ router call) & Thấp (Router phân loại sai) & Triage hỗ trợ khách hàng, phân luồng nghiệp vụ. \\
+    \textbf{2. Routing} & Fixed Code Path & $1.0\times$ & Tối thiểu ($+1$ router) & Router phân loại sai lệch hướng & Phân luồng hỗ trợ khách hàng, chọn chuyên gia. \\
     \addlinespace
-    \textbf{3. Parallelization} & Fixed Code Path & $1.2\times--2.5\times$ & Thấp nhất (Song song) & Thấp (Nghẽn tại bước tổng hợp) & Bỏ phiếu đa góc nhìn, kiểm tra guardrails. \\
+    \textbf{3. Parallelization} & Fixed Code Path & $1.2\times--2.5\times$ & Thấp nhất (Song song) & Nút thắt tại bước tổng hợp gộp & Bỏ phiếu đa góc nhìn, kiểm tra an toàn Guardrails. \\
     \addlinespace
-    \textbf{4. Evaluator-Optimizer} & Cyclic Workflow & $2.0\times--4.0\times$ & Trung bình--Cao & Trung bình (Bẫy nịnh bợ sycophancy) & Sinh mã nguồn, soạn thảo văn bản học thuật/pháp lý. \\
+    \textbf{4. Evaluator-Optimizer} & Cyclic Workflow & $2.0\times--4.0\times$ & Trung bình $\to$ Cao & Bẫy nịnh bợ (sycophancy), vòng lặp suy giảm & Sinh mã nguồn, soạn thảo văn bản học thuật/kỹ thuật. \\
     \addlinespace
-    \textbf{5. Orchestrator-Workers} & Hierarchical Split & $\mathbf{3.0\times--8.0\times}$ & Trung bình (Chờ nhánh chậm nhất) & Trung bình (Mất mát khi tổng hợp) & \textbf{Nghiên cứu phức tạp, rà soát đa khía cạnh.} \\
+    \textbf{5. Orchestrator-Workers} & Phân cấp (Hierarchy) & $\mathbf{3.0\times--8.0\times}$ & Chờ nhánh chậm nhất ($\max t_i$) & Mất mát thông tin khi tổng hợp & \textbf{Nghiên cứu sâu, phân rã đa mục tiêu, cô lập ngữ cảnh.} \\
     \addlinespace
-    \textbf{6. Autonomous Agent} & Model-Directed & $5.0\times--15\times+$ & Không đoán trước được & Cao (Sai số tích lũy ngoài kiểm soát) & Thám hiểm web mở, môi trường sandbox. \\
+    \textbf{6. Autonomous Agent} & Do Model tự quyết định & $5.0\times--15\times+$ & Không đoán trước được & Sai số tích lũy ngoài tầm kiểm soát & Thám hiểm không gian mở, giải quyết sự cố sandbox. \\
     \bottomrule
   \end{tabularx}
 
-  \vspace{0.25cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Đánh Đổi Kỹ Thuật: Kiểm Soát (Control) vs. Tự Trị (Autonomy)}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Dịch chuyển từ trái sang phải làm tăng tính linh hoạt suy luận nhưng làm bùng nổ theo hàm mũ chi phí, độ trễ và các điểm nghẽn lỗi. Kỹ thuật hệ thống đòi hỏi phải chọn mẫu thiết kế nằm xa nhất về bên trái mà vẫn giải quyết được trọn vẹn yêu cầu bài toán.
+  \vspace{0.2cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Nguyên Tắc Pareto Trong Thiết Kế Hệ Thống (Pareto Frontier)}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Hệ thống tối ưu không phải là hệ thống trao nhiều quyền tự trị nhất, mà là hệ thống đạt độ tin cậy mong muốn với \textbf{mức độ phức tạp và chi phí thấp nhất}. Bất kỳ sự gia tăng quyền tự trị nào cũng phải được chứng minh bằng thực nghiệm định lượng (Quantitative Evals) thay vì trực giác.
   \end{tcolorbox}
 \end{frame}
 
@@ -659,35 +659,35 @@
 
   \begin{columns}[t]
     \begin{column}{0.52\textwidth}
-      \begin{block}{\textbf{Kiến Trúc Hệ Thống Dynamic Orchestration}}
+      \begin{block}{\textbf{Kiến Trúc Điều Phối Phân Cấp (Lead/Subagent)}}
         \footnotesize
         \begin{enumerate}\scriptsize
           \item \textbf{Lead Orchestrator (Dynamic Planner):}
                 Phân tích truy vấn mở ở runtime; tự động phân rã thành các subgoals độc lập (vốn điều lệ vs. tỷ lệ sở hữu nước ngoài).
           \item \textbf{Isolated Subagent Workers:}
-                Khởi tạo các ephemeral worker chuyên biệt (Retrieval Worker, Auditor Worker, Drafter Worker) chạy trong execution context riêng.
-          \item \textbf{Context Boundary Isolation:}
-                Subagents chỉ nhận input tối thiểu; raw search traces và chain-of-thought nội bộ bị purge sau khi synthesize.
+                Khởi tạo các ephemeral worker chuyên biệt (Retrieval, Audit, Drafting) thực thi song song trong context boundary riêng biệt.
           \item \textbf{Typed State Handoff Protocols:}
-                Giao tiếp liên tác tử qua strict typed schemas (Pydantic), ngăn ngừa context drift lan truyền giữa các workers.
-          \item \textbf{Persistent State Graph Engine:}
-                Centralized State Checkpointer lưu trữ mọi transition, bảo đảm tính xác định và phục hồi sự cố.
+                Giao tiếp liên tác tử qua strict typed schemas (Pydantic), loại bỏ hoàn toàn nhiễu ngôn ngữ tự nhiên.
+          \item \textbf{Context Purging Policy:}
+                Toàn bộ raw scratchpad và search trace nội bộ bị tiêu hủy ngay sau khi trích xuất kết quả cấu trúc về cho Lead.
+          \item \textbf{Centralized State Checkpointer:}
+                Lưu trữ mọi chuyển đổi trạng thái xuống bộ nhớ bền bỉ (SQLite/Postgres), bảo đảm tính xác định và khả năng phục hồi.
         \end{enumerate}
       \end{block}
     \end{column}
 
     \begin{column}{0.46\textwidth}
-      \begin{alertblock}{\textbf{Tầm Quan Trọng Của Cô Lập Ngữ Cảnh (Context Isolation)}}
+      \begin{alertblock}{\textbf{Cơ Sở Kỹ Thuật Của Cô Lập Ngữ Cảnh (Context Isolation)}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Triệt tiêu phình to Token bậc hai:} Thay vì nhồi 15k tokens vào monolithic context, mỗi subagent chạy trong clean window $<1,500$ tokens.
-          \item \textbf{Bảo vệ chống thoái hóa chú ý:} Tránh hiện tượng "Lost in the Middle" và xung đột thông tin giữa các miền nghiệp vụ độc lập.
-          \item \textbf{Chặn đứng ảo giác lây lan:} Dữ liệu rác hoặc văn bản hết hiệu lực ở retrieval node bị chặn đứng, không lọt vào context của drafter.
+          \item \textbf{Triệt tiêu bùng nổ token bậc hai:} Thay vì nhồi monolithic context khổng lồ ($>30\text{k}$ tokens), mỗi worker chạy trong context sạch $<1,500$ tokens $\to$ Giảm $70-80\%$ attention noise.
+          \item \textbf{Chống thoái hóa chú ý (Lost in the Middle):} Tập trung attention weights tối đa vào đúng nhiệm vụ chuyên môn của từng subagent.
+          \item \textbf{Khoanh vùng lỗi (Fault Containment):} Kết quả rác hoặc văn bản hết hiệu lực ở retrieval node bị cô lập hoàn toàn, không lây nhiễm vào drafter.
         \end{itemize}
       \end{alertblock}
       \vspace{0.08cm}
-      \begin{block}{\scriptsize \textbf{Minh Họa Bằng Case Study Thực Nghiệm G4}}
-        \tiny Kiến trúc trên được kiểm chứng thực tế trong hệ thống kiểm tra tuân thủ pháp lý đa tác tử của Nhóm G4 (LegalPilot-VN).
+      \begin{block}{\scriptsize \textbf{Minh Họa Bằng Kiến Trúc Hệ Thống G4}}
+        \tiny Triển khai thực tế trong nhóm: \texttt{LegalOrchestrator} điều phối song song \texttt{LawGraphAgent} (Retrieval) và \texttt{ClaimAuditorAgent} (Audit Oracle) trước khi chuyển giao cho \texttt{DrafterAgent}.
       \end{block}
     \end{column}
   \end{columns}
@@ -702,27 +702,27 @@
       \begin{alertblock}{\textbf{Mẫu Kiến Trúc Bị Loại Bỏ: Vòng Lặp ReAct Tự Do}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Đặc tính:} Vòng lặp đơn tự do gọi tools tuần tự dựa trên quan sát do mô hình dẫn dắt.
-          \item \textbf{Các điểm nghẽn lỗi hệ thống trong production:}
+          \item \textbf{Bản chất:} Một LLM duy nhất tự do gọi tools theo chu trình lặp Thought $\to$ Action $\to$ Observation.
+          \item \textbf{3 Điểm nghẽn lỗi hệ thống trong Production:}
                 \begin{enumerate}\scriptsize
-                  \item \textbf{Lỗi tích lũy ($P = p^n$):} Với 5 turns ở độ chính xác $p=0.9$, độ tin cậy rơi xuống $59\%$; chỉ một sai sót nhỏ làm sụp đổ toàn bộ kết quả.
-                  \item \textbf{Ô nhiễm ngữ cảnh (Context Pollution):} Lịch sử gọi tools tích lũy liên tục gây bùng nổ token bậc hai ($8,950+$ tokens) và sinh ảo giác dây chuyền.
-                  \item \textbf{Thiếu tính bền bỉ (Zero Durability):} Tiến trình xử lý nằm hoàn toàn trên bộ nhớ RAM volatile; mất mạng hoặc timeout ở turn 4 khiến pipeline chết đứng từ đầu.
+                  \item \textbf{Sai số tích lũy cấp số nhân ($P = \prod p_i$):} Với $p = 0.92$, sau 6 bước $P \approx 60\%$, sau 12 bước $P \approx 36\%$ $\to$ Quá mỏng manh cho các bài toán quan trọng.
+                  \item \textbf{Bùng nổ chi phí và độ trễ bậc hai:} Lịch sử hội thoại dài thêm sau mỗi turn khiến tổng token tiêu thụ tăng $O(N^2)$, gây lãng phí lớn.
+                  \item \textbf{Zero Fault Containment:} Tiến trình nằm trên RAM volatile; lỗi mạng hoặc timeout ở turn cuối làm sụp đổ toàn bộ pipeline từ đầu.
                 \end{enumerate}
         \end{itemize}
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Mẫu Kiến Trúc Được Chọn: Orchestrator-Workers}}
+      \begin{block}{\textbf{Mẫu Kiến Trúc Được Chọn: Structured Orchestrator-Workers}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Đặc tính:} Phân rã phân cấp có kiểm soát; orchestrator điều phối các workers qua state graph có định hướng.
-          \item \textbf{Lợi thế kiến trúc vượt trội:}
+          \item \textbf{Bản chất:} Phân rã bài toán thành đồ thị trạng thái có hướng với quyền tự trị bị chặn biên (Bounded Autonomy).
+          \item \textbf{3 Lợi thế kiến trúc vượt trội:}
                 \begin{enumerate}\scriptsize
-                  \item \textbf{Quyền tự trị bị chặn biên (Bounded Autonomy):} Worker chỉ có thẩm quyền cục bộ trong scope hẹp; kiểm soát chặt chẽ bounds của error propagation.
-                  \item \textbf{Phục hồi trạng thái bền bỉ (Durable State Recovery):} Graph cho phép roll back có chọn lọc về checkpoint trước đó mà không phải re-execute toàn bộ pipeline.
-                  \item \textbf{Kiểm soát ngân sách tài nguyên:} Lượng token được giới hạn chặt chẽ qua state schemas ($2,410$ tokens vs. $8,950$ tokens trong ReAct).
+                  \item \textbf{Khoanh vùng sai số:} Worker chỉ có thẩm quyền trong phạm vi hẹp; lỗi của một tác tử bị chặn đứng tại boundary, không lan truyền.
+                  \item \textbf{Thực thi bền bỉ (Durable Execution):} Tích hợp checkpointing lưu trữ trạng thái sau từng bước $\to$ Cho phép phục hồi hoặc retry cục bộ.
+                  \item \textbf{Kiểm soát ngân sách token \& thời gian:} Áp đặt ngân sách token và số lượt suy luận (max turns) cứng trên từng node, loại bỏ vòng lặp vô tận.
                 \end{enumerate}
         \end{itemize}
       \end{block}
@@ -730,8 +730,8 @@
   \end{columns}
 
   \vspace{0.15cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Nguyên Tắc Lựa Chọn Kiến Trúc Trong Thực Tế}},fonttitle=\footnotesize\bfseries]
-    \footnotesize Quyền tự trị không ràng buộc bắt buộc phải bị loại bỏ trong các hệ thống doanh nghiệp đòi hỏi độ chính xác tuyệt đối. Kiến trúc đúng đắn kết hợp \textbf{phân rã tác vụ động với các bước chuyển đổi trạng thái tiền định}.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Bài Học Quyết Định Kiến Trúc Trong Thực Tế}},fonttitle=\footnotesize\bfseries]
+    \footnotesize Quyền tự trị không ràng buộc (unconstrained autonomy) là nguồn gốc của các lỗi bất định trong doanh nghiệp. Thiết kế chuẩn mực là kết hợp \textbf{khả năng phân rã linh hoạt của LLM với luồng kiểm soát trạng thái tiền định bằng mã nguồn}.
   \end{tcolorbox}
 \end{frame}
 
@@ -744,9 +744,9 @@
       \begin{alertblock}{\textbf{Hạn Chế Khi Để LLM Tự Đánh Giá (LLM-as-a-Judge)}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Bẫy phân phối tiên nghiệm (Parametric Prior):} Yêu cầu LLM "tự rà soát" (\textit{"Are you sure?"}) không tham chiếu thế giới thực mà chỉ tái lấy mẫu từ cùng một parametric distribution đã sinh lỗi.
-          \item \textbf{Vòng lặp nịnh bợ (Sycophantic Feedback):} Evaluator LLM có xu hướng đồng thuận với Generator nếu chia sẻ cùng base model, dẫn đến confirmation bias nguy hại.
-          \item \textbf{Điểm mù tri thức (Epistemic Blind Spots):} LLM không thể tự biết một API endpoint, DB record hay văn bản pháp quy đã bị bãi bỏ nếu không truy vấn live external registry.
+          \item \textbf{Vòng lặp phân phối tham số (Parametric Circularity):} Yêu cầu LLM "tự rà soát" (\textit{"Are you sure?"}) chỉ tái lấy mẫu từ cùng một phân phối $P_\theta(y \vert x)$ đã sinh lỗi ban đầu $\to$ Không thể phát hiện ảo giác bằng chính mô hình tạo ra ảo giác.
+          \item \textbf{Bẫy nịnh bợ (Sycophancy Trap):} Evaluator LLM có xu hướng thiên vị và đồng thuận với candidate output của Generator, đặc biệt khi chia sẻ cùng base model.
+          \item \textbf{Điểm mù tri thức thời gian thực:} LLM không thể tự biết một văn bản quy phạm pháp luật đã bị bãi bỏ vào ngày hôm qua nếu không truy vấn live external registry.
         \end{itemize}
       \end{alertblock}
     \end{column}
@@ -755,10 +755,10 @@
       \begin{block}{\textbf{Cơ Chế Kiểm Định Bằng Deterministic Oracles}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Tách rời mặt phẳng xác thực (Decoupled Plane):} Tách rời tầng suy luận xác suất (probabilistic reasoning) khỏi tầng xác thực xác định (deterministic validation).
-          \item \textbf{Cổng kiểm tra nhị phân (Binary Assertion Gates):} Worker tích hợp các deterministic tools (linter, unit tests, registry API \texttt{vbpl\_verify\_status}) trả về ground truth nhị phân.
-          \item \textbf{Ngắt mạch cứng (Hard Circuit Breakers):} Kết quả từ oracle kích hoạt state transitions tức thì: nếu trạng thái \texttt{REVOKED}, graph tự động ngắt luồng và kích hoạt recovery edge.
-          \item \textbf{Nhật ký kiểm toán (Audit Logging):} Lưu trữ binary proof vào durable state record phục vụ compliance auditing.
+          \item \textbf{Tách rời hai mặt phẳng (Decoupled Planes):} Tách biệt tầng suy luận xác suất (probabilistic reasoning) khỏi tầng kiểm định tiền định (deterministic validation).
+          \item \textbf{Cổng kiểm tra nhị phân (Binary Assertion Gates):} Sử dụng các công cụ xác định (Linters, Type Checkers, Schema Validators, Database Registry APIs) trả về kết quả nhị phân: \texttt{VALID} hoặc \texttt{INVALID}.
+          \item \textbf{Ngắt mạch cứng (Hard Circuit Breakers):} Khi Oracle phát hiện vi phạm, đồ thị lập tức ngắt luồng và kích hoạt nhánh phục hồi có điều kiện.
+          \item \textbf{Nhật ký kiểm toán bất biến (Audit Trail):} Lưu trữ bằng chứng nhị phân vào durable state phục vụ giải trình kỹ thuật và pháp lý.
         \end{itemize}
       \end{block}
     \end{column}
@@ -771,17 +771,17 @@
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Trình Tự Thực Thi Đồ Thị \& Cơ Chế Rollback}}
+      \begin{block}{\textbf{Trình Tự Thực Thi Đồ Thị \& Cơ Chế Rollback Vi Sai}}
         \footnotesize
         \begin{enumerate}\scriptsize
-          \item \textbf{Lưu trữ Snapshot (Node 1):} Orchestrator phân rã subgoals; state graph lưu snapshot \texttt{chk\_plan\_ready} xuống persistent storage (SQLite/Postgres).
-          \item \textbf{Thực thi cô lập (Node 2):} Retrieval worker lấy kết quả ban đầu (Decree 101/2012) $\to$ lưu checkpoint \texttt{chk\_retrieval\_done}.
-          \item \textbf{Bắt lỗi bằng Oracle (Node 3):} Auditor phát hiện văn bản bãi bỏ qua external oracle $\to$ kích hoạt conditional failure edge.
-          \item \textbf{Differential Rollback (Recovery Edge):}
-                $\bullet$ Graph phục hồi state về snapshot \texttt{chk\_plan\_ready}.\\
-                $\bullet$ \textbf{Giữ nguyên trạng thái hợp lệ:} Subgoal B (Foreign ownership) giữ nguyên trong state cache, không chạy lại!\\
-                $\bullet$ Chỉ có Subgoal A bị vô hiệu hóa được re-routed tới successor 52/2024.
-          \item \textbf{Hội tụ kết quả (Node 4):} Drafter worker hoàn thành final output từ active verified data $\to$ checkpoint \texttt{chk\_final\_dossier}.
+          \item \textbf{Checkpoint $C_1$ (Lập kế hoạch):} Orchestrator phân rã truy vấn thành Subgoal 1 (Điều kiện cấp phép) và Subgoal 2 (Tỷ lệ sở hữu nước ngoài) $\to$ Lưu snapshot $C_1$ (SQLite/Postgres).
+          \item \textbf{Thực thi song song:} Worker 1 tra cứu Subgoal 1; Worker 2 tra cứu Subgoal 2 $\to$ Lưu checkpoint $C_2$.
+          \item \textbf{Phát hiện lỗi bằng Oracle:} Auditor Oracle phát hiện văn bản của Subgoal 1 đã hết hiệu lực $\to$ Kích hoạt Conditional Failure Edge.
+          \item \textbf{Differential Rollback (Quay lui vi sai):}
+                $\bullet$ Khôi phục trạng thái đồ thị về $C_1$.\\
+                $\bullet$ \textbf{Bảo toàn dữ liệu hợp lệ:} Giữ nguyên kết quả Subgoal 2 trong State Cache (không tính toán lại!).\\
+                $\bullet$ Chỉ tái điều phối Subgoal 1 sang văn bản kế thừa hợp lệ kèm bộ đếm retry ($K \le 2$).
+          \item \textbf{Hội tụ trạng thái:} Drafter tổng hợp hồ sơ hoàn chỉnh từ dữ liệu đã qua xác thực $100\%$ $\to$ Lưu checkpoint $C_3$.
         \end{enumerate}
       \end{block}
     \end{column}
@@ -790,14 +790,14 @@
       \begin{alertblock}{\textbf{Đặc Tính Đảm Bảo Của Hệ Thống}}
         \footnotesize
         \begin{itemize}
-          \item \textbf{Không bao giờ Cold Restart:} Tránh lãng phí tài nguyên và chi phí token vào việc chạy lại các subtasks hợp lệ đã hoàn tất.
-          \item \textbf{Tiếp tục thực thi xác định:} Khi gặp network drop hoặc tool crash, runtime resume ngay từ checkpoint gần nhất thay vì chạy lại từ turn 0.
-          \item \textbf{Dấu vết kiểm toán tái lập được:} Toàn bộ lịch sử transitions và diffs được lưu trữ phục vụ debugging và enterprise compliance.
+          \item \textbf{Không bao giờ Cold Restart:} Tiết kiệm tối đa chi phí token và thời gian bằng cách không chạy lại các subtasks hợp lệ đã hoàn thành.
+          \item \textbf{Tiếp tục thực thi xác định (Resilient Resumption):} Khi gặp sự cố mạng hoặc sập container, runtime tiếp tục mượt mà từ checkpoint an toàn gần nhất.
+          \item \textbf{Gỡ lỗi Time-Travel (Time-Travel Debugging):} Cho phép kỹ sư phân nhánh trạng thái từ bất kỳ checkpoint nào để tái lập và chẩn đoán lỗi.
         \end{itemize}
       \end{alertblock}
       \vspace{0.08cm}
-      \begin{block}{\scriptsize \textbf{Minh Họa Bằng Trace Thực Nghiệm}}
-        \tiny Dẫn chứng bằng trace thực nghiệm xử lý chuyển giao Nghị định 101/2012 sang Nghị định 52/2024 trong demo S1-7.
+      \begin{block}{\scriptsize \textbf{Minh Họa Bằng Trace Thực Nghiệm Trong Demo}}
+        \tiny Trace thực nghiệm xử lý chuyển tiếp Nghị định 101/2012 (bãi bỏ) sang Nghị định 52/2024 trong mã nguồn \texttt{LegalOrchestrator} của nhóm.
       \end{block}
     \end{column}
   \end{columns}
@@ -811,11 +811,11 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{1. Hub-and-Spoke (Anthropic)}}
         \footnotesize
-        \textbf{Lead/Subagent Topology:}
+        \textbf{Kiến trúc hình sao tập trung:}
         \begin{itemize}\scriptsize
-          \item Lead điều phối tập trung; subagents hoạt động độc lập và báo cáo về Lead.
-          \item \textbf{Ưu điểm:} Full state visibility, cô lập ngữ cảnh tuyệt đối giữa các subagents.
-          \item \textbf{Hạn chế:} Điểm nghẽn độ trễ tại Lead (\textbf{Straggler Effect}: $\max(t_i)$); chi phí tổng hợp cao ($3-8\times$ tokens).
+          \item Lead điều phối trung tâm; subagents hoạt động độc lập và báo cáo về Lead.
+          \item \textbf{Ưu điểm:} Toàn quyền kiểm soát trạng thái; cô lập ngữ cảnh tuyệt đối giữa các subagents.
+          \item \textbf{Đánh đổi:} Nút thắt độ trễ tại Lead (\textbf{Straggler Effect}: $\max t_i$); chi phí token tổng hợp cao ($3-8\times$).
         \end{itemize}
       \end{block}
     \end{column}
@@ -823,11 +823,11 @@
     \begin{column}{0.32\textwidth}
       \begin{alertblock}{\textbf{2. Decentralized Swarms}}
         \footnotesize
-        \textbf{Peer-to-Peer Mesh:}
+        \textbf{Mạng ngang hàng (Peer-to-Peer):}
         \begin{itemize}\scriptsize
           \item Tác tử tự do handoff và giao tiếp ngang hàng trực tiếp (e.g. OpenAI Swarm).
-          \item \textbf{Ưu điểm:} Linh hoạt cao trong đàm phán đa bên không cấu trúc.
-          \item \textbf{Fatal Failure Modes:} Dễ rơi vào infinite ping-pong loops; $O(N^2)$ message explosion; bất khả thi trong việc rollback trạng thái bền bỉ.
+          \item \textbf{Ưu điểm:} Tính linh hoạt rất cao trong đàm phán đa bên không cấu trúc.
+          \item \textbf{Rủi ro chí mạng:} Bùng nổ tin nhắn $O(N^2)$; dễ kẹt vòng lặp ping-pong vô tận; không thể rollback trạng thái bền bỉ.
         \end{itemize}
       \end{alertblock}
     \end{column}
@@ -835,11 +835,11 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{3. Cyclic State Graphs}}
         \footnotesize
-        \textbf{LangGraph Architecture:}
+        \textbf{Kiến trúc LangGraph:}
         \begin{itemize}\scriptsize
           \item Điều phối qua đồ thị trạng thái với strict typed schema và conditional edges.
-          \item \textbf{Ưu điểm:} Kiểm soát chặt chẽ bounds vòng lặp, hỗ trợ durable checkpointing và deterministic time-travel.
-          \item \textbf{Hạn chế:} Chi phí phát triển schema ban đầu cao; kém linh hoạt với bài toán mở hoàn toàn.
+          \item \textbf{Ưu điểm:} Kiểm soát chặt chẽ chu trình lặp; hỗ trợ durable checkpointing và deterministic time-travel.
+          \item \textbf{Đánh đổi:} Đòi hỏi định nghĩa state schema chặt chẽ từ đầu; tính tự do thấp hơn swarm.
         \end{itemize}
       \end{block}
     \end{column}
@@ -892,7 +892,7 @@
 
   \vspace{0.25cm}
   \begin{alertblock}{\textbf{Đúc Kết Nguyên Lý Kỹ Thuật Hệ Thống}}
-    \footnotesize \textbf{Thông Điệp Cốt Lõi:} Kiến trúc agent tốt nhất là kiến trúc đơn giản nhất giải quyết bài toán một cách tin cậy; độ phức tạp là một khoản chi phí kỹ thuật, không phải là một tính năng.
+    \footnotesize \textbf{Thông Điệp Cốt Lõi:} Kiến trúc agent tốt nhất là kiến trúc đơn giản nhất giải quyết bài toán một cách tin cậy; \textbf{độ phức tạp là một khoản chi phí kỹ thuật phát sinh, không phải là một tính năng tự hào}.
   \end{alertblock}
 \end{frame}
 
