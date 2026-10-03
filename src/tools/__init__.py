@@ -7,6 +7,12 @@ Exports:
 - check_statute_validity: Callable function for statute status checks.
 """
 
+from src.tools.lawgraph_tool import (
+    QUERY_LAWGRAPH_TOOL,
+    TRACE_SELECTIVE_EDGE_TOOL,
+    query_lawgraph,
+    trace_selective_edge,
+)
 from src.tools.statutory_retriever import (
     STATUTORY_RETRIEVER_TOOL,
     retrieve_statutory_provisions,
@@ -17,8 +23,12 @@ from src.tools.validity_checker import (
 )
 
 __all__ = [
+    "QUERY_LAWGRAPH_TOOL",
     "STATUTORY_RETRIEVER_TOOL",
+    "TRACE_SELECTIVE_EDGE_TOOL",
     "VALIDITY_CHECKER_TOOL",
     "check_statute_validity",
+    "query_lawgraph",
     "retrieve_statutory_provisions",
+    "trace_selective_edge",
 ]

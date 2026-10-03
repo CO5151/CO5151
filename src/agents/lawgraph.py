@@ -116,30 +116,134 @@ class LawGraphAgent(ADKAgent):
         },
     }
 
-    def __init__(self, traversal_engine: Any | None = None) -> None:
+    def __init__(
+        self,
+        traversal_engine: Any | None = None,
+        qdrant_manager: Any | None = None,
+        use_live_db: bool = False,
+    ) -> None:
+        from src.tools.lawgraph_tool import QUERY_LAWGRAPH_TOOL, TRACE_SELECTIVE_EDGE_TOOL
         from src.tools.statutory_retriever import STATUTORY_RETRIEVER_TOOL
+        from src.tools.validity_checker import VALIDITY_CHECKER_TOOL
 
         super().__init__(
             name="LawGraphAgent",
             description="Truy vấn văn bản luật, nghị định, thông tư và duyệt đồ thị quan hệ sửa đổi/bổ sung.",
             role="retriever",
-            tools=[STATUTORY_RETRIEVER_TOOL],
+            tools=[
+                STATUTORY_RETRIEVER_TOOL,
+                VALIDITY_CHECKER_TOOL,
+                TRACE_SELECTIVE_EDGE_TOOL,
+                QUERY_LAWGRAPH_TOOL,
+            ],
         )
         self.traversal_engine = traversal_engine
+        self.qdrant_manager = qdrant_manager
+        self.use_live_db = use_live_db
 
     def _run(self, input_data: Any, context: dict[str, Any]) -> Any:
         """Executes statutory retrieval via standard ADK interface."""
         if isinstance(input_data, dict):
             subgoals = input_data.get("subgoals", [])
             keywords = input_data.get("keywords", [])
+            reference_date = input_data.get("reference_date", "")
         elif isinstance(input_data, str):
             subgoals = [input_data]
             keywords = [input_data]
+            reference_date = ""
         else:
             subgoals, keywords = [], []
-        return self.retrieve_provisions(subgoals, keywords)
+            reference_date = ""
+        return self.retrieve_provisions(subgoals, keywords, reference_date=reference_date)
 
-    def retrieve_provisions(self, subgoals: list[str], keywords: list[str]) -> list[dict[str, Any]]:
+    def trace_selective_edge(
+        self,
+        seed_doc_id: str,
+        reference_date: str = "",
+    ) -> dict[str, Any]:
+        """Traces selective edges for a seed document using selective edge traversal."""
+        from src.tools.lawgraph_tool import trace_selective_edge
+
+        return trace_selective_edge(seed_doc_id=seed_doc_id, reference_date=reference_date)
+
+    def _retrieve_from_live_graph(
+        self,
+        subgoals: list[str],
+        keywords: list[str],
+        reference_date: str = "",
+    ) -> list[dict[str, Any]]:
+        """Retrieves provisions by traversing Neo4j knowledge graph with temporal pruning."""
+        try:
+            import re
+
+            from src.knowledge.selective_traversal import SelectiveTraversalEngine, TraversalContext
+
+            engine = self.traversal_engine or SelectiveTraversalEngine()
+            context = (
+                TraversalContext(reference_date=reference_date)
+                if reference_date
+                else TraversalContext()
+            )
+
+            doc_candidates: set[str] = set()
+            pattern = re.compile(r"\b\d+/\d{4}/[A-Za-z0-9Đđ/-]+\b", re.IGNORECASE)
+
+            full_text = " ".join(subgoals + keywords)
+            for m in pattern.finditer(full_text):
+                clean_id = m.group(0).upper().replace("Đ", "D").replace("đ", "d")
+                doc_candidates.add(clean_id)
+
+            if not doc_candidates and hasattr(engine, "client"):
+                for kw in keywords:
+                    if len(kw) < 4:
+                        continue
+                    try:
+                        records = engine.client.execute_query(
+                            "MATCH (d:Document) WHERE d.title CONTAINS $kw RETURN d.doc_id as doc_id LIMIT 3",
+                            {"kw": kw},
+                        )
+                        for r in records:
+                            if r.get("doc_id"):
+                                doc_candidates.add(str(r["doc_id"]))
+                    except Exception:
+                        pass
+
+            live_provisions: list[dict[str, Any]] = []
+            for doc_id in doc_candidates:
+                try:
+                    res = engine.traverse(doc_id, context)
+                    for art in res.active_articles:
+                        live_provisions.append(
+                            {
+                                "doc_id": art.get("governing_doc_id", doc_id),
+                                "title": f"Văn bản {art.get('governing_doc_id', doc_id)}",
+                                "status": "active",
+                                "effective_date": res.reference_date,
+                                "article": f"Điều {art.get('article_number', '')}",
+                                "article_title": art.get("title", ""),
+                                "content": art.get("content", ""),
+                                "amended_by": art.get("amended_by"),
+                                "supersedes": [
+                                    r.get("repealer_doc_id") for r in res.repealed_provisions
+                                ],
+                                "revoked_by": None,
+                            }
+                        )
+                except Exception as ex:
+                    logger.debug("Selective traversal skipped for %s: %s", doc_id, ex)
+
+            return live_provisions
+        except Exception as e:
+            logger.debug("Live graph retrieval unavailable: %s", e)
+            return []
+
+    def retrieve_provisions(
+        self,
+        subgoals: list[str],
+        keywords: list[str],
+        reference_date: str = "",
+        force_live_db: bool = False,
+    ) -> list[dict[str, Any]]:
         """Retrieves relevant legal articles based on subgoals and keyword matches."""
         logger.info(f"LawGraphAgent: Retrieving provisions for subgoals: {subgoals}")
         results: list[dict[str, Any]] = []
@@ -154,7 +258,6 @@ class LawGraphAgent(ADKAgent):
                 art_text = f"{article.get('title', '')} {article.get('content', '')}".lower()
                 combined = f"{doc_text} {art_text}"
 
-                # Match if any search term or subgoal keyword matches
                 is_match = any(term in combined for term in search_terms) or not search_terms
                 if is_match:
                     item_key = f"{doc_id}:{article.get('article', '')}"
@@ -173,6 +276,15 @@ class LawGraphAgent(ADKAgent):
                                 "revoked_by": doc.get("revoked_by"),
                             }
                         )
+
+        # If live database is requested or catalog had no results, attempt dynamic graph retrieval
+        if (self.use_live_db or force_live_db) or not results:
+            live_results = self._retrieve_from_live_graph(subgoals, keywords, reference_date)
+            for item in live_results:
+                item_key = f"{item['doc_id']}:{item['article']}"
+                if item_key not in seen_keys:
+                    seen_keys.add(item_key)
+                    results.append(item)
 
         logger.info(f"LawGraphAgent: Found {len(results)} candidate provisions.")
         return results
