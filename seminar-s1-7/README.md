@@ -6,46 +6,48 @@
 
 ---
 
-## 1. Submission Package Checklist (4 Mandatory Email Attachments)
+## 1. Official Syllabus Literature Alignment (Zero Fabricated Readings)
+
+### Core Reading (Mandatory Foundation)
+- **Anthropic (Dec 2024)**: *Building Effective Agents* (Workflows vs. autonomous agents, simplicity-first thesis, prompt chaining, routing, orchestrator-workers, evaluator-optimizer).
+
+### Extension Readings (Presenting Group Deep Dive)
+1. **Anthropic (Feb 2025)**: *How We Built Our Multi-Agent Research System* (Lead/subagent decomposition, context isolation, $3\times-8\times$ token multiplier and latency overhead).
+2. **OpenAI (Feb 2025)**: *A Practical Guide to Building Agents* (Model-directed tool calling loops, schemas, guardrails, and structured evals).
+3. **LangGraph Documentation (2024–2025)**: *State Graphs, Checkpointing, and Human-in-the-Loop* (Cyclic state graphs, durable execution, failure recovery).
+
+---
+
+## 2. Submission Package Checklist (4 Mandatory Email Attachments)
 
 Subject line: `[CO5151][G4] Seminar S1-7`
 
-1. **`slides_s1_7.pdf`**: Exactly 22 slides in Academic English. Designed with prompt/outline style, balanced equal time (~9.5 mins) & equal weightage across all 3 members.
-2. **`annotated_bibliography_en.pdf`**: Exactly ONE PAGE (4 Core Readings + 4 Extension Papers, exactly 1 critical reflection sentence per paper).
-3. **`src/` & Live Pipeline Demo**: Production Multi-Agent Pipeline (`python3 -m src.agents.orchestrator`) and Streamlit UI (`streamlit run src/ui/app.py`), proving the necessity of External Ground-Truth Verifiers and State Checkpointing.
+1. **`slides_s1_7.pdf`**: Exactly 22 slides in Academic English, strictly answering all 6 syllabus questions with balanced time (~9.5 mins each) across all 3 members.
+2. **`annotated_bibliography_en.pdf`**: Exactly ONE PAGE (1 Core Reading + 3 Extension Readings, exactly 1 critical reflection sentence per reading).
+3. **`demo_orchestration_trace.py` & `src/`**: Empirical orchestration benchmark script comparing Workflow ($1\times$), Monolithic Agent ($11.7\times$), and Orchestrator-Workers ($3.2\times$) with durable checkpoint recovery.
 4. **`ai_use_statement_en.pdf`**: Transparent AI-use declaration in compliance with HCMUT academic integrity policies.
 
 ---
 
-## 2. Equal Time & Intellectual Weightage Breakdown (30 Minutes Total)
-
-Each member presents **exactly 6 substantive slides** (~9.5 minutes), covering foundational theory, systems design, and critical empirical papers:
+## 3. Equal Time & Intellectual Weightage Breakdown (30 Minutes Total)
 
 | Member | Time | Assigned Scope & Primary Literature | Content Slides |
 | :--- | :---: | :--- | :--- |
-| **Nguyen Trung Phong**<br>*(Member)* | **9.5 mins** | **Block 1: Primitives, Simplicity First \& Extension 1**<br>• Workflows vs. Autonomous Agents (Fixed code paths vs. Model control)<br>• Why Anthropic argues: *"Start Simple"* ($P = p^n$ compounding error)<br>• Building Blocks: Prompt Chaining \& Semantic Routing (Buys vs. Costs)<br>• **Extension 1 (Wang et al., 2022)**: *Self-Consistency* (Sampling $\neq$ Refinement)<br>• **Decision Framework**: When to stick with simple code (3-question test) | **Slides 5–9**<br>*(5 slides)* |
-| **Vu Viet Hung**<br>*(Member)* | **9.5 mins** | **Block 2: Dynamic Orchestration, Systems \& Extension 2**<br>• **Orchestrator-Workers vs. One Long Context** *(Teacher's mandatory question)*<br>• Evaluator-Optimizer \& Lead/Subagent Split (Anthropic 2025: $3-8\times$ cost/latency)<br>• **LangGraph \& Durable Execution**: State Graphs, Checkpointing \& Fault Recovery<br>• **Extension 2 (Huang et al., 2023)**: Fallacy of Intrinsic Self-Correction<br>• Comprehensive Architectural Trade-Off Matrix (All 6 Patterns) | **Slides 10–14**<br>*(5 slides)* |
-| **Dang Lam Tung**<br>*(Group Lead)* | **11 mins** | **Block 3: G4 Architecture, Deep Verification \& Live Demo**<br>• **Architecture: Orchestrator Coordinating Sub-Agents** (Slide 15): D1 Multi-Agent System<br>• **External Verification & Oracles** (Slide 16): Ground-truth oracles vs. model self-critique (OpenAI 2025)<br>• **Extension 3 (Lightman et al., 2023)** (Slide 17): *Let's Verify* (PRM vs. ORM step scoring)<br>• **Extension 4 (Zelikman et al., 2022)** (Slide 18): *STaR* (Bootstrap loop via ground-truth filter)<br>• **Feedback Signal Synthesis Matrix** (Slide 19): Comparing signal origins across 4 techniques<br>• **Live Project Verification Trace** (Slide 20): Intercept of revoked Decree 101/2012 $\to$ 52/2024<br>• **50-Query Benchmark Results & Frontiers** (Slide 21): Empirical gains from external verifiers | **Slides 15–21**<br>*(7 slides)* |
-| **Shared** | **1.5 mins** | Title (Slide 1), Roadmap (Slide 2), Deadlines (Slide 3), Lit Map (Slide 4), Conclusion \& Committee Q&A (Slide 22) | **Slides 1–4, 22** |
+| **Nguyen Trung Phong**<br>*(Member)* | **9.5 mins** | **Block 1: Primitives, Simplicity First & Workflows**<br>• Workflows vs. Autonomous Agents (Fixed code paths vs. Model control)<br>• Why Anthropic argues: *"Start Simple"* ($P = p^n$ compounding error trap)<br>• Concrete Patterns 1 & 2: Prompt Chaining & Semantic Routing (Buys vs. Costs)<br>• Concrete Pattern 3: Evaluator-Optimizer (Feedback loop, costs, and sycophancy)<br>• Simplicity-First Decision Framework: When simple code is enough | **Slides 5–9**<br>*(5 slides)* |
+| **Vu Viet Hung**<br>*(Member)* | **9.5 mins** | **Block 2: Dynamic Orchestration & Systems Architecture**<br>• **Orchestrator-Workers vs. One Long Context** (Context isolation vs attention dilution)<br>• **Anthropic (2025) Lead/Subagent Reality**: $3\times-8\times$ token cost multiplier & latency<br>• **OpenAI (2025) Practical Guide**: Tool loops, guardrails & evaluation harnesses<br>• **LangGraph State Graphs**: Cyclic graphs, state schemas, and reducers<br>• **Durable Execution & Checkpointing**: Failure recovery and human-in-the-loop | **Slides 10–14**<br>*(5 slides)* |
+| **Dang Lam Tung**<br>*(Group Lead)* | **11 mins** | **Block 3: G4 Project Architecture, Defense & Live Trace**<br>• **Comprehensive Trade-Off Matrix**: Comparing all patterns across cost/latency/reliability<br>• **G4 Architecture (LegalPilot-VN)**: Orchestrator-Worker with LangGraph State Checkpoint<br>• **Design Decision Made vs. Alternative Rejected**: Why G4 rejected ReAct / naive chain<br>• **External Ground-Truth Verification Oracles**: Non-LLM status lookup (`vbpl_verify_status`)<br>• **Durable Execution in Action**: Intercepting revoked Decree 101/2012 $\to$ 52/2024 via checkpoint<br>• **Empirical Benchmark Trace**: Validating Anthropic's $3.2\times$ cost ratio<br>• **Production Guidelines & Defense Preparation**: Lessons learned from industry | **Slides 15–21**<br>*(7 slides)* |
+| **Shared** | **1.5 mins** | Title (Slide 1), Roadmap (Slide 2), Deadlines (Slide 3), Literature Roadmap (Slide 4), Conclusion & Defense (Slide 22) | **Slides 1–4, 22** |
 
 ---
 
-## 3. Live Project Execution Trace & Benchmark Demo
+## 4. Run Live Trace Demo & Benchmark
 
-We execute the live multi-agent verification pipeline from our actual project codebase:
+Run the empirical benchmark trace script directly:
+```bash
+python3 seminar-s1-7/demo_orchestration_trace.py
+```
 
-### A. Run CLI Multi-Agent Orchestration Trace
+Or run the production orchestrator in the main repository:
 ```bash
 python3 -m src.agents.orchestrator
 ```
-This demonstrates:
-1. **Dynamic Task Decomposition**: User query split across specialized legal workers.
-2. **External MCP Ground-Truth Verifier**: Intercepts revoked statutes (e.g., Decree 101/2012 on 50B capital) via live status lookup (`vbpl_verify_status`).
-3. **State Checkpointing & Re-Routing**: Intercepts the revoked decree, rolls state back, and re-routes to current Decree 52/2024 with 100% compliance.
-4. **Contrast with Chatty Swarms / Naive Prompting**: Eliminates conversational sycophancy where subagents flatter and accept each other's hallucinations.
-
-### B. Run Interactive Web Visual Dashboard
-```bash
-streamlit run src/ui/app.py
-```
-Open `http://localhost:8501` to test interactive legal queries, inspect step-by-step agent execution traces, and view active vs. revoked law status tables in real time.
