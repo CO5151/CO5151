@@ -124,6 +124,7 @@ class LawGraphAgent(ADKAgent):
     ) -> None:
         import json
         from pathlib import Path
+
         from src.tools.lawgraph_tool import QUERY_LAWGRAPH_TOOL, TRACE_SELECTIVE_EDGE_TOOL
         from src.tools.statutory_retriever import STATUTORY_RETRIEVER_TOOL
         from src.tools.validity_checker import VALIDITY_CHECKER_TOOL

@@ -68,6 +68,10 @@ class ParsedDocument:
     articles: list[ParsedArticle] = field(default_factory=list)
 
 
+# Alias for backward compatibility / semantic naming
+HTMLParsed = ParsedDocument
+
+
 @dataclass
 class LegalCrossReference:
     """Represents a directional relationship between legal entities."""
@@ -733,7 +737,9 @@ class LegalIngestionPipeline:
                     for ref in cross_refs
                 ],
             }
-            export_file.write_text(json.dumps(current_data, ensure_ascii=False, indent=2), encoding="utf-8")
+            export_file.write_text(
+                json.dumps(current_data, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
             return
 
         self.neo4j_client.init_schema()
@@ -806,7 +812,9 @@ class LegalIngestionPipeline:
                 except Exception:
                     existing_chunks = []
             existing_chunks.extend(chunks)
-            export_file.write_text(json.dumps(existing_chunks, ensure_ascii=False, indent=2), encoding="utf-8")
+            export_file.write_text(
+                json.dumps(existing_chunks, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
             return
 
         self.qdrant_manager.init_collection(
