@@ -13,11 +13,21 @@ This benchmark directly compares three architectural paradigms as specified in t
   2. Monolithic Autonomous Agent (Single Giant Context Window / ReAct Loop):
      - Model-directed control flow in a single context; suffers from context pollution, compounding error (P = p^n),
        and lacks state persistence (crash = complete loss of progress).
-  3. Lead/Subagent Orchestration (Anthropic 2025) + LangGraph Checkpointing (Durable Execution):
+  3. Lead/Subagent Orchestration (Anthropic 2025) + state re-routing (Google ADK):
      - Hierarchical decomposition with isolated subagent contexts;
      - Quantifies the 3x-8x token cost multiplier and latency trade-off;
      - Demonstrates durable failure recovery: when a revoked decree is caught, state is rolled back to a saved
        checkpoint and re-routed without re-executing completed subgoals.
+
+This is an ILLUSTRATIVE MODEL, not a measurement.
+No LLM is called and no tokenizer is used: the token counts below are analytical
+constants taken from the pattern definitions, and the accuracy figures are qualitative
+statements about each paradigm. Treat this as a teaching aid for the three design
+patterns, not as experimental evidence. Measured numbers for the G4 system live in
+``data/benchmarks/benchmark_results.json`` (produced by the evaluation suite).
+
+The G4 architecture is implemented on **Google ADK**; the orchestrator/worker split and
+its state handling are described in ``src/agents/orchestrator.py``.
 """
 
 import sys
@@ -178,15 +188,15 @@ def run_pattern_monolithic_agent(query: str) -> ExecutionMetrics:
 
 # =====================================================================
 # PATTERN 3: LEAD/SUBAGENT ORCHESTRATOR + LANGGRAPH CHECKPOINTING (G4)
-# Anthropic 2025: Lead/Subagent split + LangGraph: Durable Execution & State Graphs
+# Anthropic 2025: Lead/Subagent split + shared state schema (Google ADK)
 # =====================================================================
 def run_pattern_orchestrator_checkpointed(query: str) -> ExecutionMetrics:
-    print(f"\n{BOLD}{GREEN}=== [PATTERN 3] LEAD/SUBAGENT ORCHESTRATOR WITH DURABLE CHECKPOINTING (G4) ==={RESET}")
-    print(f"  {DIM}Architecture: Orchestrator-Worker Split (Anthropic 2025) + LangGraph StateGraph & Checkpointer{RESET}")
+    print(f"\n{BOLD}{GREEN}=== [PATTERN 3] ORCHESTRATOR-WORKER SPLIT WITH STATE RE-ROUTING (G4 / Google ADK) ==={RESET}")
+    print(f"  {DIM}Architecture: Orchestrator-Worker split (Anthropic 2025) + shared ADK state schema{RESET}")
     start = time.time()
     m = ExecutionMetrics(
-        pattern_name="3. Orchestrator-Workers + LangGraph",
-        paradigm="Orchestrator-Workers + StateGraph"
+        pattern_name="3. Orchestrator-Workers (ADK)",
+        paradigm="Orchestrator-Workers + shared state"
     )
 
     # 1. Lead Agent (Orchestrator Node): Planning & Decomposition
@@ -199,7 +209,7 @@ def run_pattern_orchestrator_checkpointed(query: str) -> ExecutionMetrics:
 
     # Checkpoint 1: Save state after planning
     chk_1 = CheckpointState("chk_plan_ready", time.time(), ["PlanCreated"], {}, {"entity": "FDI"})
-    print(f"    {MAGENTA}💾 [LangGraph Checkpoint Saved: 'chk_plan_ready']{RESET} State persisted to SQLite.")
+    print(f"    {MAGENTA}[State snapshot: 'state after planning']{RESET} (illustrative - in-memory only)")
 
     # 2. Subagent 1: LawGraph Retrieval Worker (Context Isolation)
     print(f"\n  {BLUE}[Node 2: Subagent 'LawGraph Worker' (Isolated Clean Context)]{RESET}")
@@ -212,7 +222,7 @@ def run_pattern_orchestrator_checkpointed(query: str) -> ExecutionMetrics:
 
     # Checkpoint 2: Save state after retrieval
     chk_2 = CheckpointState("chk_retrieval_done", time.time(), ["PlanCreated", "CandidateRetrieved"], {"candidate": retrieved_candidate}, {})
-    print(f"    {MAGENTA}💾 [LangGraph Checkpoint Saved: 'chk_retrieval_done']{RESET}")
+    print(f"    {MAGENTA}[State snapshot: 'candidate retrieved']{RESET} (illustrative - in-memory only)")
 
     # 3. Subagent 2: Claim Auditor / Ground-Truth Oracle Worker
     print(f"\n  {BLUE}[Node 3: Subagent 'Claim Auditor' - External Oracle Verification]{RESET}")
@@ -226,9 +236,9 @@ def run_pattern_orchestrator_checkpointed(query: str) -> ExecutionMetrics:
         print(f"    {RED}✖ STATUTORY FAILURE DETECTED:{RESET} {retrieved_candidate} was {oracle_res['status']}!")
         print(f"    -> Replacement statute indicated: {oracle_res['revoked_by']}")
         
-        # 4. Durable Recovery via LangGraph StateGraph Re-route Edge
-        print(f"\n  {GREEN}[LangGraph Durable Execution: State Recovery Loop]{RESET}")
-        print(f"    {MAGENTA}↺ Restoring state from Checkpoint 'chk_plan_ready'...{RESET} (Subgoal B remains untouched!)")
+        # 4. Recovery via orchestrator re-route edge
+        print(f"\n  {GREEN}[Orchestrator State Recovery Loop]{RESET}")
+        print(f"    {MAGENTA}-> Restoring shared state from snapshot 'state after planning'...{RESET} (Subgoal B remains untouched!)")
         m.checkpoint_restores += 1
         
         # Re-route to successor Decree 52/2024
@@ -252,15 +262,15 @@ def run_pattern_orchestrator_checkpointed(query: str) -> ExecutionMetrics:
     m.subagent_calls += 1
 
     # Final Checkpoint
-    print(f"    {MAGENTA}💾 [LangGraph Checkpoint Saved: 'chk_final_dossier']{RESET} Audit trace completed.")
+    print(f"    {MAGENTA}[State snapshot: 'final dossier']{RESET} Trace complete (illustrative - in-memory only).")
 
     m.wall_clock_ms = (time.time() - start) * 1000
     m.grounding_accuracy = f"{GREEN}100% (Strictly Decree 52/2024){RESET}"
-    m.failure_recovery = "Durable Checkpointing (LangGraph)"
+    m.failure_recovery = "State re-route from snapshot (ADK orchestrator)"
     m.status = f"{GREEN}OPTIMAL (Grounded & Fault-Tolerant){RESET}"
 
     print(f"  {GREEN}✔ Outcome:{RESET} 100% legally grounded compliance dossier delivered. Revocation handled cleanly.")
-    print(f"  {DIM}  Analysis: Consumed 2,410 tokens (~3.2x vs naive workflow), exactly matching Anthropic's 2025 multi-agent cost ratio.{RESET}")
+    print(f"  {DIM}  Analysis: modelled at {m.total_tokens:,} tokens (~3.2x vs naive workflow), consistent with Anthropic's 2025 multi-agent cost ratio. This is an estimate, not a measurement.{RESET}")
     return m
 
 
@@ -281,6 +291,9 @@ def main():
     print(f"\n\n{BOLD}{'='*86}{RESET}")
     print(f"{BOLD}{'TRACE WALKTHROUGH COMPARISON: WORKFLOWS VS. MONOLITHIC AGENT VS. ORCHESTRATOR':^86}{RESET}")
     print(f"{BOLD}{'='*86}{RESET}")
+    print(f"{YELLOW}NOTE: token counts are analytical constants and accuracy figures are qualitative.{RESET}")
+    print(f"{YELLOW}      This is a design-pattern illustration, not an experimental measurement.        {RESET}")
+    print(f"{BOLD}{'='*86}{RESET}")
     print(f"{'Trace Metric (Case Demo)':<24} | {'1. Deterministic Workflow':<23} | {'2. Monolithic Agent':<23} | {'3. Orchestrator-Workers (G4)':<26}")
     print(f"{'-'*24}-+-{'-'*23}-+-{'-'*23}-+-{'-'*26}")
     print(f"{'Control Flow':<24} | {'Fixed Code Path':<23} | {'Model-Directed (1 Loop)':<23} | {'Hierarchical Lead/Subagents':<26}")
@@ -288,15 +301,15 @@ def main():
     print(f"{'Execution Steps / Turns':<24} | {str(m1.turns) + ' steps':<23} | {str(m2.turns) + ' turns':<23} | {str(m3.turns) + ' node transitions':<26}")
     print(f"{'Context Hygiene':<24} | {'Minimal / Rigid':<23} | {RED+'Diluted (Prompt Bloat)'+RESET:<32} | {GREEN+'Isolated Subagent Contexts'+RESET:<35}")
     print(f"{'Compounding Error (P=p^n)':<24} | {'Zero self-correction':<23} | {RED+'High Risk (Unbounded)'+RESET:<32} | {GREEN+'Bounded by State Schema'+RESET:<35}")
-    print(f"{'Failure Recovery':<24} | {'None (Crash/Output bad)':<23} | {'Restarts from turn 0':<23} | {GREEN+'Durable Checkpoint Resume'+RESET:<35}")
+    print(f"{'Failure Recovery':<24} | {'None (Crash/Output bad)':<23} | {'Restarts from turn 0':<23} | {GREEN+'State re-route from snapshot'+RESET:<35}")
     print(f"{'Regulatory Accuracy':<24} | {RED+m1.grounding_accuracy+RESET:<32} | {YELLOW+m2.grounding_accuracy+RESET:<32} | {GREEN+m3.grounding_accuracy+RESET:<35}")
     print(f"{BOLD}{'='*86}{RESET}")
 
     print(f"\n{BOLD}Key Takeaways for Seminar S1-7 Defense:{RESET}")
     print(f"1. {BOLD}Why Anthropic recommends starting simple:{RESET} Workflows (Pattern 1) are deterministic, ultra-fast, and cost 1/3 to 1/10 of multi-agent systems.")
     print(f"2. {BOLD}When to move to Orchestrator-Workers:{RESET} When subgoals require distinct context scopes and external ground-truth validation (e.g. legal compliance).")
-    print(f"3. {BOLD}The Lead/Subagent Cost Reality (Anthropic 2025):{RESET} Lead/Subagent split adds 3x-8x token overhead ({m3.total_tokens} vs {m1.total_tokens} tokens), but delivers context isolation.")
-    print(f"4. {BOLD}Why G4 chose LangGraph Checkpointing:{RESET} Durable execution prevents full pipeline restarts upon encountering revoked statutes, rolling back state to a verified checkpoint.\n")
+    print(f"3. {BOLD}The Lead/Subagent Cost Reality (Anthropic 2025):{RESET} Lead/Subagent split adds 3x-8x token overhead ({m3.total_tokens} vs {m1.total_tokens} modelled tokens), but delivers context isolation.")
+    print(f"4. {BOLD}Why G4 uses an orchestrator-worker split on Google ADK:{RESET} Bounded state schema plus targeted re-routing means a revoked statute is re-retrieved without restarting the whole pipeline.\n")
 
 if __name__ == "__main__":
     main()

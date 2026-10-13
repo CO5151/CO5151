@@ -2,7 +2,9 @@
 
 Executes comparative benchmarking of all retrieval baselines against
 the 100 question-answer pairs in data/benchmarks/sbv_testset_tvpl.json.
-Generates metrics matching the SBV-LawGraph paper (ACIIDS 2026).
+
+Ground truth is used **only for scoring**. Baseline models receive the query and the
+retrieval corpus, never the answer key - see :mod:`src.evaluation.baselines`.
 """
 
 from __future__ import annotations
@@ -19,6 +21,7 @@ from src.evaluation.baselines import (
     ReActBaseline,
     SBVLawGraphBaseline,
 )
+from src.evaluation.corpus import LegalCorpus
 from src.evaluation.metrics import (
     MetricSummary,
     f1_at_k,
@@ -63,11 +66,16 @@ class SBVLawGraphEvaluator:
         self,
         dataset_path: str = "data/benchmarks/sbv_testset_tvpl.json",
         pricing_provider: str = "deepseek_v3",
+        corpus: LegalCorpus | None = None,
     ) -> None:
         self.dataset_path = Path(dataset_path)
         self.pricing_provider = pricing_provider
         self.pricing = self.PRICING_TABLE.get(pricing_provider, self.PRICING_TABLE["deepseek_v3"])
         self.dataset: list[dict[str, Any]] = self._load_dataset()
+        # Retrieval corpus assembled from locally ingested artifacts. Empty when no
+        # ingestion output is present, in which case scores are reported as zero
+        # rather than fabricated.
+        self.corpus: LegalCorpus = corpus or LegalCorpus.from_processed_artifacts()
 
     def _load_dataset(self) -> list[dict[str, Any]]:
         """Loads and parses benchmark dataset."""
@@ -113,7 +121,9 @@ class SBVLawGraphEvaluator:
             query = item.get("question", "")
             ground_truth = item.get("relevant_articles", [])
 
-            pred = model.predict(query, ground_truth=ground_truth)
+            # Ground truth is deliberately withheld from the model; it is used only
+            # below, for scoring.
+            pred = model.predict(query, self.corpus)
             retrieved = pred.retrieved_articles
 
             # Calculate individual metrics
@@ -185,10 +195,23 @@ class SBVLawGraphEvaluator:
             summary = self.evaluate_model(m, limit=limit)
             results[m.name] = summary
 
-        # Persist results
+        # Persist results with provenance metadata so that partial-corpus runs can
+        # never be mistaken for full-corpus experimental results.
         out_file = Path(save_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
-        serializable = {k: v.to_dict() for k, v in results.items()}
+        serializable: dict[str, Any] = {k: v.to_dict() for k, v in results.items()}
+        serializable["_metadata"] = {
+            "method": "measured",
+            "corpus_chunks": len(self.corpus.chunks),
+            "corpus_documents": len({c.doc_id for c in self.corpus.chunks}),
+            "questions_evaluated": len(self.dataset[:limit] if limit else self.dataset),
+            "pricing_provider": self.pricing_provider,
+            "latency_note": (
+                "Latency covers retrieval + Claim Auditor verification only. "
+                "End-to-end LLM generation latency is not measured in this run."
+            ),
+            "token_note": "Token counts are estimated from context length, not tokenizer output.",
+        }
         with open(out_file, "w", encoding="utf-8") as f:
             json.dump(serializable, f, indent=2, ensure_ascii=False)
         logger.info(f"Saved benchmark results to {out_file}")

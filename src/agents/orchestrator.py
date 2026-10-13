@@ -18,6 +18,7 @@ from src.agents.claim_auditor import ClaimAuditorAgent
 from src.agents.drafter import DrafterAgent
 from src.agents.lawgraph import LawGraphAgent
 from src.core.logger import logger
+from src.core.statute_status import is_active_status
 from src.memory.sqlite_manager import SQLiteMemoryManager
 from src.memory.state_models import (
     AuditHistoryRecord,
@@ -152,7 +153,9 @@ class LegalOrchestrator(ADKAgent):
         state.current_step = 3
 
         # 4. Error recovery / Re-routing loop (if revoked documents are found)
-        active_clauses = [c for c in retrieved if c.get("status") == "active"]
+        active_clauses = [
+            c for c in retrieved if is_active_status(c.get("status"), c.get("revoked_by"))
+        ]
         if not audit_report.is_fully_verified and state.retry_count < self.max_retries:
             logger.warning(
                 "LegalOrchestrator: Revoked document detected! Triggering Re-route edge..."

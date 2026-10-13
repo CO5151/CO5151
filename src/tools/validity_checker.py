@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.agents.base import ToolDefinition
+from src.core.statute_status import is_active_status
 
 
 def check_statute_validity(doc_id: str) -> dict[str, Any]:
@@ -38,7 +39,7 @@ def check_statute_validity(doc_id: str) -> dict[str, Any]:
         "doc_id": doc_id,
         "title": doc_info.get("title"),
         "status": status,
-        "is_valid": status == "active",
+        "is_valid": is_active_status(status, revoked_by),
         "effective_date": doc_info.get("effective_date"),
         "revoked_by": revoked_by,
         "revoked_date": doc_info.get("revoked_date"),

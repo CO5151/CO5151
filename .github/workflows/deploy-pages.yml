@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "landing/**"
+      - "seminar-s1-7/demo/**"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
@@ -35,6 +36,11 @@ jobs:
       - name: Install dependencies
         working-directory: landing
         run: npm ci
+
+      - name: Copy seminar demo to landing public
+        run: |
+          mkdir -p landing/public/demo
+          cp -r seminar-s1-7/demo/web/* landing/public/demo/
 
       - name: Build static export
         working-directory: landing
