@@ -43,6 +43,25 @@ class AgentResult:
     trace_id: str = field(default_factory=lambda: str(uuid.uuid4()))
 
 
+def get_llm() -> Any | None:
+    """Returns a ChatOpenAI instance configured for DeepSeek or None."""
+    try:
+        from src.core.config import settings
+        from src.core.logger import logger
+        api_key = settings.DEEPSEEK_API_KEY or settings.OPENAI_API_KEY
+        if api_key and not api_key.startswith("paste_") and not api_key.startswith("sk-local-dummy"):
+            from langchain_openai import ChatOpenAI
+            return ChatOpenAI(
+                model=settings.DEEPSEEK_MODEL or "deepseek-chat",
+                api_key=api_key,
+                base_url=settings.DEEPSEEK_API_BASE or "https://api.deepseek.com",
+                temperature=0.1,
+            )
+    except Exception as e:
+        logger.warning(f"Could not initialize ChatOpenAI: {e}")
+    return None
+
+
 class ADKAgent:
     """Base class for Google ADK-compliant agents."""
 
@@ -58,6 +77,7 @@ class ADKAgent:
         self.role = role
         self.tools: list[ToolDefinition] = tools or []
         self._tool_map: dict[str, ToolDefinition] = {t.name: t for t in self.tools}
+        self.llm = get_llm()
 
     def register_tool(self, tool: ToolDefinition) -> None:
         """Registers a tool with the agent."""
