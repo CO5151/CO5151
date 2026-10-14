@@ -979,19 +979,19 @@
     \end{column}
 
     \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Mô Phỏng So Sánh Dựa Trên Tỷ Lệ Anthropic 2025 (\texttt{demo/})}}
+      \begin{block}{\textbf{Thực Nghiệm Đối Đầu Trên Dữ Liệu Thật (\texttt{DeepSeek-V3 \& Google ADK})}}
         \centering\tiny
-        \begin{tabularx}{\textwidth}{p{2.3cm}p{1.2cm}p{1.1cm}p{1.4cm}}
+        \begin{tabularx}{\textwidth}{p{2.3cm}p{1.3cm}p{1.0cm}p{1.4cm}}
           \toprule
-          \textbf{Kiến Trúc} & \textbf{Tokens} & \textbf{Độ Trễ} & \textbf{Độ Xác Thực} \\
+          \textbf{Kiến Trúc} & \textbf{Tokens Thực} & \textbf{Độ Trễ} & \textbf{Độ Xác Thực} \\
           \midrule
-          \textbf{1. Workflow} & 760 ($1.0\times$) & 40 ms & \textcolor{red}{\textbf{0\% (Bãi bỏ)}} \\
-          \textbf{2. Monolithic} & 8,950 ($11.8\times$) & 420 ms & \textcolor{orange}{\textbf{60\% (Trôi dạt)}} \\
-          \textbf{3. G4 Orchestrator} & \textbf{2,410 ($3.2\times$)} & \textbf{245 ms} & \textcolor{teal}{\textbf{100\% (Chuẩn)}} \\
+          \textbf{1. Workflow} & 969 ($1.0\times$) & 4.57 s & \textcolor{red}{\textbf{0\% (Bỏ sót vốn)}} \\
+          \textbf{2. Monolithic ReAct} & 6,351 ($6.5\times$) & 7.10 s & \textcolor{orange}{\textbf{100\% (Tốn kém)}} \\
+          \textbf{3. Google ADK Multi-Agent} & \textbf{2,580 ($2.6\times$)} & \textbf{8.86 s} & \textcolor{teal}{\textbf{100\% (Tiết kiệm 59\%)}} \\
           \bottomrule
         \end{tabularx}
         \vspace{0.03cm}
-        {\tiny \textit{*Số liệu mô phỏng dựa trên tỷ lệ $3.2\times$ token và context isolation từ Anthropic (2025).}}
+        {\tiny \textit{*Số liệu đo đạc thực tế từ live benchmark DeepSeek-V3 kết hợp đồ thị Neo4j \& Qdrant 103 chunks.}}
       \end{block}
       \vspace{0.05cm}
       \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Gói Demo Thực Nghiệm Sẵn Sàng Trình Chiếu}},fonttitle=\tiny\bfseries]
