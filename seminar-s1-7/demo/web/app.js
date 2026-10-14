@@ -14,7 +14,8 @@ const SCENARIOS = {
     
     // Pattern 1: Deterministic Workflow
     p1: {
-      tokens: 780,
+      tokens: 969,
+      latency: "4,570 ms",
       steps: [
         {
           name: "Bước 1: Router phân loại yêu cầu",
@@ -22,147 +23,125 @@ const SCENARIOS = {
           desc: "Nhận dạng từ khóa 'ví điện tử', 'FDI' -> Định tuyến sang nhóm thủ tục thanh toán không dùng tiền mặt.",
           action: "classify_intent(query)",
           obs: "category = 'fintech_payment_licensing'",
-          context: "[Prompt Router cố định]:\nClassify intent: 'Tư vấn điều kiện cấp phép ví điện tử cho nhà đầu tư ngoại năm 2024'\nOutput: fintech_payment_licensing"
+          context: "[Prompt Router (DeepSeek)]:\nClassify intent: 'Doanh nghiệp muốn xin cấp phép ví điện tử thì vốn tối thiểu cần bao nhiêu tiền...'\nOutput: fintech_payment_licensing (180 tokens)"
         },
         {
-          name: "Bước 2: Truy vấn cơ sở dữ liệu tĩnh",
-          tokens: 330,
-          desc: "Lấy văn bản khớp cứng trong bảng tra cứu (chọn văn bản đầu tiên tìm thấy: NĐ 101/2012/NĐ-CP).",
-          action: "db_lookup('fintech_payment_licensing')",
-          obs: "matched_document = '101/2012/ND-CP' (Điều 15: Điều kiện cấp phép)",
-          context: "[Prompt Retriever]:\nQuery: fintech_payment_licensing\nResult: 101/2012/ND-CP - Nghị định về thanh toán không dùng tiền mặt"
+          name: "Bước 2: Vector Search 1-Shot (Không có vòng lặp)",
+          tokens: 340,
+          desc: "Tìm kiếm ngữ nghĩa 1 lần: Chỉ bốc trúng Điều 18 Thông tư 40/2024/TT-NHNN (hồ sơ mở ví), trượt mất Điều 22 NĐ 52/2024.",
+          action: "dense_hybrid_search(query, top_k=2)",
+          obs: "matched_document = '40/2024/TT-NHNN:Article_18' (Quy định về hồ sơ, thỏa thuận mở ví điện tử)",
+          context: "[Prompt Retriever]:\nQuery: 'cấp phép ví điện tử vốn tối thiểu'\nResult: [40/2024/TT-NHNN] Điều 18: Hồ sơ mở ví điện tử..."
         },
         {
-          name: "Bước 3: Định dạng kết quả tư vấn",
-          tokens: 270,
+          name: "Bước 3: Tổng hợp kết quả (Thất bại trước bẫy pháp lý)",
+          tokens: 449,
           status: "failed",
-          desc: "Soạn thảo văn bản viện dẫn trực tiếp NĐ 101/2012 mà không qua bước rà soát hiệu lực.",
-          action: "format_response(matched_document)",
-          obs: "THẤT BẠI: Trích dẫn văn bản đã hết hiệu lực từ 01/07/2024. Hồ sơ nộp lên NHNN sẽ bị từ chối.",
-          context: "[Prompt Formatter]:\nInput: 101/2012/ND-CP\nOutput: 'Hồ sơ xin cấp phép áp dụng theo Nghị định 101/2012/NĐ-CP...' (SAI LUẬT)"
+          desc: "LLM sinh câu trả lời dựa trên context thiếu sót, không có cơ chế rà soát lại để tìm văn bản quy định về vốn.",
+          action: "synthesize_response(matched_document)",
+          obs: "THẤT BẠI: Kết luận 'Không có quy định nào đề cập đến vốn điều lệ tối thiểu' do thiếu Điều 22 NĐ 52/2024.",
+          context: "[DeepSeek Output (Live Run)]:\n'Dựa trên căn cứ pháp lý cung cấp (Thông tư 40/2024/TT-NHNN, Điều 18), không có quy định nào đề cập đến vốn điều lệ tối thiểu... Không thể trả lời doanh nghiệp cần bao nhiêu vốn.' (SAI NGHIỆP VỤ)"
         }
       ],
-      grounding: "0% (Dính luật hết hiệu lực)",
+      grounding: "0% (Bỏ sót quy định vốn tối thiểu)",
       outcomeClass: "result-danger"
     },
 
     // Pattern 2: Monolithic ReAct Agent
     p2: {
-      tokens: 8950,
+      tokens: 6351,
+      latency: "7,096 ms",
       steps: [
         {
-          name: "Turn 1: Tool search_statute()",
-          tokens: 950,
-          desc: "LLM tự suy luận và gọi tool tìm kiếm văn bản pháp luật về cấp phép ví điện tử.",
-          thought: "Người dùng cần biết điều kiện cấp phép ví điện tử cho nhà đầu tư nước ngoài. Tôi cần tìm văn bản quy định cấp phép.",
-          action: "search_statute(query='quy định cấp phép dịch vụ ví điện tử')",
-          obs: "Kết quả: Nghị định 101/2012/NĐ-CP (Điều 15 quy định điều kiện cấp phép cung ứng dịch vụ trung gian thanh toán).",
-          context: "[System Prompt: 650 tokens (Luật, hướng dẫn, mô tả tools)]\n+ [User Query: 'Tư vấn điều kiện cấp phép ví điện tử cho nhà đầu tư ngoại năm 2024']\n--> Tổng Context Turn 1: 950 tokens"
+          name: "Turn 1: Tool search_statutes()",
+          tokens: 1150,
+          desc: "DeepSeek tự gọi công cụ tra cứu ngữ nghĩa vector dense embedding trong 103 chunks.",
+          thought: "Người dùng cần biết mức vốn điều lệ tối thiểu và căn cứ pháp lý hiện hành để xin cấp phép ví điện tử. Tôi cần tra cứu quy định cấp phép.",
+          action: "search_statutes(query='vốn điều lệ tối thiểu cấp phép cung ứng dịch vụ ví điện tử')",
+          obs: "Tìm thấy: Nghị định 52/2024/NĐ-CP (Điều 22: Vốn tối thiểu 50 tỷ đồng) và Thông tư 40/2024/TT-NHNN (Điều 27).",
+          context: "[System Prompt: 650 tokens (Luật, tools, hướng dẫn)]\n+ [User Query]\n--> Tổng Context Turn 1: 1.150 tokens"
         },
         {
-          name: "Turn 2: Tool verify_validity()",
-          tokens: 1750,
-          desc: "LLM phát hiện cần kiểm tra hiệu lực NĐ 101/2012; context bắt đầu dồn lịch sử Turn 1.",
-          thought: "Tôi cần kiểm tra xem Nghị định 101/2012/NĐ-CP còn hiệu lực thi hành hay không trước khi tư vấn.",
-          action: "verify_validity(doc_id='101/2012/ND-CP')",
-          obs: "CẢNH BÁO: Nghị định 101/2012/NĐ-CP ĐÃ BÃI BỎ từ 01/07/2024. Văn bản thay thế: Nghị định 52/2024/NĐ-CP.",
-          context: "[System Prompt + User Query]\n+ [Turn 1 Thought + Action: search_statute + Observation: 101/2012]\n--> Toàn bộ lịch sử Turn 1 được nhồi vào prompt. Tổng Context Turn 2: 1.750 tokens"
+          name: "Turn 2: Tool verify_statute_validity() [Đồ thị Neo4j]",
+          tokens: 2480,
+          desc: "DeepSeek nhận diện cần kiểm tra hiệu lực NĐ 52/2024 và TT 40/2024 qua đồ thị Neo4j; context bắt đầu dồn lịch sử Turn 1.",
+          thought: "Đã có NĐ 52/2024 và TT 40/2024. Để tránh tư vấn sai luật, tôi cần kiểm tra tính hiệu lực pháp lý của hai văn bản này qua đồ thị quan hệ Neo4j.",
+          action: "verify_statute_validity('52/2024/ND-CP') | verify_statute_validity('40/2024/TT-NHNN')",
+          obs: "Neo4j Graph xác nhận: Cả 2 văn bản đều IN_FORCE (Còn hiệu lực). NĐ 52/2024 bãi bỏ/thay thế NĐ 101/2012/NĐ-CP.",
+          context: "[System Prompt + User Query]\n+ [Turn 1 Thought + Action: search_statutes + Observation: 52/2024 & 40/2024]\n--> Toàn bộ lịch sử Turn 1 được nhồi vào prompt. Context Turn 2: 2.480 tokens."
         },
         {
-          name: "Turn 3: Tool search_statute() [Context dài]",
-          tokens: 2650,
-          desc: "LLM tra cứu NĐ 52/2024 và điều kiện FDI. Context dài > 2.600 tokens làm tăng độ trễ.",
-          thought: "NĐ 101 đã hết hiệu lực và được thay thế bởi NĐ 52/2024. Tôi cần tra cứu vốn điều lệ tối thiểu và tỷ lệ sở hữu nước ngoài trong NĐ 52/2024.",
-          action: "search_statute(query='Nghị định 52/2024 vốn điều lệ tối thiểu và tỷ lệ sở hữu nước ngoài')",
-          obs: "NĐ 52/2024/NĐ-CP: Điều 22 quy định vốn điều lệ tối thiểu 50 tỷ VNĐ; Điều 23 trần sở hữu nước ngoài tối đa 49%.",
-          context: "[System Prompt + User Query]\n+ [Lịch sử Turn 1 + Obs 1] + [Lịch sử Turn 2 + Obs 2]\n--> Context phình to 2.650 tokens. Chú ý của LLM bị phân tán."
-        },
-        {
-          name: "Turn 4: Tổng hợp kết quả [Context dồn dập]",
-          tokens: 3600,
-          status: "failed",
-          desc: "Context dồn tích 3 turns trước (>3.600 tokens). LLM nhầm lẫn giữa điều kiện NĐ 101 và NĐ 52.",
-          thought: "Đã có đủ dữ liệu. Tôi sẽ tổng hợp kết quả tư vấn cho Global PayTech Asia Ltd.",
+          name: "Turn 3: Tổng hợp kết luận [Context dồn dập 6.351 tokens]",
+          tokens: 2721,
+          desc: "Toàn bộ hội thoại và kết quả tool dồn tích vào prompt (>2.700 tokens cho 1 lượt). Đưa ra kết luận đúng nhưng tốn chi phí gấp 6.5x.",
+          thought: "Đã có đầy đủ căn cứ từ Qdrant và Neo4j. Tôi sẽ tổng hợp kết luận tư vấn pháp lý hoàn chỉnh.",
           action: "finish_response()",
-          obs: "KẾT QUẢ BỊ TRỘN LẪN: Nhận diện đúng NĐ 52/2024 nhưng lẫn lộn quy trình cấp phép cũ của NĐ 101 vào văn bản kết luận do prompt quá dài.",
-          context: "[Toàn bộ hội thoại tích lũy qua 4 turns: > 3.600 tokens]\n--> Chi phí tích lũy 4 turns: 950 + 1750 + 2650 + 3600 = 8.950 tokens (Gấp 11.8 lần)"
+          obs: "KẾT QUẢ ĐẠT: Vốn tối thiểu 50 tỷ VNĐ theo Điều 22 NĐ 52/2024. Cảnh báo NĐ 101/2012 cũ đã bị bãi bỏ.",
+          context: "[Toàn bộ hội thoại tích lũy qua các turns: > 2.700 tokens]\n--> Tổng token thực tế đo đạc: 1.150 + 2.480 + 2.721 = 6.351 tokens (Gấp 6.5 lần)"
         }
       ],
-      grounding: "60% (Lẫn lộn luật cũ & mới do prompt dài)",
+      grounding: "100% (Tìm đúng luật nhưng tốn 6.351 tokens)",
       outcomeClass: "result-warning"
     },
 
-    // Pattern 3: Orchestrator-Workers (Google ADK)
+    // Pattern 3: Orchestrator-Workers (Google ADK & LangGraph)
     p3: {
-      tokens: 2410,
+      tokens: 2580,
+      latency: "8,856 ms",
       steps: [
         {
           name: "Bước 1: Lead Orchestrator phân rã Subgoals",
-          tokens: 450,
-          desc: "Phân tách truy vấn phức tạp thành 2 nhiệm vụ con độc lập: Subgoal A (Cấp phép) & Subgoal B (Vốn FDI).",
-          thought: "Phân rã thành: Subgoal A = 'Điều kiện cấp phép ví điện tử'; Subgoal B = 'Kiểm tra trần sở hữu vốn ngoại 45% so với quy định'.",
+          tokens: 180,
+          desc: "Orchestrator phân rã câu hỏi thành 2 subgoals độc lập (Vốn tối thiểu & Điều kiện FDI) mà không mang vác context nặng.",
+          thought: "Phân rã thành: Subgoal 1 = 'Điều kiện vốn pháp định tối thiểu 50 tỷ đồng'; Subgoal 2 = 'Thủ tục và điều kiện FDI theo NĐ 52/2024'.",
           action: "plan_subgoals(query)",
-          obs: "Đã khởi tạo kế hoạch: [Subgoal A: PENDING, Subgoal B: PENDING]",
+          obs: "Đã khởi tạo kế hoạch: [Subgoal 1: PENDING, Subgoal 2: PENDING]",
           memory: [
-            { type: "state", text: "State Schema: LegalAgentState (session_id: sess_01)" },
-            { type: "plan", text: "Subgoal A: Cấp phép ví điện tử (PENDING)" },
-            { type: "plan", text: "Subgoal B: Trần sở hữu ngoại FDI 45% (PENDING)" }
+            { type: "state", text: "State Schema: LegalAgentState (session_id: sess_d994bf5e)" },
+            { type: "plan", text: "Subgoal 1: Vốn tối thiểu 50 tỷ đồng (PENDING)" },
+            { type: "plan", text: "Subgoal 2: Điều kiện nhà đầu tư FDI (PENDING)" }
           ],
-          context: "[Lead Prompt chuyên biệt]: Nhận diện và bẻ nhỏ subgoals. Context gọn nhẹ: 450 tokens."
+          context: "[Lead Prompt (Google ADK)]: Chỉ phân tích và sinh subgoals. Context gọn nhẹ: 180 tokens."
         },
         {
-          name: "Bước 2: Workers tra cứu độc lập (Context sạch)",
-          tokens: 730,
-          desc: "Worker 1 & Worker 2 chạy với context cách ly sạch (<400 tokens/worker), không dính lịch sử thừa.",
-          thought: "Worker 1 tra cứu Subgoal A -> NĐ 101/2012. Worker 2 tra cứu Subgoal B -> Điều 23 trần ngoại 49%.",
-          action: "Worker1: search(subgoal_a) | Worker2: search(subgoal_b)",
-          obs: "Worker 1 trả về NĐ 101/2012. Worker 2 xác nhận FDI 45% <= trần 49% (ĐẠT).",
+          name: "Bước 2: LawGraph Worker tra cứu độc lập",
+          tokens: 0,
+          desc: "Worker duyệt đồ thị quan hệ Neo4j và Qdrant dense chunks bằng thuật toán graph traversal (0 token LLM).",
+          thought: "Tra cứu đồ thị quan hệ cho 2 subgoals, phát hiện NĐ 101/2012 có liên kết REVOKED_BY sang NĐ 52/2024.",
+          action: "LawGraphAgent.retrieve_provisions(subgoals)",
+          obs: "Thu thập 4 điều khoản (Điều 22 & 23 NĐ 52/2024, Điều 18 & 23 TT 40/2024).",
           memory: [
-            { type: "keep", text: "● Subgoal B: FDI 45% ĐẠT (Trần 49%) - LƯU VÀO STATE MEMORY" },
-            { type: "pending", text: "○ Subgoal A: Lấy văn bản NĐ 101/2012 - CHỜ KIỂM ĐỊNH" }
+            { type: "keep", text: "● Đồ thị Neo4j: Cung cấp Điều 22 & 23 NĐ 52/2024 (Vốn 50 tỷ, FDI trần 49%)" },
+            { type: "pending", text: "○ Chuyển giao danh sách điều khoản sang Claim Auditor để chốt chặn hiệu lực" }
           ],
-          context: "[Worker 1 Context: 380 tokens] | [Worker 2 Context: 350 tokens]\n--> Context mỗi worker hoàn toàn sạch, không bị tích lũy prompt."
+          context: "[Code Traversal thuần túy]: Chạy ngầm trong worker, 0 token LLM tiêu hao."
         },
         {
-          name: "Bước 3: ClaimAuditor kiểm định qua VBPL",
-          tokens: 310,
-          status: "failed",
-          desc: "Auditor đối soát hiệu lực độc lập; phát hiện NĐ 101/2012 đã bị thay thế bởi NĐ 52/2024.",
-          action: "verify_validity('101/2012/ND-CP')",
-          obs: "CẢNH BÁO: NĐ 101/2012 đã hết hiệu lực từ 01/07/2024; quan hệ kế thừa: revoked_by = '52/2024/ND-CP'.",
-          memory: [
-            { type: "keep", text: "● Subgoal B: ĐÃ HỢP LỆ (Không bị ảnh hưởng)" },
-            { type: "update", text: "⚠️ Subgoal A: NĐ 101/2012 HẾT HIỆU LỰC -> Cần điều hướng" }
-          ],
-          context: "[Auditor Context]: 310 tokens đối soát độc lập qua API cơ sở dữ liệu quốc gia VBPL."
-        },
-        {
-          name: "Bước 4: Điều hướng thay thế & Bảo toàn State Memory",
-          tokens: 620,
+          name: "Bước 3: Claim Auditor chốt chặn hiệu lực qua VBPL",
+          tokens: 0,
           status: "recovered",
-          desc: "Truy vết sang NĐ 52/2024 theo quan hệ 'revoked_by'. Chỉ cập nhật Subgoal A, Subgoal B giữ nguyên trong memory.",
-          thought: "Chỉ truy vấn lại văn bản thay thế 52/2024 cho Subgoal A. Subgoal B (FDI 45%) đã hợp lệ nên không chạy lại.",
-          action: "reroute_successor('52/2024/ND-CP', subgoal_a)",
-          obs: "Lấy NĐ 52/2024 Điều 22: Vốn tối thiểu 50 tỷ VNĐ (Doanh nghiệp 35 tỷ -> Thiếu 15 tỷ).",
+          desc: "Auditor đối soát hiệu lực độc lập qua cơ sở dữ liệu quốc gia VBPL và đồ thị bãi bỏ. Bắt buộc 100% căn cứ phải còn hiệu lực.",
+          action: "ClaimAuditorAgent.audit_provisions(clauses)",
+          obs: "XÁC THỰC 100%: NĐ 52/2024 và TT 40/2024 hợp lệ hoàn toàn; chặn đứng hoàn toàn NĐ 101/2012 cũ.",
           memory: [
-            { type: "keep", text: "● Subgoal B (FDI 45%): ĐƯỢC BẢO TOÀN TRONG STATE MEMORY (Tiết kiệm 100% chi phí chạy lại)" },
-            { type: "keep", text: "● Subgoal A: Đã cập nhật NĐ 52/2024 Điều 22 (Vốn 50 tỷ)" }
+            { type: "keep", text: "● Grounding Rate: 100.0% Grounded" },
+            { type: "update", text: "✅ Toàn bộ căn cứ pháp lý đã qua kiểm định hợp lệ (is_fully_verified = True)" }
           ],
-          context: "[Re-routing Prompt]: Chỉ điều phối lại Subgoal A. Giữ nguyên trạng thái Subgoal B."
+          context: "[Auditor Logic]: Kiểm tra logic Python đối chiếu DB, 0 token LLM tiêu hao."
         },
         {
-          name: "Bước 5: Drafter tổng hợp từ State Memory",
-          tokens: 650,
-          desc: "Drafter nhận các điều khoản sạch từ bộ nhớ trạng thái để soạn thảo báo cáo tuân thủ chính xác 100%.",
-          action: "draft_compliance_dossier(state_memory)",
-          obs: "HOÀN TẤT: Căn cứ NĐ 52/2024: Vốn điều lệ 35 tỷ thiếu 15 tỷ so với mức tối thiểu 50 tỷ; Tỷ lệ FDI 45% đạt chuẩn.",
+          name: "Bước 4: Compliance Drafter tổng hợp hồ sơ",
+          tokens: 2400,
+          desc: "Drafter chỉ nhận các điều khoản sạch đã được Auditor phê duyệt để soạn thảo bản tư vấn chuyên nghiệp kèm lộ trình.",
+          action: "DrafterAgent.synthesize_dossier(verified_clauses, audit_report)",
+          obs: "HOÀN TẤT: Căn cứ Điều 22 NĐ 52/2024: Vốn tối thiểu 50 tỷ VNĐ (Doanh nghiệp 35 tỷ -> Thiếu 15 tỷ); Tỷ lệ FDI 49% theo Điều 23; kèm 5 bước khuyến nghị thực thi.",
           memory: [
-            { type: "keep", text: "💾 Ghi nhận checkpoint hoàn tất vào SQLite (enterprise_compliance.db)" }
+            { type: "keep", text: "💾 Ghi nhận checkpoint hoàn tất vào SQLite (enterprise_compliance.db) - Session ID: sess_d994bf5e" }
           ],
-          context: "[Drafter Context]: Nhận dữ liệu đã qua xác thực từ State Memory. Tổng token toàn bộ: 2.410 tkn (3.2x)."
+          context: "[Drafter Prompt (Google ADK)]: Chỉ nhận điều khoản sạch còn hiệu lực. Tổng token toàn bộ: 2.580 tkn (Tiết kiệm 59.4% so với ReAct)."
         }
       ],
-      grounding: "100% (Đã kiểm định qua VBPL)",
+      grounding: "100% Grounded (Xác thực tuyệt đối qua VBPL & Neo4j)",
       outcomeClass: "result-success"
     }
   },

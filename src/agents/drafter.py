@@ -94,24 +94,25 @@ class DrafterAgent(ADKAgent):
             )
 
         llm_conclusion = ""
-        if getattr(self, "llm", None) and verified_clauses:
+        if verified_clauses:
             try:
-                from langchain_core.messages import HumanMessage, SystemMessage
+                from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
                 ctx = "\n".join([f"- {c.get('title')} {c.get('article')}: {c.get('content')}" for c in verified_clauses])
                 p_info = f"Doanh nghiệp: {profile.company_name}, Vốn hiện có: {profile.charter_capital:,.0f} VNĐ" if profile and profile.charter_capital else ""
+                drafter_adk = GoogleAgent(
+                    name="LegalDrafterWorker",
+                    model=get_default_model(),
+                    instruction="Bạn là chuyên gia tư vấn tuân thủ pháp luật doanh nghiệp Việt Nam. Hãy đưa ra kết luận và khuyến nghị thực thi chuẩn xác, chuyên nghiệp dựa trên các điều khoản đã được đối soát.",
+                )
                 prompt = (
-                    f"Bạn là Chuyên gia Pháp lý. Dựa trên câu hỏi tra cứu:\n'{query}'\n"
+                    f"Dựa trên câu hỏi tra cứu:\n'{query}'\n"
                     f"và các căn cứ pháp lý đã được thẩm định còn hiệu lực:\n{ctx}\n"
                     f"{p_info}\n"
                     "Hãy đưa ra phần KẾT LUẬN & KHUYẾN NGHỊ THỰC THI (ngắn gọn, chính xác số liệu, chỉ rõ doanh nghiệp cần làm gì)."
                 )
-                resp = self.llm.invoke([
-                    SystemMessage(content="Bạn là chuyên gia tư vấn tuân thủ pháp luật doanh nghiệp Việt Nam."),
-                    HumanMessage(content=prompt)
-                ])
-                llm_conclusion = resp.content.strip()
+                llm_conclusion = invoke_adk_agent(drafter_adk, prompt).strip()
             except Exception as e:
-                logger.warning("LLM drafting conclusion fallback: %s", e)
+                logger.warning("Google ADK Drafter conclusion failed: %s", e)
 
         conclusion_lines = [
             "-" * 78,

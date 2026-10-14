@@ -71,38 +71,37 @@ class LegalOrchestrator(ADKAgent):
 
     def plan_subgoals(self, query: str) -> tuple[list[str], list[str]]:
         """Decomposes user query into logical legal subgoals and search keywords using LLM."""
-        if getattr(self, "llm", None):
-            try:
-                import json
-                from langchain_core.messages import HumanMessage, SystemMessage
-                prompt = (
-                    f"Phân rã câu hỏi pháp lý sau thành 2 mục tiêu con (subgoals) và 3-5 từ khóa tra cứu chính xác:\n"
-                    f"Câu hỏi: {query}\n"
-                    f"Chỉ trả về đúng định dạng JSON:\n"
-                    f'{{"subgoals": ["Subgoal 1: ...", "Subgoal 2: ..."], "keywords": ["từ_khóa_1", "từ_khóa_2"]}}'
-                )
-                resp = self.llm.invoke([
-                    SystemMessage(content="Bạn là Legal Planning Agent. Chỉ xuất JSON thuần túy, không dùng markdown hay giải thích."),
-                    HumanMessage(content=prompt)
-                ])
-                raw = resp.content.strip()
-                if "```json" in raw:
-                    raw = raw.split("```json")[1].split("```")[0].strip()
-                elif "```" in raw:
-                    raw = raw.split("```")[1].split("```")[0].strip()
-                parsed = json.loads(raw)
-                subgoals = parsed.get("subgoals", [])
-                keywords = parsed.get("keywords", [])
-                # Augment with essential domain tokens from query to ensure robust retrieval
-                q_lower = query.lower()
-                if "ví điện tử" in q_lower or "thanh toán" in q_lower or "fintech" in q_lower:
-                    keywords.extend(["ví điện tử", "thanh toán không dùng tiền mặt", "điều kiện cung ứng", "52/2024/nd-cp", "40/2024/tt-nhnn", "nhà đầu tư nước ngoài"])
-                if "đèn đỏ" in q_lower or "giao thông" in q_lower:
-                    keywords.extend(["vượt đèn đỏ", "mô tô", "xe gắn máy", "100/2019/nd-cp", "168/2024/nd-cp"])
-                if subgoals and keywords:
-                    return subgoals, list(dict.fromkeys(keywords))
-            except Exception as e:
-                logger.warning("LLM subgoal planning failed, using rule-based fallback: %s", e)
+        try:
+            import json
+            from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
+            planner_agent = GoogleAgent(
+                name="LegalPlannerAgent",
+                model=get_default_model(),
+                instruction="Bạn là Legal Planning Agent. Phân tích câu hỏi pháp lý và chỉ trả về DUY NHẤT một khối JSON thuần túy (không kèm giải thích hay markdown code block) theo định dạng: {\"subgoals\": [\"...\", \"...\"], \"keywords\": [\"...\", \"...\"]}",
+            )
+            prompt = (
+                f"Phân rã câu hỏi pháp lý sau thành 2 mục tiêu con (subgoals) và 3-5 từ khóa tra cứu chính xác:\n"
+                f"Câu hỏi: {query}\n"
+                f'Định dạng JSON yêu cầu: {{"subgoals": ["Subgoal 1: ...", "Subgoal 2: ..."], "keywords": ["từ_khóa_1", "từ_khóa_2"]}}'
+            )
+            raw = invoke_adk_agent(planner_agent, prompt).strip()
+            if "```json" in raw:
+                raw = raw.split("```json")[1].split("```")[0].strip()
+            elif "```" in raw:
+                raw = raw.split("```")[1].split("```")[0].strip()
+            parsed = json.loads(raw)
+            subgoals = parsed.get("subgoals", [])
+            keywords = parsed.get("keywords", [])
+            # Augment with essential domain tokens from query to ensure robust retrieval
+            q_lower = query.lower()
+            if "ví điện tử" in q_lower or "thanh toán" in q_lower or "fintech" in q_lower:
+                keywords.extend(["ví điện tử", "thanh toán không dùng tiền mặt", "điều kiện cung ứng", "52/2024/nd-cp", "40/2024/tt-nhnn", "nhà đầu tư nước ngoài"])
+            if "đèn đỏ" in q_lower or "giao thông" in q_lower:
+                keywords.extend(["vượt đèn đỏ", "mô tô", "xe gắn máy", "100/2019/nd-cp", "168/2024/nd-cp"])
+            if subgoals and keywords:
+                return subgoals, list(dict.fromkeys(keywords))
+        except Exception as e:
+            logger.warning("Google ADK planning failed, using rule-based fallback: %s", e)
 
         # Fallback heuristic mapping
         q_lower = query.lower()
