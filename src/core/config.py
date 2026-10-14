@@ -85,6 +85,10 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     # LLM settings
+    DEEPSEEK_API_KEY: str | None = None
+    DEEPSEEK_API_BASE: str = "https://api.deepseek.com"
+    DEEPSEEK_MODEL: str = "deepseek-chat"
+
     GEMINI_API_KEY: str | None = None
     GOOGLE_CLOUD_PROJECT: str | None = None
     GOOGLE_CLOUD_LOCATION: str = "global"
