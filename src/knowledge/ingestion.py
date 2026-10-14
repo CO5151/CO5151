@@ -668,8 +668,16 @@ def generate_legal_chunks(
             context_header = f"[{doc.doc_type} {doc.doc_id} - {doc.title}] [Điều {article.article_number}: {article.title}]"
             full_chunk_text = f"{context_header} [Khoản {clause.clause_number}]: {clause.content}"
 
-            # If embedding model is not called yet, generate deterministic dummy vector for ingestion testing
-            vector = [0.0] * dummy_vector_dim if dummy_vector_dim else []
+            # Compute real dense embedding vector using Vietnamese bi-encoder model
+            try:
+                from sentence_transformers import SentenceTransformer
+                _global_embedder = getattr(generate_legal_chunks, "_embedder", None)
+                if _global_embedder is None:
+                    _global_embedder = SentenceTransformer("bkai-foundation-models/vietnamese-bi-encoder")
+                    generate_legal_chunks._embedder = _global_embedder
+                vector = [float(x) for x in _global_embedder.encode(full_chunk_text, normalize_embeddings=True)]
+            except Exception:
+                vector = [0.0] * (dummy_vector_dim or 768)
 
             chunks.append(
                 {
