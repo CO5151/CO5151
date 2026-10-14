@@ -128,11 +128,6 @@
           <svg id="p1Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
         </div>
 
-        <div class="card-explanation">
-          <div class="exp-title">Đặc tính kiến trúc:</div>
-          <div class="exp-text">Dữ liệu đi qua chuỗi prompt cứng. Không gọi tool động, không kiểm định hiệu lực văn bản, không thể tự sửa sai khi gặp luật bãi bỏ.</div>
-        </div>
-
         <div class="card-log" id="p1Logs"></div>
 
         <div class="card-footer">
@@ -174,11 +169,6 @@
           <svg id="p2Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
         </div>
 
-        <div class="card-explanation">
-          <div class="exp-title">Đặc tính kiến trúc:</div>
-          <div class="exp-text">Một LLM duy nhất tự gọi tools lặp đi lặp lại. Toàn bộ lịch sử và kết quả tool dồn tích vào prompt khiến <strong>Context Window phình to</strong>, gây nhiễu và tốn chi phí.</div>
-        </div>
-
         <div class="card-log" id="p2Logs"></div>
 
         <div class="card-footer">
@@ -218,11 +208,6 @@
             <span class="badge-tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">LEAD + WORKERS</span>
           </div>
           <svg id="p3Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
-        </div>
-
-        <div class="card-explanation">
-          <div class="exp-title">Đặc tính kiến trúc:</div>
-          <div class="exp-text">Lead phân rã truy vấn; mỗi Worker chạy trong <strong>context sạch độc lập (&lt;400 tokens)</strong>. ClaimAuditor đối soát VBPL; khi phát hiện văn bản bãi bỏ, chỉ điều hướng lại Subgoal lỗi, <strong>giữ nguyên kết quả hợp lệ trong State Memory</strong>.</div>
         </div>
 
         <div class="card-log" id="p3Logs"></div>
