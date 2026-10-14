@@ -96,6 +96,10 @@ const SCENARIOS = {
           thought: "Phân rã thành: Subgoal 1 = 'Điều kiện vốn pháp định tối thiểu 50 tỷ đồng'; Subgoal 2 = 'Thủ tục và điều kiện FDI theo NĐ 52/2024'.",
           action: "plan_subgoals(query)",
           obs: "Đã khởi tạo kế hoạch: [Subgoal 1: PENDING, Subgoal 2: PENDING]",
+          isolation: {
+            inScope: "Chỉ nhận User Query để phân rã 2 subgoals (180 tkn)",
+            blocked: "Cách ly 100%: Không thấy DB schema, không thấy vector chunks, không nhận thông tin nhạy cảm của doanh nghiệp."
+          },
           memory: [
             { type: "state", text: "State Schema: LegalAgentState (session_id: sess_d994bf5e)" },
             { type: "plan", text: "Subgoal 1: Vốn tối thiểu 50 tỷ đồng (PENDING)" },
@@ -110,6 +114,10 @@ const SCENARIOS = {
           thought: "Tra cứu đồ thị quan hệ cho 2 subgoals, phát hiện NĐ 101/2012 có liên kết REVOKED_BY sang NĐ 52/2024.",
           action: "LawGraphAgent.retrieve_provisions(subgoals)",
           obs: "Thu thập 4 điều khoản (Điều 22 & 23 NĐ 52/2024, Điều 18 & 23 TT 40/2024).",
+          isolation: {
+            inScope: "Từng Subgoal độc lập được gửi riêng cho worker truy vấn đồ thị Neo4j.",
+            blocked: "Không biết danh tính doanh nghiệp (FDI/Vốn 35 tỷ), không thấy Drafter, không thấy các workers khác."
+          },
           memory: [
             { type: "keep", text: "● Đồ thị Neo4j: Cung cấp Điều 22 & 23 NĐ 52/2024 (Vốn 50 tỷ, FDI trần 49%)" },
             { type: "pending", text: "○ Chuyển giao danh sách điều khoản sang Claim Auditor để chốt chặn hiệu lực" }
@@ -123,6 +131,10 @@ const SCENARIOS = {
           desc: "Auditor đối soát hiệu lực độc lập qua cơ sở dữ liệu quốc gia VBPL và đồ thị bãi bỏ. Bắt buộc 100% căn cứ phải còn hiệu lực.",
           action: "ClaimAuditorAgent.audit_provisions(clauses)",
           obs: "XÁC THỰC 100%: NĐ 52/2024 và TT 40/2024 hợp lệ hoàn toàn; chặn đứng hoàn toàn NĐ 101/2012 cũ.",
+          isolation: {
+            inScope: "Chỉ nhận danh sách Candidate Clauses (doc_id, ngày hiệu lực) để kiểm định khách quan.",
+            blocked: "Độc lập ngoại vi 100%: Không biết câu hỏi người dùng, không bị chi phối bởi mong muốn giảm nhẹ của doanh nghiệp."
+          },
           memory: [
             { type: "keep", text: "● Grounding Rate: 100.0% Grounded" },
             { type: "update", text: "✅ Toàn bộ căn cứ pháp lý đã qua kiểm định hợp lệ (is_fully_verified = True)" }
@@ -135,6 +147,10 @@ const SCENARIOS = {
           desc: "Drafter chỉ nhận các điều khoản sạch đã được Auditor phê duyệt để soạn thảo bản tư vấn chuyên nghiệp kèm lộ trình.",
           action: "DrafterAgent.synthesize_dossier(verified_clauses, audit_report)",
           obs: "HOÀN TẤT: Căn cứ Điều 22 NĐ 52/2024: Vốn tối thiểu 50 tỷ VNĐ (Doanh nghiệp 35 tỷ -> Thiếu 15 tỷ); Tỷ lệ FDI 49% theo Điều 23; kèm 5 bước khuyến nghị thực thi.",
+          isolation: {
+            inScope: "Chỉ nhận các điều khoản HỢP LỆ (Điều 22 & 23 NĐ 52/2024) + Hồ sơ doanh nghiệp để soạn thảo.",
+            blocked: "CÔ LẬP HOÀN TOÀN KHỎI VĂN BẢN BÃI BỎ: Không bao giờ nhận NĐ 101/2012 cũ ➔ Triệt tiêu 100% nguy cơ ảo giác viện dẫn sai luật!"
+          },
           memory: [
             { type: "keep", text: "💾 Ghi nhận checkpoint hoàn tất vào SQLite (enterprise_compliance.db) - Session ID: sess_d994bf5e" }
           ],
@@ -886,6 +902,25 @@ class StreamlinedDemoApp {
             <div class="step-memory">
               <div class="memory-header">💾 State Memory:</div>
               ${memItems}
+            </div>
+          `;
+        }
+        if (st.isolation) {
+          extraBlocks += `
+            <div class="step-isolation">
+              <div class="isolation-header">
+                <span>🛡️ Ranh Giới Cách Ly Ngữ Cảnh (Context Isolation Boundary)</span>
+              </div>
+              <div class="isolation-grid">
+                <div class="iso-box in-scope">
+                  <span class="iso-title">✅ Được phép thấy (In-Scope):</span>
+                  <span>${st.isolation.inScope}</span>
+                </div>
+                <div class="iso-box blocked">
+                  <span class="iso-title">🚫 Bị cô lập / Chặn (Blocked):</span>
+                  <span>${st.isolation.blocked}</span>
+                </div>
+              </div>
             </div>
           `;
         }
