@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CO5151 Seminar S1-7 | Thiết Kế Agent Cho Bài Toán Law Graph</title>
-  <meta name="description" content="Mô phỏng thực nghiệm đối chiếu 3 mẫu thiết kế Agent (Workflow, Monolithic ReAct, Lead/Subagent Orchestrator) cho bài toán Pháp điển hóa Việt Nam.">
+  <title>CO5151 Seminar S1-7 | So Sánh 3 Kiến Trúc Agent Pháp Lý</title>
+  <meta name="description" content="Thực nghiệm đối chiếu trực quan 3 mô hình Agent: Deterministic Workflow, Monolithic ReAct Loop và Lead Orchestrator - Workers.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
             <span class="badge-tag" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4; border-color: rgba(6, 182, 212, 0.3);">GROUP G4</span>
           </div>
           <div class="brand-subtitle">
-            Thiết Kế Kiến Trúc Agent Cho Bài Toán Đồ Thị Pháp Luật · GVHD: TS. Lê Xuân Bách
+            Đối Chiếu Thực Nghiệm 3 Kiến Trúc Agent Cho Bài Toán Đồ Thị Pháp Luật · GVHD: TS. Lê Xuân Bách
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@
     <!-- Scenario Selector Strip -->
     <section class="scenario-strip" aria-label="Lựa chọn tình huống pháp lý">
       <div class="scenario-header">
-        <span class="section-label">📌 Chọn Tình Huống Thực Nghiệm Pháp Lý:</span>
+        <span class="section-label">📌 Chọn Tình Huống Thực Nghiệm:</span>
         <span id="scenTrap" style="font-size: 0.76rem; color: var(--accent-amber); font-family: var(--font-mono);">
           Bẫy pháp lý: NĐ 101/2012 bị bãi bỏ từ 01/07/2024; thay thế bằng NĐ 52/2024.
         </span>
@@ -58,20 +58,20 @@
       <div class="scenario-pill-group">
         <div class="scenario-pill active" data-scenario="fintech" id="pillFintech">
           <div class="pill-title">💳 1. Cấp Phép Ví Điện Tử FDI (2024)</div>
-          <div class="pill-desc">Doanh nghiệp FDI xin giấy phép cung ứng dịch vụ Ví điện tử khi NĐ 101/2012 vừa bị bãi bỏ bởi NĐ 52/2024.</div>
-          <div class="pill-trap">NĐ 101/2012 (Hết hiệu lực) ➔ NĐ 52/2024 (50 tỷ VNĐ)</div>
+          <div class="pill-desc">Doanh nghiệp FDI xin giấy phép ví điện tử khi NĐ 101/2012 vừa bị bãi bỏ bởi NĐ 52/2024.</div>
+          <div class="pill-trap">NĐ 101/2012 (Hết hiệu lực) ➔ NĐ 52/2024 (Vốn 50 tỷ VNĐ)</div>
         </div>
 
         <div class="scenario-pill" data-scenario="traffic" id="pillTraffic">
           <div class="pill-title">🚦 2. Xử Phạt Vượt Đèn Đỏ Xe Máy</div>
-          <div class="pill-desc">Tra cứu mức xử phạt vi phạm nồng độ cồn và vượt đèn đỏ theo quy định chuyển tiếp mới nhất.</div>
-          <div class="pill-trap">NĐ 100/2019 (600k-1M) ➔ NĐ 168/2024 (4M-6M VNĐ)</div>
+          <div class="pill-desc">Mức phạt tiền và hình thức tước GPLX khi NĐ 100/2019 bị thay thế bởi NĐ 168/2024.</div>
+          <div class="pill-trap">NĐ 100/2019 (600k-1M) ➔ NĐ 168/2024 (4M-6M VNĐ, tước GPLX)</div>
         </div>
 
         <div class="scenario-pill" data-scenario="labor" id="pillLabor">
-          <div class="pill-title">💼 3. Giấy Phép Chuyên Gia Ngoại</div>
-          <div class="pill-desc">Điều kiện cấp giấy phép lao động cho chuyên gia kỹ thuật khi quy định bằng cấp được nới lỏng.</div>
-          <div class="pill-trap">NĐ 152/2020 (Bằng đúng ngành) ➔ NĐ 70/2023 (Nới lỏng)</div>
+          <div class="pill-title">💼 3. Giấy Phép Lao Động Chuyên Gia Ngoại</div>
+          <div class="pill-desc">Điều kiện văn bằng và kinh nghiệm khi NĐ 152/2020 được sửa đổi bởi NĐ 70/2023.</div>
+          <div class="pill-trap">NĐ 152/2020 (Đúng ngành) ➔ NĐ 70/2023 (Nới lỏng bằng cấp)</div>
         </div>
       </div>
     </section>
@@ -94,532 +94,120 @@
       </div>
     </div>
 
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs" aria-label="Xem các góc nhìn hệ thống">
-      <button class="tab-btn active" data-tab="tabRace">
-        <span>🏁 1. Đối Chiếu 3 Mô Hình (Side-by-Side)</span>
-      </button>
-      <button class="tab-btn" data-tab="tabWorkflow">
-        <span>🔀 2. Đồ Thị Luồng Trạng Thái (LangGraph StateGraph)</span>
-      </button>
-      <button class="tab-btn" data-tab="tabMemory">
-        <span>🧠 3. Bộ Nhớ & Trạng Thái (Live State)</span>
-      </button>
-      <button class="tab-btn" data-tab="tabGraph">
-        <span>🕸️ 4. Đồ Thị Pháp Điển (Law Graph)</span>
-      </button>
-      <button class="tab-btn" data-tab="tabBenchmark">
-        <span>📊 5. Ma Trận Đánh Đổi</span>
-      </button>
-      <button class="tab-btn" data-tab="tabDossier">
-        <span>📋 6. Hồ Sơ Tuân Thủ</span>
-      </button>
-    </nav>
+    <!-- 3-WAY COMPARISON (MAIN WORKBENCH) -->
+    <section class="race-grid">
 
-    <!-- TAB 1: 3-WAY COMPARATIVE RACE (PRIMARY VIEW WITH SIDE-BY-SIDE DIAGRAMS) -->
-    <section id="tabRace" class="tab-panel active">
-      <div class="race-grid">
-
-        <!-- Pattern 1: Workflow -->
-        <div class="paradigm-card" id="cardP1">
-          <div class="card-header">
-            <span class="card-tag tag-cyan">Anthropic (Dec 2024)</span>
-            <h2 class="card-title">1. Deterministic Workflow</h2>
-            <div class="card-sub">Prompt Chaining & Routing · Fixed Code Path</div>
+      <!-- Column 1: Deterministic Workflow -->
+      <div class="paradigm-card" id="cardP1">
+        <div class="card-header">
+          <span class="card-tag tag-cyan">Prompt Chaining & Routing</span>
+          <h2 class="card-title">1. Deterministic Workflow</h2>
+          <div class="card-sub">Pipeline cố định · Không Tool Loop · Không Kiểm Định</div>
+        </div>
+        <div class="card-metrics">
+          <div class="metric-box">
+            <span class="metric-label">Tổng Token</span>
+            <span class="metric-val" id="p1Tokens">0 tkn</span>
           </div>
-          <div class="card-metrics">
-            <div class="metric-box">
-              <span class="metric-label">Chi Phí Token</span>
-              <span class="metric-val" id="p1Tokens">0 tkn</span>
-            </div>
-            <div class="metric-box">
-              <span class="metric-label">Tỷ Lệ Bội Số</span>
-              <span class="metric-val">1.0x (Gốc)</span>
-            </div>
-            <div class="metric-box">
-              <span class="metric-label">Độ Trễ</span>
-              <span class="metric-val">~40 ms</span>
-            </div>
+          <div class="metric-box">
+            <span class="metric-label">Bội Số Token</span>
+            <span class="metric-val">1.0x</span>
           </div>
-
-          <!-- Embedded Architecture Diagram for Workflow 1 -->
-          <div class="card-diagram-box">
-            <div class="diagram-title-strip">
-              <span>SƠ ĐỒ KIẾN TRÚC: CHUỖI CỐ ĐỊNH</span>
-              <span class="badge-tag" style="background: rgba(244, 63, 94, 0.15); color: #f43f5e;">🚫 KHÔNG BỘ NHỚ</span>
-            </div>
-            <svg id="p1Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
-          </div>
-
-          <div class="card-log" id="p1Logs"></div>
-          <div class="card-footer">
-            <div id="p1Status" class="result-badge">Chưa bắt đầu</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
-              <strong>Đánh giá:</strong> Cực rẻ & nhanh, nhưng thất bại 100% khi gặp luật bãi bỏ do không có cơ chế rà soát và không có bộ nhớ phục hồi.
-            </div>
+          <div class="metric-box">
+            <span class="metric-label">Độ Trễ</span>
+            <span class="metric-val">~40 ms</span>
           </div>
         </div>
 
-        <!-- Pattern 2: Monolithic Agent -->
-        <div class="paradigm-card" id="cardP2">
-          <div class="card-header">
-            <span class="card-tag tag-amber">OpenAI (Feb 2025)</span>
-            <h2 class="card-title">2. Monolithic Autonomous Agent</h2>
-            <div class="card-sub">Single ReAct Loop · Model-Directed Flow</div>
-          </div>
-          <div class="card-metrics">
-            <div class="metric-box">
-              <span class="metric-label">Chi Phí Token</span>
-              <span class="metric-val" id="p2Tokens">0 tkn</span>
-            </div>
-            <div class="metric-box">
-              <span class="metric-label">Tỷ Lệ Bội Số</span>
-              <span class="metric-val" style="color: var(--accent-amber);">11.8x</span>
-            </div>
-            <div class="metric-box">
-              <span class="metric-label">Độ Trễ</span>
-              <span class="metric-val">~420 ms</span>
-            </div>
-          </div>
-
-          <!-- Embedded Architecture Diagram for Workflow 2 -->
-          <div class="card-diagram-box">
-            <div class="diagram-title-strip">
-              <span>SƠ ĐỒ KIẾN TRÚC: VÒNG LẶP REACT TỰ DO</span>
-              <span class="badge-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);">⚠️ KHÔNG CÓ CHECKPOINT (IN-MEMORY)</span>
-            </div>
-            <svg id="p2Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
-          </div>
-
-          <div class="card-log" id="p2Logs"></div>
-          <div class="card-footer">
-            <div id="p2Status" class="result-badge">Chưa bắt đầu</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
-              <strong>Đánh giá:</strong> Lịch sử hội thoại tích lũy gây tốn token; không kiểm định hiệu lực văn bản qua VBPL; không lưu vết checkpoint khi gặp lỗi.
-            </div>
-          </div>
+        <div class="card-explanation">
+          <div class="exp-title">Đặc tính kiến trúc:</div>
+          <div class="exp-text">Dữ liệu đi qua chuỗi prompt cứng. Không gọi tool động, không kiểm định hiệu lực văn bản, không thể tự sửa sai khi gặp luật bãi bỏ.</div>
         </div>
 
-        <!-- Pattern 3: G4 Lead/Subagent Orchestrator -->
-        <div class="paradigm-card highlight" id="cardP3">
-          <div class="card-header">
-            <span class="card-tag tag-emerald">Google ADK Architecture</span>
-            <h2 class="card-title">3. Orchestrator-Workers (G4)</h2>
-            <div class="card-sub">Phân rã tác tử + Kiểm định VBPL + Lưu vết SQLite</div>
-          </div>
-          <div class="card-metrics">
-            <div class="metric-box">
-              <span class="metric-label">Chi Phí Token</span>
-              <span class="metric-val" id="p3Tokens" style="color: var(--accent-emerald);">0 tkn</span>
-            </div>
-            <div class="metric-box">
-              <span class="metric-label">Tỷ Lệ Bội Số</span>
-              <span class="metric-val" style="color: var(--accent-emerald);">3.2x</span>
-            </div>
-            <div class="metric-box">
-              <span class="metric-label">Độ Trễ</span>
-              <span class="metric-val">~245 ms</span>
-            </div>
-          </div>
+        <div class="card-log" id="p1Logs"></div>
 
-          <!-- Embedded Architecture Diagram for Workflow 3 -->
-          <div class="card-diagram-box">
-            <div class="diagram-title-strip">
-              <span>SƠ ĐỒ KIẾN TRÚC: ORCHESTRATOR-WORKERS</span>
-              <span class="badge-tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">LEAD + WORKERS (G4)</span>
-            </div>
-            <svg id="p3Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
+        <div class="card-footer">
+          <div id="p1Status" class="result-badge">Chưa bắt đầu</div>
+          <div class="footer-note">
+            <strong>Kết quả:</strong> Trích dẫn sai do lấy văn bản hết hiệu lực. Không có cơ chế hồi phục.
           </div>
-
-          <div class="card-log" id="p3Logs"></div>
-          <div class="card-footer">
-            <div id="p3Status" class="result-badge">Chưa bắt đầu</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
-              <strong>Đánh giá:</strong> Kiểm định hiệu lực qua VBPL; tự động điều hướng sang văn bản kế thừa; lưu vết trạng thái vào SQLite.
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- TAB 2: GRAPH WORKFLOW (LANGGRAPH STATEGRAPH) -->
-    <section id="tabWorkflow" class="tab-panel">
-      <div class="graph-container-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-          <div>
-            <h2 style="font-size: 1.05rem; font-weight: 700; color: #fff;">Đồ Thị Luồng Trạng Thái Tác Tử (Multi-Agent State Graph & Recovery Cycle)</h2>
-            <p style="font-size: 0.76rem; color: var(--text-muted);">
-              Mô hình hóa chu trình điều phối có hướng (Directed Multi-Agent Flow): Planning ➔ LawGraph Retrieval ➔ Claim Auditor ➔ Re-route Edge ➔ Drafter ➔ SQLite Memory.
-            </p>
-          </div>
-          <div class="graph-legend">
-            <div class="legend-item"><div class="legend-dot" style="background: #3b82f6;"></div><span>Entry / Planning Node</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #06b6d4;"></div><span>Subagent Worker</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div><span>Deterministic Oracle Gate</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div><span>Re-route / Thay thế văn bản</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #10b981;"></div><span>Synthesizer / SQLite</span></div>
-          </div>
-        </div>
-
-        <div class="workflow-viewport">
-          <svg id="workflowSvg"></svg>
-        </div>
-
-        <div class="state-widget" style="margin-top: 8px;">
-          <div class="widget-label">
-            <span>Chi Tiết Node Đang Kích Hoạt (State Transition Inspector)</span>
-            <span id="wfCurrentNodeBadge" class="badge-tag">CHỜ THỰC THI</span>
-          </div>
-          <div class="widget-value-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
-            <div class="widget-pill-item">
-              <span class="widget-pill-title">Tên Node / Vai Trò</span>
-              <span id="wfNodeName" class="widget-pill-content">LegalOrchestrator</span>
-            </div>
-            <div class="widget-pill-item">
-              <span class="widget-pill-title">Lớp Google ADK</span>
-              <span id="wfNodeClass" class="widget-pill-content">src.agents.orchestrator</span>
-            </div>
-            <div class="widget-pill-item">
-              <span class="widget-pill-title">Context Budget (Token)</span>
-              <span id="wfNodeTokens" class="widget-pill-content">&lt; 450 tokens</span>
-            </div>
-            <div class="widget-pill-item">
-              <span class="widget-pill-title">Chuyển Dịch Trạng Thái</span>
-              <span id="wfNodeTransition" class="widget-pill-content">C0_INIT ➔ C1_PLAN</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- TAB 3: LIVE MEMORY INSPECTOR -->
-    <section id="tabMemory" class="tab-panel">
-      <!-- 3-Tier Memory Architectural Banner -->
-      <div class="memory-tiers-banner">
-        <div class="tier-card tier-working">
-          <div class="tier-header">
-            <span class="tier-title">Tầng 1: Working Memory</span>
-            <span class="badge-tag" style="background: rgba(6, 182, 212, 0.2); color: #06b6d4;">RAM / EPISODIC</span>
-          </div>
-          <div class="tier-desc">Pydantic v2 <code>LegalAgentState</code> lưu trữ hồ sơ doanh nghiệp, câu truy vấn và các subgoals đang thực thi. Bị cô lập trên từng Worker.</div>
-        </div>
-        <div class="tier-card tier-cache">
-          <div class="tier-header">
-            <span class="tier-title">Tầng 2: State Cache (Kế Thừa Kết Quả)</span>
-            <span class="badge-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">CACHED SUBGOALS</span>
-          </div>
-          <div class="tier-desc">Lưu giữ các Subgoal đã xác thực thành công. Khi phát hiện một nhánh văn bản hết hiệu lực, hệ thống chỉ tra cứu lại nhánh đó mà không cần thực thi lại các mục tiêu đã hoàn thành.</div>
-        </div>
-        <div class="tier-card tier-durable">
-          <div class="tier-header">
-            <span class="tier-title">Tầng 3: SQLite Persistent Memory</span>
-            <span class="badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">ACID DURABLE</span>
-          </div>
-          <div class="tier-desc">Checkpointer lưu snapshots bất biến vào <code>enterprise_compliance.db</code>. Đảm bảo khôi phục tức thì khi container crash hoặc mạng rớt.</div>
         </div>
       </div>
 
-      <div class="memory-inspector-grid">
-
-        <!-- Column 1: Working Memory & LegalAgentState Schema -->
-        <div class="memory-tier-card">
-          <div class="memory-header-row">
-            <div class="memory-title">
-              <span>🧠 Tầng 1 & 2: Working Memory & LegalAgentState</span>
-            </div>
-            <span class="badge-tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
-              PYDANTIC V2 SCHEMA
-            </span>
+      <!-- Column 2: Monolithic Autonomous Agent (ReAct) -->
+      <div class="paradigm-card" id="cardP2">
+        <div class="card-header">
+          <span class="card-tag tag-amber">Autonomous Tool Loop</span>
+          <h2 class="card-title">2. Monolithic ReAct Agent</h2>
+          <div class="card-sub">Single Loop (Thought ➔ Action ➔ Observation)</div>
+        </div>
+        <div class="card-metrics">
+          <div class="metric-box">
+            <span class="metric-label">Tổng Token</span>
+            <span class="metric-val" id="p2Tokens">0 tkn</span>
           </div>
-
-          <div class="state-widget-deck">
-
-            <!-- Enterprise Profile in Memory -->
-            <div class="state-widget">
-              <div class="widget-label">
-                <span>🏢 Hồ Sơ Doanh Nghiệp trong Memory (EnterpriseProfile)</span>
-                <span class="badge-tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">IMMUTABLE</span>
-              </div>
-              <div class="widget-value-grid">
-                <div class="widget-pill-item">
-                  <span class="widget-pill-title">Doanh nghiệp</span>
-                  <span id="memCompany" class="widget-pill-content">Global PayTech Asia Ltd.</span>
-                </div>
-                <div class="widget-pill-item">
-                  <span class="widget-pill-title">Loại hình</span>
-                  <span id="memType" class="widget-pill-content">Doanh nghiệp FDI</span>
-                </div>
-                <div class="widget-pill-item">
-                  <span class="widget-pill-title">Vốn điều lệ</span>
-                  <span id="memCapital" class="widget-pill-content" style="color: var(--accent-amber);">35 tỷ VNĐ</span>
-                </div>
-                <div class="widget-pill-item">
-                  <span class="widget-pill-title">Sở hữu ngoại</span>
-                  <span id="memForeign" class="widget-pill-content">45.0% (Trần 49%)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Subgoals & Plan in Memory -->
-            <div class="state-widget">
-              <div class="widget-label">
-                <span>🎯 Kế Hoạch & Subgoals trong Memory (plan_steps)</span>
-                <span id="memStepCount" class="badge-tag">Bước: 0 / 2</span>
-              </div>
-              <div class="subgoal-check-list" id="memSubgoalsList">
-                <div class="subgoal-item" id="memSubA">
-                  <span>Subgoal A: Xác định điều kiện tiên quyết và văn bản quy phạm</span>
-                  <span class="subgoal-status-badge" style="background: rgba(255,255,255,0.08); color: #a1a1aa;">CHỜ THỰC THI</span>
-                </div>
-                <div class="subgoal-item cached" id="memSubB">
-                  <span>Subgoal B: Đối chiếu tỷ lệ sở hữu nhà đầu tư nước ngoài (45%)</span>
-                  <span class="subgoal-status-badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">PRESERVED IN CACHE</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Retrieved Clauses in Memory -->
-            <div class="state-widget">
-              <div class="widget-label">
-                <span>📚 Căn Cứ Pháp Lý Trong Bộ Nhớ (retrieved_clauses)</span>
-                <span id="memClauseCount" class="badge-tag">0 điều khoản</span>
-              </div>
-              <div class="clauses-memory-deck" id="memClausesDeck">
-                <div style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">Chưa có văn bản nào được nạp vào working memory.</div>
-              </div>
-            </div>
-
-            <!-- Audit Report in Memory -->
-            <div class="state-widget">
-              <div class="widget-label">
-                <span>⚖️ Báo Cáo Kiểm Định (audit_report)</span>
-                <span id="memAuditBadge" class="badge-tag">CHƯA KIỂM ĐỊNH</span>
-              </div>
-              <div class="widget-value-grid">
-                <div class="widget-pill-item">
-                  <span class="widget-pill-title">Grounding Rate</span>
-                  <span id="memGroundingRate" class="widget-pill-content">0.0%</span>
-                </div>
-                <div class="widget-pill-item">
-                  <span class="widget-pill-title">Số luận điểm hợp lệ</span>
-                  <span id="memClaimsRatio" class="widget-pill-content">0 / 0</span>
-                </div>
-              </div>
-              <div id="memAuditFeedback" style="margin-top: 8px; font-size: 0.74rem; color: var(--text-secondary); line-height: 1.4;">
-                Cổng kiểm định Oracle tiền định chưa được kích hoạt.
-              </div>
-            </div>
-
+          <div class="metric-box">
+            <span class="metric-label">Bội Số Token</span>
+            <span class="metric-val" style="color: var(--accent-amber);">11.8x</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Độ Trễ</span>
+            <span class="metric-val">~420 ms</span>
           </div>
         </div>
 
-        <!-- Column 2: SQLite Memory & Differential Diff -->
-        <div class="memory-tier-card">
-          <div class="memory-header-row">
-            <div class="memory-title">
-              <span>💾 Tầng 3: Bộ Nhớ Bền Vững & Lưu Vết Trạng Thái</span>
-            </div>
-            <span class="badge-tag" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">
-              SQLITE CHECKPOINTER
-            </span>
-          </div>
-
-          <!-- Differential Rollback Diff Box -->
-          <div class="state-widget">
-            <div class="widget-label">
-              <span>↺ Theo Dõi Thay Đổi Trạng Thái (State Transition Diff)</span>
-              <span class="badge-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">DIFF INSPECTION</span>
-            </div>
-            <div class="memory-diff-box" id="memDiffBox">
-<div class="diff-line diff-keep">● [PRESERVED IN CACHE] enterprise_profile (Vốn: 35 tỷ, FDI: 45%) - KHÔNG TÍNH LẠI</div>
-<div class="diff-line diff-keep">● [PRESERVED IN CACHE] Subgoal B (Tỷ lệ sở hữu nước ngoài đạt chuẩn Điều 23)</div>
-<div class="diff-line diff-del">- [PRUNED FROM MEMORY] 101/2012/ND-CP (Bãi bỏ bởi vbpl_verify_oracle)</div>
-<div class="diff-line diff-add">+ [INSERTED TO MEMORY] 52/2024/ND-CP (Căn cứ thay thế hợp lệ thi hành từ 01/07/2024)</div>
-            </div>
-            <p style="margin-top: 6px; font-size: 0.72rem; color: var(--text-muted); line-height: 1.35;">
-              <strong>Bằng chứng thực nghiệm:</strong> Khi kiểm định phát hiện văn bản ở Subgoal A hết hiệu lực, hệ thống điều hướng tra cứu văn bản kế thừa mà không làm mất dữ liệu của Subgoal B đã hoàn thành.
-            </p>
-          </div>
-
-          <!-- SQLite Checkpoints Table -->
-          <div class="state-widget" style="flex: 1; display: flex; flex-direction: column;">
-            <div class="widget-label">
-              <span>Bảng Checkpoint Trong Cơ Sở Dữ Liệu SQLite (data/enterprise_compliance.db)</span>
-              <span class="badge-tag">TABLE: state_checkpoints</span>
-            </div>
-            <div style="overflow-x: auto; flex: 1;">
-              <table class="sqlite-table">
-                <thead>
-                  <tr>
-                    <th>Checkpoint ID</th>
-                    <th>Node Tác Tử</th>
-                    <th>Thời Gian</th>
-                    <th>Trạng Thái Payload</th>
-                  </tr>
-                </thead>
-                <tbody id="memSqliteTableBody">
-                  <tr>
-                    <td><code>sess_demo_C1_PLAN</code></td>
-                    <td>LeadOrchestrator</td>
-                    <td>+0.04s</td>
-                    <td><span style="color: #60a5fa;">PlanReady (2 subgoals)</span></td>
-                  </tr>
-                  <tr>
-                    <td><code>sess_demo_C2_RETRIEVAL</code></td>
-                    <td>LawGraphWorker</td>
-                    <td>+0.09s</td>
-                    <td><span style="color: #f59e0b;">CandidateRetrieved (101/2012)</span></td>
-                  </tr>
-                  <tr>
-                    <td><code>sess_demo_C1_ROLLBACK</code></td>
-                    <td>RollbackEdge</td>
-                    <td>+0.14s</td>
-                    <td><span style="color: #c084fc;">Restored C1; Subgoal B Intact</span></td>
-                  </tr>
-                  <tr>
-                    <td><code>sess_demo_C3_FINAL</code></td>
-                    <td>DrafterWorker</td>
-                    <td>+0.24s</td>
-                    <td><span style="color: #10b981;">100% Grounded Dossier</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
+        <div class="card-explanation">
+          <div class="exp-title">Đặc tính kiến trúc:</div>
+          <div class="exp-text">Một LLM duy nhất tự gọi tools lặp đi lặp lại. Toàn bộ lịch sử và kết quả tool dồn tích vào prompt khiến <strong>Context Window phình to</strong>, gây nhiễu và tốn chi phí.</div>
         </div>
 
-      </div>
-    </section>
+        <div class="card-log" id="p2Logs"></div>
 
-    <!-- TAB 4: LAW GRAPH VISUALIZER -->
-    <section id="tabGraph" class="tab-panel">
-      <div class="graph-container-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <h2 style="font-size: 1.05rem; font-weight: 700; color: #fff;">Đồ Thị Trạng Thái & Pháp Điển (Interactive State Graph)</h2>
-            <p style="font-size: 0.76rem; color: var(--text-muted);">
-              Minh họa luồng điều phối phân rã Subgoals, cô lập ngữ cảnh các Worker, cổng kiểm định Oracle tiền định và đường vòng quay lui (Re-route Edge).
-            </p>
-          </div>
-          <div class="graph-legend">
-            <div class="legend-item"><div class="legend-dot" style="background: #3b82f6;"></div><span>Query</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #10b981;"></div><span>Lead / Active</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #06b6d4;"></div><span>Subagent</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #f43f5e;"></div><span>Expired Law</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div><span>Oracle Gate</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div><span>Re-route Edge</span></div>
-          </div>
-        </div>
-
-        <div class="graph-viewport">
-          <svg id="lawGraphSvg"></svg>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: CHECKPOINTS & DURABLE EXECUTION -->
-    <section id="tabCheckpoints" class="tab-panel">
-      <div class="checkpoint-grid">
-        <div class="checkpoint-timeline-card">
-          <h2 style="font-size: 0.95rem; font-weight: 700; color: #fff;">Nhật Ký Checkpoint (SQLite)</h2>
-          <p style="font-size: 0.74rem; color: var(--text-muted);">Lưu trữ snapshot bất biến sau mỗi bước chuyển trạng thái.</p>
-          <div class="checkpoint-list" id="chkList">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <div class="checkpoint-detail-card">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 0.95rem; font-weight: 700; color: #fff;">Chi Tiết Trạng Thái Snapshot (State Payload Inspector)</h3>
-            <span class="badge-tag" style="background: rgba(168, 85, 247, 0.15); color: #a855f7; border-color: rgba(168, 85, 247, 0.3);">
-              IMMUTABLE SCHEMA
-            </span>
-          </div>
-          <div class="json-viewer" id="jsonViewer">
-{
-  "message": "Chưa có checkpoint nào được kích hoạt."
-}
-          </div>
-          <div class="lit-quote-box">
-            <strong>Cơ chế điều hướng (Re-routing):</strong> Khi kiểm định phát hiện văn bản ở Subgoal A hết hiệu lực, hệ thống truy vết quan hệ kế thừa sang văn bản mới. Kết quả tra cứu của Subgoal B được giữ nguyên, tránh tra cứu lặp lại.
+        <div class="card-footer">
+          <div id="p2Status" class="result-badge">Chưa bắt đầu</div>
+          <div class="footer-note">
+            <strong>Kết quả:</strong> Phát hiện được văn bản mới nhưng trộn lẫn điều kiện cũ và mới do context quá dài làm loãng sự chú ý.
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- TAB 4: TRADE-OFF BENCHMARK & LITERATURE -->
-    <section id="tabBenchmark" class="tab-panel">
-      <div class="benchmark-table-wrapper">
-        <table class="benchmark-table">
-          <thead>
-            <tr>
-              <th>Tiêu Chí Kỹ Thuật</th>
-              <th>1. Deterministic Workflow</th>
-              <th>2. Monolithic Autonomous Agent</th>
-              <th>3. Orchestrator-Workers (G4)</th>
-              <th>Căn Cứ Lý Thuyết Seminar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Kiểm Soát Luồng</strong></td>
-              <td>Fixed Code Path</td>
-              <td>Model-Directed (Tự do)</td>
-              <td>Phân cấp (Lead/Subagent)</td>
-              <td>Anthropic (2024): <em>Building Effective Agents</em></td>
-            </tr>
-            <tr>
-              <td><strong>Bội Số Chi Phí Token</strong></td>
-              <td>1.0x (Cơ sở)</td>
-              <td><span style="color: var(--accent-rose); font-weight: 700;">11.8x (Bùng nổ)</span></td>
-              <td><span style="color: var(--accent-emerald); font-weight: 700;">3.2x (Đúng dự báo)</span></td>
-              <td>Thực nghiệm nhóm G4 trên kịch bản đối chiếu</td>
-            </tr>
-            <tr>
-              <td><strong>Độ Trễ Thực Thi</strong></td>
-              <td>Thấp nhất (~40ms)</td>
-              <td>Cao nhất (Tuần tự ~420ms)</td>
-              <td>Trung bình (~245ms)</td>
-              <td>Nút thắt nhánh chậm nhất (Straggler: max tᵢ)</td>
-            </tr>
-            <tr>
-              <td><strong>Sai Số Tích Lũy (P = pⁿ)</strong></td>
-              <td>Bị chặn tại code</td>
-              <td><span style="color: var(--accent-rose);">Nguy cơ sập dây chuyền</span></td>
-              <td>Khoanh vùng theo Subgoal</td>
-              <td>OpenAI (Feb 2025): <em>Practical Guide to Building Agents</em></td>
-            </tr>
-            <tr>
-              <td><strong>Cơ Chế Phục Hồi Lỗi</strong></td>
-              <td>Không có (Mù hiệu lực)</td>
-              <td>Không có (Khởi động lại từ đầu)</td>
-              <td><span style="color: var(--accent-emerald);">Điều hướng kế thừa & SQLite</span></td>
-              <td>Google ADK Pipeline & SQLite Persistence</td>
-            </tr>
-            <tr>
-              <td><strong>Cổng Kiểm Định Hiệu Lực</strong></td>
-              <td>Không có</td>
-              <td>LLM tự rà soát (Parametric Trap)</td>
-              <td><span style="color: var(--accent-emerald);">Oracle tiền định (vbpl.vn)</span></td>
-              <td>Tách biệt mặt phẳng suy luận và kiểm định độc lập</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+      <!-- Column 3: Orchestrator-Workers (G4 / Google ADK) -->
+      <div class="paradigm-card highlight" id="cardP3">
+        <div class="card-header">
+          <span class="card-tag tag-emerald">Google ADK Architecture</span>
+          <h2 class="card-title">3. Orchestrator - Workers</h2>
+          <div class="card-sub">Phân rã Subgoals + Kiểm định VBPL + State Memory</div>
+        </div>
+        <div class="card-metrics">
+          <div class="metric-box">
+            <span class="metric-label">Tổng Token</span>
+            <span class="metric-val" id="p3Tokens" style="color: var(--accent-emerald);">0 tkn</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Bội Số Token</span>
+            <span class="metric-val" style="color: var(--accent-emerald);">3.2x</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Độ Trễ</span>
+            <span class="metric-val">~245 ms</span>
+          </div>
+        </div>
 
-    <!-- TAB 5: COMPLIANCE DOSSIER -->
-    <section id="tabDossier" class="tab-panel">
-      <div class="graph-container-card">
-        <h2 style="font-size: 1.05rem; font-weight: 700; color: #fff;">Hồ Sơ Tư Vấn Tuân Thủ Xuất Bản (Legal Compliance Dossier)</h2>
-        <p style="font-size: 0.76rem; color: var(--text-muted);">Kết quả đầu ra chính thức được soạn thảo bởi Drafter Worker từ các căn cứ đã qua xác thực 100%.</p>
-        <div class="json-viewer" id="dossierText" style="color: #6ee7b7; font-size: 0.82rem; line-height: 1.6;">
-[Chưa có dữ liệu hồ sơ. Hãy bấm "Chạy Mô Phỏng" hoặc "Bước Tiếp Theo" để sinh hồ sơ.]
+        <div class="card-explanation">
+          <div class="exp-title">Đặc tính kiến trúc:</div>
+          <div class="exp-text">Lead phân rã truy vấn; mỗi Worker chạy trong <strong>context sạch độc lập (&lt;400 tokens)</strong>. ClaimAuditor đối soát VBPL; khi phát hiện văn bản bãi bỏ, chỉ điều hướng lại Subgoal lỗi, <strong>giữ nguyên kết quả hợp lệ trong State Memory</strong>.</div>
+        </div>
+
+        <div class="card-log" id="p3Logs"></div>
+
+        <div class="card-footer">
+          <div id="p3Status" class="result-badge">Chưa bắt đầu</div>
+          <div class="footer-note">
+            <strong>Kết quả:</strong> Xác thực 100% căn cứ pháp lý hiện hành, không chạy lại các bước đã thành công, tiết kiệm token.
+          </div>
         </div>
       </div>
+
     </section>
 
   </main>
