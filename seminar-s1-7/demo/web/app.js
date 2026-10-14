@@ -62,23 +62,23 @@ const SCENARIOS = {
       ],
       tokens: 8950,
       latency: 420,
-      grounding: "60% (Trôi dạt ngữ cảnh / Ảo giác)",
-      recovery: "ReAct tùy tiện trong RAM (Sập tiến trình = Mất trắng)",
+      grounding: "Chưa kiểm định hiệu lực (Dính văn bản cũ)",
+      recovery: "Không lưu checkpoint (Stateless in-memory)",
       outcomeClass: "result-warning",
       dossier: "[TƯ VẤN BỊ XÁO TRỘN NGỮ CẢNH - MONOLITHIC AGENT]\nNhận diện được NĐ 52/2024 nhưng trộn lẫn điều kiện cũ từ NĐ 101/2012 vào quy trình thẩm định. Tiêu tốn 8.950 tokens (11.8x)."
     },
     p3: {
       steps: [
-        { name: "Node 1: Lead Orchestrator - Phân Rã", desc: "Decompose thành Subgoal A (Điều kiện cấp phép) & Subgoal B (Room ngoại FDI)", tokens: 450, status: "active", chk: "C1_PLAN" },
-        { name: "Node 2: LawGraph Worker (Cô Lập)", desc: "Tra cứu Subgoal A trong context sạch < 400 tokens -> Trả về NĐ 101/2012", tokens: 380, status: "active", chk: "C2_RETRIEVAL" },
-        { name: "Node 3: Auditor Oracle (Kiểm Định)", desc: "Gọi vbpl_verify_oracle('101/2012') -> CẢNH BÁO: Hết hiệu lực thi hành!", tokens: 310, status: "failed" },
-        { name: "Node 4: LangGraph Rollback Vi Sai", desc: "Rollback về C1_PLAN (Subgoal B được bảo toàn!); Chuyển tiếp NĐ 52/2024", tokens: 620, status: "recovered", chk: "C1_RESTORE" },
-        { name: "Node 5: Drafter Worker (Tổng Hợp)", desc: "Soạn thảo hồ sơ tuân thủ 100% từ NĐ 52/2024 (Điều 22 & 23)", tokens: 650, status: "active", chk: "C3_FINAL" }
+        { name: "Bước 1: Phân rã mục tiêu (Planning)", desc: "Tách thành Subgoal A (Điều kiện cấp phép) và Subgoal B (Tỷ lệ sở hữu FDI)", tokens: 450, status: "active", chk: "C1_PLAN" },
+        { name: "Bước 2: Tra cứu căn cứ (LawGraph)", desc: "Tra cứu Subgoal A: lấy văn bản Nghị định 101/2012", tokens: 380, status: "active", chk: "C2_RETRIEVAL" },
+        { name: "Bước 3: Kiểm định hiệu lực (Auditor)", desc: "Đối soát qua VBPL: phát hiện NĐ 101/2012 đã hết hiệu lực", tokens: 310, status: "failed" },
+        { name: "Bước 4: Điều hướng kế thừa (Re-routing)", desc: "Truy vết quan hệ thay thế sang NĐ 52/2024; giữ nguyên kết quả Subgoal B", tokens: 620, status: "recovered", chk: "C1_RESTORE" },
+        { name: "Bước 5: Soạn thảo hồ sơ (Drafter)", desc: "Soạn thảo hồ sơ tuân thủ 100% từ NĐ 52/2024 (Điều 22 & 23)", tokens: 650, status: "active", chk: "C3_FINAL" }
       ],
       tokens: 2410,
       latency: 245,
-      grounding: "100% (Xác thực pháp lý tuyệt đối)",
-      recovery: "Durable SQLite Rollback (Phục hồi vi sai)",
+      grounding: "Đã kiểm định qua VBPL",
+      recovery: "Điều hướng thay thế & Lưu vết SQLite",
       outcomeClass: "result-success",
       dossier: "HỒ SƠ TƯ VẤN PHÁP LÝ TUÂN THỦ (LEGALPILOT-VN)\n• Doanh nghiệp: Global PayTech Asia Ltd. (FDI) | Vốn: 35 tỷ VNĐ\n• Căn cứ pháp lý: Nghị định 52/2024/NĐ-CP (Có hiệu lực từ 01/07/2024)\n• Cảnh báo tuân thủ: Vốn điều lệ hiện tại (35 tỷ) THIẾU 15 TỶ so với mức tối thiểu 50 tỷ quy định tại Điều 22 Khoản 1!\n• Tỷ lệ sở hữu ngoại: 45% ĐẠT điều kiện (dưới trần 49% theo Điều 23)."
     }
@@ -143,16 +143,16 @@ const SCENARIOS = {
     },
     p3: {
       steps: [
-        { name: "Node 1: Lead Orchestrator", desc: "Phân rã: Subgoal A (Khung phạt tiền) & Subgoal B (Hình thức phạt bổ sung)", tokens: 420, status: "active", chk: "C1_PLAN" },
-        { name: "Node 2: LawGraph Worker", desc: "Tra cứu Subgoal A trong context sạch -> Lấy NĐ 100/2019", tokens: 360, status: "active", chk: "C2_RETRIEVAL" },
-        { name: "Node 3: Auditor Oracle Gate", desc: "Kiểm tra vbpl_verify_oracle('100/2019') -> BÃI BỎ bởi NĐ 168/2024!", tokens: 290, status: "failed" },
-        { name: "Node 4: Rollback & Re-route", desc: "Rollback về C1_PLAN, chuyển hướng tra cứu NĐ 168/2024 Điều 6 Khoản 4", tokens: 590, status: "recovered", chk: "C1_RESTORE" },
-        { name: "Node 5: Drafter Worker", desc: "Tổng hợp kết quả xác thực 100% từ NĐ 168/2024", tokens: 610, status: "active", chk: "C3_FINAL" }
+        { name: "Bước 1: Phân rã mục tiêu (Planning)", desc: "Phân rã: Subgoal A (Khung phạt tiền) & Subgoal B (Hình thức phạt bổ sung)", tokens: 420, status: "active", chk: "C1_PLAN" },
+        { name: "Bước 2: Tra cứu căn cứ (LawGraph)", desc: "Tra cứu Subgoal A trong context sạch -> Lấy NĐ 100/2019", tokens: 360, status: "active", chk: "C2_RETRIEVAL" },
+        { name: "Bước 3: Kiểm định hiệu lực (Auditor)", desc: "Đối soát VBPL: NĐ 100/2019 đã hết hiệu lực bởi NĐ 168/2024", tokens: 290, status: "failed" },
+        { name: "Bước 4: Điều hướng kế thừa (Re-routing)", desc: "Chuyển hướng tra cứu NĐ 168/2024 Điều 6 Khoản 4", tokens: 590, status: "recovered", chk: "C1_RESTORE" },
+        { name: "Bước 5: Soạn thảo hồ sơ (Drafter)", desc: "Tổng hợp kết quả xác thực 100% từ NĐ 168/2024", tokens: 610, status: "active", chk: "C3_FINAL" }
       ],
       tokens: 2270,
       latency: 230,
       grounding: "100% (Chuẩn Nghị định 168/2024)",
-      recovery: "Durable SQLite Rollback",
+      recovery: "Điều hướng thay thế & Lưu vết SQLite",
       outcomeClass: "result-success",
       dossier: "KẾT QUẢ TƯ VẤN PHÁP LUẬT CHÍNH XÁC (NĐ 168/2024/NĐ-CP):\n• Hành vi: Người điều khiển xe mô tô, xe gắn máy vượt đèn đỏ.\n• Mức phạt tiền: 4.000.000 VNĐ - 6.000.000 VNĐ (Điều 6 Khoản 4).\n• Xử phạt bổ sung: Tước quyền sử dụng GPLX từ 01 đến 03 tháng."
     }
@@ -217,16 +217,16 @@ const SCENARIOS = {
     },
     p3: {
       steps: [
-        { name: "Node 1: Lead Orchestrator", desc: "Phân rã: Subgoal A (Tiêu chuẩn văn bằng & kinh nghiệm) & Subgoal B (Hồ sơ)", tokens: 440, status: "active", chk: "C1_PLAN" },
-        { name: "Node 2: LawGraph Worker", desc: "Tra cứu Subgoal A trong context độc lập", tokens: 370, status: "active", chk: "C2_RETRIEVAL" },
-        { name: "Node 3: Auditor Oracle Gate", desc: "Oracle cảnh báo Điều 3 Khoản 3 NĐ 152 đã được sửa đổi bởi NĐ 70/2023!", tokens: 300, status: "failed" },
-        { name: "Node 4: Rollback & Re-route", desc: "Rollback về C1_PLAN; duyệt cạnh 'amends' tới NĐ 70/2023 Điều 1 Khoản 5", tokens: 600, status: "recovered", chk: "C1_RESTORE" },
-        { name: "Node 5: Drafter Worker", desc: "Soạn thảo hướng dẫn chính xác 100% theo Nghị định 70/2023", tokens: 630, status: "active", chk: "C3_FINAL" }
+        { name: "Bước 1: Phân rã mục tiêu (Planning)", desc: "Phân rã: Subgoal A (Tiêu chuẩn văn bằng & kinh nghiệm) & Subgoal B (Hồ sơ)", tokens: 440, status: "active", chk: "C1_PLAN" },
+        { name: "Bước 2: Tra cứu căn cứ (LawGraph)", desc: "Tra cứu Subgoal A trong context độc lập", tokens: 370, status: "active", chk: "C2_RETRIEVAL" },
+        { name: "Bước 3: Kiểm định hiệu lực (Auditor)", desc: "Oracle cảnh báo Điều 3 Khoản 3 NĐ 152 đã được sửa đổi bởi NĐ 70/2023!", tokens: 300, status: "failed" },
+        { name: "Bước 4: Điều hướng kế thừa (Re-routing)", desc: "Duyệt quan hệ sửa đổi sang NĐ 70/2023 Điều 1 Khoản 5", tokens: 600, status: "recovered", chk: "C1_RESTORE" },
+        { name: "Bước 5: Soạn thảo hồ sơ (Drafter)", desc: "Soạn thảo hướng dẫn chính xác 100% theo Nghị định 70/2023", tokens: 630, status: "active", chk: "C3_FINAL" }
       ],
       tokens: 2340,
       latency: 240,
       grounding: "100% (Áp dụng đúng NĐ 70/2023)",
-      recovery: "Durable SQLite Rollback",
+      recovery: "Điều hướng thay thế & Lưu vết SQLite",
       outcomeClass: "result-success",
       dossier: "HƯỚNG DẪN TUÂN THỦ CHUẨN XÁC THEO NĐ 70/2023/NĐ-CP (Điều 1 Khoản 5):\n• Tiêu chuẩn chuyên gia: Có bằng đại học trở lên HOẶC tương đương;\n• Kinh nghiệm: Có ít nhất 03 năm kinh nghiệm làm việc phù hợp với vị trí dự kiến làm việc tại Việt Nam.\n(Không bắt buộc bằng đại học phải trùng tên chuyên ngành như NĐ 152 cũ)."
     }
@@ -242,7 +242,7 @@ const WORKFLOW_NODES = [
   { id: "wf_lawgraph", label: "LawGraphAgent", sub: "Statutory Retrieval Worker", x: 440, y: 100, type: "worker", color: "#06b6d4", class: "src.agents.lawgraph.LawGraphAgent", tokens: "380 tkn (Isolated)" },
   { id: "wf_auditor", label: "ClaimAuditorAgent", sub: "Deterministic Oracle Gate", x: 650, y: 100, type: "oracle", color: "#f59e0b", class: "src.agents.claim_auditor.ClaimAuditorAgent", tokens: "310 tkn (Oracle)" },
   { id: "wf_decision", label: "[is_valid?]", sub: "Conditional Route Gate", x: 840, y: 100, type: "gate", color: "#f43f5e", class: "LangGraph Conditional Edge", tokens: "Zero LLM" },
-  { id: "wf_rollback", label: "Differential Rollback", sub: "Restore C1 (Sub B Intact)", x: 530, y: 220, type: "rollback", color: "#a855f7", class: "Durable SQLite Rollback", tokens: "Zero Restart Cost" },
+  { id: "wf_rollback", label: "Differential Rollback", sub: "Restore C1 (Sub B Intact)", x: 530, y: 220, type: "rollback", color: "#a855f7", class: "Điều hướng thay thế & Lưu vết SQLite", tokens: "Zero Restart Cost" },
   { id: "wf_drafter", label: "DrafterAgent", sub: "Compliance Synthesizer", x: 840, y: 220, type: "drafter", color: "#10b981", class: "src.agents.drafter.DrafterAgent", tokens: "650 tkn" },
   { id: "wf_sqlite", label: "SQLiteCheckpointer", sub: "Audit Log & Checkpointer", x: 1010, y: 220, type: "sqlite", color: "#a855f7", class: "src.memory.sqlite_manager.SQLiteMemoryManager", tokens: "Persistence" },
   { id: "wf_end", label: "__end__", sub: "Verified Compliance Dossier", x: 1160, y: 220, type: "exit", color: "#10b981", class: "Final LegalAgentState", tokens: "Output" }
@@ -254,7 +254,7 @@ const WORKFLOW_EDGES = [
   { from: "wf_lawgraph", to: "wf_auditor", label: "candidate clauses" },
   { from: "wf_auditor", to: "wf_decision", label: "audit report" },
   { from: "wf_decision", to: "wf_rollback", label: "REVOKED / EXPIRED", type: "rollback" },
-  { from: "wf_rollback", to: "wf_planner", label: "Restore Checkpoint C1", type: "rollback" },
+  { from: "wf_rollback", to: "wf_planner", label: "Chuyển tiếp thay thế", type: "rollback" },
   { from: "wf_decision", to: "wf_drafter", label: "ACTIVE (100% Valid)", type: "valid" },
   { from: "wf_planner", to: "wf_drafter", label: "Subgoal B (Cached Profile)", type: "cache" },
   { from: "wf_drafter", to: "wf_sqlite", label: "persist audit log" },
@@ -281,7 +281,7 @@ const GRAPH_DATA = {
     { from: "lead", to: "sub_b", label: "subtask 2" },
     { from: "sub_a", to: "doc_old", label: "retrieves" },
     { from: "doc_old", to: "oracle", label: "audits status" },
-    { from: "oracle", to: "lead", label: "ROLLBACK C1", type: "rollback" },
+    { from: "oracle", to: "lead", label: "HẾT HIỆU LỰC", type: "rollback" },
     { from: "lead", to: "doc_new", label: "re-routes (successor)", type: "reroute" },
     { from: "doc_new", to: "drafter", label: "verified clauses" },
     { from: "sub_b", to: "drafter", label: "cached profile" }
@@ -706,7 +706,7 @@ class DemoApp {
 
       <!-- Rollback Arc from Oracle back to Lead Orch -->
       <path id="p3_e_rollback" d="M 158 72 C 140 86, 110 86, 94 68" stroke="#a855f7" stroke-dasharray="3 2" stroke-width="1.5" fill="none" marker-end="url(#p3-arr-purple)" />
-      <text x="126" y="88" text-anchor="middle" fill="#c084fc" font-size="7">↺ Rollback C1</text>
+      <text x="126" y="88" text-anchor="middle" fill="#c084fc" font-size="7">↺ Re-route</text>
 
       <!-- Synthesizer Box -->
       <rect id="p3_n_drafter" x="262" y="28" width="62" height="36" rx="5" fill="#14141e" stroke="#10b981" stroke-width="1.5" />
@@ -722,7 +722,7 @@ class DemoApp {
 
       <!-- Bottom summary banner -->
       <rect x="18" y="104" width="324" height="22" rx="4" fill="rgba(16, 185, 129, 0.08)" stroke="rgba(16, 185, 129, 0.25)" />
-      <text x="180" y="119" text-anchor="middle" fill="#34d399" font-size="8" font-family="monospace">🛡️ KIỂM ĐỊNH ORACLE & KHÔI PHỤC VI SAI (Độc lập phân rã)</text>
+      <text x="180" y="119" text-anchor="middle" fill="#34d399" font-size="8" font-family="monospace">🛡️ KIỂM ĐỊNH HIỆU LỰC & ĐIỀU HƯỚNG THAY THẾ (Google ADK)</text>
     `;
   }
 
@@ -902,7 +902,7 @@ class DemoApp {
       this.memAuditBadge.className = "badge-tag result-danger";
       this.memGroundingRate.textContent = "0.0%";
       this.memClaimsRatio.textContent = "0 / 1 (Vi phạm hiệu lực)";
-      this.memAuditFeedback.textContent = `CẢNH BÁO: ${sc.initialClause.docId} đã hết hiệu lực. Kích hoạt conditional rollback edge về Checkpoint C1_PLAN!`;
+      this.memAuditFeedback.textContent = `CẢNH BÁO: ${sc.initialClause.docId} đã hết hiệu lực. Kích hoạt điều hướng sang văn bản kế thừa!`;
     }
 
     // Step 3: Rollback & Re-route (Differential recovery)
@@ -1100,7 +1100,7 @@ class DemoApp {
       const p = document.getElementById("node_wf_planner");
       if (n) n.classList.add("rollback");
       if (p) p.classList.add("active");
-      this.updateWorkflowInspector(WORKFLOW_NODES[5], "DIFF_ROLLBACK ➔ C1_PLAN (Sub B Cached)", "RECOVERED");
+      this.updateWorkflowInspector(WORKFLOW_NODES[5], "RE-ROUTING ➔ SUCCESSOR (Sub B Cached)", "RECOVERED");
     } else if (idx >= 4) {
       const d = document.getElementById("node_wf_drafter");
       const s = document.getElementById("node_wf_sqlite");

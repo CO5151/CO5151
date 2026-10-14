@@ -186,7 +186,7 @@
           <div class="card-diagram-box">
             <div class="diagram-title-strip">
               <span>SƠ ĐỒ KIẾN TRÚC: VÒNG LẶP REACT TỰ DO</span>
-              <span class="badge-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);">⚠️ BỘ NHỚ RAM TẠM O(N²)</span>
+              <span class="badge-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);">⚠️ KHÔNG CÓ CHECKPOINT (IN-MEMORY)</span>
             </div>
             <svg id="p2Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
           </div>
@@ -195,7 +195,7 @@
           <div class="card-footer">
             <div id="p2Status" class="result-badge">Chưa bắt đầu</div>
             <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
-              <strong>Đánh giá:</strong> Bùng nổ token bậc hai O(N²); ngữ cảnh bị loãng; lỗi sai tích lũy P=pⁿ; sập tiến trình là mất sạch bộ nhớ.
+              <strong>Đánh giá:</strong> Lịch sử hội thoại tích lũy gây tốn token; không kiểm định hiệu lực văn bản qua VBPL; không lưu vết checkpoint khi gặp lỗi.
             </div>
           </div>
         </div>
@@ -203,9 +203,9 @@
         <!-- Pattern 3: G4 Lead/Subagent Orchestrator -->
         <div class="paradigm-card highlight" id="cardP3">
           <div class="card-header">
-            <span class="card-tag tag-emerald">Anthropic 2025 + LangGraph</span>
+            <span class="card-tag tag-emerald">Google ADK Architecture</span>
             <h2 class="card-title">3. Orchestrator-Workers (G4)</h2>
-            <div class="card-sub">Lead/Subagent Isolation + Durable Checkpoints</div>
+            <div class="card-sub">Phân rã tác tử + Kiểm định VBPL + Lưu vết SQLite</div>
           </div>
           <div class="card-metrics">
             <div class="metric-box">
@@ -235,7 +235,7 @@
           <div class="card-footer">
             <div id="p3Status" class="result-badge">Chưa bắt đầu</div>
             <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
-              <strong>Đánh giá:</strong> Xác thực 100% bằng Oracle tiền định; Rollback vi sai từ Checkpoint C1 bảo toàn Subgoal B trong bộ nhớ; đúng tỷ lệ 3.2x của Anthropic.
+              <strong>Đánh giá:</strong> Kiểm định hiệu lực qua VBPL; tự động điều hướng sang văn bản kế thừa; lưu vết trạng thái vào SQLite.
             </div>
           </div>
         </div>
@@ -248,16 +248,16 @@
       <div class="graph-container-card">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
           <div>
-            <h2 style="font-size: 1.05rem; font-weight: 700; color: #fff;">Đồ Thị Luồng Trạng Thái Tác Tử (LangGraph StateGraph & Recovery Cycle)</h2>
+            <h2 style="font-size: 1.05rem; font-weight: 700; color: #fff;">Đồ Thị Luồng Trạng Thái Tác Tử (Multi-Agent State Graph & Recovery Cycle)</h2>
             <p style="font-size: 0.76rem; color: var(--text-muted);">
-              Mô hình hóa chu trình điều phối có hướng (StateGraph DAG): Planning ➔ LawGraph Retrieval ➔ Claim Auditor Oracle ➔ Conditional Recovery Edge (Rollback) ➔ Drafter ➔ SQLite Memory.
+              Mô hình hóa chu trình điều phối có hướng (Directed Multi-Agent Flow): Planning ➔ LawGraph Retrieval ➔ Claim Auditor ➔ Re-route Edge ➔ Drafter ➔ SQLite Memory.
             </p>
           </div>
           <div class="graph-legend">
             <div class="legend-item"><div class="legend-dot" style="background: #3b82f6;"></div><span>Entry / Planning Node</span></div>
             <div class="legend-item"><div class="legend-dot" style="background: #06b6d4;"></div><span>Subagent Worker</span></div>
             <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div><span>Deterministic Oracle Gate</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div><span>Differential Rollback Arc</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div><span>Re-route / Thay thế văn bản</span></div>
             <div class="legend-item"><div class="legend-dot" style="background: #10b981;"></div><span>Synthesizer / SQLite</span></div>
           </div>
         </div>
@@ -307,10 +307,10 @@
         </div>
         <div class="tier-card tier-cache">
           <div class="tier-header">
-            <span class="tier-title">Tầng 2: Differential State Cache</span>
-            <span class="badge-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">DIFF CACHE</span>
+            <span class="tier-title">Tầng 2: State Cache (Kế Thừa Kết Quả)</span>
+            <span class="badge-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">CACHED SUBGOALS</span>
           </div>
-          <div class="tier-desc">Bảo toàn Subgoal B đã xác thực (Tỷ lệ sở hữu FDI 45%) khi Subgoal A bị bãi bỏ. Tiết kiệm 100% token re-run khi rollback từ C1_PLAN.</div>
+          <div class="tier-desc">Lưu giữ các Subgoal đã xác thực thành công. Khi phát hiện một nhánh văn bản hết hiệu lực, hệ thống chỉ tra cứu lại nhánh đó mà không cần thực thi lại các mục tiêu đã hoàn thành.</div>
         </div>
         <div class="tier-card tier-durable">
           <div class="tier-header">
@@ -419,7 +419,7 @@
         <div class="memory-tier-card">
           <div class="memory-header-row">
             <div class="memory-title">
-              <span>💾 Tầng 3: Bộ Nhớ Bền Vững & Differential Rollback</span>
+              <span>💾 Tầng 3: Bộ Nhớ Bền Vững & Lưu Vết Trạng Thái</span>
             </div>
             <span class="badge-tag" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">
               SQLITE CHECKPOINTER
@@ -429,7 +429,7 @@
           <!-- Differential Rollback Diff Box -->
           <div class="state-widget">
             <div class="widget-label">
-              <span>↺ So Sánh Trạng Thái Vi Sai (Differential Memory Diff)</span>
+              <span>↺ Theo Dõi Thay Đổi Trạng Thái (State Transition Diff)</span>
               <span class="badge-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">DIFF INSPECTION</span>
             </div>
             <div class="memory-diff-box" id="memDiffBox">
@@ -439,7 +439,7 @@
 <div class="diff-line diff-add">+ [INSERTED TO MEMORY] 52/2024/ND-CP (Căn cứ thay thế hợp lệ thi hành từ 01/07/2024)</div>
             </div>
             <p style="margin-top: 6px; font-size: 0.72rem; color: var(--text-muted); line-height: 1.35;">
-              <strong>Bằng chứng thực nghiệm:</strong> Khác với ReAct agent phải restart lại từ turn 0, LangGraph StateGraph chỉ rollback nhánh lỗi ở Subgoal A; toàn bộ kết quả Subgoal B được giữ nguyên trong cache, tiết kiệm hoàn toàn chi phí token và độ trễ.
+              <strong>Bằng chứng thực nghiệm:</strong> Khi kiểm định phát hiện văn bản ở Subgoal A hết hiệu lực, hệ thống điều hướng tra cứu văn bản kế thừa mà không làm mất dữ liệu của Subgoal B đã hoàn thành.
             </p>
           </div>
 
@@ -501,7 +501,7 @@
           <div>
             <h2 style="font-size: 1.05rem; font-weight: 700; color: #fff;">Đồ Thị Trạng Thái & Pháp Điển (Interactive State Graph)</h2>
             <p style="font-size: 0.76rem; color: var(--text-muted);">
-              Minh họa luồng điều phối phân rã Subgoals, cô lập ngữ cảnh các Worker, cổng kiểm định Oracle tiền định và đường vòng quay lui (Rollback Edge).
+              Minh họa luồng điều phối phân rã Subgoals, cô lập ngữ cảnh các Worker, cổng kiểm định Oracle tiền định và đường vòng quay lui (Re-route Edge).
             </p>
           </div>
           <div class="graph-legend">
@@ -510,7 +510,7 @@
             <div class="legend-item"><div class="legend-dot" style="background: #06b6d4;"></div><span>Subagent</span></div>
             <div class="legend-item"><div class="legend-dot" style="background: #f43f5e;"></div><span>Expired Law</span></div>
             <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div><span>Oracle Gate</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div><span>Rollback Edge</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div><span>Re-route Edge</span></div>
           </div>
         </div>
 
@@ -544,7 +544,7 @@
 }
           </div>
           <div class="lit-quote-box">
-            <strong>Nguyên lý Rollback vi sai (Differential Rollback):</strong> Khi Oracle phát hiện văn bản ở Subgoal A hết hiệu lực, hệ thống khôi phục trạng thái về <code>C1_PLAN</code>. Kết quả tra cứu hợp lệ của Subgoal B (Tỷ lệ sở hữu nước ngoài) được giữ nguyên trong State Cache, không cần thực thi lại.
+            <strong>Cơ chế điều hướng (Re-routing):</strong> Khi kiểm định phát hiện văn bản ở Subgoal A hết hiệu lực, hệ thống truy vết quan hệ kế thừa sang văn bản mới. Kết quả tra cứu của Subgoal B được giữ nguyên, tránh tra cứu lặp lại.
           </div>
         </div>
       </div>
@@ -576,7 +576,7 @@
               <td>1.0x (Cơ sở)</td>
               <td><span style="color: var(--accent-rose); font-weight: 700;">11.8x (Bùng nổ)</span></td>
               <td><span style="color: var(--accent-emerald); font-weight: 700;">3.2x (Đúng dự báo)</span></td>
-              <td>Anthropic (Feb 2025): Hệ thống nghiên cứu đa tác tử</td>
+              <td>Thực nghiệm nhóm G4 trên kịch bản đối chiếu</td>
             </tr>
             <tr>
               <td><strong>Độ Trễ Thực Thi</strong></td>
@@ -596,8 +596,8 @@
               <td><strong>Cơ Chế Phục Hồi Lỗi</strong></td>
               <td>Không có (Mù hiệu lực)</td>
               <td>Không có (Khởi động lại từ đầu)</td>
-              <td><span style="color: var(--accent-emerald);">Rollback Checkpoint SQLite</span></td>
-              <td>LangGraph (2024–2025): Cyclic State Graphs & Checkpointing</td>
+              <td><span style="color: var(--accent-emerald);">Điều hướng kế thừa & SQLite</span></td>
+              <td>Google ADK Pipeline & SQLite Persistence</td>
             </tr>
             <tr>
               <td><strong>Cổng Kiểm Định Hiệu Lực</strong></td>
