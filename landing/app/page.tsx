@@ -62,6 +62,12 @@ export default function Home() {
 
           <div className="flex items-center gap-3">
             <a
+              href={`${basePath}/demo/`}
+              className="inline-flex h-9 items-center rounded-md border border-cyan-500/30 bg-cyan-950/40 px-3 text-xs font-medium text-cyan-400 transition hover:bg-cyan-900/60 active:scale-[0.98]"
+            >
+              ⚖️ S1-7 Demo Workbench
+            </a>
+            <a
               href="https://github.com/DangLamTung/CO5151"
               target="_blank"
               rel="noreferrer"

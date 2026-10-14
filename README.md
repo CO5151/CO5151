@@ -202,16 +202,20 @@ In [`src/evaluation/baselines.py`](src/evaluation/baselines.py), four baseline p
 3. **Single-Agent ReAct**: Iterative Thought-Action loop.
 4. **LegalPilot-VN Agentic (Ours)**: Google ADK multi-agent architecture with Selective Traversal and Claim Auditor oracle.
 
-> **Cloud Budget Optimization Note**: To avoid burning the $25.00 course credit buffer during everyday unit testing, the baseline models in `src/evaluation/baselines.py` execute fast algorithmic simulations matching the empirical characteristics published in the paper. To execute against live Vertex AI Gemini or local Ollama (Qwen 2.5 7B), see Section 7 below.
+> **Evaluation method note**: baseline models in `src/evaluation/baselines.py` are **query-driven and never receive the ground truth**. The evaluator holds the ground truth purely for scoring. Retrieval is real BM25 over the locally ingested corpus (`src/evaluation/corpus.py`); grounding is computed by running the actual `ClaimAuditorAgent` over each baseline's retrieved context, and latency is measured.
+>
+> **Scope caveat**: the corpus currently contains only the instruments ingested locally (3 documents / 13 chunks). Absolute retrieval scores are therefore low and are **not comparable** to published figures over the full 1,703-document corpus. Reproduce with `python -m src.evaluation.evaluator`; provenance is recorded under the `_metadata` key of `data/benchmarks/benchmark_results.json`.
 
-### Comparative Benchmark Results (100 Questions)
+### Comparative Benchmark Results (100 Questions, local corpus, measured)
 
-| Model / Architecture | P@2 | P@5 | R@2 | R@5 | F1@2 | F2@2 | Hit@2 | MRR | Noise Ratio $\downarrow$ | Grounding $\uparrow$ | Latency | Cloud Cost ($/Q) |
+| Model / Architecture | P@2 | P@5 | R@2 | R@5 | F1@2 | F2@2 | Hit@2 | MRR | Noise Ratio | Grounding $\uparrow$ | Latency | Est. Cost ($/Q) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Naive Chunk RAG** | 0.505 | 0.204 | 0.948 | 0.948 | 0.649 | 0.798 | 1.000 | 1.000 | 74.8% | 66.7% | 45 ms | $0.00024 |
-| **Static 1-Hop SBV-LawGraph** | 0.500 | 0.200 | 0.948 | 0.948 | 0.648 | 0.798 | 1.000 | 1.000 | 78.8% | 33.3% | 120 ms | $0.00051 |
-| **Single-Agent ReAct** | 0.545 | 0.222 | 0.987 | 0.990 | 0.689 | 0.837 | 1.000 | 1.000 | 47.8% | 75.0% | 480 ms | $0.00074 |
-| **LegalPilot-VN Agentic (Ours)** | **0.545** | **0.226** | **0.987** | **1.000** | **0.689** | **0.837** | **1.000** | **1.000** | **45.5%** | **100.0%** | 185 ms | $0.00042 |
+| **Naive Chunk RAG** | 0.035 | 0.020 | 0.040 | 0.040 | 0.037 | 0.038 | 0.04 | 0.035 | 98.3% | 82.6% | 0.23 ms | $0.00022 |
+| **Static 1-Hop SBV-LawGraph** | 0.035 | 0.014 | 0.040 | 0.040 | 0.037 | 0.038 | 0.04 | 0.035 | 98.2% | 77.8% | 0.12 ms | $0.00017 |
+| **Single-Agent ReAct** | 0.020 | 0.008 | 0.040 | 0.040 | 0.027 | 0.033 | 0.04 | 0.035 | 98.2% | 80.1% | 0.22 ms | $0.00014 |
+| **LegalPilot-VN Agentic (Ours)** | 0.030 | 0.012 | **0.055** | **0.055** | **0.038** | **0.047** | **0.06** | **0.055** | 98.5% | **100.0%** | 0.15 ms | $0.00018 |
+
+> **Reading these numbers.** Retrieval metrics (P@2, R@2) are near floor for *every* system because the local corpus covers only 3 of the ~10 instruments the 100 questions reference. The informative signal is **Grounding**: temporal pruning lets the agentic pipeline emit **100% in-force provisions**, while the unpruned baselines retain revoked material (77.8-82.6%). Latency covers retrieval + Claim Auditor verification only, not LLM generation. See `_metadata` in the results file for the full provenance record.
 
 ### Cost & Compute Estimation: DeepSeek vs. Vertex AI vs. Local Ollama
 

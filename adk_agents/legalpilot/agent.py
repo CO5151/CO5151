@@ -74,7 +74,7 @@ def execute_compliance_audit_pipeline(
 
 root_agent = Agent(
     name="legalpilot",
-    model="gemini-2.5-flash",
+    model="deepseek/deepseek-chat",
     description="Hệ thống đa tác tử tư vấn tuân thủ pháp luật Việt Nam (Google ADK Multi-Agent Compliance System).",
     instruction=(
         "Bạn là Trợ lý Pháp lý Cao cấp LegalPilot-VN (Theme 9). "

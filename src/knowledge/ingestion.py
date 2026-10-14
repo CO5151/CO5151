@@ -503,6 +503,49 @@ Document text:
         return None
 
 
+def apply_revocation_status(documents: dict[str, Any]) -> int:
+    """Propagate revocation metadata onto repealed documents.
+
+    Scans every ``SUPERSEDES`` cross-reference and marks the target document as
+    ``expired`` with a ``revoked_by`` pointer to the repealing instrument. Without
+    this step, offline exports record every parsed instrument as ``in_force``,
+    producing a graph that cannot represent the amendment chain the retrieval layer
+    depends on.
+
+    Args:
+        documents: Mapping of ``doc_id`` to document payload, mutated in place.
+
+    Returns:
+        Number of documents whose status was updated.
+    """
+    updates = 0
+    for doc in documents.values():
+        for ref in doc.get("cross_references") or []:
+            if ref.get("rel_type") != "SUPERSEDES":
+                continue
+            target_id = str(ref.get("target_doc_id", ""))
+            if not target_id:
+                continue
+            target = documents.get(target_id) or next(
+                (
+                    d
+                    for did, d in documents.items()
+                    if did.upper() == target_id.upper()
+                ),
+                None,
+            )
+            if not target:
+                # Target instrument has not been ingested; nothing to update yet.
+                continue
+            source_id = str(ref.get("source_doc_id", ""))
+            if target.get("status") != "expired" or target.get("revoked_by") != source_id:
+                target["status"] = "expired"
+                target["revoked_by"] = source_id
+                target["revoked_date"] = ref.get("effective_date")
+                updates += 1
+    return updates
+
+
 def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalCrossReference]:
     """Extracts explicit legal cross-references from the document text.
 
@@ -556,7 +599,38 @@ def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalC
             )
         )
 
-    # 3. Detect GUIDES / Căn cứ
+    # 3. Detect whole-document repeals / replacements.
+    #
+    # Regulatory practice often repeals an entire instrument in the preamble, e.g.
+    #   "Bãi bỏ Nghị định số 101/2012/NĐ-CP ngày 22 tháng 11 năm 2012 ..."
+    # which the article-scoped pattern above cannot match because no article number
+    # is present. Missing this edge is what previously left repealed instruments
+    # recorded as "in_force" in the exported graph.
+    whole_doc_pattern = re.compile(
+        r"(?:Bãi bỏ|Thay thế)\s+(?:toàn bộ\s+)?(?:Nghị định|Thông tư|Luật|Bộ luật)\s+"
+        r"(?:số\s+)?([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)",
+        re.IGNORECASE,
+    )
+    for match in whole_doc_pattern.finditer(full_text):
+        target_doc = normalize_doc_id(match.group(1))
+        if target_doc == doc.doc_id:
+            continue
+        if any(
+            r.rel_type == "SUPERSEDES" and r.target_doc_id == target_doc for r in refs
+        ):
+            continue
+        verb = match.group(0).strip().split()[0]
+        refs.append(
+            LegalCrossReference(
+                source_doc_id=doc.doc_id,
+                target_doc_id=target_doc,
+                rel_type="SUPERSEDES",
+                scope=f"Repeals the whole instrument ({verb})",
+                effective_date=doc.effective_date,
+            )
+        )
+
+    # 4. Detect GUIDES / Căn cứ
     guides_pattern = re.compile(
         r"Căn cứ\s+((?:Bộ luật|Luật)\s+[^;\n]+)",
         re.IGNORECASE,
@@ -594,8 +668,20 @@ def generate_legal_chunks(
             context_header = f"[{doc.doc_type} {doc.doc_id} - {doc.title}] [Điều {article.article_number}: {article.title}]"
             full_chunk_text = f"{context_header} [Khoản {clause.clause_number}]: {clause.content}"
 
-            # If embedding model is not called yet, generate deterministic dummy vector for ingestion testing
-            vector = [0.0] * dummy_vector_dim if dummy_vector_dim else []
+            # If a custom test dimension is explicitly provided (not default 768), generate dummy vector
+            if dummy_vector_dim is not None and dummy_vector_dim != 768:
+                vector = [0.0] * dummy_vector_dim
+            else:
+                # Compute real dense embedding vector using Vietnamese bi-encoder model
+                try:
+                    from sentence_transformers import SentenceTransformer
+                    _global_embedder = getattr(generate_legal_chunks, "_embedder", None)
+                    if _global_embedder is None:
+                        _global_embedder = SentenceTransformer("bkai-foundation-models/vietnamese-bi-encoder")
+                        generate_legal_chunks._embedder = _global_embedder
+                    vector = [float(x) for x in _global_embedder.encode(full_chunk_text, normalize_embeddings=True)]
+                except Exception:
+                    vector = [0.0] * 768
 
             chunks.append(
                 {
@@ -737,9 +823,15 @@ class LegalIngestionPipeline:
                     for ref in cross_refs
                 ],
             }
-            export_file.write_text(
-                json.dumps(current_data, ensure_ascii=False, indent=2), encoding="utf-8"
-            )
+            # Propagate repeal metadata so the exported graph carries the amendment
+            # chain instead of recording every instrument as in_force.
+            updated = apply_revocation_status(current_data)
+            if updated:
+                logger.info(
+                    "Revocation inference updated %d document status(es) in the graph export.",
+                    updated,
+                )
+            export_file.write_text(json.dumps(current_data, ensure_ascii=False, indent=2), encoding="utf-8")
             return
 
         self.neo4j_client.init_schema()
@@ -794,6 +886,20 @@ class LegalIngestionPipeline:
                         "effective_date": ref.effective_date or doc.effective_date,
                     },
                 )
+                # Propagate validity: a repealed instrument must not remain 'in_force'
+                # in the graph, otherwise temporal pruning has nothing to act on.
+                if ref.rel_type == "SUPERSEDES":
+                    self.neo4j_client.execute_query(
+                        "MATCH (d:Document {doc_id: $target}) "
+                        "SET d.status = 'expired', "
+                        "    d.revoked_by = $source, "
+                        "    d.revoked_date = $date",
+                        {
+                            "target": ref.target_doc_id,
+                            "source": ref.source_doc_id,
+                            "date": ref.effective_date or doc.effective_date,
+                        },
+                    )
 
     def _ingest_to_qdrant(self, chunks: list[dict[str, Any]]) -> None:
         """Initializes collection if needed and upserts legal chunks (or exports if offline)."""
@@ -811,10 +917,15 @@ class LegalIngestionPipeline:
                     existing_chunks = json.loads(export_file.read_text(encoding="utf-8"))
                 except Exception:
                     existing_chunks = []
-            existing_chunks.extend(chunks)
-            export_file.write_text(
-                json.dumps(existing_chunks, ensure_ascii=False, indent=2), encoding="utf-8"
-            )
+            # De-duplicate by chunk id so that re-ingesting is idempotent. Previously
+            # this appended unconditionally, so every re-run duplicated the corpus.
+            by_id: dict[str, dict[str, Any]] = {
+                str(entry.get("id")): entry for entry in existing_chunks
+            }
+            for entry in chunks:
+                by_id[str(entry.get("id"))] = entry
+            merged = [by_id[key] for key in sorted(by_id)]
+            export_file.write_text(json.dumps(merged, ensure_ascii=False, indent=2), encoding="utf-8")
             return
 
         self.qdrant_manager.init_collection(

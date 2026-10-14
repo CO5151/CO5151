@@ -1,20 +1,41 @@
-"""Baselines for Vietnamese Legal RAG Evaluation (SBV-LawGraph Benchmark).
+"""Baselines for the Vietnamese Legal RAG evaluation (SBV-LawGraph benchmark).
 
-Implements the 4 baseline paradigms compared in the ACIIDS 2026 SBV-LawGraph paper
-and Section 7.3 of the D1 proposal:
-1. NaiveChunkRAG: Top-k vector/lexical retrieval without knowledge graph.
-2. SBVLawGraphBaseline: Top-k retrieval + fixed 1-hop graph expansion (Phan et al., 2026).
-3. ReActBaseline: Single-agent ReAct (Reasoning + Acting) loop without selective graph pruning.
-4. LegalPilotAgenticBaseline: Google ADK multi-agent pipeline with Selective Traversal & Claim Auditor.
+Four retrieval paradigms are compared:
+
+1. :class:`NaiveChunkRAG`          - top-k lexical/BM25 chunk lookup, no graph.
+2. :class:`SBVLawGraphBaseline`    - top-k lookup + mechanical, unpruned 1-hop graph
+   expansion (the SBV-LawGraph method, Phan et al., ACIIDS 2026).
+3. :class:`ReActBaseline`          - iterative query-expansion loop over the corpus.
+4. :class:`LegalPilotAgenticBaseline` - selective traversal with temporal pruning plus
+   an external Claim Auditor verification pass.
+
+Design contract
+---------------
+``predict(query, corpus)`` receives **only** the query and the retrieval corpus. Baseline
+models never receive the evaluation ground truth; the evaluator keeps ground truth
+strictly for scoring. This makes an oracle leak structurally impossible - an earlier
+revision of this module read ``ground_truth[0]`` to build its own "retrieval", which
+silently rigged every reported metric.
+
+All figures produced here are *measured over the locally ingested corpus*. Because that
+corpus only contains the instruments ingested locally (see
+``src.evaluation.corpus.LegalCorpus``), absolute scores are not comparable to results
+published over the full 1,703-document statutory corpus.
 """
 
 from __future__ import annotations
 
 import abc
 import time
+from collections import Counter
 from dataclasses import dataclass
 
+from src.evaluation.corpus import CorpusChunk, LegalCorpus
 from src.evaluation.metrics import normalize_article_id
+
+#: Rough characters-per-token ratio used for context-size estimation.
+#: This is an estimate, not a tokenizer measurement, and is reported as such.
+_CHARS_PER_TOKEN = 4.0
 
 
 @dataclass
@@ -23,11 +44,16 @@ class RetrievalPrediction:
 
     query: str
     retrieved_articles: list[str]
-    supported_claims: int = 1
-    total_claims: int = 1
+    supported_claims: int = 0
+    total_claims: int = 0
     latency_ms: float = 0.0
     input_tokens: int = 0
     output_tokens: int = 0
+
+    @property
+    def context_chars(self) -> int:
+        """Character length of the retrieved context (used for token estimation)."""
+        return sum(len(c) for c in self.retrieved_articles)
 
 
 class BaseRetrievalModel(abc.ABC):
@@ -37,170 +63,243 @@ class BaseRetrievalModel(abc.ABC):
         self.name = name
 
     @abc.abstractmethod
-    def predict(self, query: str, ground_truth: list[str] | None = None) -> RetrievalPrediction:
-        """Executes retrieval for a query and returns structured prediction."""
-        pass
+    def predict(self, query: str, corpus: LegalCorpus) -> RetrievalPrediction:
+        """Execute retrieval for ``query`` against ``corpus``.
+
+        Implementations MUST NOT receive or consult evaluation ground truth.
+
+        Args:
+            query: Legal question to answer.
+            corpus: Indexed statutory corpus to retrieve from.
+
+        Returns:
+            A :class:`RetrievalPrediction` holding the ranked article ids.
+        """
+        raise NotImplementedError
+
+    # -- helpers --------------------------------------------------------------
+
+    @staticmethod
+    def _clause_dict(chunk: CorpusChunk) -> dict:
+        """Adapt a corpus chunk to the mapping shape expected by ClaimAuditorAgent."""
+        return {
+            "doc_id": chunk.doc_id,
+            "status": chunk.status,
+            "revoked_by": chunk.revoked_by,
+            "article": chunk.article_id,
+            "article_title": chunk.title,
+            "content": chunk.text,
+        }
+
+    @classmethod
+    def _audit(cls, chunks: list[CorpusChunk]) -> tuple[int, int]:
+        """Run the real Claim Auditor over ``chunks`` and return (supported, total).
+
+        Grounding is therefore *measured* by the same verification component used in
+        production, rather than hardcoded per baseline.
+        """
+        if not chunks:
+            return (0, 0)
+        from src.agents.claim_auditor import ClaimAuditorAgent
+
+        report = ClaimAuditorAgent().audit_provisions([cls._clause_dict(c) for c in chunks])
+        return (report.grounded_claims, report.total_claims)
+
+    @staticmethod
+    def _estimate_tokens(chunks: list[CorpusChunk]) -> tuple[int, int]:
+        """Estimate (input, output) tokens from retrieved context size.
+
+        Input tokens are derived from the retrieved context length; output tokens are
+        estimated from the number of retrieved provisions. Both are estimates.
+        """
+        context_chars = sum(len(c.text) for c in chunks)
+        input_tokens = int(context_chars / _CHARS_PER_TOKEN)
+        output_tokens = int(max(1, len(chunks)) * 120)
+        return (input_tokens, output_tokens)
+
+    def _finalize(
+        self,
+        query: str,
+        chunks: list[CorpusChunk],
+        start_time: float,
+    ) -> RetrievalPrediction:
+        """Assemble a prediction with measured latency and audited grounding."""
+        supported, total = self._audit(chunks)
+        input_tokens, output_tokens = self._estimate_tokens(chunks)
+        return RetrievalPrediction(
+            query=query,
+            retrieved_articles=[c.article_id for c in chunks],
+            supported_claims=supported,
+            total_claims=total,
+            latency_ms=round((time.perf_counter() - start_time) * 1000, 3),
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+        )
 
 
 class NaiveChunkRAG(BaseRetrievalModel):
-    """Baseline 1: Naive Chunk RAG.
+    """Baseline 1: top-k lexical chunk retrieval without any knowledge graph.
 
-    Retrieves top-k provisions via standard semantic/lexical similarity without knowledge graph.
-    Suffers from context fragmentation and misses multi-hop amendment chains.
+    Cannot follow amendment chains and performs no temporal verification, so revoked
+    instruments remain in the context whenever they are lexically similar.
     """
+
+    TOP_K = 5
 
     def __init__(self) -> None:
         super().__init__(name="Naive Chunk RAG")
 
-    def predict(self, query: str, ground_truth: list[str] | None = None) -> RetrievalPrediction:
-        start_time = time.perf_counter()
-
-        # Simulated semantic retrieval over chunked statutory text:
-        # Retrieves relevant direct articles if present, but cannot follow amendment hops
-        retrieved: list[str] = []
-        if ground_truth:
-            # Captures direct primary document, but misses chained amendments
-            primary = ground_truth[0]
-            retrieved.append(primary)
-            # Fills remainder with top semantic chunks (often related doc but wrong clause)
-            doc_prefix = primary.split("_")[0] if "_" in primary else primary
-            retrieved.extend([f"{doc_prefix}_1", f"{doc_prefix}_2", "02/2025/tt-nhnn_5"])
-        else:
-            retrieved = ["12/2022/tt-nhnn_15", "12/2022/tt-nhnn_1", "08/2023/tt-nhnn_1"]
-
-        elapsed_ms = (time.perf_counter() - start_time) * 1000 + 45.0  # standard vector latency
-
-        # In Naive RAG, without temporal verification, hallucination/outdated claim risk exists
-        return RetrievalPrediction(
-            query=query,
-            retrieved_articles=retrieved[:5],
-            supported_claims=2,
-            total_claims=3,  # Grounding rate ~ 66.7%
-            latency_ms=round(elapsed_ms, 2),
-            input_tokens=1200,
-            output_tokens=250,
-        )
+    def predict(self, query: str, corpus: LegalCorpus) -> RetrievalPrediction:
+        start = time.perf_counter()
+        hits = corpus.search(query, k=self.TOP_K)
+        return self._finalize(query, [chunk for chunk, _ in hits], start)
 
 
 class SBVLawGraphBaseline(BaseRetrievalModel):
-    """Baseline 2: Static 1-Hop Graph-RAG (SBV-LawGraph paper method, Phan et al. ACIIDS 2026).
+    """Baseline 2: static, unpruned 1-hop Graph-RAG (SBV-LawGraph method).
 
-    Follows a fixed 1-hop graph expansion over all outgoing/incoming relations.
-    Because omnibus circulars amend dozens of unrelated articles, this mechanical expansion
-    injects severe distracting noise (>60%), causing Precision@2 to drop to 0.37-0.39.
+    Reproduces the mechanism described by Phan et al. (ACIIDS 2026): semantic top-k
+    seeding followed by a *mechanical* 1-hop expansion over every outgoing relation.
+    Because omnibus instruments cross-reference many unrelated provisions, this injects
+    substantial distractor context and retains superseded instruments, since no
+    temporal filter is applied.
     """
+
+    SEED_K = 2
+    MAX_CONTEXT = 5
 
     def __init__(self) -> None:
         super().__init__(name="Static 1-Hop SBV-LawGraph")
 
-    def predict(self, query: str, ground_truth: list[str] | None = None) -> RetrievalPrediction:
-        start_time = time.perf_counter()
+    def predict(self, query: str, corpus: LegalCorpus) -> RetrievalPrediction:
+        start = time.perf_counter()
+        seeds = [chunk for chunk, _ in corpus.search(query, k=self.SEED_K)]
+        if not seeds:
+            return self._finalize(query, [], start)
 
-        retrieved: list[str] = []
-        if ground_truth:
-            # 1 direct hit from top-k vector search
-            retrieved.append(ground_truth[0])
-            # Fixed 1-hop expansion dumps unrelated amended articles from omnibus circular
-            # causing Precision@2 to hover around 0.37 - 0.39 as documented in paper
-            retrieved.extend(
-                [
-                    "unrelated_omnibus_art_34",
-                    "unrelated_omnibus_art_56",
-                    "unrelated_circular_clause_12",
-                    "101/2012/nd-cp_15",  # Expired statute captured without pruning
-                ]
-            )
-            if len(ground_truth) > 1:
-                retrieved.append(ground_truth[1])
-        else:
-            retrieved = ["12/2022/tt-nhnn_15", "unrelated_noise_1", "unrelated_noise_2"]
+        expanded: list[CorpusChunk] = list(seeds)
+        seen = {c.article_id for c in expanded}
 
-        elapsed_ms = (time.perf_counter() - start_time) * 1000 + 120.0
+        # Mechanical expansion: every chunk of every seed document, plus every
+        # document reachable through its cross references - expired or not.
+        for seed in seeds:
+            for neighbour in corpus.neighbours(seed.doc_id):
+                if neighbour.article_id not in seen:
+                    expanded.append(neighbour)
+                    seen.add(neighbour.article_id)
+            for linked in corpus.linked_docs(seed.doc_id):
+                for neighbour in corpus.chunks:
+                    if neighbour.doc_id.lower() == linked and neighbour.article_id not in seen:
+                        expanded.append(neighbour)
+                        seen.add(neighbour.article_id)
 
-        # Fixed 1-hop includes expired laws without verification
-        return RetrievalPrediction(
-            query=query,
-            retrieved_articles=retrieved,
-            supported_claims=1,
-            total_claims=3,  # Grounding rate ~ 33.3% due to expired statutes
-            latency_ms=round(elapsed_ms, 2),
-            input_tokens=2800,
-            output_tokens=420,
-        )
+        return self._finalize(query, expanded[: self.MAX_CONTEXT], start)
 
 
 class ReActBaseline(BaseRetrievalModel):
-    """Baseline 3: Single-Agent ReAct.
+    """Baseline 3: single-agent ReAct-style iterative retrieval.
 
-    Uses an iterative Thought-Action-Observation loop with standard retrieval tool.
-    Achieves reasonable precision but suffers from high latency and token cost.
+    Alternates retrieve/observe steps, expanding the query with salient terms from the
+    first pass. Improves recall over a single pass but performs no temporal validation,
+    so revoked instruments can still surface.
     """
+
+    MAX_CONTEXT = 4
+    ITERATIONS = 2
 
     def __init__(self) -> None:
         super().__init__(name="Single-Agent ReAct")
 
-    def predict(self, query: str, ground_truth: list[str] | None = None) -> RetrievalPrediction:
-        start_time = time.perf_counter()
+    def predict(self, query: str, corpus: LegalCorpus) -> RetrievalPrediction:
+        start = time.perf_counter()
+        collected: list[CorpusChunk] = []
+        seen: set[str] = set()
+        current_query = query
 
-        retrieved: list[str] = []
-        if ground_truth:
-            # Recovers primary and one chained document through 2 ReAct iterations
-            retrieved.extend(ground_truth[: min(len(ground_truth), 2)])
-            retrieved.append("12/2022/tt-nhnn_20")
-        else:
-            retrieved = ["12/2022/tt-nhnn_15", "12/2022/tt-nhnn_20"]
+        for _ in range(self.ITERATIONS):
+            for chunk, _score in corpus.search(current_query, k=self.MAX_CONTEXT):
+                if chunk.article_id not in seen:
+                    collected.append(chunk)
+                    seen.add(chunk.article_id)
+            if not collected:
+                break
+            # "Observation" step: expand the query with frequent terms from what was
+            # just retrieved.
+            expansion = Counter(
+                term for chunk in collected for term in set(chunk.tokens)
+            ).most_common(6)
+            extra = " ".join(term for term, _ in expansion)
+            current_query = f"{query} {extra}".strip()
 
-        elapsed_ms = (
-            time.perf_counter() - start_time
-        ) * 1000 + 480.0  # Multiple sequential LLM calls
-
-        return RetrievalPrediction(
-            query=query,
-            retrieved_articles=retrieved,
-            supported_claims=3,
-            total_claims=4,  # Grounding rate ~ 75.0%
-            latency_ms=round(elapsed_ms, 2),
-            input_tokens=3900,
-            output_tokens=680,
-        )
+        return self._finalize(query, collected[: self.MAX_CONTEXT], start)
 
 
 class LegalPilotAgenticBaseline(BaseRetrievalModel):
-    """Baseline 4: LegalPilot-VN (Theme 9 Multi-Agent System - Ours).
+    """Baseline 4: LegalPilot-VN (this work).
 
-    Employs Google ADK architecture:
-    - Planning & Subgoal Decomposition
-    - Selective Edge Traversal (pruning expired nodes and unrelated omnibus edges)
-    - Claim Auditor Verification Oracle (validating statutory validity)
-    - Automated recovery and re-routing
+    Employs:
+    * selective edge traversal - the graph is walked only along edges that govern the
+      query subject, instead of expanding every relation;
+    * temporal pruning - chunks whose governing instrument is revoked are dropped
+      *before* context assembly (``src.core.statute_status``);
+    * an external Claim Auditor pass that verifies each retained provision and yields
+      the per-claim grounding rate.
     """
+
+    SEED_K = 3
+    MAX_CONTEXT = 4
 
     def __init__(self) -> None:
         super().__init__(name="LegalPilot-VN Agentic (Ours)")
 
-    def predict(self, query: str, ground_truth: list[str] | None = None) -> RetrievalPrediction:
-        start_time = time.perf_counter()
+    def predict(self, query: str, corpus: LegalCorpus) -> RetrievalPrediction:
+        start = time.perf_counter()
+        seeds = [chunk for chunk, _ in corpus.search(query, k=self.SEED_K)]
+        if not seeds:
+            return self._finalize(query, [], start)
 
-        retrieved: list[str] = []
-        if ground_truth:
-            # Traversal engine accurately selects ground-truth articles and active amendments
-            retrieved = list(ground_truth)
-            # May include at most 1 closely related regulatory context
-            if len(retrieved) < 2:
-                retrieved.append(f"{normalize_article_id(ground_truth[0]).split('_')[0]}_context")
-        else:
-            retrieved = ["52/2024/nd-cp_22", "52/2024/nd-cp_23"]
+        # Selective traversal: re-route superseded seeds to their successor instrument
+        # instead of dumping the whole neighbourhood, then drop anything not in force.
+        selected: list[CorpusChunk] = []
+        seen: set[str] = set()
 
-        elapsed_ms = (time.perf_counter() - start_time) * 1000 + 185.0
+        for seed in seeds:
+            if seed.is_active:
+                if seed.article_id not in seen:
+                    selected.append(seed)
+                    seen.add(seed.article_id)
+                continue
+            # Seed is revoked: follow the revocation chain, if the successor is ingested.
+            for chunk in corpus.chunks:
+                if chunk.article_id in seen or not chunk.is_active:
+                    continue
+                if seed.revoked_by and _same_instrument(chunk.doc_id, seed.revoked_by):
+                    selected.append(chunk)
+                    seen.add(chunk.article_id)
 
-        # Claim Auditor enforces 100% active grounding rate
-        total_claims = max(1, len(retrieved))
-        return RetrievalPrediction(
-            query=query,
-            retrieved_articles=retrieved,
-            supported_claims=total_claims,
-            total_claims=total_claims,  # 100% Grounded
-            latency_ms=round(elapsed_ms, 2),
-            input_tokens=2200,
-            output_tokens=380,
-        )
+        # Backfill with remaining active chunks ranked by the query, so the context is
+        # not truncated when pruning removes most candidates.
+        if len(selected) < self.MAX_CONTEXT:
+            for chunk, _score in corpus.search(query, k=len(corpus.chunks)):
+                if len(selected) >= self.MAX_CONTEXT:
+                    break
+                if chunk.is_active and chunk.article_id not in seen:
+                    selected.append(chunk)
+                    seen.add(chunk.article_id)
+
+        return self._finalize(query, selected[: self.MAX_CONTEXT], start)
+
+
+def _same_instrument(doc_id: str, other: str) -> bool:
+    """Compare document numbers ignoring formatting and accents.
+
+    Args:
+        doc_id: First document number, e.g. ``"52/2024/ND-CP"``.
+        other: Second document number, possibly normalized differently.
+
+    Returns:
+        ``True`` when both refer to the same instrument.
+    """
+    left = normalize_article_id(doc_id)
+    right = normalize_article_id(other)
+    return bool(left) and (left == right or left in right or right in left)

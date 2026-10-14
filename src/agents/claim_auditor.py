@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any
 
 from src.agents.base import ADKAgent
 from src.core.logger import logger
+from src.core.statute_status import is_active_status
 from src.memory.state_models import AtomicClaim, AuditReport
 from src.tools.gazette_tool import VERIFY_VBPL_STATUS_TOOL, verify_vbpl_status
 from src.tools.validity_checker import VALIDITY_CHECKER_TOOL
@@ -90,8 +91,8 @@ class ClaimAuditorAgent(ADKAgent):
                     if not revoked_by and live_info.get("metadata", {}).get("revoked_by"):
                         revoked_by = live_info["metadata"]["revoked_by"]
 
-            # Check if active
-            is_active = (status in ("active", "partially_expired")) and (revoked_by is None)
+            # Check if active (accepts both 'active' and 'in_force' conventions)
+            is_active = is_active_status(status, revoked_by)
             content_str = str(clause.get("content") or "")
             is_grounded = is_active and len(content_str) > 10
 

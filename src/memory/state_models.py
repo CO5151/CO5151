@@ -47,7 +47,11 @@ class StatuteCacheEntry(BaseModel):
     effective_date: str
     status: str = Field(
         ...,
-        description="Status: 'active', 'expired', 'partially_expired', or 'not_in_force'",
+        description=(
+            "Status literal. In-force values are 'active' or 'in_force' (both accepted, "
+            "see src/core/statute_status.py); inactive values are 'expired', "
+            "'partially_expired' or 'not_in_force'."
+        ),
     )
     raw_metadata: dict[str, Any] = Field(default_factory=dict)
     cached_at: float = Field(default_factory=lambda: datetime.now(UTC).timestamp())

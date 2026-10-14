@@ -61,7 +61,7 @@ flowchart TD
 ```
 
 ### 3.2 Role-Segregated Agent Specialization
-1. **Orchestrator Agent (Supervisor)**: Evaluates user compliance inquiries against enterprise memory, executes the **retrieval-decision policy**, coordinates specialist agents via a shared LangGraph state, and controls iterative backtracking.
+1. **Orchestrator Agent (Supervisor)**: Evaluates user compliance inquiries against enterprise memory, executes the **retrieval-decision policy**, coordinates specialist agents via a shared Google ADK session state, and controls iterative backtracking.
 2. **LawGraph Research Agent (Structural Retrieval Specialist)**: Executes targeted queries on Qdrant and Neo4j. Instead of mechanical 1-hop dumping, it performs **selective edge traversal**: following only the specific *Amend* or *Guide* relationship connected to the queried sub-clause, dramatically reducing context noise.
 3. **Live Legal Law Update Agent (Real-Time Status Specialist)**: Queries the National Database of Legal Documents (VBPL) to confirm current legal effectiveness, catching newly issued circulars or suspensions issued after the offline graph was indexed.
 4. **Claim Auditor Agent (Grounding Verifier - Critic)**: Decomposes candidate compliance guidance into atomic propositions and audits each claim against the retrieved statutory text. Refuses unverified claims before they reach the user.
@@ -79,7 +79,7 @@ flowchart TD
 | **Dossier Drafter** | `submit_portal_filing` | **Irreversible-write** | Submits administrative filing payload to mock SBV portal. **Guarded by human confirmation.** |
 
 ### 3.4 Memory Design
-- **Short-Term Memory**: Shared LangGraph execution state tracking the user's ongoing compliance query, active statutory provisions, auditor critique logs, intermediate draft states, and retry counters (capped at 3 refinement cycles).
+- **Short-Term Memory**: Shared Google ADK session state tracking the user's ongoing compliance query, active statutory provisions, auditor critique logs, intermediate draft states, and retry counters (capped at 3 refinement cycles).
 - **Long-Term Memory**: Local SQLite database (`enterprise_compliance.db`):
   - `enterprise_profile`: Business structure (e.g., LLC, JSC, or foreign-invested enterprise), registered business lines, charter capital, tax registration tier, and employee headcount.
   - `audit_history`: Timestamped records of past corporate compliance audits, synthesized administrative dossiers, and human authorization logs.
@@ -143,7 +143,7 @@ The project therefore evaluates whether state-dependent planning and verificatio
 
 | Milestone | Member 1 (Lead & Orchestrator) | Member 2 (LawGraph Tool Engineer) | Member 3 (Verification & Memory) | Member 4 (Security & Eval) |
 | :--- | :--- | :--- | :--- | :--- |
-| **W2–3: Setup** | Design LangGraph MAS state machine & agent protocols | Deploy Neo4j graph & Qdrant as MCP tool | Build VBPL Legal Law Update scraper & SQLite enterprise schema | Set up evaluation harness with 100-QA SBV dataset |
+| **W2–3: Setup** | Design Google ADK multi-agent state machine & agent protocols | Deploy Neo4j graph & Qdrant as MCP tool | Build VBPL Legal Law Update scraper & SQLite enterprise schema | Set up evaluation harness with 100-QA SBV dataset |
 | **W4–6: Build** | Implement retrieval-decision policy & message handoffs | Build `trace_selective_edge` tool for Neo4j Cypher | Build per-claim proposition extractor & verifier | Build 10 prompt injection test cases & audit logger |
 | **W7: Checkpoint (D2)** | Deliver working MAS demo on 5 scenario audits | Measure latency and Precision@2 of selective traversal | Connect Claim Auditor to LawGraph & Legal Law Update outputs | Report preliminary numbers vs. SBV-LawGraph baseline |
 | **W8–10: Hardening** | Optimize Neo4j graph queries for multi-tier statutory laws | Refine per-claim proposition extractor & error handling | Run full 10-test injection suite; SME compliance officer walkthrough | 
@@ -171,7 +171,7 @@ The project therefore evaluates whether state-dependent planning and verificatio
 | **Drafter Agent** | `submit_portal_filing` | Irreversible-Write | Dispatches administrative payload. **Guarded by human token gate.** |
 
 ### 6.3 Memory Hierarchy
-* **Short-Term Working Memory:** In-memory LangGraph/ADK execution state tracking active queries, retrieved passages, audit logs, and retry counters (capped at 3 refinement loops).
+* **Short-Term Working Memory:** In-memory Google ADK execution state tracking active queries, retrieved passages, audit logs, and retry counters (capped at 3 refinement loops).
 * **Long-Term Memory:** SQLite database (`enterprise_compliance.db`) storing `enterprise_profile`, `audit_history`, and `statute_cache` (TTL 24h).
 
 ### 6.4 Google Agent Development Kit (ADK) Implementation Blueprint

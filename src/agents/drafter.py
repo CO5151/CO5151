@@ -93,17 +93,44 @@ class DrafterAgent(ADKAgent):
                 f"      Hiệu lực thi hành: Từ ngày {clause.get('effective_date')}"
             )
 
-        lines.extend(
-            [
-                "-" * 78,
-                "2. KẾT LUẬN & KHUYẾN NGHỊ THỰC THI:",
+        llm_conclusion = ""
+        if verified_clauses:
+            try:
+                from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
+                ctx = "\n".join([f"- {c.get('title')} {c.get('article')}: {c.get('content')}" for c in verified_clauses])
+                p_info = f"Doanh nghiệp: {profile.company_name}, Vốn hiện có: {profile.charter_capital:,.0f} VNĐ" if profile and profile.charter_capital else ""
+                drafter_adk = GoogleAgent(
+                    name="LegalDrafterWorker",
+                    model=get_default_model(),
+                    instruction="Bạn là chuyên gia tư vấn tuân thủ pháp luật doanh nghiệp Việt Nam. Hãy đưa ra kết luận và khuyến nghị thực thi chuẩn xác, chuyên nghiệp dựa trên các điều khoản đã được đối soát.",
+                )
+                prompt = (
+                    f"Dựa trên câu hỏi tra cứu:\n'{query}'\n"
+                    f"và các căn cứ pháp lý đã được thẩm định còn hiệu lực:\n{ctx}\n"
+                    f"{p_info}\n"
+                    "Hãy đưa ra phần KẾT LUẬN & KHUYẾN NGHỊ THỰC THI (ngắn gọn, chính xác số liệu, chỉ rõ doanh nghiệp cần làm gì)."
+                )
+                llm_conclusion = invoke_adk_agent(drafter_adk, prompt).strip()
+            except Exception as e:
+                logger.warning("Google ADK Drafter conclusion failed: %s", e)
+
+        conclusion_lines = [
+            "-" * 78,
+            "2. KẾT LUẬN & KHUYẾN NGHỊ THỰC THI:",
+        ]
+        if llm_conclusion:
+            conclusion_lines.append(llm_conclusion)
+        else:
+            conclusion_lines.extend([
                 "  - Doanh nghiệp phải tuân thủ nghiêm ngặt các điều kiện quy định tại các văn bản còn hiệu lực trên.",
                 "  - Tuyệt đối không áp dụng các văn bản/điều khoản đã bị bãi bỏ theo cảnh báo của Claim Auditor.",
-                "-" * 78,
-                self.LEGAL_DISCLAIMER,
-                "=" * 78,
-            ]
-        )
+            ])
+        conclusion_lines.extend([
+            "-" * 78,
+            self.LEGAL_DISCLAIMER,
+            "=" * 78,
+        ])
+        lines.extend(conclusion_lines)
 
         dossier = "\n".join(lines)
         return dossier
