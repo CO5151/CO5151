@@ -472,6 +472,9 @@ class StreamlinedDemoApp {
     this.playTimer = null;
 
     this.initDOMElements();
+    this.renderP1Diagram();
+    this.renderP2Diagram();
+    this.renderP3Diagram();
     this.bindEvents();
     this.renderScenarioHeader();
     this.resetSimulation();
@@ -485,6 +488,10 @@ class StreamlinedDemoApp {
     this.scenTrap = document.getElementById("scenTrap");
     this.scenEnterprise = document.getElementById("scenEnterprise");
     this.scenQuery = document.getElementById("scenQuery");
+
+    this.p1Svg = document.getElementById("p1Svg");
+    this.p2Svg = document.getElementById("p2Svg");
+    this.p3Svg = document.getElementById("p3Svg");
 
     this.p1Logs = document.getElementById("p1Logs");
     this.p2Logs = document.getElementById("p2Logs");
@@ -500,6 +507,253 @@ class StreamlinedDemoApp {
 
     this.pills = document.querySelectorAll(".scenario-pill");
     this.speedBtns = document.querySelectorAll(".speed-btn");
+  }
+
+  renderP1Diagram() {
+    if (!this.p1Svg) return;
+    this.p1Svg.innerHTML = `
+      <defs>
+        <marker id="p1-arr" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#71717a" />
+        </marker>
+        <marker id="p1-arr-green" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
+        </marker>
+        <marker id="p1-arr-red" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#f43f5e" />
+        </marker>
+      </defs>
+
+      <!-- In Circle -->
+      <circle cx="26" cy="46" r="14" fill="#10b981" />
+      <text x="26" y="50" text-anchor="middle" fill="#000" font-size="10.5" font-weight="700">In</text>
+
+      <!-- In -> Router -->
+      <line x1="40" y1="46" x2="68" y2="46" stroke="#71717a" stroke-width="1.5" marker-end="url(#p1-arr)" />
+
+      <!-- Router Node -->
+      <rect id="p1_n_router" x="68" y="28" width="62" height="36" rx="6" fill="#14141e" stroke="#3b82f6" stroke-width="1.5" />
+      <text x="99" y="44" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">Router</text>
+      <text x="99" y="56" text-anchor="middle" fill="#93c5fd" font-size="7.5">Phân loại</text>
+
+      <!-- Router -> LLM 1 (Extractor) -->
+      <line x1="130" y1="46" x2="152" y2="46" stroke="#71717a" stroke-width="1.5" marker-end="url(#p1-arr)" />
+
+      <!-- LLM 1 Node -->
+      <rect id="p1_n_llm1" x="152" y="28" width="66" height="36" rx="6" fill="#14141e" stroke="#71717a" stroke-width="1.5" />
+      <text x="185" y="44" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">LLM 1</text>
+      <text x="185" y="56" text-anchor="middle" fill="#a1a1aa" font-size="7.5">Trích xuất</text>
+
+      <!-- LLM 1 -> Gate -->
+      <line x1="218" y1="46" x2="236" y2="46" stroke="#71717a" stroke-width="1.5" marker-end="url(#p1-arr)" />
+
+      <!-- Gate Diamond -->
+      <polygon id="p1_n_gate" points="248,34 260,46 248,58 236,46" fill="#f59e0b" stroke="#d97706" stroke-width="1.2" />
+      <text x="248" y="48.5" text-anchor="middle" fill="#000" font-size="7" font-weight="800">Gate</text>
+
+      <!-- Gate Pass -> LLM 2 -->
+      <path d="M 260 40 L 278 28" stroke="#10b981" stroke-width="1.5" marker-end="url(#p1-arr-green)" />
+      <text x="270" y="32" fill="#10b981" font-size="7" font-weight="700">Pass</text>
+
+      <!-- LLM 2 Node -->
+      <rect id="p1_n_llm2" x="278" y="14" width="46" height="26" rx="5" fill="#14141e" stroke="#71717a" stroke-width="1.5" />
+      <text x="301" y="30" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="700">LLM 2</text>
+
+      <!-- Out Circle -->
+      <circle cx="340" cy="27" r="12" fill="#f97316" />
+      <text x="340" y="31" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="700">Out</text>
+
+      <!-- Gate Fail -> Exit -->
+      <path d="M 254 56 L 270 72" stroke="#f43f5e" stroke-width="1.5" marker-end="url(#p1-arr-red)" />
+      <text x="268" y="66" fill="#f43f5e" font-size="7" font-weight="700">Fail</text>
+      <circle id="p1_n_exit" cx="288" cy="78" r="11" fill="#f43f5e" />
+      <text x="288" y="81" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">Exit</text>
+
+      <!-- Stateless / No Memory Callout Banner -->
+      <rect x="18" y="100" width="324" height="24" rx="4" fill="rgba(244, 63, 94, 0.08)" stroke="rgba(244, 63, 94, 0.25)" />
+      <text x="180" y="116" text-anchor="middle" fill="#f87171" font-size="8" font-family="monospace">🚫 BỘ NHỚ: Stateless (0 Memory) · Không lưu checkpoint</text>
+    `;
+  }
+
+  renderP2Diagram() {
+    if (!this.p2Svg) return;
+    this.p2Svg.innerHTML = `
+      <defs>
+        <marker id="p2-arr" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#71717a" />
+        </marker>
+        <marker id="p2-arr-cyan" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#06b6d4" />
+        </marker>
+      </defs>
+
+      <!-- In Circle -->
+      <circle cx="26" cy="46" r="14" fill="#10b981" />
+      <text x="26" y="50" text-anchor="middle" fill="#000" font-size="10.5" font-weight="700">In</text>
+
+      <line x1="40" y1="46" x2="68" y2="46" stroke="#71717a" stroke-dasharray="3 3" stroke-width="1.5" />
+
+      <!-- LLM ReAct Node -->
+      <rect id="p2_n_llm" x="68" y="24" width="90" height="44" rx="8" fill="#14141e" stroke="#f59e0b" stroke-width="1.8" />
+      <text x="113" y="42" text-anchor="middle" fill="#fff" font-size="9.5" font-weight="700">🤖 LLM ReAct</text>
+      <text x="113" y="56" text-anchor="middle" fill="#fbbf24" font-size="7.5">Thought & Plan</text>
+
+      <!-- Bi-directional Loop to Environment/Tools -->
+      <path id="p2_e_action" d="M 158 36 C 180 20, 200 20, 218 36" stroke="#06b6d4" stroke-width="1.8" fill="none" marker-end="url(#p2-arr-cyan)" />
+      <text x="188" y="22" text-anchor="middle" fill="#06b6d4" font-size="7.5" font-weight="700">Action ➔</text>
+
+      <!-- Environment / Tools Node -->
+      <rect id="p2_n_env" x="218" y="24" width="85" height="44" rx="8" fill="#14141e" stroke="#06b6d4" stroke-width="1.8" />
+      <text x="260" y="42" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">Environment</text>
+      <text x="260" y="56" text-anchor="middle" fill="#a1a1aa" font-size="7.5">Tools & APIs</text>
+
+      <path id="p2_e_obs" d="M 218 54 C 200 68, 180 68, 158 54" stroke="#a1a1aa" stroke-width="1.8" fill="none" />
+      <text x="188" y="73" text-anchor="middle" fill="#a1a1aa" font-size="7.5">⮜ Observation</text>
+
+      <line x1="303" y1="46" x2="324" y2="46" stroke="#71717a" stroke-dasharray="3 3" stroke-width="1.5" />
+      <circle cx="338" cy="46" r="13" fill="#f97316" />
+      <text x="338" y="50" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">Out</text>
+
+      <!-- In-Memory Context Bloat Callout Banner -->
+      <rect x="18" y="100" width="324" height="24" rx="4" fill="rgba(245, 158, 11, 0.08)" stroke="rgba(245, 158, 11, 0.3)" />
+      <text x="180" y="116" text-anchor="middle" fill="#fbbf24" font-size="8" font-family="monospace">⚠️ BỘ NHỚ: In-Memory (Context dồn tích qua các turn)</text>
+    `;
+  }
+
+  renderP3Diagram() {
+    if (!this.p3Svg) return;
+    this.p3Svg.innerHTML = `
+      <defs>
+        <marker id="p3-arr" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#71717a" />
+        </marker>
+        <marker id="p3-arr-green" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
+        </marker>
+        <marker id="p3-arr-purple" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#a855f7" />
+        </marker>
+      </defs>
+
+      <!-- In Circle -->
+      <circle cx="24" cy="46" r="13" fill="#10b981" />
+      <text x="24" y="50" text-anchor="middle" fill="#000" font-size="10" font-weight="700">In</text>
+
+      <line x1="37" y1="46" x2="56" y2="46" stroke="#10b981" stroke-width="1.5" marker-end="url(#p3-arr-green)" />
+
+      <!-- Orchestrator Box -->
+      <rect id="p3_n_orch" x="56" y="24" width="76" height="44" rx="6" fill="#14141e" stroke="#10b981" stroke-width="1.8" />
+      <text x="94" y="42" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">Lead Orch</text>
+      <text x="94" y="56" text-anchor="middle" fill="#6ee7b7" font-size="7.5">Phân rã Subgoals</text>
+
+      <!-- Dispatches to Workers -->
+      <path d="M 132 36 L 158 24" stroke="#06b6d4" stroke-width="1.4" marker-end="url(#p3-arr)" />
+      <rect id="p3_n_w1" x="158" y="12" width="80" height="26" rx="4" fill="#14141e" stroke="#06b6d4" stroke-width="1.4" />
+      <text x="198" y="28" text-anchor="middle" fill="#67e8f9" font-size="8">LawGraph Worker</text>
+
+      <path d="M 132 56 L 158 66" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#p3-arr)" />
+      <rect id="p3_n_oracle" x="158" y="54" width="80" height="26" rx="4" fill="#14141e" stroke="#f59e0b" stroke-width="1.4" />
+      <text x="198" y="70" text-anchor="middle" fill="#fcd34d" font-size="8">Auditor Oracle</text>
+
+      <!-- Re-route Arc from Oracle back to Lead Orch -->
+      <path id="p3_e_rollback" d="M 158 72 C 140 86, 110 86, 94 68" stroke="#a855f7" stroke-dasharray="3 2" stroke-width="1.5" fill="none" marker-end="url(#p3-arr-purple)" />
+      <text x="126" y="88" text-anchor="middle" fill="#c084fc" font-size="7">↺ Re-route</text>
+
+      <!-- Synthesizer Box -->
+      <rect id="p3_n_drafter" x="262" y="28" width="62" height="36" rx="5" fill="#14141e" stroke="#10b981" stroke-width="1.5" />
+      <text x="293" y="45" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="700">Synthesizer</text>
+      <text x="293" y="56" text-anchor="middle" fill="#a1a1aa" font-size="7">Drafter</text>
+
+      <path d="M 238 25 L 262 38" stroke="#10b981" stroke-width="1.2" />
+      <path d="M 238 67 L 262 54" stroke="#10b981" stroke-width="1.2" />
+
+      <line x1="324" y1="46" x2="336" y2="46" stroke="#10b981" stroke-width="1.5" />
+      <circle cx="344" cy="46" r="11" fill="#f97316" />
+      <text x="344" y="50" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">Out</text>
+
+      <!-- Bottom summary banner -->
+      <rect x="18" y="104" width="324" height="22" rx="4" fill="rgba(16, 185, 129, 0.08)" stroke="rgba(16, 185, 129, 0.25)" />
+      <text x="180" y="119" text-anchor="middle" fill="#34d399" font-size="8" font-family="monospace">🛡️ KIỂM ĐỊNH VBPL & ĐIỀU HƯỚNG THAY THẾ (Google ADK)</text>
+    `;
+  }
+
+  highlightParadigmDiagrams(idx) {
+    const p1Nodes = ["p1_n_router", "p1_n_llm1", "p1_n_gate", "p1_n_llm2", "p1_n_exit"];
+    p1Nodes.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute("stroke-width", "1.5");
+    });
+
+    const p2Nodes = ["p2_n_llm", "p2_n_env"];
+    p2Nodes.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute("stroke-width", "1.8");
+    });
+
+    const p3Nodes = ["p3_n_orch", "p3_n_w1", "p3_n_oracle", "p3_n_drafter"];
+    p3Nodes.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute("stroke-width", "1.5");
+    });
+    const rb = document.getElementById("p3_e_rollback");
+    if (rb) rb.setAttribute("stroke-width", "1.5");
+
+    if (idx === -1) return;
+
+    if (idx === 0) {
+      const r = document.getElementById("p1_n_router");
+      if (r) r.setAttribute("stroke-width", "3");
+
+      const l = document.getElementById("p2_n_llm");
+      if (l) l.setAttribute("stroke-width", "3.2");
+
+      const o = document.getElementById("p3_n_orch");
+      if (o) o.setAttribute("stroke-width", "3.2");
+    } else if (idx === 1) {
+      const l1 = document.getElementById("p1_n_llm1");
+      if (l1) l1.setAttribute("stroke-width", "3");
+
+      const e = document.getElementById("p2_n_env");
+      if (e) e.setAttribute("stroke-width", "3");
+
+      const w1 = document.getElementById("p3_n_w1");
+      if (w1) w1.setAttribute("stroke-width", "3");
+    } else if (idx === 2) {
+      const g = document.getElementById("p1_n_gate");
+      if (g) g.setAttribute("stroke-width", "2.8");
+
+      const l = document.getElementById("p2_n_llm");
+      if (l) {
+        l.setAttribute("stroke", "#f43f5e");
+        l.setAttribute("stroke-width", "3.2");
+      }
+
+      const ora = document.getElementById("p3_n_oracle");
+      if (ora) {
+        ora.setAttribute("stroke", "#f43f5e");
+        ora.setAttribute("stroke-width", "3");
+      }
+    } else if (idx === 3) {
+      const ex = document.getElementById("p1_n_exit");
+      if (ex) ex.setAttribute("stroke-width", "3");
+
+      const l = document.getElementById("p2_n_llm");
+      if (l) {
+        l.setAttribute("stroke", "#f59e0b");
+        l.setAttribute("stroke-width", "3.5");
+      }
+
+      const r = document.getElementById("p3_e_rollback");
+      if (r) {
+        r.setAttribute("stroke-width", "3");
+        r.setAttribute("stroke", "#c084fc");
+      }
+      const o = document.getElementById("p3_n_orch");
+      if (o) o.setAttribute("stroke-width", "3");
+    } else if (idx >= 4) {
+      const d = document.getElementById("p3_n_drafter");
+      if (d) d.setAttribute("stroke-width", "3.2");
+    }
   }
 
   bindEvents() {
@@ -602,6 +856,8 @@ class StreamlinedDemoApp {
     this.renderCardSteps(this.p1Logs, sc.p1.steps, idx, this.p1Tokens, this.p1Status, sc.p1);
     this.renderCardSteps(this.p2Logs, sc.p2.steps, idx, this.p2Tokens, this.p2Status, sc.p2);
     this.renderCardSteps(this.p3Logs, sc.p3.steps, idx, this.p3Tokens, this.p3Status, sc.p3);
+
+    this.highlightParadigmDiagrams(idx);
   }
 
   renderCardSteps(container, steps, currentIdx, tokenEl, statusEl, patternObj) {

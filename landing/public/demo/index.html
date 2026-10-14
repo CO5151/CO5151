@@ -119,6 +119,15 @@
           </div>
         </div>
 
+        <!-- Embedded Architecture Diagram for Workflow 1 -->
+        <div class="card-diagram-box">
+          <div class="diagram-title-strip">
+            <span>SƠ ĐỒ KIẾN TRÚC: CHUỖI CỐ ĐỊNH</span>
+            <span class="badge-tag" style="background: rgba(244, 63, 94, 0.15); color: #f43f5e;">🚫 STATELESS</span>
+          </div>
+          <svg id="p1Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
+        </div>
+
         <div class="card-explanation">
           <div class="exp-title">Đặc tính kiến trúc:</div>
           <div class="exp-text">Dữ liệu đi qua chuỗi prompt cứng. Không gọi tool động, không kiểm định hiệu lực văn bản, không thể tự sửa sai khi gặp luật bãi bỏ.</div>
@@ -156,6 +165,15 @@
           </div>
         </div>
 
+        <!-- Embedded Architecture Diagram for Workflow 2 -->
+        <div class="card-diagram-box">
+          <div class="diagram-title-strip">
+            <span>SƠ ĐỒ KIẾN TRÚC: VÒNG LẶP REACT</span>
+            <span class="badge-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);">⚠️ IN-MEMORY</span>
+          </div>
+          <svg id="p2Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
+        </div>
+
         <div class="card-explanation">
           <div class="exp-title">Đặc tính kiến trúc:</div>
           <div class="exp-text">Một LLM duy nhất tự gọi tools lặp đi lặp lại. Toàn bộ lịch sử và kết quả tool dồn tích vào prompt khiến <strong>Context Window phình to</strong>, gây nhiễu và tốn chi phí.</div>
@@ -191,6 +209,15 @@
             <span class="metric-label">Độ Trễ</span>
             <span class="metric-val">~245 ms</span>
           </div>
+        </div>
+
+        <!-- Embedded Architecture Diagram for Workflow 3 -->
+        <div class="card-diagram-box">
+          <div class="diagram-title-strip">
+            <span>SƠ ĐỒ KIẾN TRÚC: ORCHESTRATOR-WORKERS</span>
+            <span class="badge-tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">LEAD + WORKERS</span>
+          </div>
+          <svg id="p3Svg" class="paradigm-svg" viewBox="0 0 360 135"></svg>
         </div>
 
         <div class="card-explanation">
