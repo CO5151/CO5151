@@ -153,6 +153,47 @@ class LegalCorpus:
                     )
                 )
 
+        if not chunks:
+            # Fallback to STATUTE_CATALOG when precomputed export files are absent
+            from src.agents.lawgraph import LawGraphAgent
+
+            for doc_id, doc in LawGraphAgent.STATUTE_CATALOG.items():
+                doc_title = str(doc.get("title", ""))
+                status = str(doc.get("status", "unknown"))
+                revoked_by = doc.get("revoked_by")
+                cross_refs: list[dict[str, str]] = []
+                for s in doc.get("supersedes", []):
+                    cross_refs.append({"target_doc_id": s, "rel_type": "SUPERSEDES"})
+                amends = doc.get("amends")
+                if amends:
+                    if isinstance(amends, list):
+                        for a in amends:
+                            cross_refs.append({"target_doc_id": a, "rel_type": "AMENDS"})
+                    else:
+                        cross_refs.append({"target_doc_id": str(amends), "rel_type": "AMENDS"})
+                guides = doc.get("guides")
+                if guides:
+                    cross_refs.append({"target_doc_id": str(guides), "rel_type": "GUIDES"})
+
+                for art in doc.get("articles", []):
+                    art_name = str(art.get("article", ""))
+                    m = re.search(r"\b(\d+)\b", art_name)
+                    art_num = m.group(1) if m else art_name.lower().replace(" ", "_")
+                    article_id = f"{doc_id.lower()}_{art_num}"
+                    content = str(art.get("content", ""))
+                    full_text = f"{doc_title}\n{art_name}: {art.get('title', '')}\n{content}"
+                    chunks.append(
+                        CorpusChunk(
+                            article_id=article_id,
+                            doc_id=doc_id,
+                            text=full_text,
+                            title=str(art.get("title", doc_title)),
+                            status=status,
+                            revoked_by=revoked_by,
+                            cross_references=cross_refs,
+                        )
+                    )
+
         logger.info("LegalCorpus built with %d chunk(s)", len(chunks))
         return cls(chunks)
 
@@ -209,7 +250,10 @@ class LegalCorpus:
         targets: list[str] = []
         for chunk in self.neighbours(doc_id):
             for ref in chunk.cross_references:
-                target = str(ref.get("target_doc_id", "")).strip()
+                if isinstance(ref, dict):
+                    target = str(ref.get("target_doc_id", "")).strip()
+                else:
+                    target = str(ref).strip()
                 if target:
                     targets.append(target.lower())
         return targets

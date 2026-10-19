@@ -39,16 +39,16 @@ Agent = GoogleAgent
 Runner = GoogleRunner
 
 __all__ = [
+    "ADKAgent",
+    "ADKRunner",
     "Agent",
-    "Runner",
-    "Workflow",
+    "AgentResult",
     "GoogleAgent",
     "GoogleRunner",
     "InMemorySessionService",
-    "ADKAgent",
-    "ADKRunner",
+    "Runner",
     "ToolDefinition",
-    "AgentResult",
+    "Workflow",
     "get_default_model",
     "invoke_adk_agent",
 ]
@@ -90,7 +90,7 @@ def invoke_adk_agent(
     collected_text: list[str] = []
     try:
         for event in runner.run(user_id=user_id, session_id=sid, new_message=msg):
-            if hasattr(event, "content") and event.content:
+            if hasattr(event, "content") and event.content and event.content.parts:
                 for part in event.content.parts:
                     if hasattr(part, "text") and part.text:
                         collected_text.append(part.text)
@@ -130,12 +130,16 @@ def get_llm() -> Any | None:
     """Returns a ChatOpenAI instance configured for DeepSeek if needed."""
     try:
         api_key = settings.DEEPSEEK_API_KEY or settings.OPENAI_API_KEY
-        if api_key and not api_key.startswith("paste_") and not api_key.startswith("sk-local-dummy"):
+        if (
+            api_key
+            and not api_key.startswith("paste_")
+            and not api_key.startswith("sk-local-dummy")
+        ):
             from langchain_openai import ChatOpenAI
 
             return ChatOpenAI(
                 model=settings.DEEPSEEK_MODEL or "deepseek-chat",
-                api_key=api_key,
+                api_key=api_key,  # type: ignore[arg-type]
                 base_url=settings.DEEPSEEK_API_BASE or "https://api.deepseek.com",
                 temperature=0.1,
             )
@@ -177,7 +181,7 @@ class ADKAgent:
                 model=self.model,
                 instruction=self.instruction,
                 description=self.description,
-                tools=adk_callables if adk_callables else None,
+                tools=adk_callables if adk_callables else None,  # type: ignore[arg-type]
             )
         except Exception as e:
             logger.warning(f"Failed to initialize underlying Google ADK Agent for {self.name}: {e}")

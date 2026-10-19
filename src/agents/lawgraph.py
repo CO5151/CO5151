@@ -47,6 +47,24 @@ class LawGraphAgent(ADKAgent):
                 },
             ],
         },
+        "40/2024/TT-NHNN": {
+            "doc_id": "40/2024/TT-NHNN",
+            "title": "Thông tư 40/2024/TT-NHNN hướng dẫn Nghị định 52/2024/NĐ-CP về thanh toán không dùng tiền mặt",
+            "issue_date": "2024-06-28",
+            "effective_date": "2024-07-01",
+            "status": "in_force",
+            "guides": "52/2024/ND-CP",
+            "articles": [
+                {
+                    "article": "Điều 18",
+                    "title": "Hồ sơ mở và sử dụng ví điện tử",
+                    "content": (
+                        "Hồ sơ, trình tự, thủ tục mở và sử dụng ví điện tử đối với tổ chức, cá nhân "
+                        "và điều kiện cung ứng dịch vụ trung gian thanh toán theo quy định."
+                    ),
+                }
+            ],
+        },
         "101/2012/ND-CP": {
             "doc_id": "101/2012/ND-CP",
             "title": "Nghị định 101/2012/NĐ-CP về thanh toán không dùng tiền mặt (CŨ)",

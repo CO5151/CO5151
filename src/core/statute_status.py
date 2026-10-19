@@ -32,9 +32,7 @@ UNKNOWN = "unknown"
 ACTIVE_STATUSES: frozenset[str] = frozenset({ACTIVE, IN_FORCE})
 
 #: Every literal that denotes a statute no longer (fully) in effect.
-INACTIVE_STATUSES: frozenset[str] = frozenset(
-    {EXPIRED, PARTIALLY_EXPIRED, NOT_IN_FORCE}
-)
+INACTIVE_STATUSES: frozenset[str] = frozenset({EXPIRED, PARTIALLY_EXPIRED, NOT_IN_FORCE})
 
 #: Canonical spelling used when *writing* status values.
 CANONICAL_ACTIVE = ACTIVE
