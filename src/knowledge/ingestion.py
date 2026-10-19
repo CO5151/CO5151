@@ -527,11 +527,7 @@ def apply_revocation_status(documents: dict[str, Any]) -> int:
             if not target_id:
                 continue
             target = documents.get(target_id) or next(
-                (
-                    d
-                    for did, d in documents.items()
-                    if did.upper() == target_id.upper()
-                ),
+                (d for did, d in documents.items() if did.upper() == target_id.upper()),
                 None,
             )
             if not target:
@@ -615,9 +611,7 @@ def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalC
         target_doc = normalize_doc_id(match.group(1))
         if target_doc == doc.doc_id:
             continue
-        if any(
-            r.rel_type == "SUPERSEDES" and r.target_doc_id == target_doc for r in refs
-        ):
+        if any(r.rel_type == "SUPERSEDES" and r.target_doc_id == target_doc for r in refs):
             continue
         verb = match.group(0).strip().split()[0]
         refs.append(
@@ -675,11 +669,17 @@ def generate_legal_chunks(
                 # Compute real dense embedding vector using Vietnamese bi-encoder model
                 try:
                     from sentence_transformers import SentenceTransformer
+
                     _global_embedder = getattr(generate_legal_chunks, "_embedder", None)
                     if _global_embedder is None:
-                        _global_embedder = SentenceTransformer("bkai-foundation-models/vietnamese-bi-encoder")
-                        generate_legal_chunks._embedder = _global_embedder
-                    vector = [float(x) for x in _global_embedder.encode(full_chunk_text, normalize_embeddings=True)]
+                        _global_embedder = SentenceTransformer(
+                            "bkai-foundation-models/vietnamese-bi-encoder"
+                        )
+                        generate_legal_chunks._embedder = _global_embedder  # type: ignore[attr-defined]
+                    vector = [
+                        float(x)
+                        for x in _global_embedder.encode(full_chunk_text, normalize_embeddings=True)
+                    ]
                 except Exception:
                     vector = [0.0] * 768
 
@@ -831,7 +831,9 @@ class LegalIngestionPipeline:
                     "Revocation inference updated %d document status(es) in the graph export.",
                     updated,
                 )
-            export_file.write_text(json.dumps(current_data, ensure_ascii=False, indent=2), encoding="utf-8")
+            export_file.write_text(
+                json.dumps(current_data, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
             return
 
         self.neo4j_client.init_schema()
@@ -925,7 +927,9 @@ class LegalIngestionPipeline:
             for entry in chunks:
                 by_id[str(entry.get("id"))] = entry
             merged = [by_id[key] for key in sorted(by_id)]
-            export_file.write_text(json.dumps(merged, ensure_ascii=False, indent=2), encoding="utf-8")
+            export_file.write_text(
+                json.dumps(merged, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
             return
 
         self.qdrant_manager.init_collection(

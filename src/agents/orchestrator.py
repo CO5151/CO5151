@@ -73,11 +73,13 @@ class LegalOrchestrator(ADKAgent):
         """Decomposes user query into logical legal subgoals and search keywords using LLM."""
         try:
             import json
+
             from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
+
             planner_agent = GoogleAgent(
                 name="LegalPlannerAgent",
                 model=get_default_model(),
-                instruction="Bạn là Legal Planning Agent. Phân tích câu hỏi pháp lý và chỉ trả về DUY NHẤT một khối JSON thuần túy (không kèm giải thích hay markdown code block) theo định dạng: {\"subgoals\": [\"...\", \"...\"], \"keywords\": [\"...\", \"...\"]}",
+                instruction='Bạn là Legal Planning Agent. Phân tích câu hỏi pháp lý và chỉ trả về DUY NHẤT một khối JSON thuần túy (không kèm giải thích hay markdown code block) theo định dạng: {"subgoals": ["...", "..."], "keywords": ["...", "..."]}',
             )
             prompt = (
                 f"Phân rã câu hỏi pháp lý sau thành 2 mục tiêu con (subgoals) và 3-5 từ khóa tra cứu chính xác:\n"
@@ -95,9 +97,20 @@ class LegalOrchestrator(ADKAgent):
             # Augment with essential domain tokens from query to ensure robust retrieval
             q_lower = query.lower()
             if "ví điện tử" in q_lower or "thanh toán" in q_lower or "fintech" in q_lower:
-                keywords.extend(["ví điện tử", "thanh toán không dùng tiền mặt", "điều kiện cung ứng", "52/2024/nd-cp", "40/2024/tt-nhnn", "nhà đầu tư nước ngoài"])
+                keywords.extend(
+                    [
+                        "ví điện tử",
+                        "thanh toán không dùng tiền mặt",
+                        "điều kiện cung ứng",
+                        "52/2024/nd-cp",
+                        "40/2024/tt-nhnn",
+                        "nhà đầu tư nước ngoài",
+                    ]
+                )
             if "đèn đỏ" in q_lower or "giao thông" in q_lower:
-                keywords.extend(["vượt đèn đỏ", "mô tô", "xe gắn máy", "100/2019/nd-cp", "168/2024/nd-cp"])
+                keywords.extend(
+                    ["vượt đèn đỏ", "mô tô", "xe gắn máy", "100/2019/nd-cp", "168/2024/nd-cp"]
+                )
             if subgoals and keywords:
                 return subgoals, list(dict.fromkeys(keywords))
         except Exception as e:

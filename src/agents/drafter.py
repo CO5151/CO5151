@@ -97,8 +97,18 @@ class DrafterAgent(ADKAgent):
         if verified_clauses:
             try:
                 from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
-                ctx = "\n".join([f"- {c.get('title')} {c.get('article')}: {c.get('content')}" for c in verified_clauses])
-                p_info = f"Doanh nghiệp: {profile.company_name}, Vốn hiện có: {profile.charter_capital:,.0f} VNĐ" if profile and profile.charter_capital else ""
+
+                ctx = "\n".join(
+                    [
+                        f"- {c.get('title')} {c.get('article')}: {c.get('content')}"
+                        for c in verified_clauses
+                    ]
+                )
+                p_info = (
+                    f"Doanh nghiệp: {profile.company_name}, Vốn hiện có: {profile.charter_capital:,.0f} VNĐ"
+                    if profile and profile.charter_capital
+                    else ""
+                )
                 drafter_adk = GoogleAgent(
                     name="LegalDrafterWorker",
                     model=get_default_model(),
@@ -121,15 +131,19 @@ class DrafterAgent(ADKAgent):
         if llm_conclusion:
             conclusion_lines.append(llm_conclusion)
         else:
-            conclusion_lines.extend([
-                "  - Doanh nghiệp phải tuân thủ nghiêm ngặt các điều kiện quy định tại các văn bản còn hiệu lực trên.",
-                "  - Tuyệt đối không áp dụng các văn bản/điều khoản đã bị bãi bỏ theo cảnh báo của Claim Auditor.",
-            ])
-        conclusion_lines.extend([
-            "-" * 78,
-            self.LEGAL_DISCLAIMER,
-            "=" * 78,
-        ])
+            conclusion_lines.extend(
+                [
+                    "  - Doanh nghiệp phải tuân thủ nghiêm ngặt các điều kiện quy định tại các văn bản còn hiệu lực trên.",
+                    "  - Tuyệt đối không áp dụng các văn bản/điều khoản đã bị bãi bỏ theo cảnh báo của Claim Auditor.",
+                ]
+            )
+        conclusion_lines.extend(
+            [
+                "-" * 78,
+                self.LEGAL_DISCLAIMER,
+                "=" * 78,
+            ]
+        )
         lines.extend(conclusion_lines)
 
         dossier = "\n".join(lines)

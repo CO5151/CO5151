@@ -29,9 +29,12 @@ import abc
 import time
 from collections import Counter
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from src.evaluation.corpus import CorpusChunk, LegalCorpus
 from src.evaluation.metrics import normalize_article_id
+
+if TYPE_CHECKING:
+    from src.evaluation.corpus import CorpusChunk, LegalCorpus
 
 #: Rough characters-per-token ratio used for context-size estimation.
 #: This is an estimate, not a tokenizer measurement, and is reported as such.
