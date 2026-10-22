@@ -3,7 +3,7 @@
 %  Agent Design Patterns & Orchestration: When Simple Workflows Beat Autonomous Agents
 %  Giảng viên hướng dẫn: TS. Lê Xuân Bách  |  Khoa KH&KT Máy tính -- ĐHBK ĐHQG-HCM (HK261)
 %  Nhóm G4: Đặng Lâm Tùng (Lead) - Nguyễn Trung Phong - Vũ Việt Hưng
-%  23 SLIDES | THUẬT NGỮ KỸ THUẬT & TRÍCH DẪN GIỮ NGUYÊN TIẾNG ANH
+%  24 SLIDES | THUẬT NGỮ KỸ THUẬT & TRÍCH DẪN GIỮ NGUYÊN TIẾNG ANH
 % =====================================================================
 \documentclass[aspectratio=1610,10pt,xcolor={table}]{beamer}
 
@@ -49,6 +49,7 @@
 
 % ---- Giảm khoảng cách để nội dung không tràn khỏi slide ----
 \tcbset{top=2pt,bottom=2pt,left=4pt,right=4pt,boxsep=1pt,toptitle=1pt,bottomtitle=1pt}
+\tcbset{usecase/.style={colback=green!4,colframe=darkgreen,fonttitle=\scriptsize\bfseries}}
 \let\origitemize\itemize
 \renewcommand{\itemize}{\origitemize\setlength{\itemsep}{1pt}\setlength{\topsep}{1pt}}
 \let\origenumerate\enumerate
@@ -82,7 +83,7 @@
 \begin{frame}[plain]
   \begin{tikzpicture}[remember picture, overlay]
     \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
-    \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
+    \node[anchor=center, text=white, font=\bfseries\scriptsize, text width=\paperwidth-1.2cm, align=center] at ([yshift=-0.6cm]current page.north)
       {TRƯỜNG ĐẠI HỌC BÁCH KHOA (ĐHQG-HCM) -- KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH};
   \end{tikzpicture}
 
@@ -102,7 +103,7 @@
     \end{tcolorbox}
 
     \vspace{0.3cm}
-    {\scriptsize \color{gray}Thời lượng: 30 phút $\cdot$ 23 slides}
+    {\scriptsize \color{gray}Thời lượng: 30 phút $\cdot$ 24 slides}
   \end{center}
 \end{frame}
 
@@ -116,11 +117,12 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Phần I: Workflows \& Các Pattern Cơ Bản}}
         {\small\textbf{Nguyễn Trung Phong}}\\
-        {\scriptsize (9.5 phút $\vert$ Slides 5--9)}\\[0.08cm]
+        {\scriptsize (9.5 phút $\vert$ Slides 5--10)}\\[0.08cm]
         \begin{itemize}\scriptsize
           \item Workflows vs. Agents
           \item Vì sao Anthropic khuyên bắt đầu đơn giản
           \item Prompt Chaining \& Routing
+          \item Parallelization
           \item Evaluator-Optimizer
           \item Khi nào mới cần đến agent
         \end{itemize}
@@ -130,7 +132,7 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Phần II: Multi-Agent Orchestration}}
         {\small\textbf{Vũ Việt Hưng}}\\
-        {\scriptsize (9.5 phút $\vert$ Slides 10--15)}\\[0.08cm]
+        {\scriptsize (9.5 phút $\vert$ Slides 11--16)}\\[0.08cm]
         \begin{itemize}\scriptsize
           \item Mô hình Orchestrator-Workers (Anthropic)
           \item Orchestrator-Workers vs. long context
@@ -145,7 +147,7 @@
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Phần III: Trade-offs \& Fault Tolerance}}
         {\small\textbf{Đặng Lâm Tùng (Trưởng nhóm)}}\\
-        {\scriptsize (11 phút $\vert$ Slides 16--22)}\\[0.08cm]
+        {\scriptsize (11 phút $\vert$ Slides 17--23)}\\[0.08cm]
         \begin{itemize}\scriptsize
           \item Trade-off matrix
           \item Dynamic orchestration (G4)
@@ -193,7 +195,7 @@
         \footnotesize
         \begin{enumerate}
           \item \textbf{\texttt{slides\_s1\_7.pdf}}\\
-                $\to$ 23 slides.
+                $\to$ 24 slides.
           \item \textbf{\texttt{annotated\_bibliography.pdf}}\\
                 $\to$ 1 trang: 1 core reading + 3 extension readings, mỗi bài kèm 1 câu critical reflection.
           \item \textbf{Thư mục \texttt{demo/} \& code}\\
@@ -248,7 +250,7 @@
 \end{frame}
 
 % =====================================================================
-% PHẦN 1: NGUYỄN TRUNG PHONG (SLIDES 5 - 9) -- 9.5 PHÚT
+% PHẦN 1: NGUYỄN TRUNG PHONG (SLIDES 5 - 10) -- 9.5 PHÚT
 % =====================================================================
 
 % SLIDE 5: WORKFLOWS VS AUTONOMOUS AGENTS
@@ -258,11 +260,11 @@
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
       \begin{block}{\textbf{Workflows: Control Flow Nằm Trong Code}}
-        \footnotesize
-        \begin{itemize}
+        \scriptsize
+        \begin{itemize}\scriptsize
           \item \textbf{Control flow:} viết sẵn bằng code (Python, Go...).
           \item \textbf{Vai trò của LLM:} thực hiện từng bước nhỏ trong một pipeline đã định trước.
-          \item \textbf{Routing:} if-else, kiểm tra schema, chuyển trạng thái theo quy tắc cố định.
+          \item \textbf{Rẽ nhánh:} if-else, kiểm tra schema, chuyển trạng thái theo quy tắc cố định.
           \item \textbf{Ưu điểm:} dễ dự đoán, dễ tái lập, latency thấp, ít token ($1\times$).
         \end{itemize}
       \end{block}
@@ -270,18 +272,31 @@
 
     \begin{column}{0.48\textwidth}
       \begin{alertblock}{\textbf{Agents: Model Tự Quyết Định Control Flow}}
-        \footnotesize
-        \begin{itemize}
+        \scriptsize
+        \begin{itemize}\scriptsize
           \item \textbf{Control flow:} do LLM quyết định trong vòng lặp (ReAct, tool calling).
           \item \textbf{Vai trò của LLM:} tự chọn tool, quyết định khi nào dừng và đi tiếp hướng nào.
-          \item \textbf{Routing:} thay đổi theo observation ở runtime.
+          \item \textbf{Rẽ nhánh:} thay đổi theo observation ở runtime.
           \item \textbf{Đánh đổi:} linh hoạt với bài toán mở, nhưng lỗi dễ cộng dồn và chi phí khó kiểm soát.
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.15cm}
+  \vspace{0.1cm}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \centering
+      \includegraphics[height=1.65cm]{figures/anthropic_augmented_llm.png}\par
+      \tiny \textbf{Building block chung:} augmented LLM = LLM + retrieval, tools, memory.
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \includegraphics[height=1.65cm]{figures/anthropic_autonomous_agent.png}\par
+      \tiny \textbf{Agent:} LLM gọi tool trong vòng lặp, nhận feedback từ environment và tự quyết khi nào dừng.
+    \end{column}
+  \end{columns}
+  \vspace{0.05cm}
   \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Định Nghĩa Của Anthropic (2024)}},fonttitle=\footnotesize\bfseries]
     \footnotesize \textit{"Workflows are systems where LLMs and tools are orchestrated through predefined code paths. Agents, on the other hand, are systems where LLMs dynamically direct their own processes and tool usage, maintaining control over how they accomplish tasks."}
   \end{tcolorbox}
@@ -347,110 +362,129 @@
 
 % SLIDE 7: PROMPT CHAINING & ROUTING
 \begin{frame}{Pattern Cơ Bản: Prompt Chaining và Routing}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Cách hoạt động, lợi ích và cái giá phải trả}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Cách hoạt động, lợi ích, cái giá và use case}
 
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
       \begin{block}{\textbf{Pattern 1: Prompt Chaining}}
         \centering
-        \begin{tikzpicture}[
-          box/.style={rectangle, draw=hcmutblue, fill=hcmutgray, font=\tiny\bfseries, rounded corners, minimum height=0.45cm},
-          gate/.style={rectangle, draw=alertorange, fill=orange!15, font=\tiny, rounded corners, minimum height=0.45cm},
-          arr/.style={-latex, thick, hcmutblue}]
-          \node[box] (in) {Input};
-          \node[box, right=0.25cm of in] (l1) {LLM 1};
-          \node[gate, right=0.25cm of l1] (gt) {Gate/Check};
-          \node[box, right=0.25cm of gt] (l2) {LLM 2};
-          \node[box, right=0.25cm of l2] (out) {Output};
-          \draw[arr] (in) -- (l1);
-          \draw[arr] (l1) -- (gt);
-          \draw[arr] (gt) -- (l2);
-          \draw[arr] (l2) -- (out);
-        \end{tikzpicture}\par
+        \includegraphics[width=0.88\linewidth]{figures/anthropic_prompt_chaining.png}\par
         \raggedright\scriptsize
-        \textbf{Cơ chế:} tách task thành một chuỗi LLM call nối tiếp; output của bước trước là input của bước sau.\\
+        \textbf{Cơ chế:} chuỗi LLM call nối tiếp, gate bằng code kiểm tra ở giữa.\\
         \textbf{What it buys:}
         \begin{itemize}\scriptsize
-          \item Mỗi prompt chỉ lo một việc, nên dễ viết và dễ kiểm soát.
-          \item Chèn được validation (gate) bằng code giữa các bước.
-          \item Các bước trung gian có thể dùng model nhỏ, rẻ hơn.
+          \item Mỗi prompt chỉ lo một việc, dễ viết và dễ kiểm soát.
+          \item Gate chặn lỗi sớm; bước trung gian dùng được model nhỏ.
         \end{itemize}
         \textbf{What it costs:}
         \begin{itemize}\scriptsize
           \item Latency cộng dồn theo số bước ($T = \sum t_i$).
-          \item Cứng nhắc: một bước sai mà không có code rẽ nhánh thì lỗi đi thẳng xuống các bước sau.
+          \item Không có nhánh rẽ thì lỗi trôi thẳng xuống bước sau.
         \end{itemize}
       \end{block}
+      \begin{tcolorbox}[usecase,title={Use case}]
+        \scriptsize
+        \begin{itemize}\scriptsize
+          \item Viết marketing copy, rồi dịch sang ngôn ngữ khác.
+          \item Viết outline $\rightarrow$ kiểm tra outline đạt tiêu chí $\rightarrow$ viết tài liệu theo outline.
+        \end{itemize}
+      \end{tcolorbox}
     \end{column}
 
     \begin{column}{0.48\textwidth}
       \begin{block}{\textbf{Pattern 2: Routing}}
         \centering
-        \begin{tikzpicture}[
-          box/.style={rectangle, draw=hcmutblue, fill=hcmutgray, font=\tiny\bfseries, rounded corners, minimum height=0.42cm},
-          spec/.style={rectangle, draw=hcmutlight, fill=blue!8, font=\tiny, rounded corners, minimum height=0.42cm},
-          arr/.style={-latex, thick, hcmutblue}]
-          \node[box] (in) {Input};
-          \node[box, right=0.35cm of in] (rt) {Router LLM};
-          \node[spec, above right=-0.05cm and 0.4cm of rt] (b1) {Specialist A};
-          \node[spec, below right=-0.05cm and 0.4cm of rt] (b2) {Specialist B};
-          \draw[arr] (in) -- (rt);
-          \draw[arr] (rt) |- (b1);
-          \draw[arr] (rt) |- (b2);
-        \end{tikzpicture}\par
+        \includegraphics[height=1.1cm]{figures/anthropic_routing.png}\par
         \raggedright\scriptsize
-        \textbf{Cơ chế:} một classifier (LLM, regex hoặc embedding) xác định intent rồi chuyển input sang nhánh xử lý phù hợp.\\
+        \textbf{Cơ chế:} classifier (LLM hoặc model truyền thống) phân loại input, chuyển sang nhánh chuyên biệt.\\
         \textbf{What it buys:}
         \begin{itemize}\scriptsize
-          \item Mỗi nhánh có system prompt và bộ tool riêng, gọn hơn.
-          \item Tránh prompt bloat (không phải nhồi 50 tool vào một prompt).
-          \item Query đơn giản có thể chuyển sang model nhỏ để tiết kiệm.
+          \item Mỗi nhánh có system prompt và bộ tool riêng, tránh prompt bloat.
+          \item Tối ưu cho loại input này không làm hỏng loại input khác.
         \end{itemize}
         \textbf{What it costs:}
         \begin{itemize}\scriptsize
-          \item Router phân loại sai thì cả nhánh phía sau xử lý sai theo.
-          \item Thêm nhánh mới phải sửa cả router lẫn handler phía sau.
+          \item Router phân loại sai thì cả nhánh phía sau sai theo.
+          \item Thêm nhánh mới phải sửa cả router lẫn handler.
         \end{itemize}
       \end{block}
+      \begin{tcolorbox}[usecase,title={Use case}]
+        \scriptsize
+        \begin{itemize}\scriptsize
+          \item Customer service: general question, refund request và technical support được chuyển vào ba nhánh riêng.
+          \item Câu hỏi dễ sang Claude Haiku, câu hỏi khó sang Claude Sonnet để tối ưu chi phí.
+        \end{itemize}
+      \end{tcolorbox}
     \end{column}
   \end{columns}
 \end{frame}
 
-% SLIDE 8: EVALUATOR-OPTIMIZER PATTERN
+% SLIDE 8: PARALLELIZATION
+\begin{frame}{Pattern Song Song: Parallelization}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Sectioning và voting, chi phí và use case}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{\textbf{Cơ Chế Parallelization}}
+        \centering
+        \includegraphics[width=0.85\linewidth]{figures/anthropic_parallelization.png}\par
+        \raggedright\scriptsize
+        Nhiều LLM call chạy đồng thời, \textbf{code} gộp kết quả (aggregator). Hai dạng:
+        \begin{itemize}\scriptsize
+          \item \textbf{Sectioning:} chia task thành các phần độc lập, mỗi phần một LLM call.
+          \item \textbf{Voting:} chạy cùng một task nhiều lần để có nhiều output rồi gộp lại.
+        \end{itemize}
+        \textbf{What it buys:}
+        \begin{itemize}\scriptsize
+          \item Nhanh hơn khi các phần không phụ thuộc nhau.
+          \item Mỗi call chỉ tập trung vào một khía cạnh nên làm tốt hơn; voting cho kết quả đáng tin hơn.
+        \end{itemize}
+        \textbf{What it costs:}
+        \begin{itemize}\scriptsize
+          \item $N$ nhánh thì tốn khoảng $N\times$ token; latency bằng nhánh chậm nhất ($\max t_i$).
+          \item Phải viết logic gộp: chọn ngưỡng vote, xử lý khi các nhánh mâu thuẫn.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{tcolorbox}[usecase,title={Use case}]
+        \scriptsize
+        \textbf{Sectioning:}
+        \begin{itemize}\scriptsize
+          \item \textbf{Guardrails:} một instance trả lời user, một instance khác song song lọc nội dung không phù hợp; hiệu quả hơn so với dồn cả hai việc vào một call.
+          \item \textbf{Automated evals:} mỗi LLM call chấm một khía cạnh khác nhau của output.
+        \end{itemize}
+        \textbf{Voting:}
+        \begin{itemize}\scriptsize
+          \item \textbf{Review code tìm vulnerability:} nhiều prompt khác nhau cùng review, prompt nào thấy vấn đề thì flag.
+          \item \textbf{Kiểm duyệt nội dung:} nhiều prompt đánh giá các khía cạnh khác nhau, dùng ngưỡng vote để cân bằng false positive và false negative.
+        \end{itemize}
+      \end{tcolorbox}
+      \begin{alertblock}{\textbf{Khác Gì Orchestrator-Workers?}}
+        \scriptsize Hình dạng giống nhau, nhưng ở parallelization các subtask được \textbf{định nghĩa sẵn trong code}. Ở orchestrator-workers, subtask do \textbf{orchestrator LLM quyết định} theo từng input (slide 11).
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% SLIDE 9: EVALUATOR-OPTIMIZER PATTERN
 \begin{frame}{Pattern Có Feedback: Evaluator-Optimizer}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Vòng lặp tinh chỉnh, chi phí và bẫy sycophancy}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Vòng lặp tinh chỉnh, use case và bẫy sycophancy}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
       \begin{block}{\textbf{Cơ Chế Evaluator-Optimizer}}
         \centering
-        \vspace*{0.15cm}
-        \begin{tikzpicture}[
-          box/.style={rectangle, draw=hcmutblue, fill=hcmutgray, font=\tiny\bfseries, rounded corners, minimum height=0.5cm},
-          arr/.style={-latex, thick, hcmutblue},
-          feed/.style={-latex, thick, darkred, dashed}]
-          \node[box] (in) {Input};
-          \node[box, right=0.35cm of in] (gen) {Generator LLM};
-          \node[box, right=0.8cm of gen] (eval) {Evaluator};
-          \node[box, right=0.65cm of eval] (out) {Output};
-          \draw[arr] (in) -- (gen);
-          \draw[arr] (gen) -- node[above, font=\tiny] {Draft} (eval);
-          \draw[arr] (eval) -- node[above, font=\tiny] {Pass} (out);
-          \draw[feed] (eval.south) -- ++(0,-0.35) -| node[below, font=\tiny, pos=0.25] {Feedback (chưa đạt)} (gen.south);
-        \end{tikzpicture}\par
+        \includegraphics[width=0.95\linewidth]{figures/anthropic_evaluator_optimizer.png}\par
         \raggedright\scriptsize
         \textbf{Hai vai trò tách riêng:}
         \begin{enumerate}\scriptsize
-          \item \textbf{Generator:} tạo output ban đầu từ yêu cầu.
-          \item \textbf{Evaluator (LLM hoặc tool):} chấm output theo tiêu chí rõ ràng, trả về feedback có cấu trúc.
-          \item \textbf{Refinement loop:} generator sửa theo feedback cho tới khi đạt yêu cầu.
+          \item \textbf{Generator:} tạo solution từ yêu cầu.
+          \item \textbf{Evaluator (LLM hoặc tool):} chấm theo tiêu chí rõ ràng; \textit{Rejected} thì trả feedback, \textit{Accepted} thì ra output.
+          \item \textbf{Refinement loop:} generator sửa theo feedback cho tới khi đạt.
         \end{enumerate}
-        \vspace{0.1cm}
-        \textbf{What it buys:}
-        \begin{itemize}\scriptsize
-          \item Chất lượng tăng rõ ở code generation, dịch thuật, soạn văn bản.
-          \item Giống cách con người viết nháp rồi nhờ người khác review.
-        \end{itemize}
+        \textbf{Dấu hiệu phù hợp (Anthropic):} khi có feedback của con người, output tốt lên rõ rệt; \textit{và} LLM cũng tự đưa ra được feedback tương tự.
       \end{block}
     \end{column}
 
@@ -464,11 +498,18 @@
           \item \textbf{Cách khắc phục:} dùng \textbf{external deterministic tools} (linter, unit test, API checker) làm evaluator thay vì để LLM tự review.
         \end{itemize}
       \end{alertblock}
+      \begin{tcolorbox}[usecase,title={Use case}]
+        \scriptsize
+        \begin{itemize}\scriptsize
+          \item \textbf{Literary translation:} bản dịch đầu bỏ sót sắc thái, evaluator chỉ ra chỗ cần sửa.
+          \item \textbf{Complex search:} nhiều vòng search và phân tích; evaluator quyết định có cần search tiếp không.
+        \end{itemize}
+      \end{tcolorbox}
     \end{column}
   \end{columns}
 \end{frame}
 
-% SLIDE 9: KHUNG RA QUYẾT ĐỊNH
+% SLIDE 10: KHUNG RA QUYẾT ĐỊNH
 \begin{frame}{Khi Nào Dùng Workflow, Khi Nào Dùng Agent?}
   \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Các câu hỏi cần trả lời trước khi chuyển từ workflow sang agent}
 
@@ -481,11 +522,13 @@
       line/.style={draw, -latex', thick}]
 
       \node [block, text width=1.3cm] (init) {User Query};
-      \node [decision, right=0.35cm of init] (dec1) {Các bước cố định, biết trước?};
-      \node [decision, right=0.45cm of dec1] (dec2) {Có các nhóm task tách biệt?};
-      \node [decision, right=0.45cm of dec2] (dec4) {Chia được subtask từ input?};
+      \node [decision, right=0.3cm of init] (dec1) {Các bước cố định, tuần tự?};
+      \node [decision, right=0.35cm of dec1] (dec2) {Có các nhóm task tách biệt?};
+      \node [decision, right=0.35cm of dec2] (dec3) {Subtask độc lập, biết trước?};
+      \node [decision, right=0.35cm of dec3] (dec4) {Chia được subtask từ input?};
       \node [block, above=0.35cm of dec1] (chain) {Prompt Chain / Single Call};
       \node [block, above=0.35cm of dec2] (router) {Routing};
+      \node [block, above=0.35cm of dec3] (par) {Parallelization};
       \node [block, above=0.35cm of dec4] (orch) {Orchestrator-Workers};
       \node [agent, below=0.35cm of dec4] (agent) {\textbf{Autonomous Agent}\\[-1pt]\textmd{(open-ended, không đoán trước số bước)}};
       \node [note, below=0.45cm of dec1.south west, anchor=north west] (eo) {\textbf{Evaluator-Optimizer:} thêm vòng feedback khi có \textbf{tiêu chí đánh giá rõ ràng}; kết hợp được với mọi pattern ở trên.};
@@ -494,7 +537,9 @@
       \path [line] (dec1) -- node [right, font=\tiny] {YES} (chain);
       \path [line] (dec1) -- node [above, font=\tiny] {NO} (dec2);
       \path [line] (dec2) -- node [right, font=\tiny] {YES} (router);
-      \path [line] (dec2) -- node [above, font=\tiny] {NO} (dec4);
+      \path [line] (dec2) -- node [above, font=\tiny] {NO} (dec3);
+      \path [line] (dec3) -- node [right, font=\tiny] {YES} (par);
+      \path [line] (dec3) -- node [above, font=\tiny] {NO} (dec4);
       \path [line] (dec4) -- node [right, font=\tiny] {YES} (orch);
       \path [line] (dec4) -- node [right, font=\tiny] {NO} (agent);
     \end{tikzpicture}
@@ -519,13 +564,26 @@
       \end{alertblock}
     \end{column}
   \end{columns}
+
+  \vspace{0.05cm}
+  \begin{tcolorbox}[usecase,title={Agent Use Case (Anthropic): vừa hội thoại vừa hành động, tiêu chí thành công rõ, có feedback loop}]
+    \scriptsize
+    \begin{columns}[t]
+      \begin{column}{0.48\textwidth}
+        $\blacktriangleright$ \textbf{Coding agent:} giải task SWE-bench, sửa nhiều file từ mô tả task, lấy kết quả unit test làm feedback.
+      \end{column}
+      \begin{column}{0.48\textwidth}
+        $\blacktriangleright$ \textbf{Customer support:} tool lấy order history, xử lý refund; thành công đo bằng số case được giải quyết.
+      \end{column}
+    \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % =====================================================================
-% PHẦN 2: VŨ VIỆT HƯNG (SLIDES 10 - 15) -- 9.5 PHÚT
+% PHẦN 2: VŨ VIỆT HƯNG (SLIDES 11 - 16) -- 9.5 PHÚT
 % =====================================================================
 
-% SLIDE 10: KIẾN TRÚC ORCHESTRATOR-WORKERS (ANTHROPIC)
+% SLIDE 11: KIẾN TRÚC ORCHESTRATOR-WORKERS (ANTHROPIC)
 \begin{frame}{Mô Hình Orchestrator-Workers (Anthropic)}
   \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Cơ chế phân rã nhiệm vụ động và tổng hợp song song}
 
@@ -563,7 +621,7 @@
   \end{columns}
 \end{frame}
 
-% SLIDE 11: ORCHESTRATOR-WORKERS VS NGỮ CẢNH KHỔNG LỒ
+% SLIDE 12: ORCHESTRATOR-WORKERS VS NGỮ CẢNH KHỔNG LỒ
 \begin{frame}{Orchestrator-Workers vs. Single Context}
   \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Context Isolation vs. Attention Dilution trong Agentic Systems}
 
@@ -594,7 +652,7 @@
   \end{columns}
 \end{frame}
 
-% SLIDE 12: ANTHROPIC MULTI-AGENT RESEARCH SYSTEM
+% SLIDE 13: ANTHROPIC MULTI-AGENT RESEARCH SYSTEM
 \begin{frame}{Anthropic: Lead/Subagent Đáng Giá Đến Đâu?}
   \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Bài học từ multi-agent research system của Anthropic}
 
@@ -630,7 +688,7 @@
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 13: AGENT DESIGN PATTERNS & ORCHESTRATION
+% SLIDE 14: AGENT DESIGN PATTERNS & ORCHESTRATION
 \begin{frame}{OpenAI: Agent Design Patterns \& Orchestration}
   \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Kiến trúc thiết kế và các mô hình điều phối Agent}
 
@@ -679,7 +737,7 @@
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 14: LANGGRAPH STATE GRAPHS
+% SLIDE 15: LANGGRAPH STATE GRAPHS
 \begin{frame}{LangGraph: Điều Phối Multi-Agent Bằng Cyclic State Graph}
   \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ State schema, reducers và conditional edges}
 
@@ -713,7 +771,7 @@
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 15: DURABLE EXECUTION & CHECKPOINTING
+% SLIDE 16: DURABLE EXECUTION & CHECKPOINTING
 \begin{frame}{Durable Execution \& Checkpointing: Xử Lý Lỗi Trong Production}
   \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ State persistence, fault recovery và human-in-the-loop}
 
@@ -749,10 +807,10 @@
 \end{frame}
 
 % =====================================================================
-% PHẦN 3: ĐẶNG LÂM TÙNG (LEAD) (SLIDES 16 - 22) -- 11 PHÚT
+% PHẦN 3: ĐẶNG LÂM TÙNG (LEAD) (SLIDES 17 - 23) -- 11 PHÚT
 % =====================================================================
 
-% SLIDE 16: MA TRẬN TRADE-OFF
+% SLIDE 17: MA TRẬN TRADE-OFF
 \begin{frame}{Ma Trận Trade-off Giữa Các Pattern}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Latency, token cost, độ tin cậy và failure mode}
 
@@ -785,7 +843,7 @@
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 17: DYNAMIC ORCHESTRATION
+% SLIDE 18: DYNAMIC ORCHESTRATION
 \begin{frame}{Dynamic Orchestration: Kiến Trúc Lead/Subagent Phân Cấp}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Phân rã task động và context isolation}
 
@@ -825,7 +883,7 @@
   \end{columns}
 \end{frame}
 
-% SLIDE 18: CHỌN & LOẠI PATTERN
+% SLIDE 19: CHỌN & LOẠI PATTERN
 \begin{frame}{Chọn \& Loại Pattern: Vì Sao Không Dùng ReAct Tự Do?}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Quyết định kiến trúc cho bài toán cần độ tin cậy cao}
 
@@ -867,7 +925,7 @@
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 19: DETERMINISTIC ORACLES
+% SLIDE 20: DETERMINISTIC ORACLES
 \begin{frame}{Fault Tolerance: Deterministic Oracles vs. LLM Self-Critique}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Tách phần reasoning khỏi phần validation}
 
@@ -898,7 +956,7 @@
   \end{columns}
 \end{frame}
 
-% SLIDE 20: STATE PERSISTENCE & ROLLBACK
+% SLIDE 21: STATE PERSISTENCE & ROLLBACK
 \begin{frame}{Xử Lý Lỗi \& Rollback State Trong Graph}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Xử lý lỗi cục bộ và rollback dựa trên checkpoint}
 
@@ -936,7 +994,7 @@
   \end{columns}
 \end{frame}
 
-% SLIDE 21: ORCHESTRATION TOPOLOGIES
+% SLIDE 22: ORCHESTRATION TOPOLOGIES
 \begin{frame}{So Sánh Các Topology: Hub-and-Spoke, Swarm \& Cyclic Graph}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Ba cách tổ chức giao tiếp giữa các agent}
 
@@ -984,7 +1042,7 @@
   \end{tcolorbox}
 \end{frame}
 
-% SLIDE 22: NGUYÊN TẮC & KẾT QUẢ THỰC NGHIỆM
+% SLIDE 23: NGUYÊN TẮC & KẾT QUẢ THỰC NGHIỆM
 \begin{frame}{Nguyên Tắc Thiết Kế \& Kết Quả Thực Nghiệm}
   \framesubtitle{Thuyết trình: Đặng Lâm Tùng (Trưởng nhóm) $\vert$ Bài học rút ra và số liệu đo từ demo của nhóm}
 
@@ -1031,12 +1089,12 @@
 \end{frame}
 
 % =====================================================================
-% SLIDE 23: KẾT LUẬN & THẢO LUẬN
+% SLIDE 24: KẾT LUẬN & THẢO LUẬN
 % =====================================================================
 \begin{frame}[plain]
   \begin{tikzpicture}[remember picture, overlay]
     \fill[hcmutblue] (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
-    \node[anchor=west, text=white, font=\bfseries\footnotesize] at ([xshift=0.6cm, yshift=-0.6cm]current page.north west)
+    \node[anchor=center, text=white, font=\bfseries\scriptsize, text width=\paperwidth-1.2cm, align=center] at ([yshift=-0.6cm]current page.north)
       {TRƯỜNG ĐẠI HỌC BÁCH KHOA (ĐHQG-HCM) -- CO5151 SEMINAR S1-7};
   \end{tikzpicture}
 
@@ -1056,7 +1114,7 @@
     \vspace{0.35cm}
     {\large \textbf{\color{hcmutblue}Cảm Ơn Thầy Và Các Bạn Đã Lắng Nghe!}}\\[0.15cm]
     {\small Nhóm G4 rất mong nhận được câu hỏi và góp ý từ TS. Lê Xuân Bách và các bạn.}\\[0.25cm]
-    {\scriptsize \textbf{Nhóm G4}: Đặng Lâm Tùng (Trưởng nhóm) $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng $\vert$ \texttt{CO5151 -- HK261}}
+    {\scriptsize \textbf{Nhóm G4}: Đặng Lâm Tùng (Trưởng nhóm) $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng $\vert$ \texttt{CO5151} -- \texttt{HK261}}
   \end{center}
 \end{frame}
 
