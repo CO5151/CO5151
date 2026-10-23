@@ -240,19 +240,21 @@ Nhằm bảo đảm tính liêm chính học thuật cao nhất, bảng dưới 
 | **Độ trễ trung bình hệ thống** | *Không công bố (N/R)* | **2.957 ms (2,96 s)** | Phản hồi dưới 3 giây, đáp ứng tốt trải nghiệm người dùng thực tế. |
 
 ### 5.3. Kết quả thực nghiệm so sánh đối đầu 3 kiến trúc (Linear vs ReAct vs Multi-Agent)
-Trích xuất từ các file đo đạc thực tế trên cùng 100 tác vụ kiểm thử (`benchmark_full_stats.json`, `sbv_100_gemini_judge_summary.json`):
+Trích xuất từ các file đo đạc thực tế trên cùng 100 tác vụ kiểm thử (`benchmark_full_stats.json`, `sbv_final_combined.json`, `sbv_100_gemini_judge_summary.json`):
 
 | Chỉ số thực nghiệm đo đạc | Linear Workflow | ReAct (Single-Agent) | Multi-Agent (G4 đề xuất) | Ý nghĩa so sánh thực nghiệm |
 | :--- | :---: | :---: | :---: | :--- |
 | **Số lượt gọi LLM / task** | 2 calls | 3 calls (lặp) | 2--4 calls chuyên biệt | MAS phân quyền rõ ràng, cô lập rủi ro |
 | **Tổng token trung bình** | **957,4 token** | **5.596,3 token** | **2.394,0 token** | MAS tiết kiệm **57,2%** token so với ReAct |
-| **Độ trễ trung bình (Latency)** | 2.247 ms | 3.747 ms | 2.957 ms | Nhanh hơn ReAct ~21% |
-| **Pass@1 Rate (Lần 1)** | 58,0% | 72,0% | **87,0%** | MAS trúng căn cứ ngay lượt đầu vượt trội |
-| **Pass@k Rate (Hit@k)** | 65,0% | 82,0% | **87,0%** | Khả năng bao phủ văn bản cốt lõi |
-| **Article Hit Rate** | 61,5% | 82,5% | **89,33%** | Độ chính xác đến cấp Điều |
-| **Độ trung thực (Faithfulness)** | 72,0% | 85,0% | **97,0%** | MAS triệt tiêu ảo giác nhờ Claim Auditor |
-| **Độ chính xác ca luật cũ** | **0,0% (Thất bại)** | 100,0% (nhờ lặp) | **100,0% (Thành công)** | Linear Workflow thất bại khi luật bãi bỏ |
+| **Độ trễ trung bình (Latency)** | 2.248 ms | 3.747 ms | 2.957 ms | Nhanh hơn ReAct ~21% (dưới 3 giây) |
+| **Hit@k (Văn bản cốt lõi)** | 97,0% | **99,0%** | 97,0% | Khả năng bao phủ văn bản cốt lõi ngang nhau |
+| **Tỷ lệ trúng số Điều (Article Hit)** | 88,17% | **90,83%** | 89,33% | Định vị chính xác số Điều luật cụ thể |
+| **Độ trung thực (Faithfulness)** | 92,0% | 94,0% | **97,0%** | MAS triệt tiêu ảo giác cao nhất nhờ Claim Auditor |
+| **Độ chính xác chuẩn Thầy (Sec 5.3)**| 46,0% | 44,0% | **85,0%** | MAS vượt trội về Semantic Equivalence & Căn cứ chuẩn |
+| **Độ chính xác ngặt (Strict Pass)** | 46,0% | 44,0% | 37,0% | Rubric ngặt nghèo về từng mốc ngày/thủ tục phụ |
+| **Độ chính xác ca luật cũ** | **0,0% (Thất bại)** | 100,0% (nhờ lặp) | **100,0% (Thành công)** | Linear Workflow thất bại hoàn toàn khi luật bãi bỏ |
 | **Tỷ lệ gửi lặp context (Resend)**| 0% | **40,7%** | **0%** | MAS triệt tiêu bùng nổ $O(N^2)$ ngữ cảnh |
+| **Chi phí Token / 1 câu đúng** | **2.081 token** | 12.719 token | **2.816 token** | ReAct đắt gấp 4,5--6,1 lần do lặp ngữ cảnh |
 
 ### 5.4. Thực nghiệm Ablation Study & Phân tích Lỗi (Tùng & Hưng phụ trách)
 

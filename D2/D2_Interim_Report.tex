@@ -468,7 +468,7 @@ Tổng Token tiêu thụ TB & \emph{Không công bố trong báo (N/R)} & 2.394 
 \end{table*}
 
 \subsection{Kết quả thực nghiệm so sánh đối đầu 3 kiến trúc trên 100 tác vụ}
-Toàn bộ số liệu dưới đây được trích xuất trực tiếp từ các file thực nghiệm tự động trong kho mã nguồn (\code{benchmark_full_stats.json}, \code{sbv_100_gemini_judge_summary.json}):
+Toàn bộ số liệu dưới đây được trích xuất trực tiếp từ các file thực nghiệm tự động trong kho mã nguồn (\code{benchmark_full_stats.json}, \code{sbv_final_combined.json}, \code{sbv_100_gemini_judge_summary.json}):
 
 \begin{center}
 \small
@@ -478,13 +478,15 @@ Toàn bộ số liệu dưới đây được trích xuất trực tiếp từ c
 \midrule
 Số lượt gọi LLM / task & 2 calls & 3 calls (lặp) & 2--4 calls chuyên biệt & MAS phân quyền rõ ràng, cô lập rủi ro \\
 \textbf{Tổng token trung bình} & \textbf{957{,}4 token} & \textbf{5{,}596{,}3 token} & \textbf{2{,}394{,}0 token} & MAS tiết kiệm \textbf{57,2\%} token so với ReAct \\
-Độ trễ trung bình (Latency)& 2{,}247 ms & 3{,}747 ms & 2{,}957 ms & Nhanh hơn ReAct $\sim$21\% \\
-Pass@1 Rate (Lượt 1) & 58{,}0\% & 72{,}0\% & \textbf{87{,}0\%} & MAS trúng căn cứ ngay lượt đầu vượt trội \\
-Pass@k Rate (Hit@k) & 65{,}0\% & 82{,}0\% & \textbf{87{,}0\%} & Khả năng bao phủ văn bản cốt lõi \\
-Article Hit Rate & 61{,}5\% & 82{,}5\% & \textbf{89{,}33\%} & Độ chính xác đến cấp Điều \\
-\textbf{Độ trung thực (Faithful)} & 72{,}0\% & 85{,}0\% & \textbf{97{,}0\%} & MAS triệt tiêu ảo giác nhờ Claim Auditor \\
+Độ trễ trung bình (Latency)& 2{,}248 ms & 3{,}747 ms & 2{,}957 ms & Nhanh hơn ReAct $\sim$21\% (dưới 3 giây) \\
+Hit@k (Văn bản cốt lõi) & 97{,}0\% & \textbf{99{,}0\%} & 97{,}0\% & Khả năng bao phủ văn bản cốt lõi ngang nhau \\
+Tỷ lệ trúng số Điều (Article Hit) & 88{,}17\% & \textbf{90{,}83\%} & 89{,}33\% & Định vị chính xác số Điều luật cụ thể \\
+\textbf{Độ trung thực (Faithful)} & 92{,}0\% & 94{,}0\% & \textbf{97{,}0\%} & MAS triệt tiêu ảo giác nhờ Claim Auditor \\
+\textbf{Độ chính xác chuẩn Thầy} & 46{,}0\% & 44{,}0\% & \textbf{85{,}0\%} & MAS vượt trội về ngữ nghĩa \& căn cứ chuẩn \\
+Độ chính xác ngặt (Strict Pass) & 46{,}0\% & 44{,}0\% & 37{,}0\% & Rubric ngặt nghèo về từng mốc ngày/thủ tục phụ \\
 \textbf{Độ chính xác ca luật cũ} & \textbf{0{,}0\% (Thất bại)} & 100{,}0\% (nhờ lặp) & \textbf{100{,}0\% (Thành công)} & Workflow thất bại hoàn toàn khi luật đổi \\
 Tỷ lệ gửi lặp context (Resend) & 0\% & \textbf{40{,}7\%} & \textbf{0\%} & MAS triệt tiêu bùng nổ $O(N^2)$ ngữ cảnh \\
+\textbf{Chi phí Token / 1 câu đúng} & \textbf{2{,}081 token} & 12{,}719 token & \textbf{2{,}816 token} & ReAct đắt gấp 4,5--6,1 lần do lặp ngữ cảnh \\
 \bottomrule
 \end{tabularx}
 \end{center}
