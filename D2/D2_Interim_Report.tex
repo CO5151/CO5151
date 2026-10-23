@@ -20,7 +20,7 @@
   \usepackage[vietnamese]{babel}
 \fi
 
-\usepackage[a4paper, top=18mm, bottom=18mm, left=18mm, right=18mm]{geometry}
+\usepackage[a4paper, top=16mm, bottom=16mm, left=15mm, right=15mm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{microtype}
 \usepackage[dvipsnames]{xcolor}
@@ -72,9 +72,9 @@
 \renewcommand{\footrulewidth}{0pt}
 \fancyfoot[C]{\thepage}
 
-\setlength{\parindent}{1.1em}
+\setlength{\parindent}{1.0em}
 \setlength{\parskip}{0pt}
-\linespread{1.15}
+\linespread{1.10}
 
 % --- SECTION HEADINGS (Academic Black & Clean Spacing matching D1) ---
 \titleformat{\section}
@@ -89,12 +89,12 @@
   {\normalfont\small\bfseries}
   {\thesubsubsection}{0.5em}{}
 
-\titlespacing*{\section}{0pt}{1.8ex plus .3ex minus .2ex}{0.8ex plus .2ex}
-\titlespacing*{\subsection}{0pt}{1.3ex plus .2ex minus .1ex}{0.6ex plus .1ex}
-\titlespacing*{\subsubsection}{0pt}{1.0ex plus .2ex minus .1ex}{0.4ex plus .1ex}
+\titlespacing*{\section}{0pt}{1.3ex plus .2ex minus .1ex}{0.5ex plus .1ex}
+\titlespacing*{\subsection}{0pt}{1.0ex plus .2ex minus .1ex}{0.4ex plus .1ex}
+\titlespacing*{\subsubsection}{0pt}{0.8ex plus .2ex minus .1ex}{0.3ex plus .1ex}
 
-\setlist[enumerate]{nosep, leftmargin=16pt, itemsep=1.5pt, topsep=1.5pt}
-\setlist[itemize]{nosep, leftmargin=14pt, itemsep=1.5pt, topsep=1.5pt}
+\setlist[enumerate]{nosep, leftmargin=14pt, itemsep=1.0pt, topsep=1.0pt}
+\setlist[itemize]{nosep, leftmargin=12pt, itemsep=1.0pt, topsep=1.0pt}
 
 \newcommand{\code}[1]{\texttt{\detokenize{#1}}}
 
@@ -127,12 +127,20 @@
   \vfill
 
   \begin{tabular}{rl}
-    \textbf{Giảng viên hướng dẫn:} & \textbf{TS. Lê Xuân Bách} \\[6pt]
+    \textbf{Giảng viên hướng dẫn:} & \textbf{TS. Lê Xuân Bách} \\[5pt]
     \textbf{Sinh viên thực hiện (Nhóm G4):} & \\[2pt]
     1. Đặng Lâm Tùng (Trưởng nhóm) & -- MSSV: 2012345 -- Phụ trách: Orchestrator \& Evaluation (35\%) \\
     2. Nguyễn Trung Phong & -- MSSV: 2012346 -- Phụ trách: Ingestion \& Knowledge Graph Neo4j (33\%) \\
     3. Vũ Việt Hưng & -- MSSV: 2012347 -- Phụ trách: Claim Auditor Agent (32\%) \\
   \end{tabular}
+
+  \vspace{8pt}
+
+  \begin{tcolorbox}[colback=lightgray!40,colframe=primary,width=0.94\linewidth,arc=1.5mm,boxrule=0.7pt,boxsep=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt]
+    \centering\footnotesize
+    \textbf{Repository URL:} \url{https://github.com/CO5151/CO5151} \quad \emph{(Public / Quyền đọc cho GVHD)} \\[2pt]
+    \textbf{Commit Hash phiên bản báo cáo D2:} \code{0564f120977eea484a9e224c96ad22804fc31bf4} (\code{0564f12})
+  \end{tcolorbox}
 
   \vfill
 
