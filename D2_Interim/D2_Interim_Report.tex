@@ -194,7 +194,7 @@ Hội đồng phản biện đã đưa ra 3 câu hỏi chất vấn trọng tâm
 7. Đánh giá tự động qua LLM-as-a-Judge & Đặng Lâm Tùng & \textbf{Xong} & \code{sbv_real_judge_summary.json}: Faithful rate 94,0\%, Grounding 100\% \\
 8. Giao diện Web UI người dùng (ADK Web) & Đặng Lâm Tùng & \textbf{Xong} & \code{checkpoint_2/legalpilot_web}: chạy mượt qua \code{./run_adk_web.sh} \\
 9. Bộ kiểm thử bảo mật 10 ca tấn công & Vũ Việt Hưng & \textbf{Đang làm} & Đã xây dựng Threat Model v0; kịch bản test injection dành cho D3/D4 \\
-10. Tích hợp cổng dịch vụ công thật & Cả nhóm & \textbf{Đã bỏ} & Thay bằng Mock API có Human Gate để đảm bảo an toàn nghiệp vụ \\
+10. Tích hợp cổng dịch vụ công thật & Cả nhóm & \textbf{Đang làm (D3)} & Đã xây dựng công cụ \code{public_service_portal.py} tích hợp API Cổng DVC Quốc gia/NHNN và chốt chặn chuyên viên (Human Gate); nộp live vào Tuần 11--12. \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -269,6 +269,47 @@ Toàn bộ hệ thống vận hành xoay quanh 4 trục kỹ thuật cam kết:
   \item \textbf{[A2] Tool Calling and MCP (Tầng công cụ độc lập, không phải Agent):} Đồ thị Neo4j/Qdrant và Scraper VBPL được chuẩn hóa thành các công cụ chuyên dụng. \code{Auditor Agent} trực tiếp thực thi Tool Calling để tra cứu chéo độc lập với nội dung do Drafter biên dịch.
   \item \textbf{[A3] Mô hình Drafter-Audit (Đối soát \& Phản biện khép kín):} Drafter đưa ra bản thảo $\leftrightarrow$ Auditor phản biện từng mệnh đề. Nếu phát hiện trích dẫn sai hoặc luật hết hiệu lực, Auditor kích hoạt vòng lặp yêu cầu sửa đổi hoặc gửi tín hiệu yêu cầu truy xuất lại (\emph{Re-retrieval}) về Orchestrator với ràng buộc $\text{loop counter} \le 3$.
   \item \textbf{[A4] LLM Guardrails \& Human Gate:} Báo cáo sau kiểm toán bắt buộc phải được chuyên viên pháp chế phê duyệt trước khi ghi vết vào SQLite Audit Log và xuất hồ sơ tuân thủ chính thức.
+\end{enumerate}
+
+\subsection{Chi tiết thiết kế Tác tử và Danh mục Mô hình (Agent Design \& Model Zoo)}
+Hệ thống LegalPilot-VN được xây dựng hoàn toàn trên khung chuẩn \textbf{Google ADK (Agent Development Kit 2.12.0)}, triển khai qua các lớp trừu tượng \code{SequentialAgent}, \code{LoopAgent}, \code{Runner} và quản lý trạng thái phiên bằng \code{DatabaseSessionService} (SQLite). Danh mục các mô hình nền tảng và vai trò của từng tác tử được chuẩn hóa tại Bảng~\ref{tab:model-zoo}:
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Danh mục Mô hình Nền tảng (Model Zoo) và Phân vai Tác tử trong LegalPilot-VN.}
+\label{tab:model-zoo}
+\begin{tabularx}{\linewidth}{@{}p{2.6cm} p{2.8cm} c p{1.6cm} X@{}}
+\toprule
+\textbf{Tác tử / Thành phần} & \textbf{Mô hình sử dụng} & \textbf{Nhiệt độ} & \textbf{Độ dài ctx} & \textbf{Vai trò \& Nhiệm vụ kỹ thuật} \\
+\midrule
+\textbf{Orchestrator} \newline (Supervisor/Planner) & \code{deepseek/deepseek-chat} \newline (Alias DeepSeek V3/V4.1) & 0{,}0 & 64k tokens & Phân tích câu hỏi, phân rã mục tiêu truy vấn (\emph{Subgoal Planning}), trích xuất từ khóa pháp lý, cách ly ngữ cảnh (\emph{Context Isolation}). \\
+\textbf{LawGraph Agent} \newline (Hybrid Retriever) & \code{vietnamese-bi-encoder} \newline + Neo4j Graph Engine & N/A & 768 dims & Truy xuất lai: Vector tương đồng ngữ nghĩa kết hợp duyệt đồ thị chọn lọc (\emph{Selective Traversal}) theo quan hệ sửa đổi/hướng dẫn. \\
+\textbf{Reranker Module} & \code{BAAI/bge-reranker-v2-m3} \newline (Cross-Encoder) & N/A & 8k tokens & Tái xếp hạng top 20 điều khoản ứng viên từ Neo4j/Qdrant, lọc ra top $k=3 \div 5$ điều khoản liên quan nhất. \\
+\textbf{Claim Auditor} \newline (Adversarial Critic) & \code{deepseek/deepseek-chat} \newline (Chấm bởi \code{gemini-3.8-flash}) & 0{,}0 & 64k tokens & Phản biện độc lập: bóc tách mệnh đề nguyên tử (\emph{Atomic Claims}), đối soát hiệu lực live qua Cổng \code{vbpl.vn}, phạt luật hết hiệu lực. \\
+\textbf{Drafter Agent} \newline (Legal Synthesizer) & \code{deepseek/deepseek-chat} \newline (Zero-temperature) & 0{,}0 & 64k tokens & Biên soạn báo cáo tư vấn tuân thủ chuẩn mực dựa trên 100\% điều khoản đã kiểm toán, loại bỏ rác văn bản. \\
+\textbf{LLM-as-a-Judge} \newline (Thẩm định độc lập) & \code{gemini-3.8-flash} \newline (Google Cloud Vertex AI) & 0{,}0 & 1M tokens & Giám khảo tự động chấm 100 câu benchmark theo đúng 3 tiêu chí của Thầy (Semantic, Citation, Validity). \\
+\textbf{Cổng DVC Tool} \newline (\code{public_service_portal}) & API Client \newline + Human Gate Token & N/A & N/A & Lập hồ sơ thủ tục hành chính, sinh transaction hash, chờ xác thực chữ ký số chuyên viên pháp chế trước khi gửi live. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Mô hình RAG Lai và Quy trình Nạp dữ liệu Pháp luật (Hybrid RAG \& Ingestion Pipeline)}
+Để khắc phục hoàn toàn hiện tượng pha loãng ngữ cảnh ($>$60\% nhiễu) mà phương pháp duyệt 1-hop cơ học tĩnh của bài báo trước gặp phải, LegalPilot-VN thiết kế quy trình Ingestion và Retrieval đa tầng:
+
+\begin{enumerate}
+  \item \textbf{Mô hình Vector Embedding chuyên biệt cho Pháp luật Việt Nam:} Sử dụng mô hình \code{bkai-foundation-models/vietnamese-bi-encoder} (và tương thích \code{an6203/paraphrase-vietnamese-law-embedding}) sinh vector nhúng 768 chiều. Ngưỡng tương đồng cosine được cố định ở mức tối ưu $\ge 0{,}90$ (theo kết quả thực nghiệm tối ưu của Thầy tại Hình 2a trong paper ACIIDS 2026), loại bỏ các phân đoạn có độ tương đồng thấp.
+  \item \textbf{Cơ chế Chunking theo ranh giới cấu trúc văn bản (Structural Provision Chunking):} Khác với các hệ thống RAG thông thường cắt văn bản tùy tiện theo số lượng token cố định (làm đứt gãy câu chữ điều luật), LegalPilot-VN phân rã văn bản theo đúng phân cấp hình thức quy phạm pháp luật Việt Nam:
+  $$\text{Văn bản (Document)} \longrightarrow \text{Chương (Chapter)} \longrightarrow \text{Điều (Article)} \longrightarrow \text{Khoản (Clause)} \longrightarrow \text{Điểm (Point)}$$
+  Mỗi chunk là một đơn vị quy phạm hoàn chỉnh (cấp Điều hoặc Khoản độc lập), gắn liền với Payload metadata gồm: \code{doc_id}, \code{article}, \code{title}, \code{issue_date}, \code{effective_date}, và \code{status} (\code{active/expired/in_force}).
+  \item \textbf{Kiến trúc Đồ thị Tri thức Pháp luật (Neo4j Schema):}
+  \begin{itemize}
+    \item \textbf{Các Node thực thể:} \code{:Document} (Văn bản QPPL), \code{:Article} (Điều luật), \code{:Clause} (Khoản quy định), \code{:Organization} (Cơ quan ban hành: Chính phủ, NHNN,...).
+    \item \textbf{Quan hệ phân cấp nội tại:} \code{(:Document)-[:CONTAINS]->(:Article)-[:CONTAINS]->(:Clause)}.
+    \item \textbf{Quan hệ thẩm quyền:} \code{(:Document)-[:ISSUED_BY]->(:Organization)}.
+    \item \textbf{Quan hệ tiến hóa thời gian \& hiệu lực (Temporal Evolution):} \code{(:Document)-[:SUPERSEDES]->(:Document)} (thay thế/bãi bỏ), \code{(:Document)-[:AMENDS]->(:Document)} (sửa đổi, bổ sung), \code{(:Document)-[:GUIDES]->(:Document)} (hướng dẫn thi hành).
+  \end{itemize}
+  \item \textbf{Đồng bộ hiệu lực thời gian thực (Live Gazette Synchronization):} Mỗi khi một văn bản được truy xuất, công cụ \code{verify_vbpl_status} kiểm tra chéo trạng thái hiệu lực trực tiếp trên Cổng Thông tin điện tử Pháp điển / VBPL Quốc gia (\code{vbpl.vn}) và lưu vết cache 24h vào SQLite để tối ưu độ trễ.
 \end{enumerate}
 
 \subsection{Trace thực tế khi hệ thống hoàn thành nhiệm vụ (End-to-End Trace)}
