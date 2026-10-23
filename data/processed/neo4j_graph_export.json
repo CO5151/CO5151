@@ -1,0 +1,285 @@
+{
+  "40/2024/TT-NHNN": {
+    "doc_id": "40/2024/TT-NHNN",
+    "title": "Hướng dẫn hoạt động cung ứng dịch vụ trung gian thanh toán",
+    "doc_type": "Thông Tư",
+    "issuer": "Chính phủ",
+    "issue_date": "2024-06-28",
+    "effective_date": "2024-07-01",
+    "status": "in_force",
+    "articles": [
+      {
+        "article": "Điều 18",
+        "title": "Hồ sơ mở ví điện tử",
+        "content": "1. Thỏa thuận mở và sử dụng ví điện tử theo mẫu của tổ chức cung ứng dịch vụ.\n2. Tài liệu, thông tin, dữ liệu để xác minh thông tin khách hàng cá nhân hoặc tổ chức theo quy định pháp luật.\n3. Trường hợp mở ví thông qua người đại diện hợp pháp phải có văn bản ủy quyền hợp pháp.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Thỏa thuận mở và sử dụng ví điện tử theo mẫu của tổ chức cung ứng dịch vụ."
+          },
+          {
+            "clause_number": "2",
+            "content": "Tài liệu, thông tin, dữ liệu để xác minh thông tin khách hàng cá nhân hoặc tổ chức theo quy định pháp luật."
+          },
+          {
+            "clause_number": "3",
+            "content": "Trường hợp mở ví thông qua người đại diện hợp pháp phải có văn bản ủy quyền hợp pháp."
+          }
+        ]
+      },
+      {
+        "article": "Điều 23",
+        "title": "Xác thực thông tin khách hàng khi mở ví điện tử",
+        "content": "1. Khách hàng chịu trách nhiệm về tính chính xác, trung thực của các thông tin, tài liệu cung cấp cho tổ chức cung ứng dịch vụ ví điện tử.\n2. Tổ chức cung ứng dịch vụ ví điện tử phải áp dụng các giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Khách hàng chịu trách nhiệm về tính chính xác, trung thực của các thông tin, tài liệu cung cấp cho tổ chức cung ứng dịch vụ ví điện tử."
+          },
+          {
+            "clause_number": "2",
+            "content": "Tổ chức cung ứng dịch vụ ví điện tử phải áp dụng các giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư."
+          }
+        ]
+      }
+    ],
+    "cross_references": [
+      {
+        "source_doc_id": "40/2024/TT-NHNN",
+        "target_doc_id": "Luật Ngân hàng Nhà nước Việt Nam",
+        "rel_type": "GUIDES",
+        "scope": "Guides Luật Ngân hàng Nhà nước Việt Nam",
+        "effective_date": "2024-07-01"
+      }
+    ],
+    "moj_id": "168578",
+    "eff_status_code": "HHL1P",
+    "eff_status_name": "Hết hiệu lực một phần",
+    "eff_from": "2024-07-17",
+    "eff_to": null,
+    "moj_synced_at": "2026-10-21T07:22:54+00:00"
+  },
+  "101/2012/ND-CP": {
+    "doc_id": "101/2012/ND-CP",
+    "title": "Về thanh toán không dùng tiền mặt",
+    "doc_type": "Nghị Định",
+    "issuer": "Chính Phủ",
+    "issue_date": "2012-11-22",
+    "effective_date": "2013-03-01",
+    "status": "in_force",
+    "articles": [
+      {
+        "article": "Điều 15",
+        "title": "Điều kiện cung ứng dịch vụ trung gian thanh toán",
+        "content": "1. Tổ chức không phải là ngân hàng được Ngân hàng Nhà nước cấp Giấy phép cung ứng dịch vụ trung gian thanh toán khi đáp ứng đủ các điều kiện sau đây:\n2. Có vốn điều lệ tối thiểu là 50 tỷ đồng.\n3. Người đại diện theo pháp luật, Tổng giám đốc (Giám đốc) của tổ chức phải có trình độ chuyên môn hoặc kinh nghiệm thực tế trong quản trị kinh doanh hoặc lĩnh vực phụ trách.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Tổ chức không phải là ngân hàng được Ngân hàng Nhà nước cấp Giấy phép cung ứng dịch vụ trung gian thanh toán khi đáp ứng đủ các điều kiện sau đây:"
+          },
+          {
+            "clause_number": "2",
+            "content": "Có vốn điều lệ tối thiểu là 50 tỷ đồng."
+          },
+          {
+            "clause_number": "3",
+            "content": "Người đại diện theo pháp luật, Tổng giám đốc (Giám đốc) của tổ chức phải có trình độ chuyên môn hoặc kinh nghiệm thực tế trong quản trị kinh doanh hoặc lĩnh vực phụ trách."
+          }
+        ]
+      }
+    ],
+    "cross_references": [
+      {
+        "source_doc_id": "101/2012/ND-CP",
+        "target_doc_id": "Luật Ngân hàng Nhà nước Việt Nam",
+        "rel_type": "GUIDES",
+        "scope": "Guides Luật Ngân hàng Nhà nước Việt Nam",
+        "effective_date": "2013-03-01"
+      },
+      {
+        "source_doc_id": "101/2012/ND-CP",
+        "target_doc_id": "Luật Các tổ chức tín dụng",
+        "rel_type": "GUIDES",
+        "scope": "Guides Luật Các tổ chức tín dụng",
+        "effective_date": "2013-03-01"
+      }
+    ],
+    "revoked_date": "2024-07-01",
+    "moj_id": "30443",
+    "eff_status_code": "CHL",
+    "eff_status_name": "Còn hiệu lực",
+    "eff_from": "2013-03-26",
+    "eff_to": "2027-07-01",
+    "moj_synced_at": "2026-10-21T07:22:54+00:00",
+    "superseded_by": "52/2024/ND-CP"
+  },
+  "52/2024/ND-CP": {
+    "doc_id": "52/2024/ND-CP",
+    "title": "Quy định về thanh toán không dùng tiền mặt",
+    "doc_type": "Nghị Định",
+    "issuer": "Chính Phủ",
+    "issue_date": "2024-05-15",
+    "effective_date": "2024-07-01",
+    "status": "in_force",
+    "articles": [
+      {
+        "article": "Điều 22",
+        "title": "Điều kiện cung ứng dịch vụ trung gian thanh toán",
+        "content": "1. Tổ chức không phải là ngân hàng muốn cung ứng dịch vụ ví điện tử phải có vốn điều lệ thực góp hoặc được cấp tối thiểu là 50.000.000.000 đồng (năm mươi tỷ đồng).\n2. Có đề án cung ứng dịch vụ trung gian thanh toán khả thi và được thẩm định theo quy định.\n3. Người đại diện theo pháp luật, Tổng Giám đốc (Giám đốc) của tổ chức phải có bằng đại học trở lên về một trong các chuyên ngành kinh tế, tài chính, ngân hàng hoặc công nghệ thông tin và có ít nhất 03 năm kinh nghiệm quản lý.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Tổ chức không phải là ngân hàng muốn cung ứng dịch vụ ví điện tử phải có vốn điều lệ thực góp hoặc được cấp tối thiểu là 50.000.000.000 đồng (năm mươi tỷ đồng)."
+          },
+          {
+            "clause_number": "2",
+            "content": "Có đề án cung ứng dịch vụ trung gian thanh toán khả thi và được thẩm định theo quy định."
+          },
+          {
+            "clause_number": "3",
+            "content": "Người đại diện theo pháp luật, Tổng Giám đốc (Giám đốc) của tổ chức phải có bằng đại học trở lên về một trong các chuyên ngành kinh tế, tài chính, ngân hàng hoặc công nghệ thông tin và có ít nhất 03 năm kinh nghiệm quản lý."
+          }
+        ]
+      },
+      {
+        "article": "Điều 23",
+        "title": "Tỷ lệ tham gia của nhà đầu tư nước ngoài",
+        "content": "1. Tỷ lệ sở hữu phần vốn góp hoặc cổ phần của nhà đầu tư nước ngoài tại tổ chức cung ứng dịch vụ trung gian thanh toán thực hiện theo quy định của pháp luật về đầu tư và cam kết quốc tế của Việt Nam.\n2. Tổ chức cung ứng dịch vụ trung gian thanh toán có vốn đầu tư nước ngoài phải báo cáo định kỳ cho Ngân hàng Nhà nước về tình hình sở hữu vốn của nhà đầu tư nước ngoài.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Tỷ lệ sở hữu phần vốn góp hoặc cổ phần của nhà đầu tư nước ngoài tại tổ chức cung ứng dịch vụ trung gian thanh toán thực hiện theo quy định của pháp luật về đầu tư và cam kết quốc tế của Việt Nam."
+          },
+          {
+            "clause_number": "2",
+            "content": "Tổ chức cung ứng dịch vụ trung gian thanh toán có vốn đầu tư nước ngoài phải báo cáo định kỳ cho Ngân hàng Nhà nước về tình hình sở hữu vốn của nhà đầu tư nước ngoài."
+          }
+        ]
+      }
+    ],
+    "cross_references": [
+      {
+        "source_doc_id": "52/2024/ND-CP",
+        "target_doc_id": "101/2012/ND-CP",
+        "rel_type": "SUPERSEDES",
+        "scope": "Repeals the whole instrument (Bãi)",
+        "effective_date": "2024-07-01"
+      },
+      {
+        "source_doc_id": "52/2024/ND-CP",
+        "target_doc_id": "Luật Ngân hàng Nhà nước Việt Nam",
+        "rel_type": "GUIDES",
+        "scope": "Guides Luật Ngân hàng Nhà nước Việt Nam",
+        "effective_date": "2024-07-01"
+      },
+      {
+        "source_doc_id": "52/2024/ND-CP",
+        "target_doc_id": "Luật Các tổ chức tín dụng",
+        "rel_type": "GUIDES",
+        "scope": "Guides Luật Các tổ chức tín dụng",
+        "effective_date": "2024-07-01"
+      }
+    ],
+    "moj_id": "167087",
+    "eff_status_code": "CCHL",
+    "eff_status_name": "Chưa có hiệu lực",
+    "eff_from": "2027-07-01",
+    "eff_to": null,
+    "moj_synced_at": "2026-10-21T07:22:54+00:00",
+    "moj_anomaly": "MoJ ghi chua co hieu luc tu 2027-07-01; mau thuan thuc te"
+  },
+  "70/2023/ND-CP": {
+    "doc_id": "70/2023/ND-CP",
+    "title": "Nghị định 70/2023/NĐ-CP sửa đổi Nghị định 152/2020/NĐ-CP về lao động nước ngoài",
+    "doc_type": "Nghị Định",
+    "issuer": "Chính Phủ",
+    "issue_date": "2023-09-18",
+    "effective_date": "2023-09-18",
+    "status": "in_force",
+    "amends": "152/2020/ND-CP",
+    "articles": [
+      {
+        "article": "Điều 1 Khoản 5",
+        "title": "Điều kiện cấp Giấy phép lao động cho Chuyên gia nước ngoài",
+        "content": "Có bằng đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam.",
+        "clauses": [
+          {
+            "clause_number": "5",
+            "content": "Có bằng đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam."
+          }
+        ]
+      }
+    ],
+    "cross_references": [
+      {
+        "source_doc_id": "70/2023/ND-CP",
+        "target_doc_id": "152/2020/ND-CP",
+        "rel_type": "AMENDS",
+        "scope": "Sửa đổi, bổ sung một số điều của Nghị định 152/2020/NĐ-CP",
+        "effective_date": "2023-09-18"
+      }
+    ]
+  },
+  "168/2024/ND-CP": {
+    "doc_id": "168/2024/ND-CP",
+    "title": "Nghị định 168/2024/NĐ-CP xử phạt vi phạm hành chính trật tự ATGT đường bộ",
+    "doc_type": "Nghị Định",
+    "issuer": "Chính Phủ",
+    "issue_date": "2024-12-26",
+    "effective_date": "2025-01-01",
+    "status": "in_force",
+    "supersedes": [
+      "100/2019/ND-CP",
+      "123/2021/ND-CP"
+    ],
+    "articles": [
+      {
+        "article": "Điều 6 Khoản 4",
+        "title": "Xử phạt người điều khiển xe mô tô, xe gắn máy vượt đèn đỏ",
+        "content": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ). Tước GPLX từ 01 đến 03 tháng.",
+        "sanction_range": "4.000.000 - 6.000.000 VNĐ",
+        "clauses": [
+          {
+            "clause_number": "4",
+            "content": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ). Tước GPLX từ 01 đến 03 tháng."
+          }
+        ]
+      }
+    ],
+    "cross_references": [
+      {
+        "source_doc_id": "168/2024/ND-CP",
+        "target_doc_id": "100/2019/ND-CP",
+        "rel_type": "SUPERSEDES",
+        "scope": "Thay thế Nghị định 100/2019/NĐ-CP",
+        "effective_date": "2025-01-01"
+      }
+    ]
+  },
+  "100/2019/ND-CP": {
+    "doc_id": "100/2019/ND-CP",
+    "title": "Nghị định 100/2019/NĐ-CP xử phạt vi phạm giao thông đường bộ (CŨ)",
+    "doc_type": "Nghị Định",
+    "issuer": "Chính Phủ",
+    "issue_date": "2019-12-30",
+    "effective_date": "2020-01-01",
+    "status": "expired",
+    "revoked_by": "168/2024/ND-CP",
+    "revoked_date": "2025-01-01",
+    "articles": [
+      {
+        "article": "Điều 6 Khoản 4 Điểm e",
+        "title": "Vượt đèn đỏ xe máy (CŨ)",
+        "content": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với hành vi vượt đèn đỏ (đã bị bãi bỏ bởi Nghị định 168/2024/NĐ-CP từ 01/01/2025).",
+        "sanction_range": "800.000 - 1.000.000 VNĐ",
+        "clauses": [
+          {
+            "clause_number": "4",
+            "content": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với hành vi vượt đèn đỏ."
+          }
+        ]
+      }
+    ],
+    "cross_references": []
+  }
+}

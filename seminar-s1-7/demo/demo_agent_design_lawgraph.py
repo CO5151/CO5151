@@ -5,11 +5,11 @@ Seminar S1-7: Agent Design Patterns & Orchestration for Vietnamese Law Graph
 Faculty Advisor: Dr. Le Xuan Bach
 Presenters: Dang Lam Tung (Lead) · Nguyen Trung Phong · Vu Viet Hung
 
-This script is an empirical, interactive demonstration comparing 3 agent design paradigms
+This script is an interactive demonstration comparing 3 agent design paradigms
 for the Vietnamese Law Graph compliance problem:
   1. Deterministic Workflow (Prompt Chaining & Routing - Anthropic Dec 2024)
-  2. Monolithic Autonomous Agent (Single Giant Context / ReAct Loop - OpenAI Feb 2025)
-  3. Lead/Subagent Orchestrator + LangGraph Checkpointing & Differential Rollback (Anthropic Feb 2025 + LangGraph)
+  2. Monolithic Autonomous Agent (Single Giant Context / ReAct Loop - OpenAI Apr 2025)
+  3. Lead/Subagent Orchestrator + LangGraph Checkpointing & Differential Rollback (Anthropic Jun 2025 + LangGraph)
 
 Features:
   - Real SQLite persistence for durable execution checkpoints.
@@ -465,7 +465,7 @@ def run_paradigm_1_workflow(scenario: Scenario, verbose: bool = True) -> Paradig
 
 # =====================================================================
 # 6. PARADIGM 2: MONOLITHIC AUTONOMOUS AGENT (SINGLE GIANT REACT LOOP)
-# OpenAI Feb 2025: Single Model-Directed Tool Loop (Context Inflation & Drift)
+# OpenAI Apr 2025: Single Model-Directed Tool Loop (Context Inflation & Drift)
 # =====================================================================
 def run_paradigm_2_monolithic_agent(scenario: Scenario, verbose: bool = True) -> ParadigmResult:
     start_time = time.perf_counter()
@@ -567,7 +567,7 @@ def run_paradigm_2_monolithic_agent(scenario: Scenario, verbose: bool = True) ->
 
 # =====================================================================
 # 7. PARADIGM 3: LEAD/SUBAGENT ORCHESTRATOR + LANGGRAPH CHECKPOINTING (G4)
-# Anthropic Feb 2025 Multi-Agent System + LangGraph Durable Execution
+# Anthropic Jun 2025 Multi-Agent System + LangGraph Durable Execution
 # =====================================================================
 def run_paradigm_3_orchestrator(
     scenario: Scenario,
@@ -753,8 +753,8 @@ def run_paradigm_3_orchestrator(
         print(f"    Synthesizing dossier from strictly verified active statute {active_statute}...")
         print(f"    {MAGENTA}💾 [SQLite Checkpoint Saved: '{c3_id}']{RESET} Complete audit trail recorded.")
         print(f"  {GREEN}✔ REGULATORY OUTCOME:{RESET} 100% Legally grounded dossier delivered!")
-        print(f"    Grounding Rate: {GREEN}100.0%{RESET} | Cumulative Tokens: {res.tokens} (~3.2x multiplier) | Latency: {res.wall_clock_ms:.1f}ms")
-        print(f"    Analysis: Exact empirical validation of Anthropic's 2025 Lead/Subagent 3.2x token cost multiplier.")
+        print(f"    Grounding Rate: {GREEN}100.0%{RESET} | Cumulative Tokens: {res.tokens} (~3.2x simulated step budget) | Latency: {res.wall_clock_ms:.1f}ms")
+        print("    Analysis: Simulated step budget for illustration; see the live DeepSeek-V3 run for measured tokens.")
 
     return res
 
@@ -764,7 +764,7 @@ def run_paradigm_3_orchestrator(
 # =====================================================================
 def run_full_comparative_benchmark(scenario: Scenario, db_path: str = ":memory:") -> None:
     print(f"\n{BOLD}{MAGENTA}" + "═" * 86 + f"{RESET}")
-    print(f"{BOLD}{WHITE}  CO5151 SEMINAR S1-7: AGENT DESIGN PATTERNS EMPIRICAL BENCHMARK TRACE{RESET}")
+    print(f"{BOLD}{WHITE}  CO5151 SEMINAR S1-7: AGENT DESIGN PATTERNS SIMULATED BENCHMARK TRACE{RESET}")
     print(f"{BOLD}{WHITE}  FACULTY ADVISOR: DR. LE XUAN BACH | GROUP G4 (LEGALPILOT-VN){RESET}")
     print(f"{DIM}  Scenario: {scenario.title}{RESET}")
     print(f"{DIM}  Enterprise: {scenario.enterprise_name} | Query: \"{scenario.query}\"{RESET}")
@@ -788,7 +788,7 @@ def run_full_comparative_benchmark(scenario: Scenario, db_path: str = ":memory:"
     token_mult_p3 = p3.tokens / max(1, p1.tokens)
 
     print(f"\n{BOLD}{WHITE}" + "═" * 86 + f"{RESET}")
-    print(f"{BOLD}{WHITE}           EMPIRICAL ARCHITECTURAL COMPARISON: WORKFLOWS VS. MONOLITHIC VS. G4           {RESET}")
+    print(f"{BOLD}{WHITE}           SIMULATED ARCHITECTURAL COMPARISON: WORKFLOWS VS. MONOLITHIC VS. G4           {RESET}")
     print(f"{BOLD}{WHITE}" + "═" * 86 + f"{RESET}")
     print(f"{BOLD}{'Architectural Metric':<26} | {'1. Workflow':<18} | {'2. Monolithic Agent':<18} | {'3. Orchestrator (G4)':<18}{RESET}")
     print("-" * 27 + "+" + "-" * 20 + "+" + "-" * 20 + "+" + "-" * 20)
@@ -802,12 +802,12 @@ def run_full_comparative_benchmark(scenario: Scenario, db_path: str = ":memory:"
     print(f"{'Wall-clock Latency':<26} | {f'{p1.wall_clock_ms:.1f} ms':<18} | {f'{p2.wall_clock_ms:.1f} ms':<18} | {f'{p3.wall_clock_ms:.1f} ms':<18}")
     print(f"{BOLD}{WHITE}" + "═" * 86 + f"{RESET}")
 
-    print(f"\n{BOLD}{CYAN}Key Literature Alignments Proven by Empirical Trace:{RESET}")
+    print(f"\n{BOLD}{CYAN}Key Literature Alignments Illustrated by the Simulated Trace:{RESET}")
     print(f"  1. {BOLD}Anthropic (Dec 2024) Simplicity-First Thesis:{RESET}")
     print(f"     Workflows (Pattern 1) are deterministic, fastest ({p1.wall_clock_ms:.1f}ms) and cheapest ({p1.tokens} tokens),")
     print(f"     but fail catastrophically when encountering dynamic legal obsolescence.")
-    print(f"  2. {BOLD}Anthropic (Feb 2025) Multi-Agent Research System Reality:{RESET}")
-    print(f"     Lead/Subagent decomposition incurs a ~3.2x token multiplier ({p3.tokens} vs {p1.tokens} tokens),")
+    print(f"  2. {BOLD}Anthropic (Jun 2025) Multi-Agent Research System Reality:{RESET}")
+    print(f"     Lead/Subagent decomposition incurs a ~3.2x simulated token multiplier ({p3.tokens} vs {p1.tokens} tokens),")
     print(f"     which is the deliberate price paid for context isolation and elimination of compounding errors.")
     print(f"  3. {BOLD}LangGraph (2024-2025) Durable Execution & Differential Rollback:{RESET}")
     print(f"     When Oracle detects Decree 101/2012 revocation, G4 rolls back to SQLite Checkpoint C1,")

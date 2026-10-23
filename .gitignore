@@ -29,11 +29,13 @@ MANIFEST
 # Virtual Environments
 .env
 .venv
+.venv-adk/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+~$*
 
 # Environment variables and secrets
 *.env.local
@@ -71,8 +73,11 @@ qdrant_storage/
 # Datasets and generated dossiers (keep directories via .gitkeep)
 data/raw/*
 !data/raw/.gitkeep
+!data/raw/*.txt
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/neo4j_graph_export.json
+!data/processed/qdrant_chunks_export.json
 workspace/dossiers/*
 !workspace/dossiers/.gitkeep
 reports/
@@ -100,3 +105,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+.venv-adk

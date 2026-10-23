@@ -103,36 +103,46 @@ Located in [`src/knowledge/selective_traversal.py`](src/knowledge/selective_trav
   2. Follows targeted modification paths (`AMENDS`, `SUPERSEDES`, `GUIDES`) while blocking dead-end or unrelated omnibus cross-links.
   3. Prunes superseded instruments before prompt construction, reducing noise ratio to **<15%** and achieving **100% active statute grounding**.
 
-### C. Dual-Mode Operation (Developer-Friendly)
-To ensure maximum flexibility, the codebase supports two distinct operational modes:
-1. **Standalone Catalog Mode (Zero Setup - Default)**:
-   - Powered by `LawGraphAgent.STATUTE_CATALOG` in [`src/agents/lawgraph.py`](src/agents/lawgraph.py).
-   - Allows instant execution of unit tests (`pytest`), agent CLI runs, and local Streamlit demos with **zero external dependencies** (no Docker or live database required).
-2. **Full Production GraphRAG Mode (Enterprise Scale)**:
-   - Configured in [`docker-compose.yml`](docker-compose.yml) (`neo4j:5.23-community` with APOC + `qdrant:v1.11.3`).
-   - Handles end-to-end PDF/HTML ingestion (`src/knowledge/ingestion.py`), generating thousands of graph nodes and dense embeddings.
-   - Allows direct visual graph queries via the **Neo4j Browser** at `http://localhost:7474`.
+### C. Operational Modes (Production vs Fallback)
+The system supports two resilient execution modes:
+1. **Live Neo4j Graph Mode (Primary - Recommended)**:
+   - Configured in [`docker-compose.yml`](docker-compose.yml) (`neo4j:5.23-community` with APOC + `qdrant:v1.11.3` + `searxng`).
+   - Seeds full legal entities (Documents, Articles, Clauses) and relationships (`SUPERSEDES`, `AMENDS`, `GUIDES`) via `scripts/load_neo4j_from_export.py`.
+   - Allows direct visual graph exploration via the **Neo4j Browser** at `http://localhost:7474`.
+2. **Persistent Graph Export Mode (Zero-Dependency Offline Fallback)**:
+   - Loaded dynamically from persistent JSON exports in [`data/processed/neo4j_graph_export.json`](data/processed/neo4j_graph_export.json) and [`data/processed/qdrant_chunks_export.json`](data/processed/qdrant_chunks_export.json).
+   - Zero hardcoded mock dictionaries in agent source code; completely reproducible offline.
 
-### D. Running Neo4j & Testing GraphRAG
+### D. Server Setup & Testing Guide
+
 ```bash
-# 1. Start Neo4j and Qdrant database containers
-docker compose up -d
+# 1. Start Neo4j, Qdrant, and SearXNG containers
+docker compose up -d neo4j qdrant searxng
 
-# 2. Verify Neo4j connectivity
-python3 -c "
+# 2. Seed Neo4j Knowledge Graph from verified legal dataset
+python scripts/load_neo4j_from_export.py
+
+# 3. Verify Neo4j connectivity
+python -c "
 from src.knowledge.neo4j_client import Neo4jClient
 client = Neo4jClient()
 print('Neo4j Connected:', client.verify_connectivity())
 "
 
-# 3. Batch ingest legal documents into the Graph
-./run.sh ingest data/raw
+# 4. Run end-to-end multi-agent smoke test
+python checkpoint_2/smoke_test.py
 
-# 4. Open Neo4j Browser to inspect the legal graph
-# URL: http://localhost:7474 (Username: neo4j, Password: legalpilot2026)
+# 5. Run single question trace from benchmark dataset
+python scripts/trace_one_question.py 16
+
+# 6. Run batch benchmark evaluation sample
+python scripts/test_sample_questions.py
+
+# 7. Launch Interactive Web UI Workbench
+./run_adk_web.sh  # Accessible at http://localhost:8000
 ```
 
-Example Cypher query in Neo4j Browser to visualize replacement chains:
+Example Cypher query in Neo4j Browser (`http://localhost:7474`, `neo4j` / `legalpilot2026`) to visualize replacement chains:
 ```cypher
 MATCH (new:Document {doc_id: "52/2024/ND-CP"})-[r:SUPERSEDES]->(old:Document)
 RETURN new.title, type(r), old.title, old.status;

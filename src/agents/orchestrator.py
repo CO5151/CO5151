@@ -1,11 +1,20 @@
-"""Orchestrator Agent and Pipeline for LegalPilot-VN (Theme 9).
+"""Orchestrator Supervisor for LegalPilot-VN (Theme 9 - Slide Pitch D1 Architecture).
 
-Coordinates the multi-agent execution loop following Google ADK:
-1. Orchestrator decomposes query into legal subgoals.
-2. LawGraphAgent retrieves candidate provisions from statutory catalog.
-3. ClaimAuditorAgent checks validity against external ground-truth (re-routing if revoked).
-4. DrafterAgent synthesizes the verified compliance dossier.
-5. SQLiteMemoryManager persists audit trace and state for durable execution.
+Implements the official 1 Orchestrator + 2 Sub-Agents architecture:
+1. Orchestrator (Supervisor):
+   - Manages shared state, short-term session, and loop counter <= 3.
+   - Manages long-term memory (SQLite: enterprise_profile, audit_history).
+   - Coordinates the 2 Sub-Agents: DrafterAgent and ClaimAuditorAgent.
+2. 2 Sub-Agents:
+   - DrafterAgent: Synthesizes candidate compliance dossier; requests re-retrieval if needed.
+   - ClaimAuditorAgent: Adversarial critic auditing legal provisions and candidate claims;
+     directly calls Tools (RAG Database Neo4j/Qdrant + Live VBPL Web Crawl).
+3. Tools Layer:
+   - RAG Database (Neo4j, Qdrant): Graph & dense retrieval.
+   - Web Crawl Tool: Live VBPL status check.
+   - Memory Write Tool: export_dossier.
+4. Human Gate:
+   - Pre-export approval checkpoint before persisting to immutable audit history.
 """
 
 from __future__ import annotations
@@ -26,10 +35,11 @@ from src.memory.state_models import (
     EnterpriseProfile,
     LegalAgentState,
 )
+from src.prompts import SUBGOAL_PLANNING_PROMPT
 
 
 class LegalOrchestrator(ADKAgent):
-    """Central orchestrator managing multi-agent state transitions and recovery loops."""
+    """Central Orchestrator Supervisor coordinating Drafter & Auditor Sub-Agents."""
 
     def __init__(
         self,
@@ -38,20 +48,23 @@ class LegalOrchestrator(ADKAgent):
     ) -> None:
         super().__init__(
             name="LegalOrchestrator",
-            description="Điều phối đa tác tử pháp luật Việt Nam (Planning -> Retrieval -> Audit -> Recovery -> Dossier).",
+            description="Orchestrator điều phối 2 Sub-Agents (Drafter, Auditor) kèm Tầng Công cụ và Human Gate theo Slide Pitch D1.",
             role="orchestrator",
             tools=[],
         )
         self.memory_manager = memory_manager or SQLiteMemoryManager("data/enterprise_compliance.db")
         self.max_retries = max_retries
 
-        # Initialize sub-agents
-        self.lawgraph_agent = LawGraphAgent()
+        # Tầng Công Cụ (Tools Layer): RAG Database (Neo4j, Qdrant)
+        self.rag_tool = LawGraphAgent()
+        self.lawgraph_agent = self.rag_tool  # backward-compatibility alias
+
+        # 2 Sub-Agents (Theo Slide Pitch D1):
         self.auditor_agent = ClaimAuditorAgent(memory_manager=self.memory_manager)
         self.drafter_agent = DrafterAgent()
 
-        # Initialize ADK Runner
-        self.runner = ADKRunner([self.lawgraph_agent, self.auditor_agent, self.drafter_agent])
+        # Runner managing sub-agents and tools
+        self.runner = ADKRunner([self.rag_tool, self.auditor_agent, self.drafter_agent])
 
     def _run(self, input_data: Any, context: dict[str, Any]) -> Any:
         """Executes orchestration via standard ADK interface."""
@@ -81,70 +94,36 @@ class LegalOrchestrator(ADKAgent):
                 model=get_default_model(),
                 instruction='Bạn là Legal Planning Agent. Phân tích câu hỏi pháp lý và chỉ trả về DUY NHẤT một khối JSON thuần túy (không kèm giải thích hay markdown code block) theo định dạng: {"subgoals": ["...", "..."], "keywords": ["...", "..."]}',
             )
-            prompt = (
-                f"Phân rã câu hỏi pháp lý sau thành 2 mục tiêu con (subgoals) và 3-5 từ khóa tra cứu chính xác:\n"
-                f"Câu hỏi: {query}\n"
-                f'Định dạng JSON yêu cầu: {{"subgoals": ["Subgoal 1: ...", "Subgoal 2: ..."], "keywords": ["từ_khóa_1", "từ_khóa_2"]}}'
-            )
+            prompt = SUBGOAL_PLANNING_PROMPT.format(query=query)
             raw = invoke_adk_agent(planner_agent, prompt).strip()
-            if "```json" in raw:
-                raw = raw.split("```json")[1].split("```")[0].strip()
-            elif "```" in raw:
-                raw = raw.split("```")[1].split("```")[0].strip()
-            parsed = json.loads(raw)
-            subgoals = parsed.get("subgoals", [])
-            keywords = parsed.get("keywords", [])
-            # Augment with essential domain tokens from query to ensure robust retrieval
-            q_lower = query.lower()
-            if "ví điện tử" in q_lower or "thanh toán" in q_lower or "fintech" in q_lower:
-                keywords.extend(
-                    [
-                        "ví điện tử",
-                        "thanh toán không dùng tiền mặt",
-                        "điều kiện cung ứng",
-                        "52/2024/nd-cp",
-                        "40/2024/tt-nhnn",
-                        "nhà đầu tư nước ngoài",
-                    ]
-                )
-            if "đèn đỏ" in q_lower or "giao thông" in q_lower:
-                keywords.extend(
-                    ["vượt đèn đỏ", "mô tô", "xe gắn máy", "100/2019/nd-cp", "168/2024/nd-cp"]
-                )
-            if subgoals and keywords:
-                return subgoals, list(dict.fromkeys(keywords))
+            import re
+            match = re.search(r"\{.*\}", raw, flags=re.S)
+            if match:
+                parsed = json.loads(match.group(0))
+                subgoals = [
+                    str(s).strip()
+                    for s in (parsed.get("subgoals") or parsed.get("sub_goals") or parsed.get("Subgoals") or [])
+                    if str(s).strip()
+                ]
+                keywords = [
+                    str(k).strip()
+                    for k in (parsed.get("keywords") or parsed.get("Keywords") or [])
+                    if str(k).strip()
+                ]
+                if subgoals and keywords:
+                    return subgoals, list(dict.fromkeys(keywords))
         except Exception as e:
-            logger.warning("Google ADK planning failed, using rule-based fallback: %s", e)
+            logger.warning("Google ADK planning failed, using dynamic NLP extraction: %s", e)
 
-        # Fallback heuristic mapping
-        q_lower = query.lower()
-        if "ví điện tử" in q_lower or "thanh toán" in q_lower or "fintech" in q_lower:
-            subgoals = [
-                "Subgoal 1: Xác định điều kiện cấp phép cung ứng dịch vụ Ví điện tử",
-                "Subgoal 2: Kiểm tra tỷ lệ sở hữu tối đa và điều kiện cho nhà đầu tư nước ngoài",
-            ]
-            keywords = [
-                "ví điện tử",
-                "thanh toán không dùng tiền mặt",
-                "điều kiện cung ứng",
-                "nhà đầu tư nước ngoài",
-                "40/2024/tt-nhnn",
-            ]
-        elif "đèn đỏ" in q_lower or "giao thông" in q_lower or "xe máy" in q_lower:
-            subgoals = [
-                "Subgoal 1: Tra cứu mức xử phạt vi phạm hành vi vượt đèn đỏ",
-                "Subgoal 2: Xác định hình thức xử phạt bổ sung (tước giấy phép lái xe)",
-            ]
-            keywords = ["vượt đèn đỏ", "mô tô", "xe gắn máy", "đèn tín hiệu", "xử phạt"]
-        elif "lao động" in q_lower or "chuyên gia" in q_lower:
-            subgoals = [
-                "Subgoal 1: Điều kiện cấp giấy phép lao động cho chuyên gia nước ngoài",
-            ]
-            keywords = ["lao động nước ngoài", "giấy phép lao động", "chuyên gia"]
-        else:
-            subgoals = ["Subgoal: Tra cứu và đối soát văn bản quy phạm pháp luật áp dụng"]
-            keywords = [w for w in q_lower.split() if len(w) > 3]
-
+        # Dynamic regex and token extraction (NO hardcoded topic strings)
+        import re
+        statute_patterns = re.findall(r"\d+/\d+/[A-ZĐa-zđ\-_]+", query)
+        clean_terms = [w.lower() for w in re.findall(r"\b[\w\-]+\b", query, flags=re.UNICODE) if len(w) > 2]
+        keywords = list(dict.fromkeys(statute_patterns + clean_terms[:8]))
+        subgoals = [
+            f"Xác định quy định pháp lý điều chỉnh cho yêu cầu: {query}",
+            f"Tra cứu căn cứ và điều kiện áp dụng liên quan đến: {' '.join(clean_terms[:6])}",
+        ]
         return subgoals, keywords
 
     def run(
@@ -172,52 +151,101 @@ class LegalOrchestrator(ADKAgent):
         # 2. Retrieval phase (Worker 1: LawGraph via ADK Runner)
         retrieval_res = self.runner.dispatch(
             "LawGraphAgent",
-            {"subgoals": subgoals, "keywords": keywords},
+            {"subgoals": subgoals, "keywords": keywords, "query": query},
         )
         retrieved = retrieval_res.data if retrieval_res.success else []
         state.retrieved_clauses = retrieved
         state.current_step = 2
 
-        # 3. Audit phase (Worker 2: Claim Auditor - Verification Oracle via ADK Runner)
-        audit_res = self.runner.dispatch(
-            "ClaimAuditorAgent",
-            retrieved,
-            context={"enable_live_vbpl": enable_live_vbpl},
+        # 3. Closed-Loop Drafter-Auditor Reflection & Backtracking (Proposal Section 3.1 & 3.2)
+        # Drafter produces candidate draft -> Claim Auditor audits -> Backtrack if unverified
+        active_clauses = list(retrieved)
+        verified_map: dict[str, dict[str, Any]] = {}
+        critique_feedback: str | None = None
+        audit_report = AuditReport(
+            total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False
         )
-        audit_report: AuditReport = (
-            audit_res.data
-            if audit_res.success and audit_res.data
-            else AuditReport(
-                total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False
+        candidate_dossier = ""
+
+        attempts = 0
+        while attempts <= self.max_retries:
+            attempts += 1
+            state.retry_count = attempts - 1
+            state.current_step = 3
+
+            # Step A: Drafter synthesizes candidate compliance draft
+            draft_res = self.runner.dispatch(
+                "DrafterAgent",
+                {
+                    "query": query,
+                    "verified_clauses": active_clauses,
+                    "audit_report": audit_report if audit_report.total_claims > 0 else None,
+                    "profile": enterprise_profile,
+                    "critique_feedback": critique_feedback,
+                },
             )
-        )
-        state.audit_report = audit_report
-        verified_map = {v["doc_id"]: v for v in audit_report.live_verifications}
-        state.live_verifications = list(verified_map.values())
-        state.current_step = 3
+            candidate_dossier = draft_res.data if draft_res.success and draft_res.data else ""
+            if attempts == 1:
+                state.candidate_draft = candidate_dossier
 
-        # 4. Error recovery / Re-routing loop (if revoked documents are found)
-        active_clauses = [
-            c for c in retrieved if is_active_status(c.get("status"), c.get("revoked_by"))
-        ]
-        if not audit_report.is_fully_verified and state.retry_count < self.max_retries:
-            logger.warning(
-                "LegalOrchestrator: Revoked document detected! Triggering Re-route edge..."
+            # Step B: Claim Auditor audits candidate draft and provisions (Validation Bottleneck)
+            audit_res = self.runner.dispatch(
+                "ClaimAuditorAgent",
+                {
+                    "clauses": active_clauses,
+                    "enable_live_vbpl": enable_live_vbpl,
+                    "draft": candidate_dossier,
+                },
             )
-            state.retry_count += 1
+            audit_report = (
+                audit_res.data
+                if audit_res.success and audit_res.data
+                else AuditReport(
+                    total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False
+                )
+            )
+            state.audit_report = audit_report
+            for v in audit_report.live_verifications:
+                verified_map[v["doc_id"]] = v
+            state.live_verifications = list(verified_map.values())
 
-            # Prune revoked clauses and enforce active replacement
-            revoked_docs = [c.cited_statute for c in audit_report.unsupported_claims]
-            logger.info(f"LegalOrchestrator: Pruning revoked documents: {revoked_docs}")
+            # Step C: Verification Gate (Every claim grounded in active law?)
+            if audit_report.is_fully_verified:
+                logger.info(
+                    "LegalOrchestrator: Drafter-Auditor critique passed (100% grounded in active law)."
+                )
+                break
 
-            # If all retrieved clauses were revoked, attempt successor traversal from catalog
-            if not active_clauses and audit_report.unsupported_claims:
+            # Step D: Backtrack loop if unverified claims / repealed clauses found
+            if attempts <= self.max_retries:
+                logger.warning(
+                    "LegalOrchestrator: Auditor flagged invalid claims at attempt %d. Triggering BacktrackLoop...",
+                    attempts,
+                )
+                critique_feedback = audit_report.auditor_feedback
+
+                # Prune revoked clauses and enforce active replacement
+                revoked_docs = [c.cited_statute for c in audit_report.unsupported_claims]
+                logger.info("LegalOrchestrator: Pruning revoked documents: %s", revoked_docs)
+
+                # Prune revoked clauses from active set
+                active_clauses = [
+                    c
+                    for c in active_clauses
+                    if c.get("doc_id") not in revoked_docs
+                    and is_active_status(c.get("status"), c.get("revoked_by"))
+                ]
+
+                # Follow revocation chain in catalog/graph to successor documents
                 for uc in audit_report.unsupported_claims:
                     old_doc_info = LawGraphAgent.STATUTE_CATALOG.get(uc.cited_statute)
-                    if old_doc_info and old_doc_info.get("revoked_by"):
-                        successor_id = old_doc_info["revoked_by"]
+                    successor_id = old_doc_info.get("revoked_by") if old_doc_info else None
+                    if not successor_id and uc.live_verification:
+                        successor_id = uc.live_verification.get("metadata", {}).get("revoked_by")
+                    if successor_id:
                         logger.info(
-                            f"LegalOrchestrator: Following revocation chain to successor: {successor_id}"
+                            "LegalOrchestrator: Following revocation chain to successor: %s",
+                            successor_id,
                         )
                         successor_doc = LawGraphAgent.STATUTE_CATALOG.get(successor_id)
                         if successor_doc:
@@ -234,38 +262,8 @@ class LegalOrchestrator(ADKAgent):
                                     }
                                 )
 
-            # Re-audit with active verified clauses
-            re_audit_res = self.runner.dispatch(
-                "ClaimAuditorAgent",
-                active_clauses,
-                context={"enable_live_vbpl": enable_live_vbpl},
-            )
-            audit_report = (
-                re_audit_res.data
-                if re_audit_res.success and re_audit_res.data
-                else AuditReport(
-                    total_claims=0, grounded_claims=0, grounding_rate=0.0, is_fully_verified=False
-                )
-            )
-            state.audit_report = audit_report
-            for v in audit_report.live_verifications:
-                verified_map[v["doc_id"]] = v
-            state.live_verifications = list(verified_map.values())
-            state.retrieved_clauses = active_clauses
-
-        # 5. Drafting phase (Worker 3: Drafter via ADK Runner)
-        draft_res = self.runner.dispatch(
-            "DrafterAgent",
-            {
-                "query": query,
-                "verified_clauses": active_clauses,
-                "audit_report": audit_report,
-                "profile": enterprise_profile,
-            },
-        )
-        dossier = draft_res.data if draft_res.success and draft_res.data else ""
-        state.candidate_draft = dossier
-        state.final_compliance_dossier = dossier
+        state.active_clauses = active_clauses
+        state.final_compliance_dossier = candidate_dossier
         state.is_completed = True
         state.current_step = 4
 

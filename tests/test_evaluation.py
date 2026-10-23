@@ -115,7 +115,7 @@ class TestEvaluationMetrics(unittest.TestCase):
     def test_grounding_rate(self) -> None:
         """Tests Grounding Rate calculation."""
         self.assertEqual(grounding_rate(supported_claims=3, total_claims=4), 0.75)
-        self.assertEqual(grounding_rate(supported_claims=0, total_claims=0), 1.0)
+        self.assertEqual(grounding_rate(supported_claims=0, total_claims=0), 0.0)
 
 
 class TestBaselinesAndEvaluator(unittest.TestCase):

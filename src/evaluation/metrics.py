@@ -145,9 +145,14 @@ def noise_ratio(retrieved: list[str], ground_truth: list[str]) -> float:
 
 
 def grounding_rate(supported_claims: int, total_claims: int) -> float:
-    """Calculates Per-Claim Grounding Rate (SAFE / Ragas Faithfulness)."""
+    """Calculates Per-Claim Grounding Rate (SAFE / Ragas Faithfulness).
+
+    With no claims there is nothing grounded, so the rate is 0.0. Returning
+    1.0 here made an empty audit report print "GROUNDING RATE: 100%" while
+    also reporting "Verified Docs: 0".
+    """
     if total_claims <= 0:
-        return 1.0
+        return 0.0
     return round(supported_claims / total_claims, 4)
 
 

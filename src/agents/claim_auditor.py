@@ -34,29 +34,36 @@ class ClaimAuditorAgent(ADKAgent):
 
     def _run(self, input_data: Any, context: dict[str, Any]) -> Any:
         """Executes verification audit via standard ADK interface."""
+        draft = ""
         if isinstance(input_data, list):
             clauses = input_data
             enable_live_vbpl = context.get("enable_live_vbpl", True)
+            draft = context.get("draft", "")
         elif isinstance(input_data, dict):
             clauses = input_data.get("clauses", [])
             enable_live_vbpl = input_data.get(
                 "enable_live_vbpl", context.get("enable_live_vbpl", True)
             )
+            draft = input_data.get("draft", context.get("draft", ""))
         else:
             clauses = []
             enable_live_vbpl = context.get("enable_live_vbpl", True)
-        return self.audit_provisions(clauses, enable_live_vbpl=enable_live_vbpl)
+        return self.audit_provisions(
+            clauses, enable_live_vbpl=enable_live_vbpl, candidate_draft=draft
+        )
 
     def audit_provisions(
         self,
         clauses: list[dict[str, Any]],
         enable_live_vbpl: bool = True,
+        candidate_draft: str = "",
     ) -> AuditReport:
-        """Audits retrieved provisions to ensure every cited document is active and valid."""
+        """Audits candidate draft and provisions to ensure every cited document is active and valid."""
         logger.info(
-            "ClaimAuditorAgent: Auditing %d candidate clauses (enable_live_vbpl=%s)...",
+            "ClaimAuditorAgent: Auditing %d candidate clauses (enable_live_vbpl=%s, has_draft=%s)...",
             len(clauses),
             enable_live_vbpl,
+            bool(candidate_draft),
         )
 
         claims: list[AtomicClaim] = []
@@ -133,6 +140,38 @@ class ClaimAuditorAgent(ADKAgent):
                 f"Phát hiện căn cứ hết hiệu lực: {', '.join(revoked_items)}. "
                 "Yêu cầu Orchestrator chuyển hướng tra cứu văn bản thay thế mới nhất."
             )
+
+        # Proposal Section 3.2 & 6.1: Claim Auditor Agent as Adversarial Critic
+        # Deconstructs claims and evaluates validity via LLM Critic
+        try:
+            from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
+            critic_agent = GoogleAgent(
+                name="ClaimAuditorCritic",
+                model=get_default_model(),
+                instruction=(
+                    "Bạn là Claim Auditor Agent (Adversarial Critic). Nhiệm vụ của bạn là kiểm tra, phản biện "
+                    "các căn cứ pháp lý: chỉ ra các điều khoản/văn bản hết hiệu lực hoặc bị bãi bỏ, "
+                    "và đưa ra feedback yêu cầu khắc phục ngắn gọn."
+                ),
+            )
+            evidence_summary = "\n".join([
+                f"- {c.cited_statute} ({c.cited_article}): {'HỢP LỆ' if c.is_statute_active else 'HẾT HIỆU LỰC (BÃI BỎ)'}"
+                for c in claims
+            ])
+            critic_prompt = (
+                f"Hãy đánh giá và phê bình các căn cứ pháp lý sau cho câu hỏi tuân thủ:\n"
+                f"{evidence_summary}\n\n"
+                f"Nếu có văn bản hết hiệu lực, hãy nêu rõ cảnh báo rủi ro pháp lý và yêu cầu chuyển hướng tra cứu."
+            )
+            llm_critique = invoke_adk_agent(critic_agent, critic_prompt).strip()
+            if llm_critique:
+                feedback = (
+                    f"{feedback}\n[Phản biện từ Auditor LLM]: {llm_critique}"
+                    if feedback
+                    else f"[Phản biện từ Auditor LLM]: {llm_critique}"
+                )
+        except Exception as e:
+            logger.warning("ClaimAuditor LLM evaluation failed: %s", e)
 
         report = AuditReport(
             total_claims=total,

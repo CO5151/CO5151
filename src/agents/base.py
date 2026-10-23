@@ -181,7 +181,9 @@ class ADKAgent:
                 model=self.model,
                 instruction=self.instruction,
                 description=self.description,
-                tools=adk_callables if adk_callables else None,  # type: ignore[arg-type]
+                # google-adk >= 2.3 requires a list; passing None raises a
+                # pydantic validation error and silently disables the ADK agent.
+                tools=adk_callables,
             )
         except Exception as e:
             logger.warning(f"Failed to initialize underlying Google ADK Agent for {self.name}: {e}")

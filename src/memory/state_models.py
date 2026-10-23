@@ -101,6 +101,7 @@ class LegalAgentState(BaseModel):
     plan_steps: list[str] = Field(default_factory=list)
     current_step: int = 0
     retrieved_clauses: list[dict[str, Any]] = Field(default_factory=list)
+    active_clauses: list[dict[str, Any]] = Field(default_factory=list)
     validity_status: dict[str, str] = Field(default_factory=dict)
     candidate_draft: str | None = None
     audit_report: AuditReport | None = None

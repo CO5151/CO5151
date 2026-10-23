@@ -7,7 +7,7 @@ Demonstrates:
 3. Multi-Agent Orchestrator-Workers (LangGraph StateGraph with Auditor Recovery Loop & Isolated Contexts)
 
 Hardware & Model:
-- LLM: DeepSeek-V3 ('deepseek-chat') via LangChain-OpenAI
+- LLM: DeepSeek Flash V4.1 via the `deepseek-chat` alias (LangChain-OpenAI)
 - Dense Embedding: 'bkai-foundation-models/vietnamese-bi-encoder' (768 dims)
 - Knowledge Store: 103 statutory chunks (Qdrant export) + Legal Knowledge Graph (Neo4j export)
 """
@@ -32,6 +32,14 @@ DEEPSEEK_KEY = os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")
 if not DEEPSEEK_KEY or DEEPSEEK_KEY.startswith("paste_"):
     print("[ERROR] DEEPSEEK_API_KEY is not set in .env! Please set your valid key.", file=sys.stderr)
     sys.exit(1)
+
+# Shared answer-length contract used by every benchmark arm when BENCH_CONCISE=1,
+# so the 4 architectures are compared on the same output budget.
+CONCISE_INSTRUCTION = (
+    "\n4. TRẢ LỜI NGẮN GỌN: tối đa 150 từ. Đi thẳng vào câu trả lời, KHÔNG lặp lại câu hỏi, "
+    "KHÔNG mục lục, KHÔNG dẫn nhập, KHÔNG tuyên bố miễn trừ trách nhiệm. "
+    "Nếu căn cứ không đủ thì chỉ ghi: 'Không đủ căn cứ để trả lời'."
+)
 
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage, ToolMessage
 from langchain_core.tools import tool
@@ -291,10 +299,21 @@ def ma_claim_auditor(state: MultiAgentState) -> dict:
         else:
             audited.append({**p, "validity_status": "ACTIVE", "audit_note": "Còn hiệu lực"})
 
+    # LLM Adversarial Critic (Proposal Section 3.2): audits provisions and issues critique
+    critic_prompt = (
+        "Bạn là Claim Auditor Agent (Adversarial Critic). Hãy đối soát và phê bình các căn cứ pháp lý sau:\n"
+        + "\n".join([f"- Văn bản: {p['doc_id']} | Trạng thái: {p['validity_status']} | Ghi chú: {p['audit_note']}" for p in audited])
+        + "\n\nYêu cầu: Chỉ ra rõ văn bản nào bị bãi bỏ (nếu có), văn bản nào còn hiệu lực, và yêu cầu chuyển hướng tra cứu."
+    )
+    resp = llm.invoke([
+        SystemMessage(content="Bạn là chuyên gia kiểm toán pháp lý độc lập (Claim Auditor)."),
+        HumanMessage(content=critic_prompt),
+    ])
+    tokens = resp.response_metadata.get("token_usage", {}).get("total_tokens", 0)
+
     # If repealed detected and retries left, trigger recovery branch
     should_retry = has_repealed and state["retry_count"] < 2
 
-    tokens = 0
     return {
         "audited_provisions": audited,
         "audit_passed": not has_repealed,
@@ -327,6 +346,8 @@ def ma_drafter(state: MultiAgentState) -> dict:
         "2. Cảnh báo các văn bản cũ đã hết hiệu lực nếu có.\n"
         "3. Kèm tuyên bố miễn trừ trách nhiệm pháp lý."
     )
+    if os.getenv("BENCH_CONCISE"):
+        prompt += CONCISE_INSTRUCTION
     resp = llm.invoke([HumanMessage(content=prompt)])
     tokens = resp.response_metadata.get("token_usage", {}).get("total_tokens", 0)
     return {"final_dossier": resp.content, "total_tokens": state["total_tokens"] + tokens}

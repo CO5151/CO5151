@@ -7,10 +7,10 @@
 const SCENARIOS = {
   fintech: {
     id: "fintech",
-    title: "1. Cấp Phép Ví Điện Tử FDI (2024)",
+    title: "1. Cấp Phép Ví Điện Tử (2024)",
     query: "Tư vấn điều kiện cấp phép ví điện tử cho nhà đầu tư ngoại năm 2024",
-    enterprise: "Global PayTech Asia Ltd. (FDI)",
-    trap: "NĐ 101/2012 bị bãi bỏ từ 01/07/2024; thay thế bằng NĐ 52/2024 (Vốn 50 tỷ VNĐ).",
+    enterprise: "Công ty CP Thanh toán An Phát (vốn thực góp 35 tỷ)",
+    trap: "NĐ 101/2012 đã bị NĐ 52/2024 thay thế từ 01/07/2024 (VBPL vẫn ghi còn hiệu lực đến 01/07/2027).",
     
     // Pattern 1: Deterministic Workflow
     p1: {
@@ -20,7 +20,7 @@ const SCENARIOS = {
         {
           name: "Bước 1: Router phân loại yêu cầu",
           tokens: 180,
-          desc: "Nhận dạng từ khóa 'ví điện tử', 'FDI' -> Định tuyến sang nhóm thủ tục thanh toán không dùng tiền mặt.",
+          desc: "Nhận dạng từ khóa 'ví điện tử' -> Định tuyến sang nhóm thủ tục thanh toán không dùng tiền mặt.",
           action: "classify_intent(query)",
           obs: "category = 'fintech_payment_licensing'",
           context: "[Prompt Router (DeepSeek)]:\nClassify intent: 'Doanh nghiệp muốn xin cấp phép ví điện tử thì vốn tối thiểu cần bao nhiêu tiền...'\nOutput: fintech_payment_licensing (180 tokens)"
@@ -67,16 +67,16 @@ const SCENARIOS = {
           desc: "DeepSeek nhận diện cần kiểm tra hiệu lực NĐ 52/2024 và TT 40/2024 qua đồ thị Neo4j; context bắt đầu dồn lịch sử Turn 1.",
           thought: "Đã có NĐ 52/2024 và TT 40/2024. Để tránh tư vấn sai luật, tôi cần kiểm tra tính hiệu lực pháp lý của hai văn bản này qua đồ thị quan hệ Neo4j.",
           action: "verify_statute_validity('52/2024/ND-CP') | verify_statute_validity('40/2024/TT-NHNN')",
-          obs: "Neo4j Graph xác nhận: Cả 2 văn bản đều IN_FORCE (Còn hiệu lực). NĐ 52/2024 bãi bỏ/thay thế NĐ 101/2012/NĐ-CP.",
+          obs: "Neo4j Graph: NĐ 101/2012 đã bị NĐ 52/2024 thay thế (vẫn ghi còn hiệu lực đến 01/07/2027).",
           context: "[System Prompt + User Query]\n+ [Turn 1 Thought + Action: search_statutes + Observation: 52/2024 & 40/2024]\n--> Toàn bộ lịch sử Turn 1 được nhồi vào prompt. Context Turn 2: 2.480 tokens."
         },
         {
           name: "Turn 3: Tổng hợp kết luận [Context dồn dập 6.351 tokens]",
           tokens: 2721,
-          desc: "Toàn bộ hội thoại và kết quả tool dồn tích vào prompt (>2.700 tokens cho 1 lượt). Đưa ra kết luận đúng nhưng tốn chi phí gấp 6.5x.",
+          desc: "Toàn bộ hội thoại và kết quả tool dồn tích vào prompt (>2.700 tokens cho 1 lượt). Đưa ra kết luận đúng nhưng tốn chi phí gấp 6.5x trong lượt chạy này (trung bình 10 lần: 7.4x).",
           thought: "Đã có đầy đủ căn cứ từ Qdrant và Neo4j. Tôi sẽ tổng hợp kết luận tư vấn pháp lý hoàn chỉnh.",
           action: "finish_response()",
-          obs: "KẾT QUẢ ĐẠT: Vốn tối thiểu 50 tỷ VNĐ theo Điều 22 NĐ 52/2024. Cảnh báo NĐ 101/2012 cũ đã bị bãi bỏ.",
+          obs: "KẾT QUẢ ĐẠT: Vốn tối thiểu 50 tỷ VNĐ theo Điều 22 NĐ 52/2024. Cảnh báo NĐ 101/2012 đã bị thay thế.",
           context: "[Toàn bộ hội thoại tích lũy qua các turns: > 2.700 tokens]\n--> Tổng token thực tế đo đạc: 1.150 + 2.480 + 2.721 = 6.351 tokens (Gấp 6.5 lần)"
         }
       ],
@@ -92,8 +92,8 @@ const SCENARIOS = {
         {
           name: "Bước 1: Lead Orchestrator phân rã Subgoals",
           tokens: 180,
-          desc: "Orchestrator phân rã câu hỏi thành 2 subgoals độc lập (Vốn tối thiểu & Điều kiện FDI) mà không mang vác context nặng.",
-          thought: "Phân rã thành: Subgoal 1 = 'Điều kiện vốn pháp định tối thiểu 50 tỷ đồng'; Subgoal 2 = 'Thủ tục và điều kiện FDI theo NĐ 52/2024'.",
+          desc: "Orchestrator phân rã câu hỏi thành 2 subgoals độc lập (Vốn tối thiểu & các điều kiện còn lại của Điều 22) mà không mang vác context nặng.",
+          thought: "Phân rã thành: Subgoal 1 = 'Điều kiện vốn pháp định tối thiểu 50 tỷ đồng'; Subgoal 2 = 'Các điều kiện khác của Điều 22 NĐ 52/2024'.",
           action: "plan_subgoals(query)",
           obs: "Đã khởi tạo kế hoạch: [Subgoal 1: PENDING, Subgoal 2: PENDING]",
           isolation: {
@@ -103,7 +103,7 @@ const SCENARIOS = {
           memory: [
             { type: "state", text: "State Schema: LegalAgentState (session_id: sess_d994bf5e)" },
             { type: "plan", text: "Subgoal 1: Vốn tối thiểu 50 tỷ đồng (PENDING)" },
-            { type: "plan", text: "Subgoal 2: Điều kiện nhà đầu tư FDI (PENDING)" }
+            { type: "plan", text: "Subgoal 2: Các điều kiện khác của Điều 22 (PENDING)" }
           ],
           context: "[Lead Prompt (Google ADK)]: Chỉ phân tích và sinh subgoals. Context gọn nhẹ: 180 tokens."
         },
@@ -116,10 +116,10 @@ const SCENARIOS = {
           obs: "Thu thập 4 điều khoản (Điều 22 & 23 NĐ 52/2024, Điều 18 & 23 TT 40/2024).",
           isolation: {
             inScope: "Từng Subgoal độc lập được gửi riêng cho worker truy vấn đồ thị Neo4j.",
-            blocked: "Không biết danh tính doanh nghiệp (FDI/Vốn 35 tỷ), không thấy Drafter, không thấy các workers khác."
+            blocked: "Không biết danh tính doanh nghiệp (vốn 35 tỷ), không thấy Drafter, không thấy các workers khác."
           },
           memory: [
-            { type: "keep", text: "● Đồ thị Neo4j: Cung cấp Điều 22 & 23 NĐ 52/2024 (Vốn 50 tỷ, FDI trần 49%)" },
+            { type: "keep", text: "● Đồ thị Neo4j: Điều 22 NĐ 52/2024 (vốn điều lệ thực góp tối thiểu 50 tỷ)" },
             { type: "pending", text: "○ Chuyển giao danh sách điều khoản sang Claim Auditor để chốt chặn hiệu lực" }
           ],
           context: "[Code Traversal thuần túy]: Chạy ngầm trong worker, 0 token LLM tiêu hao."
@@ -146,7 +146,7 @@ const SCENARIOS = {
           tokens: 2400,
           desc: "Drafter chỉ nhận các điều khoản sạch đã được Auditor phê duyệt để soạn thảo bản tư vấn chuyên nghiệp kèm lộ trình.",
           action: "DrafterAgent.synthesize_dossier(verified_clauses, audit_report)",
-          obs: "HOÀN TẤT: Căn cứ Điều 22 NĐ 52/2024: Vốn tối thiểu 50 tỷ VNĐ (Doanh nghiệp 35 tỷ -> Thiếu 15 tỷ); Tỷ lệ FDI 49% theo Điều 23; kèm 5 bước khuyến nghị thực thi.",
+          obs: "HOÀN TẤT: Căn cứ Điều 22 khoản 1 NĐ 52/2024, vốn điều lệ thực góp tối thiểu là 50 tỷ VNĐ — doanh nghiệp mới có 35 tỷ, thiếu 15 tỷ nên CHƯA đủ điều kiện; các điều kiện khác của Điều 22 cần đối chiếu thêm.",
           isolation: {
             inScope: "Chỉ nhận các điều khoản HỢP LỆ (Điều 22 & 23 NĐ 52/2024) + Hồ sơ doanh nghiệp để soạn thảo.",
             blocked: "CÔ LẬP HOÀN TOÀN KHỎI VĂN BẢN BÃI BỎ: Không bao giờ nhận NĐ 101/2012 cũ ➔ Triệt tiêu 100% nguy cơ ảo giác viện dẫn sai luật!"
@@ -154,7 +154,7 @@ const SCENARIOS = {
           memory: [
             { type: "keep", text: "💾 Ghi nhận checkpoint hoàn tất vào SQLite (enterprise_compliance.db) - Session ID: sess_d994bf5e" }
           ],
-          context: "[Drafter Prompt (Google ADK)]: Chỉ nhận điều khoản sạch còn hiệu lực. Tổng token toàn bộ: 2.580 tkn (Tiết kiệm 59.4% so với ReAct)."
+          context: "[Drafter Prompt (Google ADK)]: Chỉ nhận điều khoản sạch còn hiệu lực. Tổng token lượt chạy này: 2.580 tkn (trung bình 10 lần: tiết kiệm 56% so với ReAct)."
         }
       ],
       grounding: "100% Grounded (Xác thực tuyệt đối qua VBPL & Neo4j)",
@@ -198,7 +198,7 @@ const SCENARIOS = {
           context: "Tư vấn phạt 600.000 - 1.000.000 VNĐ theo NĐ 100/2019 (ĐÃ BÃI BỎ)."
         }
       ],
-      grounding: "0% (Văn bản đã bị bãi bỏ)",
+      grounding: "0% (Văn bản đã bị thay thế)",
       outcomeClass: "result-danger"
     },
 
@@ -885,14 +885,14 @@ class StreamlinedDemoApp {
         if (st.action) {
           extraBlocks += `
             <div class="step-block step-action">
-              <span class="block-tag">🛠️ Action (Tool):</span> <code>${st.action}</code>
+              <span class="block-tag">🛠️ Hàm được gọi:</span> <code>${st.action}</code>
             </div>
           `;
         }
         if (st.obs) {
           extraBlocks += `
             <div class="step-block step-obs">
-              <span class="block-tag">👁️ Observation:</span> ${st.obs}
+              <span class="block-tag">📤 OUTPUT (kết quả bước này trả về):</span> ${st.obs}
             </div>
           `;
         }
@@ -928,7 +928,7 @@ class StreamlinedDemoApp {
           extraBlocks += `
             <div class="step-context">
               <div class="context-header">
-                <span>📦 Context Window (Prompt gửi vào model)</span>
+                <span>� INPUT (prompt thực sự gửi vào model)</span>
                 <span class="context-size">${st.tokens} tokens</span>
               </div>
               <pre class="context-content">${st.context}</pre>
