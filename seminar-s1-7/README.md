@@ -12,8 +12,8 @@
 - **Anthropic (Dec 2024)**: *Building Effective Agents* (Workflows vs. autonomous agents, simplicity-first thesis, prompt chaining, routing, orchestrator-workers, evaluator-optimizer).
 
 ### Extension Readings (Presenting Group Deep Dive)
-1. **Anthropic (Feb 2025)**: *How We Built Our Multi-Agent Research System* (Lead/subagent decomposition, context isolation, $3\times-8\times$ token multiplier and latency overhead).
-2. **OpenAI (Feb 2025)**: *A Practical Guide to Building Agents* (Model-directed tool calling loops, schemas, guardrails, and structured evals).
+1. **Anthropic (Jun 2025)**: *How We Built Our Multi-Agent Research System* (Lead/subagent decomposition, context isolation, $\approx 15\times$ token multiplier and latency overhead).
+2. **OpenAI (Apr 2025)**: *A Practical Guide to Building Agents* (Model-directed tool calling loops, schemas, guardrails, and structured evals).
 3. **LangGraph Documentation (2024–2025)**: *State Graphs, Checkpointing, and Human-in-the-Loop* (Cyclic state graphs, durable execution, failure recovery).
 
 ---
@@ -22,9 +22,9 @@
 
 Subject line: `[CO5151][G4] Seminar S1-7`
 
-1. **`slides_s1_7.pdf`**: Exactly 22 slides in Academic English, strictly answering all 6 syllabus questions with balanced time (~9.5 mins each) across all 3 members.
+1. **`slides_s1_7.pdf`**: Exactly 22 slides in Academic English, strictly answering all 7 syllabus items plus the defense question, with balanced time (~9.5 mins each) across all 3 members.
 2. **`annotated_bibliography_en.pdf`**: Exactly ONE PAGE (1 Core Reading + 3 Extension Readings, exactly 1 critical reflection sentence per reading).
-3. **`demo/` Package & Code**: Empirical orchestration benchmark and interactive workbench comparing Workflow ($1\times$), Monolithic Agent ($11.8\times$), and Orchestrator-Workers ($3.2\times$) with durable checkpoint recovery and live memory inspection.
+3. **`demo/` Package & Code**: Interactive workbench and a 10-run DeepSeek-V3 benchmark (mean $\pm$ std) comparing Workflow ($1\times$), Monolithic ReAct ($7.4\times$), and Orchestrator-Workers ($3.3\times$) with durable checkpoint recovery and live memory inspection. The CLI trace uses an illustrative step budget, not API-measured tokens.
 4. **`ai_use_statement_en.pdf`**: Transparent AI-use declaration in compliance with HCMUT academic integrity policies.
 
 ---

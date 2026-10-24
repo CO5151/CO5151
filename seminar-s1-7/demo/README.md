@@ -27,7 +27,7 @@ seminar-s1-7/demo/
 ## 2. Key Interactive Features in the Demo
 
 1. **3-Way Comparative Race (`Tab 1`)**:
-   - Compares **1. Deterministic Workflow** ($760$ tokens, $1.0\times$), **2. Monolithic ReAct Agent** ($8,950$ tokens, $11.8\times$), and **3. Orchestrator-Workers with Checkpointing** ($2,410$ tokens, $3.2\times$).
+   - Simulated step budget for **1. Deterministic Workflow** ($760$ tokens, $1.0\times$), **2. Monolithic ReAct Agent** ($8,950$ tokens, $11.8\times$), and **3. Orchestrator-Workers with Checkpointing** ($2,410$ tokens, $3.2\times$). These are illustrative, not API-measured; the measured 10-run mean is Workflow 849 ($1.0\times$), ReAct 6,313 ($7.4\times$), and Multi-Agent 2,760 ($3.3\times$).
 2. **Graph Workflow (`Tab 2`)**:
    - Interactive LangGraph StateGraph DAG: Entry $\to$ Planning $\to$ Isolated Retrieval Worker $\to$ External Deterministic Oracle (`vbpl_verify_oracle`) $\to$ **Differential Rollback Arc** $\to$ Drafter Worker $\to$ SQLite Memory $\to$ Exit.
 3. **Live Multi-Tier Memory Visualizer (`Tab 3`)**:

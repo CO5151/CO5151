@@ -46,11 +46,11 @@
 
 \section{Extension Readings (Các Tài Liệu Mở Rộng Cho Nhóm Thuyết Trình)}
 \begin{enumerate}[leftmargin=1.4em, itemsep=6pt, topsep=3pt, start=2]
-  \item \textbf{Anthropic. (Feb 2025).} \textit{How We Built Our Multi-Agent Research System.} Anthropic Engineering Blog.\\
-  \textbf{Phạm vi trọng tâm:} Mô hình phân cấp Lead/Subagents; cô lập ngữ cảnh (context isolation); đánh đổi thực tế về chi phí token gấp $3\times$--$8\times$ và độ trễ.\\
-  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Việc chia nhỏ tác vụ cho các subagent giải quyết triệt để vấn đề thoái hóa ngữ cảnh nhưng phải trả giá bằng sự bùng nổ token gấp $3\times$--$8\times$ và nút thắt cổ chai độ trễ tại Lead Agent khi phải tổng hợp kết quả mà thường xuyên bỏ sót các mâu thuẫn tinh vi giữa các tác tử phụ.
+  \item \textbf{Anthropic. (Jun 2025).} \textit{How We Built Our Multi-Agent Research System.} Anthropic Engineering Blog.\\
+  \textbf{Phạm vi trọng tâm:} Mô hình phân cấp Lead/Subagents; cô lập ngữ cảnh (context isolation); đánh đổi thực tế về chi phí token gấp khoảng $15\times$ và độ trễ.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Việc chia nhỏ tác vụ cho các subagent giải quyết triệt để vấn đề thoái hóa ngữ cảnh nhưng phải trả giá bằng sự bùng nổ token gấp khoảng $15\times$ và nút thắt cổ chai độ trễ tại Lead Agent khi phải tổng hợp kết quả mà thường xuyên bỏ sót các mâu thuẫn tinh vi giữa các tác tử phụ.
 
-  \item \textbf{OpenAI. (Feb 2025).} \textit{A Practical Guide to Building Agents.} OpenAI Developer Documentation.\\
+  \item \textbf{OpenAI. (Apr 2025).} \textit{A Practical Guide to Building Agents.} OpenAI Developer Documentation.\\
   \textbf{Phạm vi trọng tâm:} Vòng lặp gọi công cụ do mô hình điều hướng (model-directed tool calling); cơ chế rào chắn (guardrails); khung đánh giá (evals); chuyển giao tác vụ (handoffs).\\
   \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Tài liệu cổ xúy việc trao quyền tự trị cho vòng lặp gọi công cụ của mô hình nhưng né tránh thực tế rằng xác suất tích lũy lỗi ($P = p^n$) sẽ nhanh chóng làm suy giảm nghiêm trọng độ tin cậy trong các bài toán pháp lý/tài chính nếu thiếu validator xác thực ground-truth độc lập.
 

@@ -22,7 +22,7 @@ from src.evaluation.baselines import (
     ReActBaseline,
     SBVLawGraphBaseline,
 )
-from src.evaluation.corpus import LegalCorpus, tokenize
+from src.evaluation.corpus import tokenize
 from src.evaluation.evaluator import SBVLawGraphEvaluator
 from src.evaluation.metrics import (
     f1_at_k,
@@ -115,7 +115,7 @@ class TestEvaluationMetrics(unittest.TestCase):
     def test_grounding_rate(self) -> None:
         """Tests Grounding Rate calculation."""
         self.assertEqual(grounding_rate(supported_claims=3, total_claims=4), 0.75)
-        self.assertEqual(grounding_rate(supported_claims=0, total_claims=0), 1.0)
+        self.assertEqual(grounding_rate(supported_claims=0, total_claims=0), 0.0)
 
 
 class TestBaselinesAndEvaluator(unittest.TestCase):
@@ -162,19 +162,22 @@ class TestBaselinesAndEvaluator(unittest.TestCase):
         """
         import inspect
 
-        for model in (NaiveChunkRAG(), SBVLawGraphBaseline(), ReActBaseline(), LegalPilotAgenticBaseline()):
+        for model in (
+            NaiveChunkRAG(),
+            SBVLawGraphBaseline(),
+            ReActBaseline(),
+            LegalPilotAgenticBaseline(),
+        ):
             params = list(inspect.signature(model.predict).parameters)
             self.assertEqual(params, ["query", "corpus"], f"{model.name} leaked extra params")
             self.assertNotIn("ground_truth", params)
 
     def test_temporal_pruning_removes_revoked_provisions(self) -> None:
         """Tests that the agentic baseline never returns a revoked instrument."""
-        pred = LegalPilotAgenticBaseline().predict("Nghị định thanh toán không dùng tiền mặt", self.corpus)
-        revoked_docs = {
-            c.doc_id.lower()
-            for c in self.corpus.chunks
-            if not c.is_active
-        }
+        pred = LegalPilotAgenticBaseline().predict(
+            "Nghị định thanh toán không dùng tiền mặt", self.corpus
+        )
+        revoked_docs = {c.doc_id.lower() for c in self.corpus.chunks if not c.is_active}
         returned_docs = {a.split("_")[0] for a in pred.retrieved_articles}
         for doc in revoked_docs:
             self.assertNotIn(doc, returned_docs, "Agentic baseline returned a revoked statute")
@@ -184,9 +187,7 @@ class TestBaselinesAndEvaluator(unittest.TestCase):
         static_pred = SBVLawGraphBaseline().predict(self.query, self.corpus)
         agentic_pred = LegalPilotAgenticBaseline().predict(self.query, self.corpus)
 
-        static_active = sum(
-            1 for a in static_pred.retrieved_articles if self._is_active_article(a)
-        )
+        static_active = sum(1 for a in static_pred.retrieved_articles if self._is_active_article(a))
         agentic_active = sum(
             1 for a in agentic_pred.retrieved_articles if self._is_active_article(a)
         )

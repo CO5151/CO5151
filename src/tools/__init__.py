@@ -19,6 +19,12 @@ from src.tools.lawgraph_tool import (
     query_lawgraph,
     trace_selective_edge,
 )
+from src.tools.public_service_portal import (
+    CHECK_PORTAL_STATUS_TOOL,
+    SUBMIT_PORTAL_FILING_TOOL,
+    check_portal_filing_status,
+    submit_portal_filing,
+)
 from src.tools.statutory_retriever import (
     STATUTORY_RETRIEVER_TOOL,
     retrieve_statutory_provisions,
@@ -29,16 +35,20 @@ from src.tools.validity_checker import (
 )
 
 __all__ = [
+    "CHECK_PORTAL_STATUS_TOOL",
     "QUERY_LAWGRAPH_TOOL",
     "SEARCH_GAZETTE_TOOL",
     "STATUTORY_RETRIEVER_TOOL",
+    "SUBMIT_PORTAL_FILING_TOOL",
     "TRACE_SELECTIVE_EDGE_TOOL",
     "VALIDITY_CHECKER_TOOL",
     "VERIFY_VBPL_STATUS_TOOL",
+    "check_portal_filing_status",
     "check_statute_validity",
     "query_lawgraph",
     "retrieve_statutory_provisions",
     "search_gazette",
+    "submit_portal_filing",
     "trace_selective_edge",
     "verify_vbpl_status",
 ]

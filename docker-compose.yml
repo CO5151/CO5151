@@ -38,6 +38,32 @@ services:
       timeout: 5s
       retries: 5
 
+  # Self-hosted search API for the `search_official_legal_web` tool.
+  # No API key, no per-query cost: it aggregates upstream engines itself.
+  # Needs `configs/searxng/settings.yml` (already in the repo) to expose JSON.
+  searxng:
+    image: searxng/searxng:latest
+    container_name: legalpilot-searxng
+    restart: unless-stopped
+    ports:
+      - "${SEARXNG_PORT:-8080}:8080"
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:${SEARXNG_PORT:-8080}/
+      - SEARXNG_SECRET=${SEARXNG_SECRET:-legalpilot-dev-only-change-me}
+    volumes:
+      - ./configs/searxng:/etc/searxng:rw
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: json-file
+      options:
+        max-size: "1m"
+        max-file: "1"
+
 volumes:
   neo4j_data:
     driver: local

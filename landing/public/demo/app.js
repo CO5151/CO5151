@@ -1,322 +1,492 @@
 /**
- * CO5151 Seminar S1-7: Agent Design Patterns & Orchestration
- * Vietnamese Law Graph Compliance Interactive Workbench
- * Group G4: Dang Lam Tung · Nguyen Trung Phong · Vu Viet Hung
- * Faculty Advisor: Dr. Le Xuan Bach
+ * CO5151 Seminar S1-7: Agent Design Patterns Comparison
+ * Streamlined, authentic interactive workbench for comparing 3 Agent architectures
+ * Group G4 (LegalPilot-VN) - HCMUT-VNU
  */
 
-// ============================================================================
-// 1. STATUTORY LAW GRAPH & SCENARIOS DATABASE
-// ============================================================================
 const SCENARIOS = {
   fintech: {
     id: "fintech",
-    title: "1. Cấp phép Ví điện tử FDI (NĐ 101/2012 hết hiệu lực → NĐ 52/2024)",
+    title: "1. Cấp Phép Ví Điện Tử FDI (2024)",
     query: "Tư vấn điều kiện cấp phép ví điện tử cho nhà đầu tư ngoại năm 2024",
     enterprise: "Global PayTech Asia Ltd. (FDI)",
-    entityType: "Doanh nghiệp FDI",
-    capital: "35.000.000.000 VNĐ",
-    foreignRatio: "45.0%",
-    regulatoryTrap: "Bẫy pháp lý: NĐ 101/2012 bị bãi bỏ từ 01/07/2024; thay thế bằng NĐ 52/2024 (Vốn ĐL tối thiểu 50 tỷ VNĐ).",
-    initialDoc: "101/2012/ND-CP",
-    successorDoc: "52/2024/ND-CP",
-    subgoalA: "Xác định điều kiện cấp phép ví điện tử và mức vốn điều lệ tối thiểu",
-    subgoalB: "Đối chiếu trần sở hữu nước ngoài (Room ngoại tối đa 49%)",
-    initialClause: {
-      docId: "101/2012/ND-CP",
-      article: "Điều 15",
-      title: "Điều kiện cấp phép (ĐÃ HẾT HIỆU LỰC)",
-      content: "Vốn điều lệ tối thiểu 50 tỷ đồng (Văn bản đã bị bãi bỏ toàn bộ từ ngày 01/07/2024 bởi NĐ 52/2024).",
-      status: "expired"
-    },
-    successorClause: {
-      docId: "52/2024/ND-CP",
-      article: "Điều 22 & 23",
-      title: "Điều kiện cung ứng Ví điện tử & Tỷ lệ sở hữu nước ngoài",
-      content: "Vốn điều lệ tối thiểu 50.000.000.000 VNĐ; tỷ lệ nhà đầu tư nước ngoài tuân thủ cam kết WTO (tối đa 49%).",
-      status: "active"
-    },
-    diffText: `● [PRESERVED IN CACHE] enterprise_profile (Vốn: 35 tỷ, FDI: 45%) - KHÔNG TÍNH LẠI
-● [PRESERVED IN CACHE] Subgoal B (Tỷ lệ sở hữu nước ngoài đạt chuẩn Điều 23)
-- [PRUNED FROM MEMORY] 101/2012/ND-CP:Điều 15 (Bãi bỏ bởi vbpl_verify_oracle)
-+ [INSERTED TO MEMORY] 52/2024/ND-CP:Điều 22 & 23 (Hiệu lực từ 01/07/2024)`,
+    trap: "NĐ 101/2012 bị bãi bỏ từ 01/07/2024; thay thế bằng NĐ 52/2024 (Vốn 50 tỷ VNĐ).",
+    
+    // Pattern 1: Deterministic Workflow
     p1: {
+      tokens: 969,
+      latency: "4,570 ms",
       steps: [
-        { name: "Router Phân Loại Ý Định", desc: "Phân loại câu hỏi sang luồng cấp phép Ví điện tử", tokens: 180, status: "active" },
-        { name: "Prompt Chain: Trích Xuất Căn Cứ", desc: "Vector search trả về NĐ 101/2012 (độ phổ biến cao nhất)", tokens: 320, status: "failed" },
-        { name: "Prompt Chain: Tổng Hợp Văn Bản", desc: "Soạn thảo thư tư vấn căn cứ theo NĐ 101/2012", tokens: 260, status: "failed" }
+        {
+          name: "Bước 1: Router phân loại yêu cầu",
+          tokens: 180,
+          desc: "Nhận dạng từ khóa 'ví điện tử', 'FDI' -> Định tuyến sang nhóm thủ tục thanh toán không dùng tiền mặt.",
+          action: "classify_intent(query)",
+          obs: "category = 'fintech_payment_licensing'",
+          context: "[Prompt Router (DeepSeek)]:\nClassify intent: 'Doanh nghiệp muốn xin cấp phép ví điện tử thì vốn tối thiểu cần bao nhiêu tiền...'\nOutput: fintech_payment_licensing (180 tokens)"
+        },
+        {
+          name: "Bước 2: Vector Search 1-Shot (Không có vòng lặp)",
+          tokens: 340,
+          desc: "Tìm kiếm ngữ nghĩa 1 lần: Chỉ bốc trúng Điều 18 Thông tư 40/2024/TT-NHNN (hồ sơ mở ví), trượt mất Điều 22 NĐ 52/2024.",
+          action: "dense_hybrid_search(query, top_k=2)",
+          obs: "matched_document = '40/2024/TT-NHNN:Article_18' (Quy định về hồ sơ, thỏa thuận mở ví điện tử)",
+          context: "[Prompt Retriever]:\nQuery: 'cấp phép ví điện tử vốn tối thiểu'\nResult: [40/2024/TT-NHNN] Điều 18: Hồ sơ mở ví điện tử..."
+        },
+        {
+          name: "Bước 3: Tổng hợp kết quả (Thất bại trước bẫy pháp lý)",
+          tokens: 449,
+          status: "failed",
+          desc: "LLM sinh câu trả lời dựa trên context thiếu sót, không có cơ chế rà soát lại để tìm văn bản quy định về vốn.",
+          action: "synthesize_response(matched_document)",
+          obs: "THẤT BẠI: Kết luận 'Không có quy định nào đề cập đến vốn điều lệ tối thiểu' do thiếu Điều 22 NĐ 52/2024.",
+          context: "[DeepSeek Output (Live Run)]:\n'Dựa trên căn cứ pháp lý cung cấp (Thông tư 40/2024/TT-NHNN, Điều 18), không có quy định nào đề cập đến vốn điều lệ tối thiểu... Không thể trả lời doanh nghiệp cần bao nhiêu vốn.' (SAI NGHIỆP VỤ)"
+        }
       ],
-      tokens: 760,
-      latency: 42,
-      grounding: "0% (Trích dẫn luật hết hiệu lực)",
-      recovery: "Không thể phục hồi (Workflow mù hiệu lực)",
-      outcomeClass: "result-danger",
-      dossier: "[CẢNH BÁO TƯ VẤN SAI LỆCH - WORKFLOW]\nCăn cứ: Nghị định 101/2012/NĐ-CP (ĐÃ BÃI BỎ).\nHồ sơ nộp lên NHNN sẽ BỊ BÁC BỎ NGAY LẬP TỨC do viện dẫn sai văn bản quy phạm pháp luật!"
+      grounding: "0% (Bỏ sót quy định vốn tối thiểu)",
+      outcomeClass: "result-danger"
     },
+
+    // Pattern 2: Monolithic ReAct Agent
     p2: {
+      tokens: 6351,
+      latency: "7,096 ms",
       steps: [
-        { name: "Turn 1 [ReAct Loop - Thought/Action]", desc: "Search: 'quy định cấp phép ví điện tử' (System prompt + History)", tokens: 950, status: "active" },
-        { name: "Turn 2 [ReAct Loop - Observation]", desc: "Top hit NĐ 101/2012 -> Verify status: REVOKED by 52/2024!", tokens: 1750, status: "active" },
-        { name: "Turn 3 [ReAct Loop - Context Drift]", desc: "Search thêm tỷ lệ sở hữu ngoại; attention bị loãng qua 2.650 tokens", tokens: 2650, status: "active" },
-        { name: "Turn 4 [ReAct Loop - Tổng Hợp]", desc: "Tổng hợp toàn bộ lịch sử; nhầm lẫn điều khoản giữa NĐ 101 và 52", tokens: 3600, status: "failed" }
+        {
+          name: "Turn 1: Tool search_statutes()",
+          tokens: 1150,
+          desc: "DeepSeek tự gọi công cụ tra cứu ngữ nghĩa vector dense embedding trong 103 chunks.",
+          thought: "Người dùng cần biết mức vốn điều lệ tối thiểu và căn cứ pháp lý hiện hành để xin cấp phép ví điện tử. Tôi cần tra cứu quy định cấp phép.",
+          action: "search_statutes(query='vốn điều lệ tối thiểu cấp phép cung ứng dịch vụ ví điện tử')",
+          obs: "Tìm thấy: Nghị định 52/2024/NĐ-CP (Điều 22: Vốn tối thiểu 50 tỷ đồng) và Thông tư 40/2024/TT-NHNN (Điều 27).",
+          context: "[System Prompt: 650 tokens (Luật, tools, hướng dẫn)]\n+ [User Query]\n--> Tổng Context Turn 1: 1.150 tokens"
+        },
+        {
+          name: "Turn 2: Tool verify_statute_validity() [Đồ thị Neo4j]",
+          tokens: 2480,
+          desc: "DeepSeek nhận diện cần kiểm tra hiệu lực NĐ 52/2024 và TT 40/2024 qua đồ thị Neo4j; context bắt đầu dồn lịch sử Turn 1.",
+          thought: "Đã có NĐ 52/2024 và TT 40/2024. Để tránh tư vấn sai luật, tôi cần kiểm tra tính hiệu lực pháp lý của hai văn bản này qua đồ thị quan hệ Neo4j.",
+          action: "verify_statute_validity('52/2024/ND-CP') | verify_statute_validity('40/2024/TT-NHNN')",
+          obs: "Neo4j Graph xác nhận: Cả 2 văn bản đều IN_FORCE (Còn hiệu lực). NĐ 52/2024 bãi bỏ/thay thế NĐ 101/2012/NĐ-CP.",
+          context: "[System Prompt + User Query]\n+ [Turn 1 Thought + Action: search_statutes + Observation: 52/2024 & 40/2024]\n--> Toàn bộ lịch sử Turn 1 được nhồi vào prompt. Context Turn 2: 2.480 tokens."
+        },
+        {
+          name: "Turn 3: Tổng hợp kết luận [Context dồn dập 6.351 tokens]",
+          tokens: 2721,
+          desc: "Toàn bộ hội thoại và kết quả tool dồn tích vào prompt (>2.700 tokens cho 1 lượt). Đưa ra kết luận đúng nhưng tốn chi phí gấp 6.5x.",
+          thought: "Đã có đầy đủ căn cứ từ Qdrant và Neo4j. Tôi sẽ tổng hợp kết luận tư vấn pháp lý hoàn chỉnh.",
+          action: "finish_response()",
+          obs: "KẾT QUẢ ĐẠT: Vốn tối thiểu 50 tỷ VNĐ theo Điều 22 NĐ 52/2024. Cảnh báo NĐ 101/2012 cũ đã bị bãi bỏ.",
+          context: "[Toàn bộ hội thoại tích lũy qua các turns: > 2.700 tokens]\n--> Tổng token thực tế đo đạc: 1.150 + 2.480 + 2.721 = 6.351 tokens (Gấp 6.5 lần)"
+        }
       ],
-      tokens: 8950,
-      latency: 420,
-      grounding: "60% (Trôi dạt ngữ cảnh / Ảo giác)",
-      recovery: "ReAct tùy tiện trong RAM (Sập tiến trình = Mất trắng)",
-      outcomeClass: "result-warning",
-      dossier: "[TƯ VẤN BỊ XÁO TRỘN NGỮ CẢNH - MONOLITHIC AGENT]\nNhận diện được NĐ 52/2024 nhưng trộn lẫn điều kiện cũ từ NĐ 101/2012 vào quy trình thẩm định. Tiêu tốn 8.950 tokens (11.8x)."
+      grounding: "100% (Tìm đúng luật nhưng tốn 6.351 tokens)",
+      outcomeClass: "result-warning"
     },
+
+    // Pattern 3: Orchestrator-Workers (Google ADK & LangGraph)
     p3: {
+      tokens: 2580,
+      latency: "8,856 ms",
       steps: [
-        { name: "Node 1: Lead Orchestrator - Phân Rã", desc: "Decompose thành Subgoal A (Điều kiện cấp phép) & Subgoal B (Room ngoại FDI)", tokens: 450, status: "active", chk: "C1_PLAN" },
-        { name: "Node 2: LawGraph Worker (Cô Lập)", desc: "Tra cứu Subgoal A trong context sạch < 400 tokens -> Trả về NĐ 101/2012", tokens: 380, status: "active", chk: "C2_RETRIEVAL" },
-        { name: "Node 3: Auditor Oracle (Kiểm Định)", desc: "Gọi vbpl_verify_oracle('101/2012') -> CẢNH BÁO: Hết hiệu lực thi hành!", tokens: 310, status: "failed" },
-        { name: "Node 4: LangGraph Rollback Vi Sai", desc: "Rollback về C1_PLAN (Subgoal B được bảo toàn!); Chuyển tiếp NĐ 52/2024", tokens: 620, status: "recovered", chk: "C1_RESTORE" },
-        { name: "Node 5: Drafter Worker (Tổng Hợp)", desc: "Soạn thảo hồ sơ tuân thủ 100% từ NĐ 52/2024 (Điều 22 & 23)", tokens: 650, status: "active", chk: "C3_FINAL" }
+        {
+          name: "Bước 1: Lead Orchestrator phân rã Subgoals",
+          tokens: 180,
+          desc: "Orchestrator phân rã câu hỏi thành 2 subgoals độc lập (Vốn tối thiểu & Điều kiện FDI) mà không mang vác context nặng.",
+          thought: "Phân rã thành: Subgoal 1 = 'Điều kiện vốn pháp định tối thiểu 50 tỷ đồng'; Subgoal 2 = 'Thủ tục và điều kiện FDI theo NĐ 52/2024'.",
+          action: "plan_subgoals(query)",
+          obs: "Đã khởi tạo kế hoạch: [Subgoal 1: PENDING, Subgoal 2: PENDING]",
+          isolation: {
+            inScope: "Chỉ nhận User Query để phân rã 2 subgoals (180 tkn)",
+            blocked: "Cách ly 100%: Không thấy DB schema, không thấy vector chunks, không nhận thông tin nhạy cảm của doanh nghiệp."
+          },
+          memory: [
+            { type: "state", text: "State Schema: LegalAgentState (session_id: sess_d994bf5e)" },
+            { type: "plan", text: "Subgoal 1: Vốn tối thiểu 50 tỷ đồng (PENDING)" },
+            { type: "plan", text: "Subgoal 2: Điều kiện nhà đầu tư FDI (PENDING)" }
+          ],
+          context: "[Lead Prompt (Google ADK)]: Chỉ phân tích và sinh subgoals. Context gọn nhẹ: 180 tokens."
+        },
+        {
+          name: "Bước 2: LawGraph Worker tra cứu độc lập",
+          tokens: 0,
+          desc: "Worker duyệt đồ thị quan hệ Neo4j và Qdrant dense chunks bằng thuật toán graph traversal (0 token LLM).",
+          thought: "Tra cứu đồ thị quan hệ cho 2 subgoals, phát hiện NĐ 101/2012 có liên kết REVOKED_BY sang NĐ 52/2024.",
+          action: "LawGraphAgent.retrieve_provisions(subgoals)",
+          obs: "Thu thập 4 điều khoản (Điều 22 & 23 NĐ 52/2024, Điều 18 & 23 TT 40/2024).",
+          isolation: {
+            inScope: "Từng Subgoal độc lập được gửi riêng cho worker truy vấn đồ thị Neo4j.",
+            blocked: "Không biết danh tính doanh nghiệp (FDI/Vốn 35 tỷ), không thấy Drafter, không thấy các workers khác."
+          },
+          memory: [
+            { type: "keep", text: "● Đồ thị Neo4j: Cung cấp Điều 22 & 23 NĐ 52/2024 (Vốn 50 tỷ, FDI trần 49%)" },
+            { type: "pending", text: "○ Chuyển giao danh sách điều khoản sang Claim Auditor để chốt chặn hiệu lực" }
+          ],
+          context: "[Code Traversal thuần túy]: Chạy ngầm trong worker, 0 token LLM tiêu hao."
+        },
+        {
+          name: "Bước 3: Claim Auditor chốt chặn hiệu lực qua VBPL",
+          tokens: 0,
+          status: "recovered",
+          desc: "Auditor đối soát hiệu lực độc lập qua cơ sở dữ liệu quốc gia VBPL và đồ thị bãi bỏ. Bắt buộc 100% căn cứ phải còn hiệu lực.",
+          action: "ClaimAuditorAgent.audit_provisions(clauses)",
+          obs: "XÁC THỰC 100%: NĐ 52/2024 và TT 40/2024 hợp lệ hoàn toàn; chặn đứng hoàn toàn NĐ 101/2012 cũ.",
+          isolation: {
+            inScope: "Chỉ nhận danh sách Candidate Clauses (doc_id, ngày hiệu lực) để kiểm định khách quan.",
+            blocked: "Độc lập ngoại vi 100%: Không biết câu hỏi người dùng, không bị chi phối bởi mong muốn giảm nhẹ của doanh nghiệp."
+          },
+          memory: [
+            { type: "keep", text: "● Grounding Rate: 100.0% Grounded" },
+            { type: "update", text: "✅ Toàn bộ căn cứ pháp lý đã qua kiểm định hợp lệ (is_fully_verified = True)" }
+          ],
+          context: "[Auditor Logic]: Kiểm tra logic Python đối chiếu DB, 0 token LLM tiêu hao."
+        },
+        {
+          name: "Bước 4: Compliance Drafter tổng hợp hồ sơ",
+          tokens: 2400,
+          desc: "Drafter chỉ nhận các điều khoản sạch đã được Auditor phê duyệt để soạn thảo bản tư vấn chuyên nghiệp kèm lộ trình.",
+          action: "DrafterAgent.synthesize_dossier(verified_clauses, audit_report)",
+          obs: "HOÀN TẤT: Căn cứ Điều 22 NĐ 52/2024: Vốn tối thiểu 50 tỷ VNĐ (Doanh nghiệp 35 tỷ -> Thiếu 15 tỷ); Tỷ lệ FDI 49% theo Điều 23; kèm 5 bước khuyến nghị thực thi.",
+          isolation: {
+            inScope: "Chỉ nhận các điều khoản HỢP LỆ (Điều 22 & 23 NĐ 52/2024) + Hồ sơ doanh nghiệp để soạn thảo.",
+            blocked: "CÔ LẬP HOÀN TOÀN KHỎI VĂN BẢN BÃI BỎ: Không bao giờ nhận NĐ 101/2012 cũ ➔ Triệt tiêu 100% nguy cơ ảo giác viện dẫn sai luật!"
+          },
+          memory: [
+            { type: "keep", text: "💾 Ghi nhận checkpoint hoàn tất vào SQLite (enterprise_compliance.db) - Session ID: sess_d994bf5e" }
+          ],
+          context: "[Drafter Prompt (Google ADK)]: Chỉ nhận điều khoản sạch còn hiệu lực. Tổng token toàn bộ: 2.580 tkn (Tiết kiệm 59.4% so với ReAct)."
+        }
       ],
-      tokens: 2410,
-      latency: 245,
-      grounding: "100% (Xác thực pháp lý tuyệt đối)",
-      recovery: "Durable SQLite Rollback (Phục hồi vi sai)",
-      outcomeClass: "result-success",
-      dossier: "HỒ SƠ TƯ VẤN PHÁP LÝ TUÂN THỦ (LEGALPILOT-VN)\n• Doanh nghiệp: Global PayTech Asia Ltd. (FDI) | Vốn: 35 tỷ VNĐ\n• Căn cứ pháp lý: Nghị định 52/2024/NĐ-CP (Có hiệu lực từ 01/07/2024)\n• Cảnh báo tuân thủ: Vốn điều lệ hiện tại (35 tỷ) THIẾU 15 TỶ so với mức tối thiểu 50 tỷ quy định tại Điều 22 Khoản 1!\n• Tỷ lệ sở hữu ngoại: 45% ĐẠT điều kiện (dưới trần 49% theo Điều 23)."
+      grounding: "100% Grounded (Xác thực tuyệt đối qua VBPL & Neo4j)",
+      outcomeClass: "result-success"
     }
   },
+
   traffic: {
     id: "traffic",
-    title: "2. Xử phạt Vượt đèn đỏ Mô tô (NĐ 100/2019 bãi bỏ → NĐ 168/2024)",
+    title: "2. Xử Phạt Vượt Đèn Đỏ Xe Máy",
     query: "Mức xử phạt vượt đèn đỏ xe máy theo quy định mới nhất hiện hành",
     enterprise: "Logistics Express Vietnam JSC",
-    entityType: "Công ty Cổ phần",
-    capital: "15.000.000.000 VNĐ",
-    foreignRatio: "0.0%",
-    regulatoryTrap: "Bẫy pháp lý: NĐ 100/2019 (600k-1M) đã bị thay thế bởi NĐ 168/2024 (Phạt 4M-6M, tước GPLX 1-3 tháng).",
-    initialDoc: "100/2019/ND-CP",
-    successorDoc: "168/2024/ND-CP",
-    subgoalA: "Xác định khung tiền phạt đối với hành vi vượt đèn đỏ mô tô",
-    subgoalB: "Xác định hình thức xử phạt bổ sung (tước giấy phép lái xe)",
-    initialClause: {
-      docId: "100/2019/ND-CP",
-      article: "Điều 6 Khoản 4",
-      title: "Xử phạt vượt đèn đỏ xe máy (CŨ)",
-      content: "Phạt tiền từ 600.000 VNĐ đến 1.000.000 VNĐ (Quy định cũ đã bị bãi bỏ bởi NĐ 168/2024).",
-      status: "expired"
-    },
-    successorClause: {
-      docId: "168/2024/ND-CP",
-      article: "Điều 6 Khoản 4",
-      title: "Xử phạt vượt đèn đỏ xe máy (MỚI)",
-      content: "Phạt tiền từ 4.000.000 VNĐ đến 6.000.000 VNĐ; tước quyền sử dụng GPLX từ 01 tháng đến 03 tháng.",
-      status: "active"
-    },
-    diffText: `● [PRESERVED IN CACHE] enterprise_profile (Logistics Express JSC) - KHÔNG TÍNH LẠI
-● [PRESERVED IN CACHE] Subgoal B (Xác minh hình thức xử phạt bổ sung)
-- [PRUNED FROM MEMORY] 100/2019/ND-CP (Bãi bỏ bởi vbpl_verify_oracle)
-+ [INSERTED TO MEMORY] 168/2024/ND-CP (Áp dụng mức phạt mới 4M-6M VNĐ)`,
+    trap: "NĐ 100/2019 (600k-1M) bị thay thế bởi NĐ 168/2024 (4M-6M, tước GPLX 1-3 tháng).",
+
     p1: {
+      tokens: 760,
       steps: [
-        { name: "Router Phân Loại Ý Định", desc: "Phân loại câu hỏi sang luồng xử phạt giao thông đường bộ", tokens: 170, status: "active" },
-        { name: "Prompt Chain: Extractor", desc: "Trích xuất NĐ 100/2019 Điều 6 Khoản 4 Điểm e (Mức phạt 600k-1 triệu)", tokens: 310, status: "failed" },
-        { name: "Prompt Chain: Synthesizer", desc: "Xuất thông báo tư vấn phạt 600k-1M (Sai luật hoàn toàn)", tokens: 250, status: "failed" }
+        {
+          name: "Bước 1: Router định tuyến",
+          tokens: 180,
+          action: "classify_intent(query)",
+          obs: "category = 'traffic_violation_penalty'",
+          desc: "Định tuyến sang nhóm vi phạm trật tự an toàn giao thông đường bộ.",
+          context: "Input: 'Mức xử phạt vượt đèn đỏ xe máy theo quy định mới nhất hiện hành'"
+        },
+        {
+          name: "Bước 2: Tra cứu bảng tĩnh",
+          tokens: 310,
+          action: "db_lookup('traffic_violation_penalty')",
+          obs: "matched_document = '100/2019/ND-CP' (Điều 6 Khoản 4)",
+          desc: "Lấy NĐ 100/2019 quy định phạt 600.000 - 1.000.000 VNĐ.",
+          context: "Query: traffic_violation_penalty -> Top match: 100/2019/ND-CP"
+        },
+        {
+          name: "Bước 3: Định dạng kết quả",
+          tokens: 270,
+          status: "failed",
+          action: "format_response(matched_document)",
+          obs: "THẤT BẠI: Cung cấp mức phạt cũ 600k-1M; không có thông tin tước GPLX theo luật mới.",
+          desc: "Không kiểm tra tính hiệu lực, tư vấn sai lệch mức phạt thực tế.",
+          context: "Tư vấn phạt 600.000 - 1.000.000 VNĐ theo NĐ 100/2019 (ĐÃ BÃI BỎ)."
+        }
       ],
-      tokens: 730,
-      latency: 38,
-      grounding: "0% (Luật cũ đã bãi bỏ)",
-      recovery: "Không có",
-      outcomeClass: "result-danger",
-      dossier: "[TƯ VẤN SAI LỆCH - WORKFLOW]\nThông báo lái xe mức phạt 600.000 - 1.000.000 VNĐ theo Nghị định 100/2019. Lái xe sẽ bị phạt 4-6 triệu theo luật mới!"
+      grounding: "0% (Văn bản đã bị bãi bỏ)",
+      outcomeClass: "result-danger"
     },
+
     p2: {
-      steps: [
-        { name: "Turn 1 [ReAct Loop]", desc: "Search: 'mức phạt vượt đèn đỏ xe máy' -> Trả về NĐ 100/2019", tokens: 910, status: "active" },
-        { name: "Turn 2 [ReAct Loop]", desc: "Verify status: NĐ 100 bị bãi bỏ bởi NĐ 168/2024", tokens: 1680, status: "active" },
-        { name: "Turn 3 [ReAct Loop]", desc: "Search hình thức tước bằng lái; lịch sử dài phình to", tokens: 2540, status: "active" },
-        { name: "Turn 4 [ReAct Loop]", desc: "Tổng hợp; đưa ra mức phạt lẫn lộn từ 600k đến 6 triệu", tokens: 3450, status: "failed" }
-      ],
       tokens: 8580,
-      latency: 410,
-      grounding: "50% (Đưa ra cả mức phạt cũ và mới)",
-      recovery: "ReAct không lưu checkpoint",
-      outcomeClass: "result-warning",
-      dossier: "[TƯ VẤN LẪN LỘN - MONOLITHIC AGENT]\nTrích dẫn mâu thuẫn: Phạt từ 600.000 đến 6.000.000 đồng và có thể bị tước GPLX."
-    },
-    p3: {
       steps: [
-        { name: "Node 1: Lead Orchestrator", desc: "Phân rã: Subgoal A (Khung phạt tiền) & Subgoal B (Hình thức phạt bổ sung)", tokens: 420, status: "active", chk: "C1_PLAN" },
-        { name: "Node 2: LawGraph Worker", desc: "Tra cứu Subgoal A trong context sạch -> Lấy NĐ 100/2019", tokens: 360, status: "active", chk: "C2_RETRIEVAL" },
-        { name: "Node 3: Auditor Oracle Gate", desc: "Kiểm tra vbpl_verify_oracle('100/2019') -> BÃI BỎ bởi NĐ 168/2024!", tokens: 290, status: "failed" },
-        { name: "Node 4: Rollback & Re-route", desc: "Rollback về C1_PLAN, chuyển hướng tra cứu NĐ 168/2024 Điều 6 Khoản 4", tokens: 590, status: "recovered", chk: "C1_RESTORE" },
-        { name: "Node 5: Drafter Worker", desc: "Tổng hợp kết quả xác thực 100% từ NĐ 168/2024", tokens: 610, status: "active", chk: "C3_FINAL" }
+        {
+          name: "Turn 1: Tool search_statute()",
+          tokens: 910,
+          thought: "Cần tìm mức phạt tiền khi vượt đèn đỏ mô tô, xe gắn máy.",
+          action: "search_statute(query='mức phạt vượt đèn đỏ xe máy')",
+          obs: "Nghị định 100/2019/NĐ-CP Điều 6 Khoản 4: Phạt tiền từ 600.000 đến 1.000.000 đồng.",
+          context: "System Prompt + User Query -> Context: 910 tokens"
+        },
+        {
+          name: "Turn 2: Tool verify_validity()",
+          tokens: 1680,
+          thought: "Kiểm tra xem Nghị định 100/2019 còn hiệu lực không.",
+          action: "verify_validity(doc_id='100/2019/ND-CP')",
+          obs: "Nghị định 100/2019/NĐ-CP ĐÃ BÃI BỎ bởi Nghị định 168/2024/NĐ-CP.",
+          context: "Prompt + Lịch sử Turn 1 (Thought, Action, Obs) -> Context: 1.680 tokens"
+        },
+        {
+          name: "Turn 3: Tool search_statute() [Lịch sử dài]",
+          tokens: 2540,
+          thought: "NĐ 100 bị thay thế. Cần tìm mức phạt và hình thức tước GPLX trong NĐ 168/2024.",
+          action: "search_statute(query='Nghị định 168/2024 mức phạt vượt đèn đỏ mô tô')",
+          obs: "Nghị định 168/2024/NĐ-CP Điều 6 Khoản 4: Phạt từ 4.000.000 đến 6.000.000 VNĐ; tước GPLX 1-3 tháng.",
+          context: "Prompt + Turn 1 + Turn 2 -> Context: 2.540 tokens"
+        },
+        {
+          name: "Turn 4: Tổng hợp [Context dồn dập]",
+          tokens: 3450,
+          status: "failed",
+          thought: "Tổng hợp các mức phạt đã tìm được trong toàn bộ lịch sử.",
+          action: "finish_response()",
+          obs: "LẪN LỘN: Báo mức phạt từ 600k đến 6 triệu đồng do context lưu cả kết quả NĐ 100 lẫn NĐ 168.",
+          context: "Tích lũy trọn vẹn 4 turns: 910 + 1680 + 2540 + 3450 = 8.580 tokens (11.3x)"
+        }
       ],
+      grounding: "50% (Đưa cả mức phạt cũ và mới)",
+      outcomeClass: "result-warning"
+    },
+
+    p3: {
       tokens: 2270,
-      latency: 230,
+      steps: [
+        {
+          name: "Bước 1: Lead Orchestrator phân rã",
+          tokens: 420,
+          thought: "Tách truy vấn thành: Subgoal A (Khung tiền phạt) và Subgoal B (Hình thức phạt bổ sung).",
+          action: "plan_subgoals(query)",
+          obs: "Khởi tạo: [Subgoal A: Khung tiền phạt, Subgoal B: Tước giấy phép]",
+          memory: [
+            { type: "plan", text: "Subgoal A: Khung tiền phạt vi phạm (PENDING)" },
+            { type: "plan", text: "Subgoal B: Hình phạt bổ sung tước GPLX (PENDING)" }
+          ],
+          context: "Context Lead: 420 tokens phân rã."
+        },
+        {
+          name: "Bước 2: Workers tra cứu độc lập",
+          tokens: 650,
+          action: "Worker1: search(subgoal_a) | Worker2: search(subgoal_b)",
+          obs: "Worker 1 lấy NĐ 100/2019 Điều 6; Worker 2 xác định có áp dụng tước GPLX.",
+          memory: [
+            { type: "pending", text: "○ Subgoal A: NĐ 100/2019 (Chờ kiểm định)" },
+            { type: "keep", text: "● Subgoal B: Có áp dụng hình thức tước GPLX (Đã xác định)" }
+          ],
+          context: "Worker 1: 360 tkn | Worker 2: 290 tkn (Context sạch, không dính lịch sử thừa)"
+        },
+        {
+          name: "Bước 3: Auditor kiểm định hiệu lực",
+          tokens: 290,
+          status: "failed",
+          action: "verify_validity('100/2019/ND-CP')",
+          obs: "CẢNH BÁO: NĐ 100/2019 đã hết hiệu lực; thay thế bởi NĐ 168/2024/NĐ-CP.",
+          memory: [
+            { type: "update", text: "⚠️ Subgoal A: NĐ 100 hết hiệu lực -> Kế thừa sang NĐ 168/2024" },
+            { type: "keep", text: "● Subgoal B: Giữ nguyên trong memory" }
+          ],
+          context: "Auditor Context: 290 tokens đối soát độc lập."
+        },
+        {
+          name: "Bước 4: Điều hướng thay thế NĐ 168/2024",
+          tokens: 590,
+          status: "recovered",
+          action: "reroute_successor('168/2024/ND-CP', subgoal_a)",
+          obs: "Lấy NĐ 168/2024 Điều 6 Khoản 4: Phạt 4.000.000 - 6.000.000 VNĐ.",
+          memory: [
+            { type: "keep", text: "● Subgoal A: Đã cập nhật NĐ 168/2024 (Phạt 4 - 6 triệu VNĐ)" },
+            { type: "keep", text: "● Subgoal B: Tước GPLX 1-3 tháng (Bảo toàn trong State Memory)" }
+          ],
+          context: "Chỉ cập nhật Subgoal A. Tổng token tiết kiệm đáng kể."
+        },
+        {
+          name: "Bước 5: Drafter hoàn thiện báo cáo",
+          tokens: 320,
+          action: "draft_compliance_dossier(state_memory)",
+          obs: "HOÀN TẤT: Phạt tiền 4.000.000 - 6.000.000 VNĐ, tước GPLX 01 - 03 tháng (NĐ 168/2024).",
+          memory: [
+            { type: "keep", text: "💾 Ghi vết kiểm định vào SQLite (session_id: traffic_01)" }
+          ],
+          context: "Tổng token: 2.270 tkn. Căn cứ chính xác 100%."
+        }
+      ],
       grounding: "100% (Chuẩn Nghị định 168/2024)",
-      recovery: "Durable SQLite Rollback",
-      outcomeClass: "result-success",
-      dossier: "KẾT QUẢ TƯ VẤN PHÁP LUẬT CHÍNH XÁC (NĐ 168/2024/NĐ-CP):\n• Hành vi: Người điều khiển xe mô tô, xe gắn máy vượt đèn đỏ.\n• Mức phạt tiền: 4.000.000 VNĐ - 6.000.000 VNĐ (Điều 6 Khoản 4).\n• Xử phạt bổ sung: Tước quyền sử dụng GPLX từ 01 đến 03 tháng."
+      outcomeClass: "result-success"
     }
   },
+
   labor: {
     id: "labor",
-    title: "3. Giấy phép Chuyên gia Ngoại (NĐ 152/2020 sửa đổi bởi NĐ 70/2023)",
+    title: "3. Giấy Phép Lao Động Chuyên Gia Ngoại",
     query: "Điều kiện cấp giấy phép lao động cho chuyên gia nước ngoài",
     enterprise: "TechVentures VN LLC",
-    entityType: "Công ty TNHH",
-    capital: "20.000.000.000 VNĐ",
-    foreignRatio: "70.0%",
-    regulatoryTrap: "Bẫy pháp lý: NĐ 152/2020 yêu cầu bằng ĐH đúng ngành; NĐ 70/2023 đã nới lỏng sang bằng ĐH bất kỳ + 3 năm kinh nghiệm phù hợp.",
-    initialDoc: "152/2020/ND-CP",
-    successorDoc: "70/2023/ND-CP",
-    subgoalA: "Xác định tiêu chuẩn văn bằng chuyên môn của chuyên gia nước ngoài",
-    subgoalB: "Xác định số năm kinh nghiệm làm việc thực tế phù hợp",
-    initialClause: {
-      docId: "152/2020/ND-CP",
-      article: "Điều 3 Khoản 3",
-      title: "Tiêu chuẩn chuyên gia (QUY ĐỊNH CŨ KHẮT KHE)",
-      content: "Yêu cầu có bằng đại học đúng chuyên ngành đào tạo (Quy định cũ gây tắc nghẽn tuyển dụng).",
-      status: "expired"
-    },
-    successorClause: {
-      docId: "70/2023/ND-CP",
-      article: "Điều 1 Khoản 5",
-      title: "Tiêu chuẩn chuyên gia (QUY ĐỊNH MỚI NỚI LỎNG)",
-      content: "Có bằng đại học trở lên hoặc tương đương và có ít nhất 03 năm kinh nghiệm làm việc phù hợp với vị trí.",
-      status: "active"
-    },
-    diffText: `● [PRESERVED IN CACHE] enterprise_profile (TechVentures LLC) - KHÔNG TÍNH LẠI
-● [PRESERVED IN CACHE] Subgoal B (Kinh nghiệm 3 năm thực tế)
-- [PRUNED FROM MEMORY] 152/2020/ND-CP:Điều 3 (Yêu cầu bằng đúng ngành)
-+ [INSERTED TO MEMORY] 70/2023/ND-CP:Điều 1 Khoản 5 (Nới lỏng điều kiện bằng cấp)`,
+    trap: "NĐ 152/2020 (bằng đúng ngành) được sửa đổi bởi NĐ 70/2023 (nới lỏng sang bằng ĐH + 3 năm kinh nghiệm).",
+
     p1: {
-      steps: [
-        { name: "Router Phân Loại Ý Định", desc: "Định tuyến sang nghiệp vụ Giấy phép lao động nước ngoài", tokens: 180, status: "active" },
-        { name: "Prompt Chain: Extractor", desc: "Lấy NĐ 152/2020 Điều 3 Khoản 3 (Yêu cầu bằng đúng ngành)", tokens: 330, status: "failed" },
-        { name: "Prompt Chain: Synthesizer", desc: "Tư vấn doanh nghiệp từ chối chuyên gia nếu bằng cấp lệch ngành", tokens: 270, status: "failed" }
-      ],
       tokens: 780,
-      latency: 40,
+      steps: [
+        {
+          name: "Bước 1: Router phân loại",
+          tokens: 180,
+          action: "classify_intent(query)",
+          obs: "category = 'foreign_labor_permit'",
+          desc: "Định tuyến sang nghiệp vụ quản lý lao động nước ngoài.",
+          context: "Input: 'Điều kiện cấp giấy phép lao động cho chuyên gia nước ngoài'"
+        },
+        {
+          name: "Bước 2: Tra cứu NĐ 152/2020",
+          tokens: 330,
+          action: "db_lookup('foreign_labor_permit')",
+          obs: "matched_document = '152/2020/ND-CP' (Điều 3 Khoản 3)",
+          desc: "Lấy quy định cũ: Bắt buộc bằng đại học phải trùng tên chuyên ngành đào tạo.",
+          context: "Query: foreign_labor_permit -> 152/2020/ND-CP Điều 3"
+        },
+        {
+          name: "Bước 3: Định dạng kết quả",
+          tokens: 270,
+          status: "failed",
+          action: "format_response(matched_document)",
+          obs: "THẤT BẠI: Hướng dẫn doanh nghiệp từ chối chuyên gia nếu bằng cấp lệch ngành (Bỏ sót NĐ 70/2023).",
+          desc: "Áp dụng luật cũ gây khó khăn, đình trệ tuyển dụng chuyên gia.",
+          context: "Tư vấn theo NĐ 152/2020 (Bỏ sót văn bản sửa đổi NĐ 70/2023)."
+        }
+      ],
       grounding: "0% (Bỏ sót Nghị định 70/2023 sửa đổi)",
-      recovery: "Không có",
-      outcomeClass: "result-danger",
-      dossier: "[TƯ VẤN SAI QUY CHUẨN - WORKFLOW]\nYêu cầu chuyên gia phải có bằng đại học đúng chuyên ngành đào tạo theo NĐ 152/2020 (Gây đình trệ tuyển dụng chuyên gia giỏi)."
+      outcomeClass: "result-danger"
     },
+
     p2: {
-      steps: [
-        { name: "Turn 1 [ReAct Loop]", desc: "Search: 'điều kiện chuyên gia giấy phép lao động' -> NĐ 152/2020", tokens: 940, status: "active" },
-        { name: "Turn 2 [ReAct Loop]", desc: "Verify status: NĐ 152 được sửa đổi bởi NĐ 70/2023", tokens: 1720, status: "active" },
-        { name: "Turn 3 [ReAct Loop]", desc: "Search điều khoản sửa đổi Điều 1 Khoản 5; ngữ cảnh dồn ốc", tokens: 2600, status: "active" },
-        { name: "Turn 4 [ReAct Loop]", desc: "Synthesizer bối rối giữa điều kiện 152 và 70", tokens: 3510, status: "failed" }
-      ],
       tokens: 8770,
-      latency: 415,
-      grounding: "70% (Lẫn lộn quy định cũ và mới)",
-      recovery: "Không có checkpoint",
-      outcomeClass: "result-warning",
-      dossier: "[TƯ VẤN BỊ MƠ HỒ - MONOLITHIC AGENT]\nNêu quy định NĐ 70/2023 nhưng vẫn lưu ý doanh nghiệp về quy định khắt khe của NĐ 152/2020 do prompt bị nhiễu."
-    },
-    p3: {
       steps: [
-        { name: "Node 1: Lead Orchestrator", desc: "Phân rã: Subgoal A (Tiêu chuẩn văn bằng & kinh nghiệm) & Subgoal B (Hồ sơ)", tokens: 440, status: "active", chk: "C1_PLAN" },
-        { name: "Node 2: LawGraph Worker", desc: "Tra cứu Subgoal A trong context độc lập", tokens: 370, status: "active", chk: "C2_RETRIEVAL" },
-        { name: "Node 3: Auditor Oracle Gate", desc: "Oracle cảnh báo Điều 3 Khoản 3 NĐ 152 đã được sửa đổi bởi NĐ 70/2023!", tokens: 300, status: "failed" },
-        { name: "Node 4: Rollback & Re-route", desc: "Rollback về C1_PLAN; duyệt cạnh 'amends' tới NĐ 70/2023 Điều 1 Khoản 5", tokens: 600, status: "recovered", chk: "C1_RESTORE" },
-        { name: "Node 5: Drafter Worker", desc: "Soạn thảo hướng dẫn chính xác 100% theo Nghị định 70/2023", tokens: 630, status: "active", chk: "C3_FINAL" }
+        {
+          name: "Turn 1: Tool search_statute()",
+          tokens: 940,
+          thought: "Tìm điều kiện cấp giấy phép cho chuyên gia nước ngoài.",
+          action: "search_statute(query='điều kiện chuyên gia giấy phép lao động')",
+          obs: "NĐ 152/2020/NĐ-CP Điều 3: Yêu cầu có bằng đại học đúng chuyên ngành và 3 năm kinh nghiệm.",
+          context: "Context Turn 1: 940 tokens"
+        },
+        {
+          name: "Turn 2: Tool verify_validity()",
+          tokens: 1720,
+          thought: "Kiểm tra xem Điều 3 NĐ 152 có sửa đổi bổ sung không.",
+          action: "verify_validity(doc_id='152/2020/ND-CP')",
+          obs: "Điều 3 Khoản 3 đã được SỬA ĐỔI, BỔ SUNG bởi Nghị định 70/2023/NĐ-CP Điều 1 Khoản 5.",
+          context: "Lịch sử Turn 1 + Turn 2 -> Context: 1.720 tokens"
+        },
+        {
+          name: "Turn 3: Tool search_statute() [Lịch sử dồn]",
+          tokens: 2600,
+          thought: "Tìm nội dung sửa đổi tại Điều 1 Khoản 5 NĐ 70/2023.",
+          action: "search_statute(query='Nghị định 70/2023 tiêu chuẩn chuyên gia')",
+          obs: "NĐ 70/2023/NĐ-CP: Có bằng đại học trở lên hoặc tương đương và 3 năm kinh nghiệm phù hợp vị trí.",
+          context: "Context phình lên 2.600 tokens."
+        },
+        {
+          name: "Turn 4: Tổng hợp [Context dồn dập]",
+          tokens: 3510,
+          status: "failed",
+          thought: "Tổng hợp kết quả tư vấn cho doanh nghiệp TechVentures.",
+          action: "finish_response()",
+          obs: "MƠ HỒ: Trích dẫn NĐ 70/2023 nhưng vẫn lưu ý điều kiện khắt khe của NĐ 152 do prompt dồn cả 2 văn bản.",
+          context: "Tổng token tiêu tốn: 940 + 1720 + 2600 + 3510 = 8.770 tokens (11.2x)"
+        }
       ],
+      grounding: "70% (Lẫn lộn quy định cũ và mới)",
+      outcomeClass: "result-warning"
+    },
+
+    p3: {
       tokens: 2340,
-      latency: 240,
+      steps: [
+        {
+          name: "Bước 1: Lead Orchestrator phân rã",
+          tokens: 440,
+          thought: "Tách thành: Subgoal A (Tiêu chuẩn văn bằng & kinh nghiệm) và Subgoal B (Hồ sơ giải trình).",
+          action: "plan_subgoals(query)",
+          obs: "Khởi tạo: [Subgoal A: Tiêu chuẩn chuyên gia, Subgoal B: Nhu cầu sử dụng lao động]",
+          memory: [
+            { type: "plan", text: "Subgoal A: Tiêu chuẩn văn bằng & kinh nghiệm (PENDING)" },
+            { type: "plan", text: "Subgoal B: Giải trình nhu cầu sử dụng lao động (PENDING)" }
+          ],
+          context: "Context Lead: 440 tokens phân rã."
+        },
+        {
+          name: "Bước 2: Workers tra cứu độc lập",
+          tokens: 670,
+          action: "Worker1: search(subgoal_a) | Worker2: search(subgoal_b)",
+          obs: "Worker 1 lấy Điều 3 NĐ 152; Worker 2 xác nhận quy trình giải trình nhu cầu lao động.",
+          memory: [
+            { type: "pending", text: "○ Subgoal A: NĐ 152/2020 Điều 3 (Chờ kiểm định)" },
+            { type: "keep", text: "● Subgoal B: Quy trình giải trình nhu cầu lao động (Đã xác thực)" }
+          ],
+          context: "Worker 1: 370 tkn | Worker 2: 300 tkn (Context sạch)"
+        },
+        {
+          name: "Bước 3: Auditor kiểm định hiệu lực",
+          tokens: 300,
+          status: "failed",
+          action: "verify_validity('152/2020/ND-CP')",
+          obs: "CẢNH BÁO: Điều 3 Khoản 3 đã được SỬA ĐỔI bởi Nghị định 70/2023/NĐ-CP (quan hệ: amends).",
+          memory: [
+            { type: "update", text: "⚠️ Subgoal A: NĐ 152 đã sửa đổi -> Duyệt quan hệ 'amends' tới NĐ 70/2023" },
+            { type: "keep", text: "● Subgoal B: Giữ nguyên trong memory" }
+          ],
+          context: "Auditor Context: 300 tokens kiểm định độc lập."
+        },
+        {
+          name: "Bước 4: Điều hướng thay thế NĐ 70/2023",
+          tokens: 600,
+          status: "recovered",
+          action: "reroute_successor('70/2023/ND-CP', subgoal_a)",
+          obs: "Lấy NĐ 70/2023 Điều 1 Khoản 5: Bằng đại học bất kỳ + 3 năm kinh nghiệm phù hợp vị trí công việc.",
+          memory: [
+            { type: "keep", text: "● Subgoal A: Đã cập nhật NĐ 70/2023 (Nới lỏng điều kiện bằng cấp)" },
+            { type: "keep", text: "● Subgoal B: Giải trình nhu cầu (Bảo toàn trong State Memory)" }
+          ],
+          context: "Chỉ cập nhật Subgoal A. Subgoal B giữ nguyên."
+        },
+        {
+          name: "Bước 5: Drafter soạn thảo hướng dẫn",
+          tokens: 330,
+          action: "draft_compliance_dossier(state_memory)",
+          obs: "HOÀN TẤT: Hướng dẫn tuyển dụng chuyên gia: Có bằng ĐH bất kỳ và 03 năm kinh nghiệm phù hợp (NĐ 70/2023).",
+          memory: [
+            { type: "keep", text: "💾 Ghi vết kiểm định vào SQLite (session_id: labor_01)" }
+          ],
+          context: "Tổng token: 2.340 tkn. Căn cứ chính xác 100%."
+        }
+      ],
       grounding: "100% (Áp dụng đúng NĐ 70/2023)",
-      recovery: "Durable SQLite Rollback",
-      outcomeClass: "result-success",
-      dossier: "HƯỚNG DẪN TUÂN THỦ CHUẨN XÁC THEO NĐ 70/2023/NĐ-CP (Điều 1 Khoản 5):\n• Tiêu chuẩn chuyên gia: Có bằng đại học trở lên HOẶC tương đương;\n• Kinh nghiệm: Có ít nhất 03 năm kinh nghiệm làm việc phù hợp với vị trí dự kiến làm việc tại Việt Nam.\n(Không bắt buộc bằng đại học phải trùng tên chuyên ngành như NĐ 152 cũ)."
+      outcomeClass: "result-success"
     }
   }
 };
 
-// ============================================================================
-// 2. WORKFLOW DAG DATA (LANGGRAPH STATEGRAPH)
-// ============================================================================
-const WORKFLOW_NODES = [
-  { id: "wf_start", label: "__start__", sub: "User Query & Profile", x: 70, y: 160, type: "entry", color: "#3b82f6", class: "BaseModel: LegalAgentState", tokens: "Input" },
-  { id: "wf_planner", label: "LegalOrchestrator", sub: "Dynamic Subgoal Planner", x: 230, y: 160, type: "lead", color: "#10b981", class: "src.agents.orchestrator.LegalOrchestrator", tokens: "450 tkn" },
-  { id: "wf_lawgraph", label: "LawGraphAgent", sub: "Statutory Retrieval Worker", x: 440, y: 100, type: "worker", color: "#06b6d4", class: "src.agents.lawgraph.LawGraphAgent", tokens: "380 tkn (Isolated)" },
-  { id: "wf_auditor", label: "ClaimAuditorAgent", sub: "Deterministic Oracle Gate", x: 650, y: 100, type: "oracle", color: "#f59e0b", class: "src.agents.claim_auditor.ClaimAuditorAgent", tokens: "310 tkn (Oracle)" },
-  { id: "wf_decision", label: "[is_valid?]", sub: "Conditional Route Gate", x: 840, y: 100, type: "gate", color: "#f43f5e", class: "LangGraph Conditional Edge", tokens: "Zero LLM" },
-  { id: "wf_rollback", label: "Differential Rollback", sub: "Restore C1 (Sub B Intact)", x: 530, y: 220, type: "rollback", color: "#a855f7", class: "Durable SQLite Rollback", tokens: "Zero Restart Cost" },
-  { id: "wf_drafter", label: "DrafterAgent", sub: "Compliance Synthesizer", x: 840, y: 220, type: "drafter", color: "#10b981", class: "src.agents.drafter.DrafterAgent", tokens: "650 tkn" },
-  { id: "wf_sqlite", label: "SQLiteCheckpointer", sub: "Audit Log & Checkpointer", x: 1010, y: 220, type: "sqlite", color: "#a855f7", class: "src.memory.sqlite_manager.SQLiteMemoryManager", tokens: "Persistence" },
-  { id: "wf_end", label: "__end__", sub: "Verified Compliance Dossier", x: 1160, y: 220, type: "exit", color: "#10b981", class: "Final LegalAgentState", tokens: "Output" }
-];
-
-const WORKFLOW_EDGES = [
-  { from: "wf_start", to: "wf_planner", label: "dispatch" },
-  { from: "wf_planner", to: "wf_lawgraph", label: "Subgoal A (Clean Scope)" },
-  { from: "wf_lawgraph", to: "wf_auditor", label: "candidate clauses" },
-  { from: "wf_auditor", to: "wf_decision", label: "audit report" },
-  { from: "wf_decision", to: "wf_rollback", label: "REVOKED / EXPIRED", type: "rollback" },
-  { from: "wf_rollback", to: "wf_planner", label: "Restore Checkpoint C1", type: "rollback" },
-  { from: "wf_decision", to: "wf_drafter", label: "ACTIVE (100% Valid)", type: "valid" },
-  { from: "wf_planner", to: "wf_drafter", label: "Subgoal B (Cached Profile)", type: "cache" },
-  { from: "wf_drafter", to: "wf_sqlite", label: "persist audit log" },
-  { from: "wf_sqlite", to: "wf_end", label: "return completed state" }
-];
-
-// ============================================================================
-// 3. STATUTORY LAW GRAPH DATA (FOR TAB 4)
-// ============================================================================
-const GRAPH_DATA = {
-  nodes: [
-    { id: "query", label: "User Query", sub: "Yêu cầu tư vấn", x: 80, y: 240, type: "query", color: "#3b82f6" },
-    { id: "lead", label: "Lead Orchestrator", sub: "Phân rã Subgoals", x: 260, y: 240, type: "agent", color: "#10b981" },
-    { id: "sub_a", label: "Subgoal A (Worker)", sub: "Điều kiện chính", x: 440, y: 150, type: "subgoal", color: "#06b6d4" },
-    { id: "sub_b", label: "Subgoal B (Worker)", sub: "Điều kiện bổ trợ", x: 440, y: 330, type: "subgoal", color: "#06b6d4" },
-    { id: "doc_old", label: "NĐ 101/2012", sub: "Văn bản cũ (HẾT HL)", x: 640, y: 150, type: "expired", color: "#f43f5e" },
-    { id: "oracle", label: "Oracle Verifier", sub: "vbpl_verify_oracle", x: 840, y: 150, type: "oracle", color: "#f59e0b" },
-    { id: "doc_new", label: "NĐ 52/2024", sub: "Văn bản thay thế", x: 640, y: 380, type: "active", color: "#10b981" },
-    { id: "drafter", label: "Drafter Worker", sub: "Tổng hợp Dossier", x: 860, y: 380, type: "drafter", color: "#a855f7" }
-  ],
-  edges: [
-    { from: "query", to: "lead", label: "dispatches" },
-    { from: "lead", to: "sub_a", label: "subtask 1" },
-    { from: "lead", to: "sub_b", label: "subtask 2" },
-    { from: "sub_a", to: "doc_old", label: "retrieves" },
-    { from: "doc_old", to: "oracle", label: "audits status" },
-    { from: "oracle", to: "lead", label: "ROLLBACK C1", type: "rollback" },
-    { from: "lead", to: "doc_new", label: "re-routes (successor)", type: "reroute" },
-    { from: "doc_new", to: "drafter", label: "verified clauses" },
-    { from: "sub_b", to: "drafter", label: "cached profile" }
-  ]
-};
-
-// ============================================================================
-// 4. APPLICATION STATE & CONTROLLER
-// ============================================================================
-class DemoApp {
+class StreamlinedDemoApp {
   constructor() {
     this.currentScenarioKey = "fintech";
     this.currentStepIndex = -1; // -1: not started
     this.maxSteps = 5;
     this.isPlaying = false;
     this.speed = 1000;
-    this.timer = null;
+    this.playTimer = null;
 
-    this.initDOM();
-    this.initEvents();
-    this.renderScenarioInfo();
-    this.renderParadigmDiagrams();
-    this.renderWorkflowGraph();
-    this.renderStatutoryGraph();
+    this.initDOMElements();
+    this.renderP1Diagram();
+    this.renderP2Diagram();
+    this.renderP3Diagram();
+    this.bindEvents();
+    this.renderScenarioHeader();
     this.resetSimulation();
   }
 
-  initDOM() {
-    this.scenarioPills = document.querySelectorAll(".scenario-pill");
-    this.tabButtons = document.querySelectorAll(".tab-btn");
-    this.tabPanels = document.querySelectorAll(".tab-panel");
-    this.playBtn = document.getElementById("btnPlay");
-    this.stepBtn = document.getElementById("btnStep");
-    this.resetBtn = document.getElementById("btnReset");
-    this.speedBtns = document.querySelectorAll(".speed-btn");
+  initDOMElements() {
+    this.btnStep = document.getElementById("btnStep");
+    this.btnPlay = document.getElementById("btnPlay");
+    this.btnReset = document.getElementById("btnReset");
+
+    this.scenTrap = document.getElementById("scenTrap");
+    this.scenEnterprise = document.getElementById("scenEnterprise");
+    this.scenQuery = document.getElementById("scenQuery");
+
+    this.p1Svg = document.getElementById("p1Svg");
+    this.p2Svg = document.getElementById("p2Svg");
+    this.p3Svg = document.getElementById("p3Svg");
 
     this.p1Logs = document.getElementById("p1Logs");
     this.p2Logs = document.getElementById("p2Logs");
@@ -330,232 +500,8 @@ class DemoApp {
     this.p2Status = document.getElementById("p2Status");
     this.p3Status = document.getElementById("p3Status");
 
-    // 3 Side-by-Side Embedded Architecture SVGs
-    this.p1Svg = document.getElementById("p1Svg");
-    this.p2Svg = document.getElementById("p2Svg");
-    this.p3Svg = document.getElementById("p3Svg");
-
-    this.wfSvg = document.getElementById("workflowSvg");
-    this.lawSvg = document.getElementById("lawGraphSvg");
-    this.dossierText = document.getElementById("dossierText");
-
-    // Memory Inspector DOM Elements
-    this.memCompany = document.getElementById("memCompany");
-    this.memType = document.getElementById("memType");
-    this.memCapital = document.getElementById("memCapital");
-    this.memForeign = document.getElementById("memForeign");
-    this.memStepCount = document.getElementById("memStepCount");
-    this.memSubgoalsList = document.getElementById("memSubgoalsList");
-    this.memClauseCount = document.getElementById("memClauseCount");
-    this.memClausesDeck = document.getElementById("memClausesDeck");
-    this.memAuditBadge = document.getElementById("memAuditBadge");
-    this.memGroundingRate = document.getElementById("memGroundingRate");
-    this.memClaimsRatio = document.getElementById("memClaimsRatio");
-    this.memAuditFeedback = document.getElementById("memAuditFeedback");
-    this.memDiffBox = document.getElementById("memDiffBox");
-    this.memSqliteTableBody = document.getElementById("memSqliteTableBody");
-
-    // Workflow Inspector DOM Elements
-    this.wfCurrentNodeBadge = document.getElementById("wfCurrentNodeBadge");
-    this.wfNodeName = document.getElementById("wfNodeName");
-    this.wfNodeClass = document.getElementById("wfNodeClass");
-    this.wfNodeTokens = document.getElementById("wfNodeTokens");
-    this.wfNodeTransition = document.getElementById("wfNodeTransition");
-  }
-
-  initEvents() {
-    this.scenarioPills.forEach(pill => {
-      pill.addEventListener("click", () => {
-        this.scenarioPills.forEach(p => p.classList.remove("active"));
-        pill.classList.add("active");
-        this.currentScenarioKey = pill.dataset.scenario;
-        this.renderScenarioInfo();
-        this.resetSimulation();
-      });
-    });
-
-    this.tabButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        this.tabButtons.forEach(b => b.classList.remove("active"));
-        this.tabPanels.forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        const panelId = btn.dataset.tab;
-        const panel = document.getElementById(panelId);
-        if (panel) panel.classList.add("active");
-        if (panelId === "tabWorkflow") {
-          setTimeout(() => this.renderWorkflowGraph(), 50);
-        } else if (panelId === "tabGraph") {
-          setTimeout(() => this.renderStatutoryGraph(), 50);
-        }
-      });
-    });
-
-    if (this.playBtn) {
-      this.playBtn.addEventListener("click", () => this.togglePlay());
-    }
-    if (this.stepBtn) {
-      this.stepBtn.addEventListener("click", () => this.stepForward());
-    }
-    if (this.resetBtn) {
-      this.resetBtn.addEventListener("click", () => this.resetSimulation());
-    }
-    if (this.speedBtns) {
-      this.speedBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          this.speedBtns.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          this.speed = parseInt(btn.dataset.speed, 10) || 1000;
-          if (this.isPlaying) {
-            this.pause();
-            this.play();
-          }
-        });
-      });
-    }
-  }
-
-  renderScenarioInfo() {
-    const sc = SCENARIOS[this.currentScenarioKey];
-    if (!sc) return;
-    const bannerTitle = document.getElementById("scenarioBannerTitle");
-    const bannerDesc = document.getElementById("scenarioBannerDesc");
-    const bannerRisk = document.getElementById("scenarioBannerRisk");
-    if (bannerTitle) bannerTitle.textContent = `${sc.icon} ${sc.title} — ${sc.enterprise}`;
-    if (bannerDesc) bannerDesc.textContent = sc.description;
-    if (bannerRisk) bannerRisk.textContent = `Rủi ro: ${sc.trap}`;
-
-    if (this.memCompany) this.memCompany.textContent = sc.enterprise;
-    if (this.memType) this.memType.textContent = sc.type;
-    if (this.memCapital) this.memCapital.textContent = sc.charterCapital;
-    if (this.memForeign) this.memForeign.textContent = sc.foreignOwnership;
-  }
-
-  togglePlay() {
-    if (this.isPlaying) {
-      this.pause();
-    } else {
-      this.play();
-    }
-  }
-
-  play() {
-    if (this.currentStepIndex >= this.maxSteps - 1) {
-      this.resetSimulation();
-    }
-    this.isPlaying = true;
-    if (this.playBtn) {
-      this.playBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Tạm Dừng`;
-      this.playBtn.classList.add("playing");
-    }
-    this.timer = setInterval(() => {
-      this.stepForward();
-    }, this.speed);
-  }
-
-  pause() {
-    this.isPlaying = false;
-    if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
-    }
-    if (this.playBtn) {
-      this.playBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Chạy Mô Phỏng (Race)`;
-      this.playBtn.classList.remove("playing");
-    }
-  }
-
-  stepForward() {
-    if (this.currentStepIndex < this.maxSteps - 1) {
-      this.currentStepIndex++;
-      this.renderStepState();
-    } else {
-      this.pause();
-    }
-  }
-
-  resetSimulation() {
-    this.pause();
-    this.currentStepIndex = -1;
-    this.renderStepState();
-  }
-
-  renderStepState() {
-    const sc = SCENARIOS[this.currentScenarioKey];
-    const idx = this.currentStepIndex;
-
-    // Render 3 Paradigms Side-by-Side Step Logs
-    this.renderCardSteps(this.p1Logs, sc.p1.steps, idx, sc.p1.tokens, this.p1Tokens, this.p1Status, sc.p1);
-    this.renderCardSteps(this.p2Logs, sc.p2.steps, idx, sc.p2.tokens, this.p2Tokens, this.p2Status, sc.p2);
-    this.renderCardSteps(this.p3Logs, sc.p3.steps, idx, sc.p3.tokens, this.p3Tokens, this.p3Status, sc.p3);
-
-    // Highlight the 3 Side-by-Side Architecture SVGs!
-    this.highlightParadigmDiagrams(idx);
-
-    // Update Dossier tab text
-    if (idx >= 4) {
-      this.dossierText.textContent = sc.p3.dossier;
-    } else {
-      this.dossierText.textContent = `[Hồ sơ đang được xử lý qua đồ thị StateGraph... Bước hiện tại: ${idx + 1}/5]`;
-    }
-
-    // Render Live Memory Inspector & Memory Bus HUD
-    this.renderLiveMemory(idx, sc);
-
-    // Highlight active nodes in Workflow & Law Graphs
-    this.highlightWorkflowStep(idx);
-    this.highlightStatutoryGraphStep(idx);
-  }
-
-  renderCardSteps(container, steps, currentIdx, maxTokens, tokenEl, statusEl, patternObj) {
-    container.innerHTML = "";
-    let consumedTokens = 0;
-
-    steps.forEach((st, i) => {
-      const item = document.createElement("div");
-      item.className = "log-step-item";
-
-      if (i <= currentIdx) {
-        item.classList.add("active");
-        consumedTokens += st.tokens;
-
-        if (i === currentIdx) {
-          item.classList.add("current");
-        }
-        if (st.status === "failed") {
-          item.classList.add("failed");
-        } else if (st.status === "recovered") {
-          item.classList.add("recovered");
-        }
-      }
-
-      item.innerHTML = `
-        <div class="step-meta">
-          <span class="step-name">${st.name}</span>
-          <span>${st.tokens} tokens</span>
-        </div>
-        <div class="step-desc">${st.desc}</div>
-      `;
-      container.appendChild(item);
-    });
-
-    tokenEl.textContent = `${consumedTokens.toLocaleString()} tkn`;
-
-    if (currentIdx >= steps.length - 1) {
-      statusEl.textContent = patternObj.grounding;
-      statusEl.className = `result-badge ${patternObj.outcomeClass}`;
-    } else {
-      statusEl.textContent = currentIdx === -1 ? "CHƯA BẮT ĐẦU" : `Đang chạy (Bước ${currentIdx + 1})`;
-      statusEl.className = "result-badge";
-    }
-  }
-
-  // ==========================================================================
-  // 3 SIDE-BY-SIDE ARCHITECTURE DIAGRAMS RENDERER
-  // ==========================================================================
-  renderParadigmDiagrams() {
-    this.renderP1Diagram();
-    this.renderP2Diagram();
-    this.renderP3Diagram();
+    this.pills = document.querySelectorAll(".scenario-pill");
+    this.speedBtns = document.querySelectorAll(".speed-btn");
   }
 
   renderP1Diagram() {
@@ -620,7 +566,7 @@ class DemoApp {
 
       <!-- Stateless / No Memory Callout Banner -->
       <rect x="18" y="100" width="324" height="24" rx="4" fill="rgba(244, 63, 94, 0.08)" stroke="rgba(244, 63, 94, 0.25)" />
-      <text x="180" y="116" text-anchor="middle" fill="#f87171" font-size="8" font-family="monospace">🚫 BỘ NHỚ: Stateless (0 Memory) · Sập là phải chạy lại từ đầu</text>
+      <text x="180" y="116" text-anchor="middle" fill="#f87171" font-size="8" font-family="monospace">🚫 BỘ NHỚ: Stateless (0 Memory) · Không lưu checkpoint</text>
     `;
   }
 
@@ -663,9 +609,9 @@ class DemoApp {
       <circle cx="338" cy="46" r="13" fill="#f97316" />
       <text x="338" y="50" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">Out</text>
 
-      <!-- Volatile Context Bloat Memory Callout -->
+      <!-- In-Memory Context Bloat Callout Banner -->
       <rect x="18" y="100" width="324" height="24" rx="4" fill="rgba(245, 158, 11, 0.08)" stroke="rgba(245, 158, 11, 0.3)" />
-      <text x="180" y="116" text-anchor="middle" fill="#fbbf24" font-size="8" font-family="monospace">⚠️ BỘ NHỚ: RAM Tạm (O(N²) quadratic bloat, trôi dạt ngữ cảnh)</text>
+      <text x="180" y="116" text-anchor="middle" fill="#fbbf24" font-size="8" font-family="monospace">⚠️ BỘ NHỚ: In-Memory (Context dồn tích qua các turn)</text>
     `;
   }
 
@@ -704,9 +650,9 @@ class DemoApp {
       <rect id="p3_n_oracle" x="158" y="54" width="80" height="26" rx="4" fill="#14141e" stroke="#f59e0b" stroke-width="1.4" />
       <text x="198" y="70" text-anchor="middle" fill="#fcd34d" font-size="8">Auditor Oracle</text>
 
-      <!-- Rollback Arc from Oracle back to Lead Orch -->
+      <!-- Re-route Arc from Oracle back to Lead Orch -->
       <path id="p3_e_rollback" d="M 158 72 C 140 86, 110 86, 94 68" stroke="#a855f7" stroke-dasharray="3 2" stroke-width="1.5" fill="none" marker-end="url(#p3-arr-purple)" />
-      <text x="126" y="88" text-anchor="middle" fill="#c084fc" font-size="7">↺ Rollback C1</text>
+      <text x="126" y="88" text-anchor="middle" fill="#c084fc" font-size="7">↺ Re-route</text>
 
       <!-- Synthesizer Box -->
       <rect id="p3_n_drafter" x="262" y="28" width="62" height="36" rx="5" fill="#14141e" stroke="#10b981" stroke-width="1.5" />
@@ -722,12 +668,11 @@ class DemoApp {
 
       <!-- Bottom summary banner -->
       <rect x="18" y="104" width="324" height="22" rx="4" fill="rgba(16, 185, 129, 0.08)" stroke="rgba(16, 185, 129, 0.25)" />
-      <text x="180" y="119" text-anchor="middle" fill="#34d399" font-size="8" font-family="monospace">🛡️ KIỂM ĐỊNH ORACLE & KHÔI PHỤC VI SAI (Độc lập phân rã)</text>
+      <text x="180" y="119" text-anchor="middle" fill="#34d399" font-size="8" font-family="monospace">🛡️ KIỂM ĐỊNH VBPL & ĐIỀU HƯỚNG THAY THẾ (Google ADK)</text>
     `;
   }
 
   highlightParadigmDiagrams(idx) {
-    // Reset all nodes
     const p1Nodes = ["p1_n_router", "p1_n_llm1", "p1_n_gate", "p1_n_llm2", "p1_n_exit"];
     p1Nodes.forEach(id => {
       const el = document.getElementById(id);
@@ -750,7 +695,6 @@ class DemoApp {
 
     if (idx === -1) return;
 
-    // Step 0: Planning & Dispatch
     if (idx === 0) {
       const r = document.getElementById("p1_n_router");
       if (r) r.setAttribute("stroke-width", "3");
@@ -760,10 +704,7 @@ class DemoApp {
 
       const o = document.getElementById("p3_n_orch");
       if (o) o.setAttribute("stroke-width", "3.2");
-    }
-
-    // Step 1: Retrieval
-    else if (idx === 1) {
+    } else if (idx === 1) {
       const l1 = document.getElementById("p1_n_llm1");
       if (l1) l1.setAttribute("stroke-width", "3");
 
@@ -772,10 +713,7 @@ class DemoApp {
 
       const w1 = document.getElementById("p3_n_w1");
       if (w1) w1.setAttribute("stroke-width", "3");
-    }
-
-    // Step 2: Oracle Audit
-    else if (idx === 2) {
+    } else if (idx === 2) {
       const g = document.getElementById("p1_n_gate");
       if (g) g.setAttribute("stroke-width", "2.8");
 
@@ -790,10 +728,7 @@ class DemoApp {
         ora.setAttribute("stroke", "#f43f5e");
         ora.setAttribute("stroke-width", "3");
       }
-    }
-
-    // Step 3: Rollback vs Failure
-    else if (idx === 3) {
+    } else if (idx === 3) {
       const ex = document.getElementById("p1_n_exit");
       if (ex) ex.setAttribute("stroke-width", "3");
 
@@ -810,439 +745,222 @@ class DemoApp {
       }
       const o = document.getElementById("p3_n_orch");
       if (o) o.setAttribute("stroke-width", "3");
-    }
-
-    // Step 4: Final Synthesis & Persistence
-    else if (idx >= 4) {
+    } else if (idx >= 4) {
       const d = document.getElementById("p3_n_drafter");
       if (d) d.setAttribute("stroke-width", "3.2");
     }
   }
 
-  // ==========================================================================
-  // LIVE MEMORY & STATE INSPECTOR RENDERER (TAB 3)
-  // ==========================================================================
-  renderLiveMemory(idx, sc) {
-    if (!this.memSubgoalsList) return;
-
-    this.memStepCount.textContent = `Bước: ${Math.max(0, idx + 1)} / 5`;
-
-    if (idx === -1) {
-      this.memSubgoalsList.innerHTML = `
-        <div class="subgoal-item">
-          <span>Subgoal A: ${sc.subgoalA}</span>
-          <span class="subgoal-status-badge" style="background: rgba(255,255,255,0.08); color: #a1a1aa;">CHỜ THỰC THI</span>
-        </div>
-        <div class="subgoal-item">
-          <span>Subgoal B: ${sc.subgoalB}</span>
-          <span class="subgoal-status-badge" style="background: rgba(255,255,255,0.08); color: #a1a1aa;">CHỜ THỰC THI</span>
-        </div>
-      `;
-      this.memClauseCount.textContent = "0 điều khoản";
-      this.memClausesDeck.innerHTML = `<div style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">Chưa có văn bản nào được nạp vào working memory.</div>`;
-      this.memAuditBadge.textContent = "CHƯA KIỂM ĐỊNH";
-      this.memAuditBadge.style.color = "#a1a1aa";
-      this.memGroundingRate.textContent = "0.0%";
-      this.memClaimsRatio.textContent = "0 / 0";
-      this.memAuditFeedback.textContent = "Cổng kiểm định Oracle tiền định chưa được kích hoạt.";
-      return;
-    }
-
-    // Step 0: Plan Created
-    if (idx === 0) {
-      this.memSubgoalsList.innerHTML = `
-        <div class="subgoal-item done">
-          <span>Subgoal A: ${sc.subgoalA}</span>
-          <span class="subgoal-status-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">PLAN READY</span>
-        </div>
-        <div class="subgoal-item cached">
-          <span>Subgoal B: ${sc.subgoalB}</span>
-          <span class="subgoal-status-badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">PRESERVED IN CACHE</span>
-        </div>
-      `;
-      this.memClauseCount.textContent = "0 điều khoản (Đang dispatch worker)";
-      this.memClausesDeck.innerHTML = `<div style="font-size: 0.75rem; color: #60a5fa;">Đã phân rã subgoals vào Pydantic LegalAgentState. Đang gọi LawGraphAgent...</div>`;
-      this.memAuditBadge.textContent = "PLAN_READY";
-      this.memAuditFeedback.textContent = "Kế hoạch đã sẵn sàng. Chờ LawGraphAgent truy xuất văn bản.";
-    }
-
-    // Step 1: Candidate Retrieved
-    else if (idx === 1) {
-      this.memClauseCount.textContent = `1 điều khoản (Cần kiểm định)`;
-      this.memClausesDeck.innerHTML = `
-        <div class="clause-item">
-          <div style="display:flex; justify-content:space-between; font-weight:700;">
-            <span style="color:#f59e0b;">${sc.initialClause.docId} (${sc.initialClause.article})</span>
-            <span class="badge-tag" style="background:rgba(245, 158, 11, 0.15); color:#f59e0b;">UNVERIFIED</span>
-          </div>
-          <div style="font-size:0.72rem; color:#a1a1aa;">${sc.initialClause.title}</div>
-          <div style="font-size:0.7rem; color:#71717a;">${sc.initialClause.content}</div>
-        </div>
-      `;
-      this.memAuditBadge.textContent = "CHỜ ORACLE";
-      this.memGroundingRate.textContent = "0.0%";
-      this.memClaimsRatio.textContent = "0 / 1";
-      this.memAuditFeedback.textContent = `Đã nạp ${sc.initialClause.docId} vào scratchpad. Chuẩn bị gọi vbpl_verify_oracle().`;
-    }
-
-    // Step 2: Oracle Detects Revocation
-    else if (idx === 2) {
-      this.memClauseCount.textContent = `1 điều khoản (PHÁT HIỆN HẾT HIỆU LỰC)`;
-      this.memClausesDeck.innerHTML = `
-        <div class="clause-item expired-law">
-          <div style="display:flex; justify-content:space-between; font-weight:700;">
-            <span style="color:#f43f5e; text-decoration:line-through;">${sc.initialClause.docId} (${sc.initialClause.article})</span>
-            <span class="badge-tag" style="background:rgba(244, 63, 94, 0.15); color:#f43f5e;">REVOKED / BÃI BỎ</span>
-          </div>
-          <div style="font-size:0.72rem; color:#f87171;">Bị bãi bỏ bởi ${sc.successorDoc} từ 01/07/2024!</div>
-          <div style="font-size:0.7rem; color:#71717a;">vbpl_verify_oracle trả về is_active = false. Kích hoạt ngắt mạch cứng!</div>
-        </div>
-      `;
-      this.memAuditBadge.textContent = "FAIL (REVOKED)";
-      this.memAuditBadge.className = "badge-tag result-danger";
-      this.memGroundingRate.textContent = "0.0%";
-      this.memClaimsRatio.textContent = "0 / 1 (Vi phạm hiệu lực)";
-      this.memAuditFeedback.textContent = `CẢNH BÁO: ${sc.initialClause.docId} đã hết hiệu lực. Kích hoạt conditional rollback edge về Checkpoint C1_PLAN!`;
-    }
-
-    // Step 3: Rollback & Re-route (Differential recovery)
-    else if (idx === 3) {
-      this.memSubgoalsList.innerHTML = `
-        <div class="subgoal-item done">
-          <span>Subgoal A: Chuyển tiếp tra cứu kế thừa ${sc.successorDoc}</span>
-          <span class="subgoal-status-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">RE-ROUTED</span>
-        </div>
-        <div class="subgoal-item cached">
-          <span>Subgoal B: ${sc.subgoalB}</span>
-          <span class="subgoal-status-badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">PRESERVED IN CACHE</span>
-        </div>
-      `;
-      this.memClauseCount.textContent = `1 điều khoản (Đã thay thế)`;
-      this.memClausesDeck.innerHTML = `
-        <div class="clause-item active-law">
-          <div style="display:flex; justify-content:space-between; font-weight:700;">
-            <span style="color:#10b981;">${sc.successorClause.docId} (${sc.successorClause.article})</span>
-            <span class="badge-tag" style="background:rgba(16, 185, 129, 0.15); color:#10b981;">ACTIVE / VERIFIED</span>
-          </div>
-          <div style="font-size:0.72rem; color:#34d399;">${sc.successorClause.title}</div>
-          <div style="font-size:0.7rem; color:#a1a1aa;">${sc.successorClause.content}</div>
-        </div>
-      `;
-      this.memAuditBadge.textContent = "RE-AUDIT PASS";
-      this.memAuditBadge.className = "badge-tag result-success";
-      this.memGroundingRate.textContent = "100.0%";
-      this.memClaimsRatio.textContent = "2 / 2";
-      this.memAuditFeedback.textContent = `Khôi phục vi sai thành công từ C1_PLAN. Subgoal B giữ nguyên trong memory. Oracle xác nhận ${sc.successorDoc} đang có hiệu lực.`;
-    }
-
-    // Step 4: Final Dossier Synthesized
-    else if (idx >= 4) {
-      this.memClauseCount.textContent = `2 điều khoản (100% Căn cứ hợp lệ)`;
-      this.memClausesDeck.innerHTML = `
-        <div class="clause-item active-law">
-          <div style="display:flex; justify-content:space-between; font-weight:700;">
-            <span style="color:#10b981;">${sc.successorClause.docId} (${sc.successorClause.article})</span>
-            <span class="badge-tag" style="background:rgba(16, 185, 129, 0.15); color:#10b981;">100% GROUNDED</span>
-          </div>
-          <div style="font-size:0.72rem; color:#34d399;">${sc.successorClause.title}</div>
-          <div style="font-size:0.7rem; color:#a1a1aa;">${sc.successorClause.content}</div>
-        </div>
-      `;
-      this.memAuditBadge.textContent = "FULLY VERIFIED";
-      this.memAuditBadge.className = "badge-tag result-success";
-      this.memGroundingRate.textContent = "100.0%";
-      this.memClaimsRatio.textContent = "2 / 2 (Chuẩn xác)";
-      this.memAuditFeedback.textContent = `Hồ sơ tuân thủ đã hoàn tất và ghi vào SQLite. Không còn bất kỳ căn cứ pháp lý hết hiệu lực nào.`;
-    }
-  }
-
-  // ==========================================================================
-  // WORKFLOW STATEGRAPH SVG RENDERER (TAB 2)
-  // ==========================================================================
-  renderWorkflowGraph() {
-    if (!this.wfSvg) return;
-    this.wfSvg.innerHTML = "";
-
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    defs.innerHTML = `
-      <marker id="wf-arrow" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#71717a" />
-      </marker>
-      <marker id="wf-arrow-green" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
-      </marker>
-      <marker id="wf-arrow-purple" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#a855f7" />
-      </marker>
-    `;
-    this.wfSvg.appendChild(defs);
-
-    // Draw Workflow Edges
-    WORKFLOW_EDGES.forEach(edge => {
-      const fromNode = WORKFLOW_NODES.find(n => n.id === edge.from);
-      const toNode = WORKFLOW_NODES.find(n => n.id === edge.to);
-      if (!fromNode || !toNode) return;
-
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("id", `wf_edge_${edge.from}_${edge.to}`);
-      path.setAttribute("class", `workflow-edge ${edge.type === "rollback" ? "rollback-edge" : ""}`);
-
-      const dx = toNode.x - fromNode.x;
-      const dy = toNode.y - fromNode.y;
-      let d = "";
-
-      if (edge.type === "rollback") {
-        d = `M ${fromNode.x} ${fromNode.y} C ${fromNode.x - 80} ${fromNode.y + 60}, ${toNode.x + 80} ${toNode.y + 60}, ${toNode.x} ${toNode.y}`;
-      } else if (edge.type === "cache") {
-        d = `M ${fromNode.x} ${fromNode.y} C ${fromNode.x + 120} ${fromNode.y + 100}, ${toNode.x - 120} ${toNode.y}, ${toNode.x} ${toNode.y}`;
-      } else {
-        const cx1 = fromNode.x + dx * 0.5;
-        const cy1 = fromNode.y;
-        const cx2 = fromNode.x + dx * 0.5;
-        const cy2 = toNode.y;
-        d = `M ${fromNode.x} ${fromNode.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${toNode.x} ${toNode.y}`;
-      }
-
-      path.setAttribute("d", d);
-      path.setAttribute("stroke", edge.type === "rollback" ? "#a855f7" : edge.type === "valid" ? "#10b981" : "#3f3f46");
-      path.setAttribute("stroke-width", edge.type === "rollback" || edge.type === "valid" ? "2.0" : "1.5");
-      path.setAttribute("fill", "none");
-      path.setAttribute("marker-end", edge.type === "rollback" ? "url(#wf-arrow-purple)" : edge.type === "valid" ? "url(#wf-arrow-green)" : "url(#wf-arrow)");
-      this.wfSvg.appendChild(path);
-    });
-
-    // Draw Workflow Nodes (Cards / Rects)
-    WORKFLOW_NODES.forEach(node => {
-      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      g.setAttribute("class", "workflow-node");
-      g.setAttribute("id", `node_${node.id}`);
-
-      const w = 120;
-      const h = 54;
-      const rx = 8;
-
-      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      rect.setAttribute("x", node.x - w / 2);
-      rect.setAttribute("y", node.y - h / 2);
-      rect.setAttribute("width", w);
-      rect.setAttribute("height", h);
-      rect.setAttribute("rx", rx);
-      rect.setAttribute("fill", "#111116");
-      rect.setAttribute("stroke", node.color);
-      rect.setAttribute("stroke-width", "1.5");
-
-      const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      title.setAttribute("x", node.x);
-      title.setAttribute("y", node.y - 6);
-      title.setAttribute("text-anchor", "middle");
-      title.setAttribute("fill", "#fff");
-      title.setAttribute("font-size", "10px");
-      title.setAttribute("font-weight", "700");
-      title.textContent = node.label;
-
-      const sub = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      sub.setAttribute("x", node.x);
-      sub.setAttribute("y", node.y + 12);
-      sub.setAttribute("text-anchor", "middle");
-      sub.setAttribute("fill", "#a1a1aa");
-      sub.setAttribute("font-size", "8.5px");
-      sub.textContent = node.sub;
-
-      g.appendChild(rect);
-      g.appendChild(title);
-      g.appendChild(sub);
-
-      g.addEventListener("click", () => {
-        this.inspectWorkflowNode(node);
+  bindEvents() {
+    this.pills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        this.pills.forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        this.currentScenarioKey = pill.dataset.scenario;
+        this.renderScenarioHeader();
+        this.resetSimulation();
       });
+    });
 
-      this.wfSvg.appendChild(g);
+    this.speedBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        this.speedBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        this.speed = parseInt(btn.dataset.speed, 10);
+        if (this.isPlaying) {
+          this.pauseSimulation();
+          this.playSimulation();
+        }
+      });
+    });
+
+    this.btnStep.addEventListener("click", () => {
+      this.pauseSimulation();
+      this.stepForward();
+    });
+
+    this.btnPlay.addEventListener("click", () => {
+      if (this.isPlaying) {
+        this.pauseSimulation();
+      } else {
+        this.playSimulation();
+      }
+    });
+
+    this.btnReset.addEventListener("click", () => {
+      this.resetSimulation();
     });
   }
 
-  inspectWorkflowNode(node) {
-    if (this.wfNodeName) this.wfNodeName.textContent = node.label;
-    if (this.wfNodeClass) this.wfNodeClass.textContent = node.class || "StateGraph Node";
-    if (this.wfNodeTokens) this.wfNodeTokens.textContent = node.tokens || "< 450 tokens";
-    if (this.wfCurrentNodeBadge) {
-      this.wfCurrentNodeBadge.textContent = "INSPECTED";
-      this.wfCurrentNodeBadge.className = "badge-tag";
+  renderScenarioHeader() {
+    const sc = SCENARIOS[this.currentScenarioKey];
+    this.scenTrap.textContent = `Bẫy pháp lý: ${sc.trap}`;
+    this.scenEnterprise.textContent = sc.enterprise;
+    this.scenQuery.textContent = `"${sc.query}"`;
+  }
+
+  resetSimulation() {
+    this.pauseSimulation();
+    this.currentStepIndex = -1;
+    this.renderStepState();
+  }
+
+  stepForward() {
+    if (this.currentStepIndex < this.maxSteps - 1) {
+      this.currentStepIndex++;
+      this.renderStepState();
+    } else {
+      this.pauseSimulation();
     }
   }
 
-  highlightWorkflowStep(idx) {
-    document.querySelectorAll(".workflow-node").forEach(n => {
-      n.classList.remove("active", "failed", "rollback");
-    });
-    document.querySelectorAll(".workflow-edge").forEach(e => e.classList.remove("active"));
-
-    if (idx === -1) {
-      this.updateWorkflowInspector(WORKFLOW_NODES[0], "C0_INIT (Chờ thực thi)", "IDLE");
-      return;
+  playSimulation() {
+    if (this.currentStepIndex >= this.maxSteps - 1) {
+      this.currentStepIndex = -1;
     }
+    this.isPlaying = true;
+    this.btnPlay.innerHTML = "<span>⏸ Tạm Dừng</span>";
+    this.btnPlay.classList.add("btn-secondary");
+    this.btnPlay.classList.remove("btn-primary");
 
-    if (idx === 0) {
-      const n = document.getElementById("node_wf_planner");
-      if (n) n.classList.add("active");
-      this.updateWorkflowInspector(WORKFLOW_NODES[1], "C0_INIT ➔ C1_PLAN", "ACTIVE");
-    } else if (idx === 1) {
-      const n = document.getElementById("node_wf_lawgraph");
-      if (n) n.classList.add("active");
-      this.updateWorkflowInspector(WORKFLOW_NODES[2], "C1_PLAN ➔ C2_RETRIEVAL", "RUNNING");
-    } else if (idx === 2) {
-      const n = document.getElementById("node_wf_auditor");
-      const g = document.getElementById("node_wf_decision");
-      if (n) n.classList.add("failed");
-      if (g) g.classList.add("failed");
-      this.updateWorkflowInspector(WORKFLOW_NODES[3], "C2_RETRIEVAL ➔ ORACLE_FAILURE", "REVOKED");
-    } else if (idx === 3) {
-      const n = document.getElementById("node_wf_rollback");
-      const p = document.getElementById("node_wf_planner");
-      if (n) n.classList.add("rollback");
-      if (p) p.classList.add("active");
-      this.updateWorkflowInspector(WORKFLOW_NODES[5], "DIFF_ROLLBACK ➔ C1_PLAN (Sub B Cached)", "RECOVERED");
-    } else if (idx >= 4) {
-      const d = document.getElementById("node_wf_drafter");
-      const s = document.getElementById("node_wf_sqlite");
-      const e = document.getElementById("node_wf_end");
-      if (d) d.classList.add("active");
-      if (s) s.classList.add("active");
-      if (e) e.classList.add("active");
-      this.updateWorkflowInspector(WORKFLOW_NODES[7], "C1_PLAN ➔ C3_FINAL_DOSSIER", "COMPLETED");
-    }
+    this.playTimer = setInterval(() => {
+      if (this.currentStepIndex < this.maxSteps - 1) {
+        this.currentStepIndex++;
+        this.renderStepState();
+      } else {
+        this.pauseSimulation();
+      }
+    }, this.speed);
   }
 
-  updateWorkflowInspector(node, transition, badge) {
-    if (this.wfNodeName) this.wfNodeName.textContent = node.label;
-    if (this.wfNodeClass) this.wfNodeClass.textContent = node.class || "StateGraph Node";
-    if (this.wfNodeTokens) this.wfNodeTokens.textContent = node.tokens || "< 450 tokens";
-    if (this.wfNodeTransition) this.wfNodeTransition.textContent = transition;
-    if (this.wfCurrentNodeBadge) {
-      this.wfCurrentNodeBadge.textContent = badge;
-      this.wfCurrentNodeBadge.className = `badge-tag ${badge === "REVOKED" ? "result-danger" : badge === "RECOVERED" ? "result-warning" : "result-success"}`;
+  pauseSimulation() {
+    this.isPlaying = false;
+    if (this.playTimer) {
+      clearInterval(this.playTimer);
+      this.playTimer = null;
     }
+    this.btnPlay.innerHTML = "<span>▶ Chạy Mô Phỏng</span>";
+    this.btnPlay.classList.add("btn-primary");
+    this.btnPlay.classList.remove("btn-secondary");
   }
 
-  // ==========================================================================
-  // STATUTORY KNOWLEDGE GRAPH SVG RENDERER (TAB 4)
-  // ==========================================================================
-  renderStatutoryGraph() {
-    if (!this.lawSvg) return;
-    this.lawSvg.innerHTML = "";
+  renderStepState() {
+    const sc = SCENARIOS[this.currentScenarioKey];
+    const idx = this.currentStepIndex;
 
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    defs.innerHTML = `
-      <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#71717a" />
-      </marker>
-      <marker id="arrow-green" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
-      </marker>
-      <marker id="arrow-purple" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#a855f7" />
-      </marker>
-    `;
-    this.lawSvg.appendChild(defs);
+    this.renderCardSteps(this.p1Logs, sc.p1.steps, idx, this.p1Tokens, this.p1Status, sc.p1);
+    this.renderCardSteps(this.p2Logs, sc.p2.steps, idx, this.p2Tokens, this.p2Status, sc.p2);
+    this.renderCardSteps(this.p3Logs, sc.p3.steps, idx, this.p3Tokens, this.p3Status, sc.p3);
 
-    GRAPH_DATA.edges.forEach(edge => {
-      const fromNode = GRAPH_DATA.nodes.find(n => n.id === edge.from);
-      const toNode = GRAPH_DATA.nodes.find(n => n.id === edge.to);
-      if (!fromNode || !toNode) return;
+    this.highlightParadigmDiagrams(idx);
+  }
 
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("id", `edge_${edge.from}_${edge.to}`);
-      path.setAttribute("class", "graph-edge");
+  renderCardSteps(container, steps, currentIdx, tokenEl, statusEl, patternObj) {
+    container.innerHTML = "";
+    let consumedTokens = 0;
 
-      const dx = toNode.x - fromNode.x;
-      const dy = toNode.y - fromNode.y;
-      const cx1 = fromNode.x + dx * 0.5;
-      const cy1 = fromNode.y;
-      const cx2 = fromNode.x + dx * 0.5;
-      const cy2 = toNode.y;
+    steps.forEach((st, i) => {
+      const item = document.createElement("div");
+      item.className = "log-step-item";
 
-      let d = `M ${fromNode.x} ${fromNode.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${toNode.x} ${toNode.y}`;
-      if (edge.type === "rollback") {
-        d = `M ${fromNode.x} ${fromNode.y} C ${fromNode.x - 100} ${fromNode.y - 80}, ${toNode.x + 100} ${toNode.y - 80}, ${toNode.x} ${toNode.y}`;
+      const isExecuted = i <= currentIdx;
+      if (isExecuted) {
+        item.classList.add("active");
+        consumedTokens += st.tokens;
+
+        if (i === currentIdx) item.classList.add("current");
+        if (st.status === "failed") item.classList.add("failed");
+        if (st.status === "recovered") item.classList.add("recovered");
       }
 
-      path.setAttribute("d", d);
-      path.setAttribute("stroke", edge.type === "rollback" ? "#a855f7" : edge.type === "reroute" ? "#10b981" : "#3f3f46");
-      path.setAttribute("stroke-width", edge.type === "rollback" ? "2.5" : "1.5");
-      path.setAttribute("fill", "none");
-      path.setAttribute("marker-end", edge.type === "rollback" ? "url(#arrow-purple)" : edge.type === "reroute" ? "url(#arrow-green)" : "url(#arrow)");
-      this.lawSvg.appendChild(path);
+      let extraBlocks = "";
+      if (isExecuted) {
+        if (st.thought) {
+          extraBlocks += `
+            <div class="step-block step-thought">
+              <span class="block-tag">💭 Thought:</span> ${st.thought}
+            </div>
+          `;
+        }
+        if (st.action) {
+          extraBlocks += `
+            <div class="step-block step-action">
+              <span class="block-tag">🛠️ Action (Tool):</span> <code>${st.action}</code>
+            </div>
+          `;
+        }
+        if (st.obs) {
+          extraBlocks += `
+            <div class="step-block step-obs">
+              <span class="block-tag">👁️ Observation:</span> ${st.obs}
+            </div>
+          `;
+        }
+        if (st.memory && st.memory.length > 0) {
+          const memItems = st.memory.map(m => `<div class="memory-item ${m.type}">${m.text}</div>`).join("");
+          extraBlocks += `
+            <div class="step-memory">
+              <div class="memory-header">💾 State Memory:</div>
+              ${memItems}
+            </div>
+          `;
+        }
+        if (st.isolation) {
+          extraBlocks += `
+            <div class="step-isolation">
+              <div class="isolation-header">
+                <span>🛡️ Ranh Giới Cách Ly Ngữ Cảnh (Context Isolation Boundary)</span>
+              </div>
+              <div class="isolation-grid">
+                <div class="iso-box in-scope">
+                  <span class="iso-title">✅ Được phép thấy (In-Scope):</span>
+                  <span>${st.isolation.inScope}</span>
+                </div>
+                <div class="iso-box blocked">
+                  <span class="iso-title">🚫 Bị cô lập / Chặn (Blocked):</span>
+                  <span>${st.isolation.blocked}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        if (st.context) {
+          extraBlocks += `
+            <div class="step-context">
+              <div class="context-header">
+                <span>📦 Context Window (Prompt gửi vào model)</span>
+                <span class="context-size">${st.tokens} tokens</span>
+              </div>
+              <pre class="context-content">${st.context}</pre>
+            </div>
+          `;
+        }
+      }
+
+      item.innerHTML = `
+        <div class="step-meta">
+          <span class="step-name">${st.name}</span>
+          <span>${st.tokens} tokens</span>
+        </div>
+        <div class="step-desc">${st.desc}</div>
+        ${extraBlocks}
+      `;
+
+      container.appendChild(item);
     });
 
-    GRAPH_DATA.nodes.forEach(node => {
-      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      g.setAttribute("class", "graph-node");
-      g.setAttribute("id", `node_${node.id}`);
+    tokenEl.textContent = `${consumedTokens.toLocaleString()} tkn`;
 
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      circle.setAttribute("cx", node.x);
-      circle.setAttribute("cy", node.y);
-      circle.setAttribute("r", "20");
-      circle.setAttribute("fill", "#181820");
-      circle.setAttribute("stroke", node.color);
-      circle.setAttribute("stroke-width", "2");
-
-      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      text.setAttribute("x", node.x);
-      text.setAttribute("y", node.y + 32);
-      text.setAttribute("text-anchor", "middle");
-      text.setAttribute("fill", "#f4f4f5");
-      text.setAttribute("font-size", "11px");
-      text.setAttribute("font-weight", "600");
-      text.textContent = node.label;
-
-      const subText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      subText.setAttribute("x", node.x);
-      subText.setAttribute("y", node.y + 45);
-      subText.setAttribute("text-anchor", "middle");
-      subText.setAttribute("fill", "#71717a");
-      subText.setAttribute("font-size", "9px");
-      subText.textContent = node.sub;
-
-      g.appendChild(circle);
-      g.appendChild(text);
-      g.appendChild(subText);
-
-      this.lawSvg.appendChild(g);
-    });
-  }
-
-  highlightStatutoryGraphStep(idx) {
-    document.querySelectorAll("#lawGraphSvg .graph-node circle").forEach(c => {
-      c.setAttribute("r", "20");
-      c.setAttribute("stroke-width", "2");
-    });
-
-    if (idx === 0) {
-      this.pulseLawNode("lead");
-    } else if (idx === 1) {
-      this.pulseLawNode("sub_a");
-      this.pulseLawNode("doc_old");
-    } else if (idx === 2) {
-      this.pulseLawNode("oracle");
-      this.pulseLawNode("doc_old");
-    } else if (idx === 3) {
-      this.pulseLawNode("lead");
-      this.pulseLawNode("doc_new");
-    } else if (idx === 4) {
-      this.pulseLawNode("drafter");
-      this.pulseLawNode("doc_new");
-    }
-  }
-
-  pulseLawNode(id) {
-    const el = document.querySelector(`#lawGraphSvg #node_${id} circle`);
-    if (el) {
-      el.setAttribute("r", "25");
-      el.setAttribute("stroke-width", "3.5");
+    if (currentIdx >= steps.length - 1) {
+      statusEl.textContent = patternObj.grounding;
+      statusEl.className = `result-badge ${patternObj.outcomeClass}`;
+    } else {
+      statusEl.textContent = currentIdx === -1 ? "CHƯA BẮT ĐẦU" : `Đang chạy (Bước ${currentIdx + 1}/${steps.length})`;
+      statusEl.className = "result-badge";
     }
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  window.demoApp = new DemoApp();
+  new StreamlinedDemoApp();
 });

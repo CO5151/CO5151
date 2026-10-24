@@ -6,115 +6,173 @@ resolving amendment chains and temporal validity bounds. Compliant with Google A
 
 from __future__ import annotations
 
+import os
+import re
+from pathlib import Path
 from typing import Any, ClassVar
 
 from src.agents.base import ADKAgent
 from src.core.logger import logger
 
+# ---------------------------------------------------------------------------
+# Retrieval backends, in priority order:
+#   1. Neo4j legal knowledge graph (live Cypher)  <- primary
+#   2. Dense cosine search over the exported chunk index
+#   3. Hand-written STATUTE_CATALOG (deterministic offline fallback)
+# The JSON exports are only used when the graph database is unreachable, so a
+# demo never breaks just because the container is down.
+# ---------------------------------------------------------------------------
+_CHUNK_EXPORT = Path("data/processed/qdrant_chunks_export.json")
+_GRAPH_EXPORT = Path("data/processed/neo4j_graph_export.json")
+_EMBEDDER_NAME = "bkai-foundation-models/vietnamese-bi-encoder"
+
+_DENSE_INDEX: dict[str, Any] = {}
+_GRAPH_STATUS: dict[str, dict[str, Any]] = {}
+_NEO4J_HANDLE: dict[str, Any] = {}
+
+def _get_neo4j_client() -> Any | None:
+    """Returns a connected Neo4jClient, or None when the graph DB is unreachable.
+
+    Probed once per process; the result (including failures) is cached so we do
+    not retry on every retrieval call.
+    """
+    if "client" in _NEO4J_HANDLE:
+        return _NEO4J_HANDLE["client"]
+    client = None
+    try:
+        from src.knowledge.neo4j_client import Neo4jClient
+
+        candidate = Neo4jClient()
+        if candidate.verify_connectivity():
+            client = candidate
+            logger.info("LawGraphAgent: Neo4j graph connected at %s", candidate.uri)
+        else:
+            candidate.close()
+    except Exception as e:  # driver missing, refused connection, bad auth...
+        logger.warning("LawGraphAgent: Neo4j unavailable (%s).", e)
+    if client is None:
+        logger.warning(
+            "LawGraphAgent: falling back to JSON exports. Start the graph with "
+            "`docker compose up -d neo4j` and seed it with "
+            "`scripts/load_neo4j_from_export.py`."
+        )
+    _NEO4J_HANDLE["client"] = client
+    return client
+
+
+def _search_terms(subgoals: list[str], keywords: list[str], limit: int = 24) -> list[str]:
+    """Tokenises subgoals + keywords into lowercase CONTAINS terms."""
+    raw = " ".join([*subgoals, *keywords]).lower()
+    tokens = [t for t in re.findall(r"\w+", raw, flags=re.UNICODE) if len(t) >= 3]
+    return list(dict.fromkeys(tokens))[:limit]
+
+
+def _load_dense_index() -> tuple[Any, Any, list[dict[str, Any]]]:
+    """Loads (embedder, normalized vectors, chunks) once per process."""
+    if "index" in _DENSE_INDEX:
+        return _DENSE_INDEX["index"]
+    try:
+        import json
+
+        import numpy as np
+        from sentence_transformers import SentenceTransformer
+
+        if not _CHUNK_EXPORT.exists():
+            raise FileNotFoundError(str(_CHUNK_EXPORT))
+        chunks = json.loads(_CHUNK_EXPORT.read_text(encoding="utf-8"))
+        matrix = np.asarray([c["vector"] for c in chunks], dtype="float32")
+        matrix /= np.linalg.norm(matrix, axis=1, keepdims=True) + 1e-9
+        model = SentenceTransformer(_EMBEDDER_NAME)
+        _DENSE_INDEX["index"] = (model, matrix, chunks)
+        logger.info("LawGraphAgent: dense chunk index ready (%d chunks).", len(chunks))
+    except Exception as e:
+        logger.warning("LawGraphAgent: dense chunk index unavailable: %s", e)
+        _DENSE_INDEX["index"] = (None, None, [])
+    return _DENSE_INDEX["index"]
+
+
+def _load_graph_status() -> dict[str, dict[str, Any]]:
+    """Document-level validity truth (status / revoked_by).
+
+    Read from the live Neo4j graph first; the chunk payloads mark every document
+    ``in_force``, so only the graph (or its export) can reveal a repeal.
+    """
+    if _GRAPH_STATUS:
+        return _GRAPH_STATUS
+
+    client = _get_neo4j_client()
+    if client is not None:
+        try:
+            rows = client.execute_query(
+                "MATCH (d:Document) "
+                "WHERE d.title IS NOT NULL "
+                "RETURN d.doc_id AS doc_id, d.title AS title, "
+                "       d.status AS status, d.revoked_by AS revoked_by, "
+                "       d.superseded_by AS superseded_by, "
+                "       d.eff_status_code AS eff_status_code, d.eff_to AS eff_to"
+            )
+            for row in rows:
+                _GRAPH_STATUS[row["doc_id"]] = {
+                    "status": row.get("status"),
+                    "revoked_by": row.get("revoked_by"),
+                    "superseded_by": row.get("superseded_by"),
+                    "eff_status_code": row.get("eff_status_code"),
+                    "eff_to": row.get("eff_to"),
+                    "title": row.get("title"),
+                }
+            if _GRAPH_STATUS:
+                logger.info(
+                    "LawGraphAgent: validity read from Neo4j (%d documents).",
+                    len(_GRAPH_STATUS),
+                )
+                return _GRAPH_STATUS
+        except Exception as e:
+            logger.warning("LawGraphAgent: Neo4j status query failed: %s", e)
+
+    try:
+        import json
+
+        if _GRAPH_EXPORT.exists():
+            data = json.loads(_GRAPH_EXPORT.read_text(encoding="utf-8"))
+            for doc_id, doc in data.items():
+                _GRAPH_STATUS[doc_id] = {
+                    "status": doc.get("status"),
+                    "revoked_by": doc.get("revoked_by"),
+                    "superseded_by": doc.get("superseded_by"),
+                    "eff_status_code": doc.get("eff_status_code"),
+                    "eff_to": doc.get("eff_to"),
+                    "title": doc.get("title"),
+                }
+            logger.info(
+                "LawGraphAgent: validity read from JSON export (%d documents).",
+                len(_GRAPH_STATUS),
+            )
+    except Exception as e:
+        logger.warning("LawGraphAgent: validity export unavailable: %s", e)
+    return _GRAPH_STATUS
+
+
+def _load_statute_catalog() -> dict[str, dict[str, Any]]:
+    """Loads statute documents dynamically from local exported knowledge graph.
+
+    Legal documents are persisted in data/processed/neo4j_graph_export.json or Neo4j,
+    never hardcoded inside agent source code.
+    """
+    import json
+
+    if _GRAPH_EXPORT.exists():
+        try:
+            return json.loads(_GRAPH_EXPORT.read_text(encoding="utf-8"))
+        except Exception as e:
+            logger.warning("Could not load %s: %s", _GRAPH_EXPORT, e)
+    return {}
+
 
 class LawGraphAgent(ADKAgent):
     """Agent responsible for statutory retrieval and legal graph traversal."""
 
-    # Built-in knowledge catalog for core Vietnamese business & administrative regulations
-    STATUTE_CATALOG: ClassVar[dict[str, dict[str, Any]]] = {
-        "52/2024/ND-CP": {
-            "doc_id": "52/2024/ND-CP",
-            "title": "Nghị định 52/2024/NĐ-CP về thanh toán không dùng tiền mặt",
-            "issue_date": "2024-05-15",
-            "effective_date": "2024-07-01",
-            "status": "active",
-            "supersedes": ["101/2012/ND-CP", "80/2016/ND-CP"],
-            "articles": [
-                {
-                    "article": "Điều 22",
-                    "title": "Điều kiện cung ứng dịch vụ trung gian thanh toán (Ví điện tử)",
-                    "content": (
-                        "Tổ chức không phải là ngân hàng muốn cung ứng dịch vụ ví điện tử phải đáp ứng: "
-                        "1. Có vốn điều lệ tối thiểu 50.000.000.000 VNĐ (50 tỷ đồng); "
-                        "2. Có đề án cung ứng dịch vụ phù hợp; "
-                        "3. Người đại diện theo pháp luật, Tổng giám đốc phải có trình độ chuyên môn hoặc kinh nghiệm quản lý."
-                    ),
-                    "capital_vnd": 50_000_000_000,
-                },
-                {
-                    "article": "Điều 23",
-                    "title": "Tỷ lệ tham gia của nhà đầu tư nước ngoài",
-                    "content": (
-                        "Tổ chức cung ứng dịch vụ trung gian thanh toán có vốn đầu tư nước ngoài "
-                        "phải tuân thủ tỷ lệ sở hữu tối đa và điều kiện tiếp cận thị trường theo cam kết WTO và pháp luật đầu tư."
-                    ),
-                    "foreign_ownership_cap": 0.49,
-                },
-            ],
-        },
-        "101/2012/ND-CP": {
-            "doc_id": "101/2012/ND-CP",
-            "title": "Nghị định 101/2012/NĐ-CP về thanh toán không dùng tiền mặt (CŨ)",
-            "issue_date": "2012-11-22",
-            "effective_date": "2013-03-01",
-            "status": "expired",
-            "revoked_by": "52/2024/ND-CP",
-            "revoked_date": "2024-07-01",
-            "articles": [
-                {
-                    "article": "Điều 15",
-                    "title": "Điều kiện cấp Giấy phép (ĐÃ BÃI BỎ)",
-                    "content": "Vốn điều lệ tối thiểu 50 tỷ đồng. (Quy định cũ theo NĐ 101/2012/NĐ-CP đã hết hiệu lực từ 01/07/2024).",
-                }
-            ],
-        },
-        "70/2023/ND-CP": {
-            "doc_id": "70/2023/ND-CP",
-            "title": "Nghị định 70/2023/NĐ-CP sửa đổi Nghị định 152/2020/NĐ-CP về lao động nước ngoài",
-            "issue_date": "2023-09-18",
-            "effective_date": "2023-09-18",
-            "status": "active",
-            "amends": "152/2020/ND-CP",
-            "articles": [
-                {
-                    "article": "Điều 1 Khoản 5",
-                    "title": "Điều kiện cấp Giấy phép lao động cho Chuyên gia nước ngoài",
-                    "content": (
-                        "Có bằng đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc "
-                        "phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam."
-                    ),
-                }
-            ],
-        },
-        "168/2024/ND-CP": {
-            "doc_id": "168/2024/ND-CP",
-            "title": "Nghị định 168/2024/NĐ-CP xử phạt vi phạm hành chính trật tự ATGT đường bộ",
-            "issue_date": "2024-12-26",
-            "effective_date": "2025-01-01",
-            "status": "active",
-            "supersedes": ["100/2019/ND-CP", "123/2021/ND-CP"],
-            "articles": [
-                {
-                    "article": "Điều 6 Khoản 4",
-                    "title": "Xử phạt người điều khiển xe mô tô, xe gắn máy vượt đèn đỏ",
-                    "content": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ). Tước GPLX từ 01 đến 03 tháng.",
-                    "sanction_range": "4.000.000 - 6.000.000 VNĐ",
-                }
-            ],
-        },
-        "100/2019/ND-CP": {
-            "doc_id": "100/2019/ND-CP",
-            "title": "Nghị định 100/2019/NĐ-CP xử phạt vi phạm giao thông đường bộ (CŨ)",
-            "issue_date": "2019-12-30",
-            "effective_date": "2020-01-01",
-            "status": "expired",
-            "revoked_by": "168/2024/ND-CP",
-            "revoked_date": "2025-01-01",
-            "articles": [
-                {
-                    "article": "Điều 6 Khoản 4 Điểm e",
-                    "title": "Vượt đèn đỏ xe máy (CŨ)",
-                    "content": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với hành vi vượt đèn đỏ (đã bị bãi bỏ bởi Nghị định 168/2024/NĐ-CP từ 01/01/2025).",
-                    "sanction_range": "800.000 - 1.000.000 VNĐ",
-                }
-            ],
-        },
-    }
+    # Dynamic knowledge catalog loaded from persistent graph export (0 hardcoded statutes)
+    STATUTE_CATALOG: ClassVar[dict[str, dict[str, Any]]] = _load_statute_catalog()
 
     def __init__(
         self,
@@ -161,14 +219,19 @@ class LawGraphAgent(ADKAgent):
             subgoals = input_data.get("subgoals", [])
             keywords = input_data.get("keywords", [])
             reference_date = input_data.get("reference_date", "")
+            query = input_data.get("query", "")
         elif isinstance(input_data, str):
             subgoals = [input_data]
             keywords = [input_data]
             reference_date = ""
+            query = input_data
         else:
             subgoals, keywords = [], []
             reference_date = ""
-        return self.retrieve_provisions(subgoals, keywords, reference_date=reference_date)
+            query = ""
+        return self.retrieve_provisions(
+            subgoals, keywords, reference_date=reference_date, query=query
+        )
 
     def trace_selective_edge(
         self,
@@ -251,45 +314,192 @@ class LawGraphAgent(ADKAgent):
             logger.debug("Live graph retrieval unavailable: %s", e)
             return []
 
+    def neo4j_retrieve(
+        self, subgoals: list[str], keywords: list[str], top_k: int = 6
+    ) -> list[dict[str, Any]]:
+        """Retrieves clauses straight from the Neo4j legal graph via Cypher.
+
+        Matches Article/Clause text against the query terms, joins the parent
+        Document for validity metadata, and ranks by the number of term hits.
+        Returns [] when the graph DB is not reachable so callers can fall back.
+        """
+        client = _get_neo4j_client()
+        if client is None:
+            return []
+        terms = _search_terms(subgoals, keywords)
+        if not terms:
+            return []
+
+        cypher = """
+        MATCH (d:Document)-[:CONTAINS]->(a:Article)
+        WITH d, a, toLower(coalesce(a.title, '') + ' ' + coalesce(a.content, '')) AS hay
+        WITH d, a, reduce(s = 0, t IN $terms | s + size(split(hay, t)) - 1) AS score
+        WHERE score > 0
+        RETURN d.doc_id AS doc_id,
+               coalesce(d.title, '') AS title,
+               coalesce(d.status, 'unknown') AS status,
+               coalesce(d.effective_date, '') AS effective_date,
+               d.revoked_by AS revoked_by,
+               'Điều ' + coalesce(a.article_number, '') AS article,
+               coalesce(a.title, '') AS article_title,
+               substring(coalesce(a.content, ""), 0, 1200) AS content,
+               score
+        ORDER BY score DESC, d.doc_id ASC, a.article_number ASC
+        LIMIT $limit
+        """
+
+        try:
+            rows = client.execute_query(cypher, {"terms": terms, "limit": top_k})
+        except Exception as e:
+            logger.warning("LawGraphAgent: Neo4j retrieval failed: %s", e)
+            return []
+
+        hits: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for row in rows:
+            key = f"{row.get('doc_id')}:{row.get('article')}"
+            if key in seen:
+                continue
+            seen.add(key)
+            hits.append(
+                {
+                    "doc_id": row.get("doc_id", "UNKNOWN"),
+                    "title": row.get("title", ""),
+                    "status": row.get("status", "unknown"),
+                    "effective_date": row.get("effective_date", ""),
+                    "article": row.get("article", ""),
+                    "article_title": row.get("article_title", ""),
+                    "content": row.get("content", ""),
+                    "supersedes": [],
+                    "revoked_by": row.get("revoked_by"),
+                    "score": int(row.get("score", 0)),
+                }
+            )
+            if len(hits) >= top_k:
+                break
+        logger.info("LawGraphAgent: Neo4j returned %d clause hits.", len(hits))
+        return hits
+
+    def dense_retrieve(self, query: str, top_k: int = 6) -> list[dict[str, Any]]:
+        """Embedding search over the exported chunk index.
+
+        Returns clause dicts in the same shape as the static catalog so the
+        Claim Auditor and Drafter can consume them unchanged.
+        """
+        if not query.strip():
+            return []
+        model, matrix, chunks = _load_dense_index()
+        if model is None or matrix is None or not chunks:
+            return []
+
+        import numpy as np
+
+        q_vec = np.asarray(model.encode(query, normalize_embeddings=True), dtype="float32")
+        sims = matrix @ q_vec
+        order = np.argsort(-sims)[: max(1, top_k)]
+        status_map = _load_graph_status()
+
+        hits: list[dict[str, Any]] = []
+        for idx in order:
+            payload = chunks[int(idx)].get("payload", {})
+            doc_id = payload.get("doc_id", "UNKNOWN")
+            article_number = str(payload.get("article_number", "")).strip()
+            truth = status_map.get(doc_id, {})
+            hits.append(
+                {
+                    "doc_id": doc_id,
+                    "title": payload.get("title") or truth.get("title") or "",
+                    # Chunk payloads say in_force for every doc; trust the graph.
+                    "status": truth.get("status") or payload.get("status", "unknown"),
+                    "effective_date": payload.get("effective_date", ""),
+                    "article": f"Điều {article_number}" if article_number else "",
+                    "article_title": payload.get("title", ""),
+                    "content": payload.get("text", ""),
+                    "supersedes": [],
+                    "revoked_by": truth.get("revoked_by"),
+                    "superseded_by": truth.get("superseded_by"),
+                    "eff_status_code": truth.get("eff_status_code"),
+                    "eff_to": truth.get("eff_to"),
+                    "score": round(float(sims[int(idx)]), 4),
+                }
+            )
+        return hits
+
     def retrieve_provisions(
         self,
         subgoals: list[str],
         keywords: list[str],
         reference_date: str = "",
         force_live_db: bool = False,
+        use_neo4j: bool = True,
+        use_dense: bool = True,
+        dense_top_k: int = 6,
+        query: str = "",
     ) -> list[dict[str, Any]]:
-        """Retrieves relevant legal articles based on subgoals and keyword matches."""
+        """Retrieves relevant legal articles based on subgoals + keyword matches."""
+        # BENCH_RETRIEVER lets a benchmark pin the retriever across architectures:
+        #   neo4j (default) -> Cypher lexical search over the graph
+        #   dense           -> bi-encoder vector search over the exported chunks
+        # Without this the ADK arm uses a different retriever than the LangGraph
+        # harness, so any metric gap mixes architecture with retrieval.
+        forced = os.getenv("BENCH_RETRIEVER", "").lower()
+        if forced == "dense":
+            use_neo4j = False
         logger.info(f"LawGraphAgent: Retrieving provisions for subgoals: {subgoals}")
         results: list[dict[str, Any]] = []
         seen_keys: set[str] = set()
 
         search_terms = [k.lower() for k in keywords]
+        # The raw question carries the discriminative wording; planner subgoals
+        # are paraphrases and lose it.
+        retrieval_texts = ([query] if query else []) + list(subgoals)
 
-        for doc_id, doc in self.STATUTE_CATALOG.items():
-            doc_text = f"{doc['title']} {doc['doc_id']}".lower()
+        # Pass 1 (primary): read clauses + validity straight from the Neo4j graph.
+        if use_neo4j:
+            for item in self.neo4j_retrieve(retrieval_texts, keywords, top_k=dense_top_k):
+                item_key = f"{item['doc_id']}:{item['article']}"
+                if item_key not in seen_keys:
+                    seen_keys.add(item_key)
+                    results.append(item)
 
-            for article in doc["articles"]:
-                art_text = f"{article.get('title', '')} {article.get('content', '')}".lower()
-                combined = f"{doc_text} {art_text}"
+        # Pass 2 (fallback): hand-written catalog, only when the graph gave nothing.
+        # Skipped when a benchmark pins the retriever, otherwise the 6-document
+        # catalog would shadow the dense pass and masquerade as dense retrieval.
+        if not results and forced != "dense":
+            for doc_id, doc in self.STATUTE_CATALOG.items():
+                doc_text = f"{doc['title']} {doc['doc_id']}".lower()
 
-                is_match = any(term in combined for term in search_terms) or not search_terms
-                if is_match:
-                    item_key = f"{doc_id}:{article.get('article', '')}"
-                    if item_key not in seen_keys:
-                        seen_keys.add(item_key)
-                        results.append(
-                            {
-                                "doc_id": doc["doc_id"],
-                                "title": doc["title"],
-                                "status": doc["status"],
-                                "effective_date": doc["effective_date"],
-                                "article": article["article"],
-                                "article_title": article["title"],
-                                "content": article["content"],
-                                "supersedes": doc.get("supersedes", []),
-                                "revoked_by": doc.get("revoked_by"),
-                            }
-                        )
+                for article in doc["articles"]:
+                    art_text = f"{article.get('title', '')} {article.get('content', '')}".lower()
+                    combined = f"{doc_text} {art_text}"
+
+                    is_match = any(term in combined for term in search_terms) or not search_terms
+                    if is_match:
+                        item_key = f"{doc_id}:{article.get('article', '')}"
+                        if item_key not in seen_keys:
+                            seen_keys.add(item_key)
+                            results.append(
+                                {
+                                    "doc_id": doc["doc_id"],
+                                    "title": doc["title"],
+                                    "status": doc["status"],
+                                    "effective_date": doc["effective_date"],
+                                    "article": article["article"],
+                                    "article_title": article["title"],
+                                    "content": article["content"],
+                                    "supersedes": doc.get("supersedes", []),
+                                    "revoked_by": doc.get("revoked_by"),
+                                }
+                            )
+
+        # Pass 3 (fallback): dense search over the exported chunk index.
+        if use_dense and not results:
+            query_text = " ".join(retrieval_texts + keywords).strip() or " ".join(subgoals)
+            for item in self.dense_retrieve(query_text, top_k=dense_top_k):
+                item_key = f"{item['doc_id']}:{item['article']}"
+                if item_key not in seen_keys:
+                    seen_keys.add(item_key)
+                    results.append(item)
 
         # If live database is requested or catalog had no results, attempt dynamic graph retrieval
         if (self.use_live_db or force_live_db) or not results:

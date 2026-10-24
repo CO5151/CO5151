@@ -45,11 +45,11 @@
 
 \section{Extension Readings: Presenting Group Deep Dive}
 \begin{enumerate}[leftmargin=1.4em, itemsep=6pt, topsep=3pt, start=2]
-  \item \textbf{Anthropic. (Feb 2025).} \textit{How We Built Our Multi-Agent Research System.} Anthropic Engineering Blog.\\
+  \item \textbf{Anthropic. (Jun 2025).} \textit{How We Built Our Multi-Agent Research System.} Anthropic Engineering Blog.\\
   \textbf{Focus Area:} Hierarchical Lead/Subagent decomposition, context window isolation, and architectural trade-offs in open-ended exploratory tasks.\\
-  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} Although partitioning exploration into isolated subagent contexts resolves attention dilution and context rot, it introduces an inevitable $3\times$--$8\times$ token inflation and a critical synthesis bottleneck where the Lead Agent frequently fails to detect subtle contradictory claims generated across independent subagent outputs.
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} Although partitioning exploration into isolated subagent contexts resolves attention dilution and context rot, it introduces an inevitable $\approx 15\times$ token inflation and a critical synthesis bottleneck where the Lead Agent frequently fails to detect subtle contradictory claims generated across independent subagent outputs.
 
-  \item \textbf{OpenAI. (Feb 2025).} \textit{A Practical Guide to Building Agents.} OpenAI Developer Documentation.\\
+  \item \textbf{OpenAI. (Apr 2025).} \textit{A Practical Guide to Building Agents.} OpenAI Developer Documentation.\\
   \textbf{Focus Area:} Model-directed tool calling loops, safety guardrails, structured evaluation harnesses, and progressive handoffs.\\
   \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The guide promotes autonomous model-directed tool calling as the default target architecture yet glosses over how compounding failure rates ($P = p^n$) render unconstrained multi-turn loops unviable in high-stakes domains without deterministic schema validation and external non-LLM ground-truth oracles.
 
