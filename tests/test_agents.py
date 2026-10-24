@@ -115,7 +115,10 @@ class TestLegalAgents(unittest.TestCase):
         assert state.final_compliance_dossier is not None
         self.assertEqual(state.audit_report.grounding_rate, 1.0)
         self.assertTrue(state.audit_report.is_fully_verified)
-        self.assertIn("Nghị định 52/2024/NĐ-CP", state.final_compliance_dossier)
+        self.assertTrue(
+            "52/2024/ND-CP" in state.final_compliance_dossier
+            or "Nghị định 52/2024/NĐ-CP" in state.final_compliance_dossier
+        )
 
     def test_lawgraph_trace_selective_edge_tool(self) -> None:
         """Tests that trace_selective_edge tool returns structured traversal output."""

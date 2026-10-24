@@ -97,12 +97,18 @@ class LegalOrchestrator(ADKAgent):
             prompt = SUBGOAL_PLANNING_PROMPT.format(query=query)
             raw = invoke_adk_agent(planner_agent, prompt).strip()
             import re
+
             match = re.search(r"\{.*\}", raw, flags=re.S)
             if match:
                 parsed = json.loads(match.group(0))
                 subgoals = [
                     str(s).strip()
-                    for s in (parsed.get("subgoals") or parsed.get("sub_goals") or parsed.get("Subgoals") or [])
+                    for s in (
+                        parsed.get("subgoals")
+                        or parsed.get("sub_goals")
+                        or parsed.get("Subgoals")
+                        or []
+                    )
                     if str(s).strip()
                 ]
                 keywords = [
@@ -117,8 +123,11 @@ class LegalOrchestrator(ADKAgent):
 
         # Dynamic regex and token extraction (NO hardcoded topic strings)
         import re
+
         statute_patterns = re.findall(r"\d+/\d+/[A-ZĐa-zđ\-_]+", query)
-        clean_terms = [w.lower() for w in re.findall(r"\b[\w\-]+\b", query, flags=re.UNICODE) if len(w) > 2]
+        clean_terms = [
+            w.lower() for w in re.findall(r"\b[\w\-]+\b", query, flags=re.UNICODE) if len(w) > 2
+        ]
         keywords = list(dict.fromkeys(statute_patterns + clean_terms[:8]))
         subgoals = [
             f"Xác định quy định pháp lý điều chỉnh cho yêu cầu: {query}",

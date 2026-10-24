@@ -25,8 +25,8 @@ from typing import Any
 
 import httpx
 
-from src.agents.base import ToolDefinition
 from src.core.logger import logger
+from src.tools.base import ToolDefinition
 
 MOJ_BASE = "https://vbpl-bientap-gateway.moj.gov.vn/api"
 MOJ_DOC_PATH = "/qtdc/public/doc/"
@@ -53,7 +53,7 @@ def get_official_document(doc_id: str, timeout_seconds: float = 20.0) -> dict[st
             timeout=timeout_seconds,
             follow_redirects=True,
         )
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         logger.warning("moj_api: request failed (%s: %s)", type(e).__name__, e)
         return {"found": False, "error": f"{type(e).__name__}: {e}"}
 

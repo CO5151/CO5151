@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from src.agents.base import ToolDefinition
+from src.tools.base import ToolDefinition
 
 
 def retrieve_statutory_provisions(keywords: list[str]) -> list[dict[str, Any]]:

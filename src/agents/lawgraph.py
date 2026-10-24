@@ -9,7 +9,7 @@ from __future__ import annotations
 import os
 import re
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, cast
 
 from src.agents.base import ADKAgent
 from src.core.logger import logger
@@ -26,9 +26,10 @@ _CHUNK_EXPORT = Path("data/processed/qdrant_chunks_export.json")
 _GRAPH_EXPORT = Path("data/processed/neo4j_graph_export.json")
 _EMBEDDER_NAME = "bkai-foundation-models/vietnamese-bi-encoder"
 
-_DENSE_INDEX: dict[str, Any] = {}
+_DENSE_INDEX: dict[str, tuple[Any, Any, list[dict[str, Any]]]] = {}
 _GRAPH_STATUS: dict[str, dict[str, Any]] = {}
 _NEO4J_HANDLE: dict[str, Any] = {}
+
 
 def _get_neo4j_client() -> Any | None:
     """Returns a connected Neo4jClient, or None when the graph DB is unreachable.
@@ -162,7 +163,9 @@ def _load_statute_catalog() -> dict[str, dict[str, Any]]:
 
     if _GRAPH_EXPORT.exists():
         try:
-            return json.loads(_GRAPH_EXPORT.read_text(encoding="utf-8"))
+            data = json.loads(_GRAPH_EXPORT.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                return cast("dict[str, dict[str, Any]]", data)
         except Exception as e:
             logger.warning("Could not load %s: %s", _GRAPH_EXPORT, e)
     return {}

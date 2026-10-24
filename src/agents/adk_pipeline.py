@@ -27,10 +27,9 @@ from __future__ import annotations
 import json
 import os
 import re
-from collections.abc import AsyncGenerator
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from google.adk.agents import BaseAgent, LlmAgent, LoopAgent, SequentialAgent
+from google.adk.agents import BaseAgent, LlmAgent, SequentialAgent
 from google.adk.events import Event, EventActions
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import Runner
@@ -44,8 +43,10 @@ from src.prompts import (
     LAWGRAPH_RESEARCH_PROMPT,
     LIVE_GAZETTE_PROMPT,
     PLANNER_INSTRUCTION,
-    WEB_DRAFTER_INSTRUCTION,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 APP_NAME = "legalpilot_adk"
 DEFAULT_MODEL = os.getenv("ADK_MODEL", "deepseek/deepseek-chat")
@@ -77,7 +78,7 @@ def _parse_plan(raw: str) -> tuple[list[str], list[str]]:
             keywords = [str(k).strip() for k in obj.get("keywords", []) if str(k).strip()]
             if subgoals:
                 return subgoals, keywords
-        except Exception:  # noqa: BLE001
+        except Exception:
             pass
     return [text[:300]] if text else [], []
 
@@ -85,6 +86,7 @@ def _parse_plan(raw: str) -> tuple[list[str], list[str]]:
 # ==============================================================================
 # 2. WORKER AGENTS (Deterministic Tool / Oracle + Selective LLM Reasoning)
 # ==============================================================================
+
 
 class QueryIntake(BaseAgent):
     """[ORCHESTRATION] Seeds session.state['user_query'] from user input (0 LLM Token)."""
@@ -104,7 +106,7 @@ class QueryIntake(BaseAgent):
 
 class RetrievalWorker(BaseAgent):
     """[HYBRID AGENT] LawGraph Research Agent: Selective retrieval + LLM relevance reasoning.
-    
+
     - Deterministic step: Traverses Neo4j validity map & dense index (0 LLM token).
     - LLM step (optional): Summarizes statutory alignment with subgoals.
     """
@@ -114,6 +116,7 @@ class RetrievalWorker(BaseAgent):
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         import litellm
+
         state = ctx.session.state
         query = state.get("user_query", "")
         subgoals, keywords = _parse_plan(state.get("plan", ""))
@@ -124,9 +127,7 @@ class RetrievalWorker(BaseAgent):
         clauses = self.retriever.retrieve_provisions(
             subgoals=subgoals, keywords=keywords, query=query
         )
-        logger.info(
-            "RetrievalWorker: %d clauses for %d subgoals", len(clauses), len(subgoals)
-        )
+        logger.info("RetrievalWorker: %d clauses for %d subgoals", len(clauses), len(subgoals))
 
         # Optional LLM reasoning call
         retrieval_analysis = ""
@@ -168,7 +169,7 @@ class RetrievalWorker(BaseAgent):
 
 class AuditWorker(BaseAgent):
     """[HYBRID AGENT] Claim Auditor: Adversarial Critic verifying statutory validity.
-    
+
     - Deterministic step: Oracle lookup against Neo4j validity status & MoJ gazette (0 LLM token).
       Automatically prunes revoked / superseded clauses and sets clean active_clauses.
     - LLM step (optional): Generates natural language critique warning of expired law.
@@ -179,9 +180,10 @@ class AuditWorker(BaseAgent):
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         import litellm
+
         state = ctx.session.state
         clauses = state.get("retrieved_clauses", []) or []
-        
+
         # Deterministic Oracle check (0 LLM token)
         report = self.auditor.audit_provisions(clauses, enable_live_vbpl=False)
 
@@ -262,7 +264,7 @@ class AuditWorker(BaseAgent):
 
 class WebFindingWorker(BaseAgent):
     """[HYBRID AGENT] Live Gazette & Web Finding Agent.
-    
+
     - Deterministic step: Whitelist crawler over official government portals (0 LLM token).
     - LLM step (optional): Assesses authenticity and relevance of portal results.
     """
@@ -271,11 +273,12 @@ class WebFindingWorker(BaseAgent):
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         import litellm
+
         from src.tools.web_search import render_web_findings, search_official_legal_web
 
         state = ctx.session.state
         query = str(state.get("user_query", ""))
-        
+
         # Deterministic search (0 LLM token)
         payload = search_official_legal_web(query, limit=3)
         text = render_web_findings(payload)
@@ -373,13 +376,17 @@ def build_legal_pipeline(
         output_key="final_dossier",
     )
 
-    tail: list[Any] = [
-        WebFindingWorker(
-            name="WebFindingWorker",
-            description="Live Gazette Agent: searches official portals for supplementary context.",
-            model=model,
-        )
-    ] if with_web_finding else []
+    tail: list[Any] = (
+        [
+            WebFindingWorker(
+                name="WebFindingWorker",
+                description="Live Gazette Agent: searches official portals for supplementary context.",
+                model=model,
+            )
+        ]
+        if with_web_finding
+        else []
+    )
 
     # Exactly 5 Agents matching Proposal Theme 9 Section 6.1:
     # 1. Orchestrator Agent (PlannerAgent)
@@ -391,7 +398,11 @@ def build_legal_pipeline(
         name="LegalPilotPipeline",
         description="5-Agent Pipeline matching Proposal Theme 9 Section 6.1: Orchestrator -> LawGraph -> Audit -> Gazette -> Drafter.",
         sub_agents=(
-            [QueryIntake(name="QueryIntake", description="Copies the user message into session state.")]
+            [
+                QueryIntake(
+                    name="QueryIntake", description="Copies the user message into session state."
+                )
+            ]
             if with_intake
             else []
         )
@@ -416,7 +427,6 @@ class LegalPilotADK:
         self.model = model
 
     def _build_message(self, query: str) -> types.Content:
-        retrieved = ""
         return types.Content(role="user", parts=[types.Part.from_text(text=query)])
 
     async def _arun(self, query: str, session_id: str, user_id: str) -> dict[str, Any]:
@@ -438,7 +448,7 @@ class LegalPilotADK:
         final = await self.session_service.get_session(
             app_name=APP_NAME, user_id=user_id, session_id=session_id
         )
-        return dict(final.state)
+        return dict(final.state) if final and final.state else {}
 
     def run(self, query: str, session_id: str | None = None) -> dict[str, Any]:
         import asyncio

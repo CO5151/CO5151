@@ -15,10 +15,11 @@ import time
 from typing import Any
 
 from src.core.logger import logger
-from src.tools.lawgraph_tool import ToolDefinition
+from src.tools.base import ToolDefinition
 
-
-PORTAL_API_ENDPOINT = os.getenv("DICHVUCONG_API_ENDPOINT", "https://dichvucong.sbv.gov.vn/api/v1/dossier")
+PORTAL_API_ENDPOINT = os.getenv(
+    "DICHVUCONG_API_ENDPOINT", "https://dichvucong.sbv.gov.vn/api/v1/dossier"
+)
 SANDBOX_MODE = os.getenv("DICHVUCONG_SANDBOX", "true").lower() in ("true", "1", "yes")
 
 

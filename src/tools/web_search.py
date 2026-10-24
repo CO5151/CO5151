@@ -32,8 +32,8 @@ import time
 import urllib.parse
 from typing import Any
 
-from src.agents.base import ToolDefinition
 from src.core.logger import logger
+from src.tools.base import ToolDefinition
 
 DEFAULT_ALLOWED_DOMAINS: tuple[str, ...] = (
     "vbpl.vn",
@@ -142,7 +142,7 @@ def search_official_legal_web(
 
     try:
         raw = _raw_query(q, limit, timeout_seconds=timeout_seconds)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         logger.warning("web_search: backend failed (%s: %s)", type(e).__name__, e)
         return {
             "status": "unavailable",

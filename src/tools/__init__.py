@@ -1,12 +1,14 @@
 """Tools module for LegalPilot-VN (Google ADK compliant tools).
 
 Exports:
+- ToolDefinition: Base tool specification.
 - STATUTORY_RETRIEVER_TOOL: Tra cứu điều khoản theo từ khoá pháp lý.
 - VALIDITY_CHECKER_TOOL: Kiểm tra hiệu lực văn bản (còn hiệu lực hay đã bị bãi bỏ).
 - retrieve_statutory_provisions: Callable function for statutory lookups.
 - check_statute_validity: Callable function for statute status checks.
 """
 
+from src.tools.base import ToolDefinition
 from src.tools.gazette_tool import (
     SEARCH_GAZETTE_TOOL,
     VERIFY_VBPL_STATUS_TOOL,
@@ -43,6 +45,7 @@ __all__ = [
     "TRACE_SELECTIVE_EDGE_TOOL",
     "VALIDITY_CHECKER_TOOL",
     "VERIFY_VBPL_STATUS_TOOL",
+    "ToolDefinition",
     "check_portal_filing_status",
     "check_statute_validity",
     "query_lawgraph",
