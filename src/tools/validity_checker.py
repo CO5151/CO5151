@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from src.agents.base import ToolDefinition
 from src.core.statute_status import is_active_status
+from src.tools.base import ToolDefinition
 
 
 def check_statute_validity(doc_id: str) -> dict[str, Any]:

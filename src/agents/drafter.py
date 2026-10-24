@@ -165,15 +165,19 @@ class DrafterAgent(ADKAgent):
         if llm_conclusion:
             conclusion_lines.append(llm_conclusion)
         else:
-            conclusion_lines.extend([
-                "  - Doanh nghiệp phải tuân thủ nghiêm ngặt các điều kiện quy định tại các văn bản còn hiệu lực trên.",
-                "  - Tuyệt đối không áp dụng các văn bản/điều khoản đã bị bãi bỏ theo cảnh báo của Claim Auditor.",
-            ])
-        conclusion_lines.extend([
-            "-" * 78,
-            self.LEGAL_DISCLAIMER,
-            "=" * 78,
-        ])
+            conclusion_lines.extend(
+                [
+                    "  - Doanh nghiệp phải tuân thủ nghiêm ngặt các điều kiện quy định tại các văn bản còn hiệu lực trên.",
+                    "  - Tuyệt đối không áp dụng các văn bản/điều khoản đã bị bãi bỏ theo cảnh báo của Claim Auditor.",
+                ]
+            )
+        conclusion_lines.extend(
+            [
+                "-" * 78,
+                self.LEGAL_DISCLAIMER,
+                "=" * 78,
+            ]
+        )
         if _CONCISE:
             conclusion_lines = [
                 "-" * 78,

@@ -20,7 +20,7 @@ import os
 import time
 import uuid
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from google.adk import Agent as GoogleAgent
 from google.adk import Runner as GoogleRunner
@@ -30,9 +30,7 @@ from google.genai import types
 
 from src.core.config import settings
 from src.core.logger import logger
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
+from src.tools.base import ToolDefinition
 
 # Re-export official Google ADK primitives as first-class citizens
 Agent = GoogleAgent
@@ -102,19 +100,6 @@ def invoke_adk_agent(
 
 
 @dataclass
-class ToolDefinition:
-    """Tool definition compliant with Google ADK tool specifications."""
-
-    name: str
-    description: str
-    func: Callable[..., Any]
-    parameters_schema: dict[str, Any] = field(default_factory=dict)
-
-    def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        return self.func(*args, **kwargs)
-
-
-@dataclass
 class AgentResult:
     """Result of an ADK agent execution."""
 
@@ -174,7 +159,7 @@ class ADKAgent:
         self.llm = get_llm()
 
         # Build official Google ADK Agent instance
-        adk_callables = [t.func for t in self.tools]
+        adk_callables: list[Any] = [t.func for t in self.tools]
         try:
             self.adk_agent: GoogleAgent | None = GoogleAgent(
                 name=self.name,

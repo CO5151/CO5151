@@ -145,6 +145,7 @@ class ClaimAuditorAgent(ADKAgent):
         # Deconstructs claims and evaluates validity via LLM Critic
         try:
             from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
+
             critic_agent = GoogleAgent(
                 name="ClaimAuditorCritic",
                 model=get_default_model(),
@@ -154,10 +155,12 @@ class ClaimAuditorAgent(ADKAgent):
                     "và đưa ra feedback yêu cầu khắc phục ngắn gọn."
                 ),
             )
-            evidence_summary = "\n".join([
-                f"- {c.cited_statute} ({c.cited_article}): {'HỢP LỆ' if c.is_statute_active else 'HẾT HIỆU LỰC (BÃI BỎ)'}"
-                for c in claims
-            ])
+            evidence_summary = "\n".join(
+                [
+                    f"- {c.cited_statute} ({c.cited_article}): {'HỢP LỆ' if c.is_statute_active else 'HẾT HIỆU LỰC (BÃI BỎ)'}"
+                    for c in claims
+                ]
+            )
             critic_prompt = (
                 f"Hãy đánh giá và phê bình các căn cứ pháp lý sau cho câu hỏi tuân thủ:\n"
                 f"{evidence_summary}\n\n"

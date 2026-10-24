@@ -16,12 +16,12 @@ from typing import Any
 import httpx
 from bs4 import BeautifulSoup
 
-from src.agents.base import ToolDefinition
 from src.core.config import settings
 from src.core.logger import logger
 from src.knowledge.ingestion import HTMLParsed, normalize_doc_id, parse_html_document
 from src.memory.sqlite_manager import SQLiteMemoryManager
 from src.memory.state_models import StatuteCacheEntry
+from src.tools.base import ToolDefinition
 
 _normalize_doc_id = normalize_doc_id
 
@@ -115,11 +115,16 @@ def verify_vbpl_status(
     # Baseline from internal catalog if known
     catalog_doc = LawGraphAgent.STATUTE_CATALOG.get(clean_id)
     if catalog_doc:
-        resolved_status = catalog_doc.get("status", "unknown")
+        raw_status = catalog_doc.get("status", "unknown")
+        if catalog_doc.get("revoked_by") or catalog_doc.get("superseded_by"):
+            raw_status = "expired"
+        resolved_status = _normalize_status(raw_status)
         resolved_title = catalog_doc.get("title", resolved_title)
         resolved_date = catalog_doc.get("effective_date", resolved_date)
         if catalog_doc.get("revoked_by"):
             raw_meta["revoked_by"] = catalog_doc["revoked_by"]
+        if catalog_doc.get("superseded_by"):
+            raw_meta["superseded_by"] = catalog_doc["superseded_by"]
 
     try:
         headers = {
