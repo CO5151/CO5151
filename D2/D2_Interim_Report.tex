@@ -306,7 +306,6 @@ Hệ thống LegalPilot-VN được xây dựng trên \textbf{Google ADK (Agent 
 \midrule
 \textbf{Orchestrator} \newline (Supervisor/\allowbreak Planner) & \code{deepseek/deepseek-chat} \newline (Alias DeepSeek V3/V4.1) & 0{,}0 & 64k tokens & Phân tích câu hỏi, \emph{Subgoal Planning}, trích xuất từ khóa pháp lý, \emph{Context Isolation}. \\
 \textbf{LawGraph Agent} \newline (Hybrid Retriever) & \code{vietnamese-bi-encoder} \newline + Neo4j Graph Engine & N/A & 768 dims & Hybrid retrieval: vector similarity kết hợp \emph{Selective Traversal} theo quan hệ sửa đổi/hướng dẫn. \\
-\textbf{Reranker Module} & \code{BAAI/bge-reranker-v2-m3} \newline (Cross-Encoder) & N/A & 8k tokens & Tái xếp hạng top 20 điều khoản ứng viên từ Neo4j/Qdrant, lọc ra top $k=3 \div 5$ điều khoản liên quan nhất. \\
 \textbf{Claim Auditor} \newline (Adversarial Critic) & \code{deepseek/deepseek-chat} \newline (Chấm bởi \code{gemini-3.8-flash}) & 0{,}0 & 64k tokens & Phản biện độc lập: tách câu trả lời thành các \emph{Atomic Claims}, đối soát hiệu lực live qua Cổng \code{vbpl.vn}, phạt luật hết hiệu lực. \\
 \textbf{Drafter Agent} \newline (Legal Synthesizer) & \code{deepseek/deepseek-chat} \newline (Zero-temperature) & 0{,}0 & 64k tokens & Biên soạn báo cáo tư vấn tuân thủ, chỉ dựa trên các điều khoản đã qua kiểm toán, loại bỏ văn bản nhiễu. \\
 \textbf{LLM-as-a-Judge} \newline (Thẩm định độc lập) & \code{gemini-3.8-flash} \newline (Google Cloud Vertex AI) & 0{,}0 & 1M tokens & Giám khảo tự động chấm 100 câu benchmark theo 3 tiêu chí đánh giá của SBV-LawGraph~\cite{phan2026sbvlawgraph} (Semantic, Citation, Validity). \\
@@ -316,14 +315,60 @@ Hệ thống LegalPilot-VN được xây dựng trên \textbf{Google ADK (Agent 
 \end{table}
 
 \subsection{Hybrid RAG và Ingestion Pipeline cho văn bản pháp luật}
-Để giảm hiện tượng pha loãng ngữ cảnh ($>$60\% nhiễu) mà phương pháp duyệt 1-hop cơ học tĩnh của SBV-LawGraph~\cite{phan2026sbvlawgraph} gặp phải, LegalPilot-VN thiết kế quy trình Ingestion và Retrieval đa tầng:
+Để giảm hiện tượng pha loãng ngữ cảnh ($>$60\% nhiễu) mà phương pháp duyệt 1-hop cơ học tĩnh của SBV-LawGraph~\cite{phan2026sbvlawgraph} gặp phải, LegalPilot-VN thiết kế quy trình Ingestion và Retrieval đa tầng. Hình~\ref{fig:ingestion-pipeline} tóm tắt pipeline ingestion:
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  >=Stealth, thick,
+  ingstep/.style = {rectangle, draw=black!70, fill=black!3, rounded corners=3pt, minimum height=1.05cm, text width=2.4cm, align=center, font=\scriptsize},
+  graph/.style = {ingstep, draw=blue!70!black, fill=blue!5},
+  vec/.style = {ingstep, draw=green!50!black, fill=green!6},
+  moj/.style = {ingstep, draw=orange!80!black, fill=orange!8},
+  store/.style = {line width=1.0pt, font=\scriptsize\bfseries}
+]
+  % Shared parsing stage
+  \node[ingstep, text width=1.9cm] (src) at (0,0) {\textbf{Văn bản QPPL thô}\\\tiny .txt / .html};
+  \node[ingstep] (parse) at (2.88,0) {\textbf{Parser}\\\tiny regex (TXT), BeautifulSoup (HTML), LLM fallback khi không tìm thấy Điều};
+  \node[ingstep, text width=2.2cm] (doc) at (5.91,0) {\textbf{ParsedDocument}\\\tiny Document $\to$ Article $\to$ Clause};
+
+  % Graph branch
+  \node[graph] (xref) at (8.94,1.6) {\textbf{Cross-reference}\\\tiny AMENDS, SUPERSEDES, GUIDES (regex)};
+  \node[graph] (revoke) at (12.07,1.6) {\textbf{Revocation propagation}\\\tiny văn bản đích: \code{status=expired}, \code{revoked_by}};
+  \node[graph, store] (neo) at (15.2,1.6) {Neo4j};
+
+  % Vector branch
+  \node[vec] (chunk) at (8.94,-1.6) {\textbf{Structural chunking}\\\tiny 1 chunk = 1 Khoản + context header};
+  \node[vec] (emb) at (12.07,-1.6) {\textbf{Embedding}\\\tiny \code{vietnamese-bi-encoder}, 768 chiều};
+  \node[vec, store] (qd) at (15.2,-1.6) {Qdrant};
+
+  % Validity sync from the Ministry of Justice gateway
+  \node[moj] (mojapi) at (8.94,3.5) {\textbf{MoJ gateway}\\\tiny \code{moj_api.py}: effStatus, effFrom, effTo};
+  \node[moj] (sync) at (12.07,3.5) {\textbf{Validity sync}\\\tiny ghi \code{eff_status_code}, \code{eff_to}, \code{superseded_by}};
+
+  \coordinate (J) at ($(doc.east)!0.5!(doc.east -| xref.west)$);
+  \draw[->] (src) -- (parse);
+  \draw[->] (parse) -- (doc);
+  \draw (doc.east) -- (J);
+  \draw[->] (J) |- (xref.west);
+  \draw[->] (J) |- (chunk.west);
+  \draw[->] (xref) -- (revoke);
+  \draw[->] (revoke) -- (neo);
+  \draw[->] (chunk) -- (emb);
+  \draw[->] (emb) -- (qd);
+  \draw[->] (mojapi) -- (sync);
+  \draw[->, orange!80!black] (sync.east) -| (neo.north);
+\end{tikzpicture}
+\caption{Ingestion pipeline (offline). Văn bản được parse thành cây Document--Article--Clause rồi tách thành hai nhánh: nhánh đồ thị (trích cross-reference, lan truyền hiệu lực vào Neo4j) và nhánh vector (chunk theo Khoản, nhúng bằng bi-encoder). Trạng thái hiệu lực được đồng bộ bổ sung từ cổng Bộ Tư pháp (MoJ) bằng \code{audit_graph_vs_moj.py} và \code{sync_moj_status.py}.}
+\label{fig:ingestion-pipeline}
+\end{figure}
 
 \begin{enumerate}
-  \item \textbf{Embedding model chuyên biệt cho pháp luật Việt Nam:} Sử dụng mô hình \code{bkai-foundation-models/vietnamese-bi-encoder} (và tương thích \code{an6203/paraphrase-vietnamese-law-embedding}) sinh embedding 768 chiều. Ngưỡng tương đồng cosine được cố định ở mức $\ge 0{,}90$ (theo kết quả khảo sát ngưỡng tại~\cite[Hình 2a]{phan2026sbvlawgraph}), loại bỏ các chunk có độ tương đồng thấp.
-  \item \textbf{Structural Provision Chunking:} Khác với các hệ thống RAG thông thường cắt văn bản tùy tiện theo số lượng token cố định (làm đứt gãy câu chữ điều luật), LegalPilot-VN phân rã văn bản theo đúng phân cấp hình thức quy phạm pháp luật Việt Nam:
-  $$\text{Văn bản (Document)} \longrightarrow \text{Chương (Chapter)} \longrightarrow \text{Điều (Article)} \longrightarrow \text{Khoản (Clause)} \longrightarrow \text{Điểm (Point)}$$
-  Mỗi chunk là một đơn vị quy phạm hoàn chỉnh (cấp Điều hoặc Khoản độc lập), gắn liền với Payload metadata gồm: \code{doc_id}, \code{article}, \code{title}, \code{issue_date}, \code{effective_date}, và \code{status} (\code{active/expired/in_force}).
-  \item \textbf{Neo4j Schema của đồ thị tri thức pháp luật:}
+  \item \textbf{Embedding model chuyên biệt cho pháp luật Việt Nam:} Sử dụng mô hình \code{bkai-foundation-models/vietnamese-bi-encoder} sinh embedding 768 chiều (chuẩn hóa L2). Ngưỡng tương đồng cosine được cố định ở mức $\ge 0{,}90$ (theo kết quả khảo sát ngưỡng tại~\cite[Hình 2a]{phan2026sbvlawgraph}), loại bỏ các chunk có độ tương đồng thấp.
+  \item \textbf{Structural Provision Chunking:} Khác với các hệ thống RAG thông thường cắt văn bản theo số lượng token cố định (làm đứt gãy câu chữ điều luật), LegalPilot-VN tách văn bản theo cấu trúc quy phạm:
+  $$\text{Văn bản (Document)} \longrightarrow \text{Điều (Article)} \longrightarrow \text{Khoản (Clause)}$$
+  Parser nhận văn bản TXT (regex), HTML (BeautifulSoup) và dùng LLM fallback khi không nhận diện được Điều nào. Mỗi chunk tương ứng đúng một Khoản; Điều không chia khoản được giữ nguyên thành một chunk. Trước nội dung mỗi chunk được gắn context header \code{[Loại VB Số hiệu - Tiêu đề] [Điều n: Tiêu đề] [Khoản m]} để embedding giữ ngữ cảnh văn bản gốc. Payload metadata gồm: \code{doc_id}, \code{article_number}, \code{clause_number}, \code{doc_type}, \code{issuer}, \code{title}, \code{status}, \code{effective_date}, \code{expiration_date}.
+  \item \textbf{Neo4j Schema của đồ thị tri thức pháp luật (Hình~\ref{fig:neo4j-schema}):}
   \begin{itemize}
     \item {\tolerance=2000 \textbf{Các Node thực thể:} \code{:Document} (Văn bản QPPL), \code{:Article} (Điều luật), \code{:Clause} (Khoản quy định), \code{:Organization} (Cơ quan ban hành: Chính phủ, NHNN,...).\par}
     \item \textbf{Quan hệ phân cấp nội tại:} \code{(:Document)-[:CONTAINS]->(:Article)-[:CONTAINS]->(:Clause)}.
@@ -335,8 +380,31 @@ Hệ thống LegalPilot-VN được xây dựng trên \textbf{Google ADK (Agent 
       \item \code{(:Document)-[:GUIDES]->(:Document)}: hướng dẫn thi hành.
     \end{itemize}
   \end{itemize}
+
   \item \textbf{Live Gazette Synchronization:} Mỗi khi một văn bản được truy xuất, công cụ \code{verify_vbpl_status} kiểm tra chéo trạng thái hiệu lực trực tiếp trên Cổng Thông tin điện tử Pháp điển / VBPL Quốc gia (\code{vbpl.vn}) và lưu vết cache 24h vào SQLite để tối ưu độ trễ.
 \end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  >=Stealth, thick,
+  ent/.style = {rectangle, draw=blue!70!black, fill=blue!5, rounded corners=3pt, text width=3.6cm, align=left, font=\scriptsize, inner sep=4pt},
+  rel/.style = {font=\tiny\bfseries, fill=white, inner sep=1.5pt}
+]
+  \node[ent] (doc) at (0,0) {\textbf{:Document}\\\tiny doc\_id, title, doc\_type, issuer, issue\_date, effective\_date, expiration\_date, status, revoked\_by, superseded\_by, eff\_status\_code, eff\_to};
+  \node[ent] (art) at (5.2,0) {\textbf{:Article}\\\tiny article\_id, article\_number, title, content, doc\_id};
+  \node[ent] (cl) at (10.4,0) {\textbf{:Clause}\\\tiny clause\_id, clause\_number, content, article\_id};
+  \node[ent] (org) at (5.2,-2.1) {\textbf{:Organization}\\\tiny name};
+
+  \draw[->] (doc) -- node[rel, above] {CONTAINS} (art);
+  \draw[->] (art) -- node[rel, above] {CONTAINS} (cl);
+  \draw[->] (doc.south) |- node[rel, near end, above] {ISSUED\_BY} (org.west);
+  \draw[->] ($(doc.north)+(-1.1,0)$) .. controls +(0,1.2) and +(0,1.2) .. node[rel, above] {SUPERSEDES / AMENDS / GUIDES} ($(doc.north)+(1.1,0)$);
+\end{tikzpicture}
+\caption{Neo4j schema của đồ thị tri thức pháp luật. Các quan hệ SUPERSEDES, AMENDS, GUIDES nối giữa hai node Document; thuộc tính hiệu lực (\code{status}, \code{revoked_by}, \code{superseded_by}, \code{eff_status_code}) được ghi trên node Document.}
+\label{fig:neo4j-schema}
+\end{figure}
+
 
 \subsection{End-to-End Trace thực tế}
 Dưới đây là trích xuất log thực tế ghi nhận trực tiếp từ terminal khi hệ thống thực thi câu hỏi: \emph{``Vốn điều lệ tối thiểu để cấp phép dịch vụ ví điện tử là bao nhiêu?''} (chạy qua script \code{checkpoint_2/smoke_test.py}):
