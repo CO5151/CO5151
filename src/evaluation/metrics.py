@@ -41,8 +41,15 @@ def normalize_article_id(art_id: str) -> str:
         doc_code = m1.group(3)
         return f"{doc_code}_{art_num}"
 
-    # Match '52/2024/nd-cp:điều 22' or '52/2024/nd-cp_22'
-    s = s.replace("điều ", "").replace("dieu ", "").replace(":", "_").replace(" ", "")
+    # Match '52/2024/nd-cp:điều 22' or '52/2024/ND-CP:Article_1' or '52/2024/nd-cp_22'
+    s = (
+        s.replace("article_", "")
+        .replace("article ", "")
+        .replace("điều ", "")
+        .replace("dieu ", "")
+        .replace(":", "_")
+        .replace(" ", "")
+    )
     # Remove leading dots or underscores
     s = s.strip("._-")
     return s
