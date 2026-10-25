@@ -93,3 +93,40 @@ def test_noise_reduction_ratio_edge_cases():
         pruned_nodes_count=2,
     )
     assert res_pruned.noise_reduction_ratio == 0.4  # 2 / (3 + 2) = 0.4
+
+
+def test_selective_traversal_article_level_amendment_chains(setup_legal_graph: Neo4jClient):
+    """Tests that selective traversal resolves fine-grained article-level AMENDS relationships."""
+    engine = SelectiveTraversalEngine(neo4j_client=setup_legal_graph)
+    ctx = TraversalContext(reference_date="2024-01-01")
+    res = engine.traverse("152/2020/ND-CP", ctx)
+
+    # Check amendment chains contain article-level pointers
+    assert len(res.amendment_chains) >= 1
+    chain_art_ids = {c["original_article_id"] for c in res.amendment_chains}
+    assert "152/2020/ND-CP:Article_3" in chain_art_ids
+    for c in res.amendment_chains:
+        assert c["original_article_id"].startswith("152/2020/ND-CP:Article_")
+        assert c["amended_by_doc_id"] == "70/2023/ND-CP"
+        assert c["amender_article_id"] is not None
+
+
+def test_markdown_synthesis_with_citations():
+    """Tests markdown synthesis includes citations section when present."""
+    engine = SelectiveTraversalEngine()
+    res = TraversalResult(
+        seed_doc_id="888/2025/ND-CP",
+        reference_date="2025-06-01",
+        citations=[
+            {
+                "source_article_id": "888/2025/ND-CP:Article_1",
+                "target_id": "52/2024/ND-CP:Article_13",
+                "target_type": "Article",
+                "scope": "theo quy định tại Điều 13 Nghị định số 52/2024/NĐ-CP",
+            }
+        ],
+    )
+    md = engine.synthesize_active_context(res)
+    assert "## Statutory Citations" in md
+    assert "888/2025/ND-CP:Article_1" in md
+    assert "52/2024/ND-CP:Article_13" in md

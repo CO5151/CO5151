@@ -263,7 +263,15 @@ class Neo4jClient:
 
         Allowed relationship types: AMENDS, GUIDES, SUPERSEDES, REFERS_TO, CONTAINS.
         """
-        valid_rels = {"AMENDS", "GUIDES", "SUPERSEDES", "REFERS_TO", "CONTAINS", "ISSUED_BY"}
+        valid_rels = {
+            "AMENDS",
+            "GUIDES",
+            "SUPERSEDES",
+            "REFERS_TO",
+            "CONTAINS",
+            "ISSUED_BY",
+            "CITES",
+        }
         if rel_type not in valid_rels:
             raise KnowledgeBaseError(
                 f"Invalid relationship type '{rel_type}'. Allowed: {valid_rels}"
@@ -274,6 +282,51 @@ class Neo4jClient:
         query = f"""
         MATCH (from:{from_label} {{{from_key}: $from_val}})
         MATCH (to:{to_label} {{{to_key}: $to_val}})
+        MERGE (from)-[r:{rel_type}]->(to)
+        SET r += $props
+        RETURN count(r) as created_count
+        """
+        params = {
+            "from_val": from_val,
+            "to_val": to_val,
+            "props": props,
+        }
+        res = self.execute_query(query, params)
+        return bool(res and res[0]["created_count"] > 0)
+
+    def upsert_relationship(
+        self,
+        from_label: str,
+        from_key: str,
+        from_val: Any,
+        to_label: str,
+        to_key: str,
+        to_val: Any,
+        rel_type: str,
+        properties: dict[str, Any] | None = None,
+    ) -> bool:
+        """Merges two nodes (creating if absent) and establishes a directional relationship.
+
+        Allowed relationship types: AMENDS, GUIDES, SUPERSEDES, REFERS_TO, CONTAINS, ISSUED_BY, CITES.
+        """
+        valid_rels = {
+            "AMENDS",
+            "GUIDES",
+            "SUPERSEDES",
+            "REFERS_TO",
+            "CONTAINS",
+            "ISSUED_BY",
+            "CITES",
+        }
+        if rel_type not in valid_rels:
+            raise KnowledgeBaseError(
+                f"Invalid relationship type '{rel_type}'. Allowed: {valid_rels}"
+            )
+
+        props = properties or {}
+        query = f"""
+        MERGE (from:{from_label} {{{from_key}: $from_val}})
+        MERGE (to:{to_label} {{{to_key}: $to_val}})
         MERGE (from)-[r:{rel_type}]->(to)
         SET r += $props
         RETURN count(r) as created_count
