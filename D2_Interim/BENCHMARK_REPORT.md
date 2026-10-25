@@ -16,13 +16,13 @@
 
 ---
 
-## 2. BẢNG ĐỐI SÁNH TRỰC DIỆN VỚI PAPER CỦA THẦY (ACIIDS 2026)
+## 2. BẢNG ĐỐI SÁNH TRỰC DIỆN VỚI SBV-LAWGRAPH (ACIIDS 2026)
 
-Đối sánh trực tiếp với công bố trong bài báo *"SBV-LawGraph: A Hybrid RAG for Vietnamese Legal Documents"* (ACIIDS 2026, Springer - authors: Khoa Phan, Xuan-Binh Le, Tho Quan):
+Đối sánh trực tiếp với số liệu công bố trong bài báo *"SBV-LawGraph: A Hybrid RAG Approach Integrating Knowledge Graph for the State Bank of Vietnam Legal Documents"* của K. N. Phan, X.-B. Le, T. T. Quan (ACIIDS 2026, Springer) [1]:
 
-### 2.1. Tầng Truy xuất Căn cứ Luật (Retrieval - Table 3 của Paper)
+### 2.1. Tầng Truy xuất Căn cứ Luật (Retrieval - Table 3 trong [1])
 
-| Chỉ số / Thước đo | Paper Thầy (ACIIDS 2026) | LegalPilot-VN (G4 D2) | Ý nghĩa Khoa học & Đối sánh Thực nghiệm |
+| Chỉ số / Thước đo | SBV-LawGraph [1] | LegalPilot-VN (G4 D2) | Ý nghĩa Khoa học & Đối sánh Thực nghiệm |
 | :--- | :---: | :---: | :--- |
 | **Retrieval Precision@k** | **0.37 – 0.39 (37% – 39%)**<br>*(Table 3, $k=2$)* | **34,47% (0.345)**<br>*($k=3{,}25$)* | **HOÀN TOÀN NHẤT QUÁN!** Không hề có hiện tượng phóng đại số liệu. Đo ở tầng bốc tài liệu, phản ánh đúng thực tế văn bản pháp luật luôn kéo theo 2 điều khoản viện dẫn lân cận. |
 | **Retrieval Recall@k** | **0.76 (76,0%)**<br>*(Table 3, $R@10$)* | **97,00%** | G4 vượt trội nhờ **Planner Agent** phân rã truy vấn sinh 3--5 sub-queries chuyên biệt, bóc tách đa khía cạnh bài toán. |
@@ -30,18 +30,18 @@
 | **Retrieval Hit@k** | *N/R (Không công bố)* | **97,00%** | 97/100 câu hỏi lấy trúng ít nhất một Điều luật căn cứ chuẩn trong top-$k$. |
 | **Tỷ lệ Trúng số Điều (Article Hit)** | *N/R (Không công bố)* | **89,33%** | Tỷ lệ trúng đích xác số Điều luật cụ thể quy định nội dung câu hỏi. |
 
-### 2.2. Tầng Thế hệ Câu trả lời & Nội dung (Generative Evaluation - Fig. 3 của Paper)
+### 2.2. Tầng Thế hệ Câu trả lời & Nội dung (Generative Evaluation - Fig. 3 trong [1])
 
-Áp dụng đúng **3 điều kiện ngặt nghèo của Thầy** trong Mục 5.3 (Trang 11):
+Áp dụng đúng **3 điều kiện đánh giá của SBV-LawGraph** [1, Mục 5.3, tr. 11]:
 1. *(i) Semantic equivalence:* Giữ nguyên vẹn ý nghĩa pháp lý cốt lõi, không mâu thuẫn.
 2. *(ii) Citation presence:* Có trích dẫn ít nhất một điều khoản/văn bản pháp luật liên quan.
 3. *(iii) Citation validity:* Trích dẫn có thật, hợp lệ trong corpus và liên quan câu hỏi.
 
 | Mô hình kiểm thử | Đạt chuẩn Correctness (Thỏa 3 điều kiện) | Citation Presence | Nguồn đánh giá |
 | :--- | :---: | :---: | :--- |
-| **Gemini-2.5-Pro** | **32 / 100 (32,0%)** | 28 / 100 | Công bố trong Paper Thầy (Fig. 3) |
-| **ChatGPT-5** | **62 / 100 (62,0%)** | 57 / 100 | Công bố trong Paper Thầy (Fig. 3) |
-| **SBV-LawGraph (Thầy)** | **91 / 100 (91,0%)** | 91 / 100 | Công bố trong Paper Thầy (Fig. 3, 2 annotator) |
+| **Gemini-2.5-Pro** | **32 / 100 (32,0%)** | 28 / 100 | Công bố trong [1] (Fig. 3) |
+| **ChatGPT-5** | **62 / 100 (62,0%)** | 57 / 100 | Công bố trong [1] (Fig. 3) |
+| **SBV-LawGraph [1]** | **91 / 100 (91,0%)** | 91 / 100 | Công bố trong [1] (Fig. 3, 2 annotator) |
 | **LegalPilot-VN (G4 D2)** | **85 / 100 (85,0%)** | **89 / 100 (89,0%)** | **Thực nghiệm G4 D2** (`gemini-3.8-flash` Judge) |
 | *--- Trong đó: Strict Correctness* | *N/R* | **37 / 100 (37,0%)** | Đúng 100% cả từng mốc thời gian, thủ tục phụ |
 | *--- Trong đó: Core Correctness* | *N/R* | **48 / 100 (48,0%)** | Đúng trọn vẹn bản chất luật và căn cứ, thiếu ý phụ |
@@ -59,7 +59,7 @@
 | **Lexical Token Recall** | Tỷ lệ từ vựng đáp án chuẩn được bao phủ | $\frac{\|W_{\text{pred}} \cap W_{\text{ref}}\|}{\|W_{\text{ref}}\|}$ | **67,79%**<br>*(Median: 68,43%)* |
 | **Token F1 Score** | Trung bình điều hòa giữa Token Precision và Token Recall | $\frac{2 \cdot P \cdot R}{P + R}$ | **70,88%**<br>*(Median: 71,88%)* |
 | **Tính trung thực (Faithfulness)** | Tỷ lệ câu không bịa đặt số hiệu luật/con số | Độc lập bởi LLM Judge | **97,00%** (97/100 câu) |
-| **Retrieval Precision@k** | **Độ tinh lọc bốc tài liệu** từ Neo4j/Qdrant (chỉ so mã Điều luật, $k=3{,}25$) | $\frac{\|\hat{R}_k \cap R\|}{k}$ | **34,47%**<br>*(Khớp mốc 37--39% của Thầy)* |
+| **Retrieval Precision@k** | **Độ tinh lọc bốc tài liệu** từ Neo4j/Qdrant (chỉ so mã Điều luật, $k=3{,}25$) | $\frac{\|\hat{R}_k \cap R\|}{k}$ | **34,47%**<br>*(Khớp mốc 37--39% trong [1])* |
 
 ---
 
@@ -86,3 +86,9 @@
    * Cần tăng cường few-shot reasoning cho Drafter.
 4. **Nhóm 4 (Chọn nhầm điều khoản khi câu hỏi mơ hồ): 7,9% (5/63 ca)**  
    * Khắc phục bằng module disambiguation tương tác ở D3.
+
+---
+
+## TÀI LIỆU THAM KHẢO
+
+[1] K. N. Phan, X.-B. Le, and T. T. Quan, "SBV-LawGraph: A Hybrid RAG Approach Integrating Knowledge Graph for the State Bank of Vietnam Legal Documents," in *Proc. Asian Conference on Intelligent Information and Database Systems (ACIIDS)*, Springer, 2026.
