@@ -4,11 +4,10 @@
 use_default_settings: true
 
 server:
-  secret_key: "eeviealIiw4DBF7CThq3QFeFMkkE6NZ"
+  secret_key: "CHANGE_ME_SEARXNG_SECRET"
   image_proxy: true
 
 search:
   formats:
     - html
     - json
-

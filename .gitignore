@@ -45,6 +45,8 @@ venv.bak/
 *.key
 credentials.json
 service_account.json
+configs/searxng/settings.yml
+!configs/searxng/settings.yml.example
 
 # Testing & Coverage
 .coverage
