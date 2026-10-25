@@ -64,7 +64,7 @@ def _get_neo4j_client() -> Any | None:
 def _search_terms(subgoals: list[str], keywords: list[str], limit: int = 24) -> list[str]:
     """Tokenises subgoals + keywords into lowercase CONTAINS terms."""
     raw = " ".join([*subgoals, *keywords]).lower()
-    tokens = [t for t in re.findall(r"\w+", raw, flags=re.UNICODE) if len(t) >= 3]
+    tokens = [t for t in re.findall(r"\w+", raw, flags=re.UNICODE) if len(t) >= 2]
     return list(dict.fromkeys(tokens))[:limit]
 
 
@@ -332,11 +332,16 @@ class LawGraphAgent(ADKAgent):
         terms = _search_terms(subgoals, keywords)
         if not terms:
             return []
+        queries = [s.strip() for s in subgoals if s.strip()]
 
         cypher = """
         MATCH (d:Document)-[:CONTAINS]->(a:Article)
-        WITH d, a, toLower(coalesce(a.title, '') + ' ' + coalesce(a.content, '')) AS hay
-        WITH d, a, reduce(s = 0, t IN $terms | s + size(split(hay, t)) - 1) AS score
+        WITH d, a, toLower(coalesce(d.title, '') + ' ' + coalesce(a.title, '') + ' ' + coalesce(a.content, '')) AS hay
+        WITH d, a,
+             reduce(s = 0, t IN $terms | s + size(split(hay, t)) - 1) AS term_freq,
+             size([t IN $terms WHERE size(split(hay, t)) > 1]) AS distinct_matches,
+             size([q IN $queries WHERE hay CONTAINS toLower(q)]) AS phrase_matches
+        WITH d, a, (distinct_matches * 10) + term_freq + (phrase_matches * 25) AS score
         WHERE score > 0
         RETURN d.doc_id AS doc_id,
                coalesce(d.title, '') AS title,
@@ -352,7 +357,9 @@ class LawGraphAgent(ADKAgent):
         """
 
         try:
-            rows = client.execute_query(cypher, {"terms": terms, "limit": top_k})
+            rows = client.execute_query(
+                cypher, {"terms": terms, "queries": queries, "limit": top_k}
+            )
         except Exception as e:
             logger.warning("LawGraphAgent: Neo4j retrieval failed: %s", e)
             return []
@@ -436,7 +443,7 @@ class LawGraphAgent(ADKAgent):
         force_live_db: bool = False,
         use_neo4j: bool = True,
         use_dense: bool = True,
-        dense_top_k: int = 6,
+        dense_top_k: int = 10,
         query: str = "",
     ) -> list[dict[str, Any]]:
         """Retrieves relevant legal articles based on subgoals + keyword matches."""

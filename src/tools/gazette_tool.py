@@ -234,8 +234,18 @@ def search_gazette(
     from src.tools.lawgraph_tool import query_lawgraph
 
     logger.info("Searching gazette portal for: %s", query)
-    # Uses hybrid query_lawgraph with portal fallback
-    return query_lawgraph(query, top_k=limit)
+    # Retrieve a broader pool of provisions, then deduplicate by doc_id
+    raw_hits = query_lawgraph(query, top_k=max(limit * 5, 25))
+    distinct_docs: list[dict[str, Any]] = []
+    seen_docs: set[str] = set()
+    for hit in raw_hits:
+        doc_id = hit.get("doc_id")
+        if doc_id and doc_id not in seen_docs:
+            seen_docs.add(doc_id)
+            distinct_docs.append(hit)
+        if len(distinct_docs) >= limit:
+            break
+    return distinct_docs or raw_hits[:limit]
 
 
 VERIFY_VBPL_STATUS_TOOL = ToolDefinition(

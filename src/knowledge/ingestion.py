@@ -523,6 +523,9 @@ def apply_revocation_status(documents: dict[str, Any]) -> int:
         for ref in doc.get("cross_references") or []:
             if ref.get("rel_type") != "SUPERSEDES":
                 continue
+            if ref.get("target_article_id"):
+                # Article-level repeal; does not expire the whole instrument
+                continue
             target_id = str(ref.get("target_doc_id", ""))
             if not target_id:
                 continue
@@ -891,17 +894,32 @@ class LegalIngestionPipeline:
                 # Propagate validity: a repealed instrument must not remain 'in_force'
                 # in the graph, otherwise temporal pruning has nothing to act on.
                 if ref.rel_type == "SUPERSEDES":
-                    self.neo4j_client.execute_query(
-                        "MATCH (d:Document {doc_id: $target}) "
-                        "SET d.status = 'expired', "
-                        "    d.revoked_by = $source, "
-                        "    d.revoked_date = $date",
-                        {
-                            "target": ref.target_doc_id,
-                            "source": ref.source_doc_id,
-                            "date": ref.effective_date or doc.effective_date,
-                        },
-                    )
+                    if ref.target_article_id:
+                        # Article-level repeal
+                        self.neo4j_client.execute_query(
+                            "MATCH (a:Article {article_id: $target_art}) "
+                            "SET a.status = 'expired', "
+                            "    a.revoked_by = $source, "
+                            "    a.revoked_date = $date",
+                            {
+                                "target_art": ref.target_article_id,
+                                "source": ref.source_doc_id,
+                                "date": ref.effective_date or doc.effective_date,
+                            },
+                        )
+                    else:
+                        # Whole-document repeal
+                        self.neo4j_client.execute_query(
+                            "MATCH (d:Document {doc_id: $target}) "
+                            "SET d.status = 'expired', "
+                            "    d.revoked_by = $source, "
+                            "    d.revoked_date = $date",
+                            {
+                                "target": ref.target_doc_id,
+                                "source": ref.source_doc_id,
+                                "date": ref.effective_date or doc.effective_date,
+                            },
+                        )
 
     def _ingest_to_qdrant(self, chunks: list[dict[str, Any]]) -> None:
         """Initializes collection if needed and upserts legal chunks (or exports if offline)."""

@@ -51,11 +51,16 @@ service_account.json
 .coverage.*
 htmlcov/
 .pytest_cache/
+.hypothesis/
 .tox/
 .nox/
 coverage.xml
 *.cover
 *.py,cover
+
+# SQLite WAL and temporary files
+*.db-shm
+*.db-wal
 
 # Linting & Formatting
 .ruff_cache/

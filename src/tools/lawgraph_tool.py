@@ -100,8 +100,13 @@ def query_lawgraph(
     from src.agents.lawgraph import LawGraphAgent
 
     agent = LawGraphAgent()
-    keywords = [w for w in query.split() if len(w) > 2]
-    provisions = agent.retrieve_provisions(subgoals=[query], keywords=keywords)
+    keywords = [w for w in query.split() if len(w) >= 2]
+    provisions = agent.retrieve_provisions(
+        subgoals=[query],
+        keywords=keywords,
+        query=query,
+        dense_top_k=max(top_k * 3, 25),
+    )
     return provisions[:top_k]
 
 
