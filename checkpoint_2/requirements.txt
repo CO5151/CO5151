@@ -8,4 +8,4 @@ python-dotenv>=1.2.4
 sentence-transformers>=3
 numpy>=1.26
 neo4j>=5.23
-ddgs>=9.0
+ddgs>=9.16.0
