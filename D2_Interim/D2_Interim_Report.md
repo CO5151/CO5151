@@ -132,15 +132,15 @@ Hệ thống LegalPilot-VN được xây dựng hoàn toàn trên khung chuẩn 
 | **Reranker Module** | `BAAI/bge-reranker-v2-m3`<br>(Cross-Encoder) | N/A | 8k tokens | Tái xếp hạng top 20 điều khoản ứng viên từ Neo4j/Qdrant, lọc ra top $k=3 \div 5$ điều khoản liên quan nhất. |
 | **Claim Auditor**<br>(Adversarial Critic) | `deepseek/deepseek-chat`<br>(Chấm bởi `gemini-3.8-flash`) | 0.0 | 64k tokens | Phản biện độc lập: bóc tách mệnh đề nguyên tử (*Atomic Claims*), đối soát hiệu lực live qua Cổng `vbpl.vn`, phạt luật hết hiệu lực. |
 | **Drafter Agent**<br>(Legal Synthesizer) | `deepseek/deepseek-chat`<br>(Zero-temperature) | 0.0 | 64k tokens | Biên soạn báo cáo tư vấn tuân thủ chuẩn mực dựa trên 100% điều khoản đã kiểm toán, loại bỏ rác văn bản. |
-| **LLM-as-a-Judge**<br>(Thẩm định độc lập) | `gemini-3.8-flash`<br>(Google Cloud Vertex AI) | 0.0 | 1M tokens | Giám khảo tự động chấm 100 câu benchmark theo đúng 3 tiêu chí của Thầy (Semantic, Citation, Validity). |
+| **LLM-as-a-Judge**<br>(Thẩm định độc lập) | `gemini-3.8-flash`<br>(Google Cloud Vertex AI) | 0.0 | 1M tokens | Giám khảo tự động chấm 100 câu benchmark theo 3 tiêu chí đánh giá của SBV-LawGraph [1] (Semantic, Citation, Validity). |
 | **Cổng DVC Tool**<br>(`public_service_portal`) | API Client<br>+ Human Gate Token | N/A | N/A | Lập hồ sơ thủ tục hành chính, sinh transaction hash, chờ xác thực chữ ký số chuyên viên pháp chế trước khi gửi live. |
 
 ### 2.4. Mô hình RAG Lai và Quy trình Nạp dữ liệu Pháp luật (Hybrid RAG & Ingestion Pipeline)
-Để khắc phục hoàn toàn hiện tượng pha loãng ngữ cảnh (>60% nhiễu) mà phương pháp duyệt 1-hop cơ học tĩnh của bài báo trước gặp phải:
+Để khắc phục hoàn toàn hiện tượng pha loãng ngữ cảnh (>60% nhiễu) mà phương pháp duyệt 1-hop cơ học tĩnh của SBV-LawGraph [1] gặp phải:
 
 1. **Mô hình Vector Embedding chuyên biệt cho Pháp luật Việt Nam:**
    - Sử dụng mô hình `bkai-foundation-models/vietnamese-bi-encoder` (và tương thích `an6203/paraphrase-vietnamese-law-embedding`) sinh vector nhúng 768 chiều.
-   - Ngưỡng tương đồng cosine được cố định ở mức tối ưu $\ge 0{,}90$ (theo kết quả thực nghiệm tối ưu của Thầy tại Hình 2a trong paper ACIIDS 2026), loại bỏ các phân đoạn có độ tương đồng thấp.
+   - Ngưỡng tương đồng cosine được cố định ở mức tối ưu $\ge 0{,}90$ (theo kết quả khảo sát ngưỡng tại [1, Hình 2a]), loại bỏ các phân đoạn có độ tương đồng thấp.
 2. **Cơ chế Chunking theo ranh giới cấu trúc văn bản (Structural Provision Chunking):**
    - Khác với các hệ thống RAG thông thường cắt văn bản tùy tiện theo số lượng token cố định (làm đứt gãy câu chữ điều luật), LegalPilot-VN phân rã văn bản theo đúng phân cấp hình thức quy phạm pháp luật Việt Nam:
      $$\text{Văn bản (Document)} \longrightarrow \text{Chương (Chapter)} \longrightarrow \text{Điều (Article)} \longrightarrow \text{Khoản (Clause)} \longrightarrow \text{Điểm (Point)}$$
@@ -184,9 +184,9 @@ Hệ thống LegalPilot-VN được xây dựng hoàn toàn trên khung chuẩn 
 ### 4.2. Khung cập nhật số liệu Neo4j Ingestion (Nguyễn Trung Phong phụ trách)
 
 > **GHI CHÚ MINH BẠCH VỀ TIẾN ĐỘ INGESTION (PHONG PHỤ TRÁCH):**  
-> Tại mốc D2, nhóm ưu tiên nạp tập con cốt lõi (Core Subset) gồm 35 văn bản để phục vụ hoàn thành benchmark 100 câu SBV và kịch bản ví điện tử NĐ 52/2024. Việc mở rộng toàn văn kho lưu trữ lịch sử 1.703 văn bản (5.221 nodes như công bố của Thầy) là chỉ tiêu trọng tâm của Phong trong giai đoạn D3 (Tuần 8--10).
+> Tại mốc D2, nhóm ưu tiên nạp tập con cốt lõi (Core Subset) gồm 35 văn bản để phục vụ hoàn thành benchmark 100 câu SBV và kịch bản ví điện tử NĐ 52/2024. Việc mở rộng toàn văn kho lưu trữ lịch sử 1.703 văn bản (5.221 nodes như công bố trong [1]) là chỉ tiêu trọng tâm của Phong trong giai đoạn D3 (Tuần 8--10).
 
-| Thành phần dữ liệu Ingestion | Hiện tại thực tế (D2) | Mục tiêu mở rộng (D3) | Quy mô Paper Thầy | Trạng thái D2 | Ghi chú kỹ thuật |
+| Thành phần dữ liệu Ingestion | Hiện tại thực tế (D2) | Mục tiêu mở rộng (D3) | Quy mô SBV-LawGraph [1] | Trạng thái D2 | Ghi chú kỹ thuật |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **Số văn bản QPPL nạp** | **35 văn bản** | **1.703 văn bản** | 1.703 văn bản | **Đạt mốc D2** | Bao phủ 100% phạm vi 28 văn bản của 100 câu SBV |
 | **Số node thực thể Neo4j** | **238 nodes** | **5.221+ nodes** | 5.221 nodes | **Đạt mốc D2** | Gồm: 35 Document, 94 Article, 106 Clause, 3 Organization |
@@ -204,29 +204,29 @@ Hệ thống LegalPilot-VN được xây dựng hoàn toàn trên khung chuẩn 
   1. `Chi tiết đánh giá 100 câu`: Bản ghi chi tiết 100 câu (Câu hỏi, Ground Truth, Dự đoán của hệ thống, Phán quyết của LLM Judge Gemini 3.8 Flash, Điểm số, Pass@1, Pass@k, Kiểm tra Hiệu lực In-force, Token F1).
   2. `Báo cáo & Thống kê`: Tổng hợp toàn bộ 15 chỉ số đo đạc chuẩn mực RAG (Strict Pass 37,0%, Pass@1 87,0%, Pass@k 87,0%, In-force 100,0%, Retrieval Precision 34,47%, Recall 97,0%, Token F1 70,88%).
   3. `Đánh giá từng Tác tử`: Phân tích hiệu năng phân rã của Tầng Công cụ (RAG/Neo4j), Claim Auditor, Compliance Drafter và Orchestrator / Human Gate.
-  4. `So_Sanh_Paper_ACIIDS_2026`: Đối sánh trực diện, minh bạch giữa các con số được công bố chính thức trong bài báo gốc của Thầy và kết quả đo đạc của nhóm G4.
+  4. `So_Sanh_Paper_ACIIDS_2026`: Đối sánh trực diện, minh bạch giữa các con số được công bố chính thức trong bài báo SBV-LawGraph [1] và kết quả đo đạc của nhóm G4.
 - **Tiêu chí chấm điểm độc lập (LLM-as-a-Judge: Gemini 3.8 Flash):**
   - *Strict Pass (37,0%):* Đúng 100% căn cứ pháp luật còn hiệu lực, viện dẫn chuẩn số hiệu văn bản và điều khoản, nội dung trả lời bao phủ trọn vẹn yêu cầu và không suy diễn sai lệch.
   - *Partial Pass (52,0%):* Đúng căn cứ pháp lý trọng tâm và nguyên tắc xử lý chính, nhưng thiếu các mốc thời gian hành chính phụ hoặc điều kiện hồ sơ thứ yếu.
   - *Incorrect (11,0%):* Chọn nhầm điều khoản hoặc suy diễn sai lệch bản chất pháp lý.
   - *Statutory Validity (100,0%):* 100% văn bản viện dẫn phải còn hiệu lực thi hành; loại trừ triệt để luật hết hiệu lực (NĐ 101/2012).
 
-### 5.2. Bảng đối sánh minh bạch: Bài báo của Thầy (ACIIDS 2026) vs. Hệ thống G4 D2
+### 5.2. Bảng đối sánh minh bạch: SBV-LawGraph (ACIIDS 2026) vs. Hệ thống G4 D2
 
-Nhằm bảo đảm tính liêm chính học thuật cao nhất, bảng dưới đây phân định rõ ràng giữa **những số liệu duy nhất thực sự được công bố trong bài báo gốc của Thầy** và **kết quả thực nghiệm đo đạc thực tế của nhóm G4** trên cùng tập benchmark 100 câu:
+Nhằm bảo đảm tính liêm chính học thuật cao nhất, bảng dưới đây phân định rõ ràng giữa **các số liệu được công bố trong bài báo SBV-LawGraph của Phan và cộng sự [1]** và **kết quả thực nghiệm đo đạc thực tế của nhóm G4** trên cùng tập benchmark 100 câu:
 
-| Hạng mục / Chỉ số đo đạc | Công bố trong Paper Thầy (ACIIDS 2026)<br>*(K. N. Phan, X.-B. Le, T. T. Quan)* | Hệ thống LegalPilot-VN (G4 D2)<br>*(Đo thực tế trên 100 câu SBV)* | Hiện trạng & Phân tích tính nhất quán khoa học |
+| Hạng mục / Chỉ số đo đạc | Công bố trong SBV-LawGraph [1]<br>*(K. N. Phan, X.-B. Le, T. T. Quan)* | Hệ thống LegalPilot-VN (G4 D2)<br>*(Đo thực tế trên 100 câu SBV)* | Hiện trạng & Phân tích tính nhất quán khoa học |
 | :--- | :---: | :---: | :--- |
 | **Quy mô Corpus văn bản** | **1.703 văn bản** (12 Luật, 84 NĐ, 777 QĐ, 763 TT) | **35 văn bản** (103 chunks Qdrant; 100% bao phủ 100 câu benchmark D2; nạp full 1.703 vào D3) | D2 nạp trọn vẹn văn bản phục vụ 100 tác vụ kiểm thử; D3 hoàn thiện toàn bộ 1.703 văn bản. |
 | **Quy mô Đồ thị Neo4j** | **5.221 node, 6.019 edge** | **238 node, 240 quan hệ** (35 Doc, 94 Art, 106 Clause; D3 mở rộng full 5.221 node) | Thực tế DB Neo4j hiện tại; mở rộng full graph vào D3 theo kế hoạch Phong phụ trách. |
 | **Tập câu hỏi benchmark** | **100 câu hỏi** (Thư Viện Pháp Luật) | **100 câu hỏi** (`sbv_testset_tvpl.json`) | Đánh giá trên cùng một tập ground-truth chuyên gia. |
-| **Cơ chế duyệt đồ thị** | **Cố định 1-hop cơ học** (*Static 1-hop*) | **Duyệt chọn lọc theo mục tiêu** (*Selective Traversal*) | Khắc phục điểm nghẽn lớn nhất mà bài báo của Thầy đã chỉ ra. |
-| **Answer Correctness (Thầy)**<br>*(Thỏa 3 điều kiện: Semantic, Citation, Validity)* | **91 / 100 (91,0%)**<br>*[HÌNH 3 CỦA THẦY]*<br>*(ChatGPT-5: 62%, Gemini: 32%)* | **85 / 100 (85,0%)**<br>*(37 Strict + 48 Core)* | Thỏa trọn vẹn 3 điều kiện: (i) Semantic equivalence, (ii) Citation presence, (iii) Citation validity. Vượt trội ChatGPT-5 (+23%) và Gemini (+53%). |
+| **Cơ chế duyệt đồ thị** | **Cố định 1-hop cơ học** (*Static 1-hop*) | **Duyệt chọn lọc theo mục tiêu** (*Selective Traversal*) | Khắc phục hạn chế chính đã được chỉ ra trong [1]. |
+| **Answer Correctness**<br>*(Thỏa 3 điều kiện: Semantic, Citation, Validity)* | **91 / 100 (91,0%)**<br>*[1, Hình 3]*<br>*(ChatGPT-5: 62%, Gemini: 32%)* | **85 / 100 (85,0%)**<br>*(37 Strict + 48 Core)* | Thỏa trọn vẹn 3 điều kiện: (i) Semantic equivalence, (ii) Citation presence, (iii) Citation validity. Vượt trội ChatGPT-5 (+23%) và Gemini (+53%). |
 | **Content Precision (Nội dung)** | *Không công bố (N/R)* | **97,79% (Claim-level)**<br>79,75% (Token-level) | **Phân định minh bạch:** 93/100 câu hoàn toàn không có luận điểm sai; 97% tuyệt đối không ảo giác. |
-| **Retrieval Precision@2 / @k** | **0.37 – 0.39 (37,0% – 39,0%)**<br>*[BẢNG 3 CỦA THẦY]* | **34,47% (0.345)** | **HOÀN TOÀN NHẤT QUÁN!** Đo ở tầng bốc tài liệu ($k=3{,}25$), phản ánh việc bốc kèm 2 điều khoản viện dẫn lân cận. |
-| **Retrieval Recall@k** | **0.76 (76,0% tại R@10)**<br>*[BẢNG 3 CỦA THẦY]* | **97,0%** | G4 đạt 97% nhờ Planner sinh 3--5 sub-queries chuyên biệt đa chiều. |
-| **Retrieval F2-Score (F2@2 / @k)** | **0.60 – 0.61**<br>*[BẢNG 3 CỦA THẦY]* | **68,35% (0.684)** | $F_2$ ưu tiên Recall để phạt nặng việc bỏ sót điều khoản bắt buộc. |
-| **Độ nhiễu ngữ cảnh (Noise)** | **> 60,0%** (*Context Dilution*)<br>*[CÓ TRONG BÁO]* | **< 15,0%** | Giảm mạnh >45% độ nhiễu nhờ Planner phân rã truy vấn và lọc điều khoản dư thừa. |
+| **Retrieval Precision@2 / @k** | **0.37 – 0.39 (37,0% – 39,0%)**<br>*[1, Bảng 3]* | **34,47% (0.345)** | **HOÀN TOÀN NHẤT QUÁN!** Đo ở tầng bốc tài liệu ($k=3{,}25$), phản ánh việc bốc kèm 2 điều khoản viện dẫn lân cận. |
+| **Retrieval Recall@k** | **0.76 (76,0% tại R@10)**<br>*[1, Bảng 3]* | **97,0%** | G4 đạt 97% nhờ Planner sinh 3--5 sub-queries chuyên biệt đa chiều. |
+| **Retrieval F2-Score (F2@2 / @k)** | **0.60 – 0.61**<br>*[1, Bảng 3]* | **68,35% (0.684)** | $F_2$ ưu tiên Recall để phạt nặng việc bỏ sót điều khoản bắt buộc. |
+| **Độ nhiễu ngữ cảnh (Noise)** | **> 60,0%** (*Context Dilution*)<br>*[1]* | **< 15,0%** | Giảm mạnh >45% độ nhiễu nhờ Planner phân rã truy vấn và lọc điều khoản dư thừa. |
 | **Xử lý luật hết hiệu lực** | **0,0% (Thất bại)** do gom cả NĐ 101/2012 cũ | **100,0% (Còn hiệu lực)** | Bài báo thừa nhận hạn chế này; G4 giải quyết triệt để bằng Claim Auditor + Cổng VBPL. |
 | **Pass@1 Rate (Lượt 1)** | *Không công bố số liệu định lượng (N/R)* | **87,0%** | 87/100 câu trúng chính xác căn cứ pháp luật ngay lượt truy xuất thứ nhất. |
 | **Pass@k Rate (Hit@k)** | *Không công bố số liệu định lượng (N/R)* | **87,0%** | 87/100 câu trúng căn cứ bắt buộc trong top-$k$ kết quả lấy về. |
@@ -250,7 +250,7 @@ Trích xuất từ các file đo đạc thực tế trên cùng 100 tác vụ ki
 | **Hit@k (Văn bản cốt lõi)** | 97,0% | **99,0%** | 97,0% | Khả năng bao phủ văn bản cốt lõi ngang nhau |
 | **Tỷ lệ trúng số Điều (Article Hit)** | 88,17% | **90,83%** | 89,33% | Định vị chính xác số Điều luật cụ thể |
 | **Độ trung thực (Faithfulness)** | 92,0% | 94,0% | **97,0%** | MAS triệt tiêu ảo giác cao nhất nhờ Claim Auditor |
-| **Độ chính xác chuẩn Thầy (Sec 5.3)**| 46,0% | 44,0% | **85,0%** | MAS vượt trội về Semantic Equivalence & Căn cứ chuẩn |
+| **Answer Correctness (theo [1], Mục 5.3)**| 46,0% | 44,0% | **85,0%** | MAS vượt trội về Semantic Equivalence & Căn cứ chuẩn |
 | **Độ chính xác ngặt (Strict Pass)** | 46,0% | 44,0% | 37,0% | Rubric ngặt nghèo về từng mốc ngày/thủ tục phụ |
 | **Độ chính xác ca luật cũ** | **0,0% (Thất bại)** | 100,0% (nhờ lặp) | **100,0% (Thành công)** | Linear Workflow thất bại hoàn toàn khi luật bãi bỏ |
 | **Tỷ lệ gửi lặp context (Resend)**| 0% | **40,7%** | **0%** | MAS triệt tiêu bùng nổ $O(N^2)$ ngữ cảnh |
@@ -332,3 +332,9 @@ Nhóm G4 cam kết tuân thủ nghiêm túc các chuẩn mực liêm chính họ
    - Toàn bộ quá trình chuẩn bị dữ liệu, thu thập 1.703 văn bản QPPL ngành Ngân hàng và dựng schema trên cơ sở dữ liệu đồ thị Neo4j.
    - Kiểm tra chéo (*Fact-checking*) 100% các điều khoản luật trích dẫn, đảm bảo tính chuẩn xác tuyệt đối của Nghị định 52/2024/NĐ-CP và Nghị định 101/2012/NĐ-CP.
    - Trực tiếp chạy và kiểm tra kết quả trên môi trường thực tế (máy tính Mac M-series, Python virtualenv).
+
+---
+
+## TÀI LIỆU THAM KHẢO
+
+[1] K. N. Phan, X.-B. Le, and T. T. Quan, "SBV-LawGraph: A Hybrid RAG Approach Integrating Knowledge Graph for the State Bank of Vietnam Legal Documents," in *Proc. Asian Conference on Intelligent Information and Database Systems (ACIIDS)*, Springer, 2026.
