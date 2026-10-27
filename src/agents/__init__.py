@@ -11,6 +11,7 @@ Exports:
 - LawGraphAgent: Statutory retrieval and legal knowledge graph traversal.
 - ClaimAuditorAgent: Verification oracle detecting expired/revoked documents.
 - DrafterAgent: Synthesizes structured compliance dossiers with disclaimers.
+- LegalParserAgent: Parses unstructured legal documents into hierarchy via Google ADK.
 """
 
 from src.agents.base import ADKAgent, ADKRunner, AgentResult, ToolDefinition
@@ -18,6 +19,7 @@ from src.agents.claim_auditor import ClaimAuditorAgent
 from src.agents.drafter import DrafterAgent
 from src.agents.lawgraph import LawGraphAgent
 from src.agents.orchestrator import LegalOrchestrator
+from src.agents.parser_agent import LegalParserAgent
 
 __all__ = [
     "ADKAgent",
@@ -27,5 +29,6 @@ __all__ = [
     "DrafterAgent",
     "LawGraphAgent",
     "LegalOrchestrator",
+    "LegalParserAgent",
     "ToolDefinition",
 ]

@@ -15,16 +15,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-import httpx
-
-from src.core.config import settings
 from src.core.exceptions import KnowledgeBaseError
 from src.core.logger import get_logger
 from src.knowledge.neo4j_client import Neo4jClient
@@ -412,95 +408,14 @@ def parse_html_document(
 def llm_fallback_parse_document(
     text: str, default_metadata: dict[str, Any] | None = None
 ) -> ParsedDocument | None:
-    """Uses LLM to parse non-standard, scanned, or complex legal documents when regex fails.
+    """Uses Google ADK LegalParserAgent to parse non-standard, scanned, or complex legal documents when regex fails.
 
-    Calls Gemini or local model with structured prompt. Degrades gracefully if unavailable.
+    Wraps the official Google ADK Agent pipeline with schema validation and fallback handling.
     """
-    api_key = settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        logger.warning("No GEMINI_API_KEY found, skipping LLM fallback parsing")
-        return None
+    from src.agents.parser_agent import LegalParserAgent
 
-    logger.info("Triggering LLM fallback parsing with Gemini...")
-    prompt = f"""You are an expert legal document parser for Vietnamese Law.
-Parse the following legal document into a strict JSON structure.
-Format:
-{{
-  "doc_id": "document number e.g. 152/2020/ND-CP",
-  "title": "document title",
-  "doc_type": "Nghị định | Thông tư | Luật | Quyết định",
-  "issuer": "Chính phủ | Bộ ...",
-  "issue_date": "YYYY-MM-DD",
-  "effective_date": "YYYY-MM-DD",
-  "articles": [
-    {{
-      "article_number": "1",
-      "title": "Tên điều",
-      "content": "Toàn văn điều",
-      "clauses": [
-        {{"clause_number": "1", "content": "Nội dung khoản 1"}}
-      ]
-    }}
-  ]
-}}
-
-Document text:
-{text[:6000]}
-"""
-    try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.llm.cloud_model}:generateContent?key={api_key}"
-        payload = {
-            "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {
-                "temperature": 0.0,
-                "responseMimeType": "application/json",
-            },
-        }
-        with httpx.Client(timeout=30) as client:
-            resp = client.post(url, json=payload)
-            resp.raise_for_status()
-            data = resp.json()
-            raw_json = data["candidates"][0]["content"]["parts"][0]["text"]
-            parsed = json.loads(raw_json)
-
-            articles = []
-            doc_id = normalize_doc_id(parsed.get("doc_id", "UNKNOWN/DOC"))
-            for art in parsed.get("articles", []):
-                art_num = str(art.get("article_number", "1"))
-                art_id = f"{doc_id}:Article_{art_num}"
-                clauses = []
-                for c in art.get("clauses", []):
-                    c_num = str(c.get("clause_number", "1"))
-                    clauses.append(
-                        ParsedClause(
-                            clause_id=f"{art_id}:Clause_{c_num}",
-                            clause_number=c_num,
-                            content=c.get("content", ""),
-                        )
-                    )
-                articles.append(
-                    ParsedArticle(
-                        article_id=art_id,
-                        article_number=art_num,
-                        title=art.get("title", ""),
-                        content=art.get("content", ""),
-                        clauses=clauses,
-                    )
-                )
-
-            return ParsedDocument(
-                doc_id=doc_id,
-                title=parsed.get("title", ""),
-                doc_type=parsed.get("doc_type", "Nghị định"),
-                issuer=parsed.get("issuer", "Chính phủ"),
-                issue_date=parsed.get("issue_date", "2020-01-01"),
-                effective_date=parsed.get("effective_date", "2020-01-01"),
-                status="in_force",
-                articles=articles,
-            )
-    except Exception as e:
-        logger.warning("LLM fallback parsing encountered an error: %s", e)
-        return None
+    agent = LegalParserAgent()
+    return agent.parse(text, default_metadata=default_metadata)
 
 
 def apply_revocation_status(documents: dict[str, Any]) -> int:
