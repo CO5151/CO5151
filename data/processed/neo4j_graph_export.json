@@ -66,7 +66,7 @@
     "issuer": "Chính Phủ",
     "issue_date": "2012-11-22",
     "effective_date": "2013-03-01",
-    "status": "in_force",
+    "status": "expired",
     "articles": [
       {
         "article": "Điều 15",
@@ -111,7 +111,8 @@
     "eff_from": "2013-03-26",
     "eff_to": "2027-07-01",
     "moj_synced_at": "2026-10-21T07:22:54+00:00",
-    "superseded_by": "52/2024/ND-CP"
+    "superseded_by": "52/2024/ND-CP",
+    "revoked_by": "52/2024/ND-CP"
   },
   "52/2024/ND-CP": {
     "doc_id": "52/2024/ND-CP",
@@ -190,22 +191,48 @@
   },
   "70/2023/ND-CP": {
     "doc_id": "70/2023/ND-CP",
-    "title": "Nghị định 70/2023/NĐ-CP sửa đổi Nghị định 152/2020/NĐ-CP về lao động nước ngoài",
+    "title": "Sửa đổi, bổ sung một số điều của Nghị định số 152/2020/NĐ-CP ngày 30 tháng 12 năm 2020 của Chính phủ quy định về người lao động nước ngoài làm việc tại Việt Nam và tuyển dụng, quản lý người lao động Việt Nam làm việc cho tổ chức, cá nhân nước ngoài tại Việt Nam",
     "doc_type": "Nghị Định",
     "issuer": "Chính Phủ",
     "issue_date": "2023-09-18",
     "effective_date": "2023-09-18",
     "status": "in_force",
-    "amends": "152/2020/ND-CP",
     "articles": [
       {
-        "article": "Điều 1 Khoản 5",
-        "title": "Điều kiện cấp Giấy phép lao động cho Chuyên gia nước ngoài",
-        "content": "Có bằng đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam.",
+        "article": "Điều 1",
+        "title": "Sửa đổi, bổ sung một số điều của Nghị định số 152/2020/NĐ-CP",
+        "content": "1. Sửa đổi, bổ sung khoản 1 và khoản 3 Điều 3 như sau:\na) \"1. Chuyên gia là người lao động nước ngoài thuộc một trong các trường hợp sau:\nTốt nghiệp đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam;\"\nb) \"3. Lao động kỹ thuật là người lao động nước ngoài thuộc một trong các trường hợp sau:\nĐược đào tạo ít nhất 1 năm và có ít nhất 3 năm kinh nghiệm phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam.\"\n\n2. Sửa đổi, bổ sung Điều 4 như sau:\n\"Điều 4. Giải trình nhu cầu sử dụng người lao động nước ngoài\n1. Trước ít nhất 15 ngày kể từ ngày dự kiến sử dụng người lao động nước ngoài, người sử dụng lao động (trừ nhà thầu) có trách nhiệm xác định nhu cầu sử dụng người lao động nước ngoài đối với từng vị trí công việc mà người lao động Việt Nam chưa đáp ứng được và báo cáo giải trình với Bộ Lao động - Thương binh và Xã hội hoặc Sở Lao động - Thương binh và Xã hội nơi người lao động nước ngoài dự kiến làm việc.\nKể từ ngày 01 tháng 01 năm 2024, việc thông báo tuyển dụng người lao động Việt Nam vào các vị trí dự kiến tuyển dụng người lao động nước ngoài được thực hiện trên Cổng thông tin điện tử của Bộ Lao động - Thương binh và Xã hội hoặc Trung tâm dịch vụ việc làm trước ít nhất 15 ngày kể từ ngày dự kiến báo cáo giải trình.\"\n\n3. Sửa đổi, bổ sung khoản 3 Điều 8 như sau:\n\"3. Vào Việt Nam làm việc tại vị trí chuyên gia, nhà quản lý, giám đốc điều hành hoặc lao động kỹ thuật có thời gian làm việc dưới 30 ngày và không quá 03 lần trong 01 năm.\"",
         "clauses": [
           {
-            "clause_number": "5",
-            "content": "Có bằng đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam."
+            "clause_number": "1",
+            "content": "Sửa đổi, bổ sung khoản 1 và khoản 3 Điều 3 như sau:\na) \"1. Chuyên gia là người lao động nước ngoài thuộc một trong các trường hợp sau:\nTốt nghiệp đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam;\"\nb) \"3. Lao động kỹ thuật là người lao động nước ngoài thuộc một trong các trường hợp sau:\nĐược đào tạo ít nhất 1 năm và có ít nhất 3 năm kinh nghiệm phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam.\""
+          },
+          {
+            "clause_number": "2",
+            "content": "Sửa đổi, bổ sung Điều 4 như sau:\n\"Điều 4. Giải trình nhu cầu sử dụng người lao động nước ngoài"
+          },
+          {
+            "clause_number": "1",
+            "content": "Trước ít nhất 15 ngày kể từ ngày dự kiến sử dụng người lao động nước ngoài, người sử dụng lao động (trừ nhà thầu) có trách nhiệm xác định nhu cầu sử dụng người lao động nước ngoài đối với từng vị trí công việc mà người lao động Việt Nam chưa đáp ứng được và báo cáo giải trình với Bộ Lao động - Thương binh và Xã hội hoặc Sở Lao động - Thương binh và Xã hội nơi người lao động nước ngoài dự kiến làm việc.\nKể từ ngày 01 tháng 01 năm 2024, việc thông báo tuyển dụng người lao động Việt Nam vào các vị trí dự kiến tuyển dụng người lao động nước ngoài được thực hiện trên Cổng thông tin điện tử của Bộ Lao động - Thương binh và Xã hội hoặc Trung tâm dịch vụ việc làm trước ít nhất 15 ngày kể từ ngày dự kiến báo cáo giải trình.\""
+          },
+          {
+            "clause_number": "3",
+            "content": "Sửa đổi, bổ sung khoản 3 Điều 8 như sau:\n\"3. Vào Việt Nam làm việc tại vị trí chuyên gia, nhà quản lý, giám đốc điều hành hoặc lao động kỹ thuật có thời gian làm việc dưới 30 ngày và không quá 03 lần trong 01 năm.\""
+          }
+        ]
+      },
+      {
+        "article": "Điều 2",
+        "title": "Điều khoản thi hành",
+        "content": "1. Nghị định này có hiệu lực thi hành từ ngày 18 tháng 09 năm 2023.\n2. Bãi bỏ khoản 2 Điều 4 của Nghị định số 152/2020/NĐ-CP ngày 30 tháng 12 năm 2020 của Chính phủ.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Nghị định này có hiệu lực thi hành từ ngày 18 tháng 09 năm 2023."
+          },
+          {
+            "clause_number": "2",
+            "content": "Bãi bỏ khoản 2 Điều 4 của Nghị định số 152/2020/NĐ-CP ngày 30 tháng 12 năm 2020 của Chính phủ."
           }
         ]
       }
@@ -214,8 +241,64 @@
       {
         "source_doc_id": "70/2023/ND-CP",
         "target_doc_id": "152/2020/ND-CP",
+        "source_article_id": null,
+        "target_article_id": null,
         "rel_type": "AMENDS",
-        "scope": "Sửa đổi, bổ sung một số điều của Nghị định 152/2020/NĐ-CP",
+        "scope": "Document level amendment",
+        "effective_date": "2023-09-18"
+      },
+      {
+        "source_doc_id": "70/2023/ND-CP",
+        "target_doc_id": "152/2020/ND-CP",
+        "source_article_id": "70/2023/ND-CP:Article_1",
+        "target_article_id": "152/2020/ND-CP:Article_3",
+        "rel_type": "AMENDS",
+        "scope": "Sửa đổi, bổ sung khoản 1 và khoản 3 Điều 3",
+        "effective_date": "2023-09-18"
+      },
+      {
+        "source_doc_id": "70/2023/ND-CP",
+        "target_doc_id": "152/2020/ND-CP",
+        "source_article_id": "70/2023/ND-CP:Article_1",
+        "target_article_id": "152/2020/ND-CP:Article_4",
+        "rel_type": "AMENDS",
+        "scope": "Sửa đổi, bổ sung Điều 4",
+        "effective_date": "2023-09-18"
+      },
+      {
+        "source_doc_id": "70/2023/ND-CP",
+        "target_doc_id": "152/2020/ND-CP",
+        "source_article_id": "70/2023/ND-CP:Article_1",
+        "target_article_id": "152/2020/ND-CP:Article_8",
+        "rel_type": "AMENDS",
+        "scope": "Sửa đổi, bổ sung khoản 3 Điều 8",
+        "effective_date": "2023-09-18"
+      },
+      {
+        "source_doc_id": "70/2023/ND-CP",
+        "target_doc_id": "152/2020/ND-CP",
+        "source_article_id": "70/2023/ND-CP:Article_2",
+        "target_article_id": "152/2020/ND-CP:Article_4",
+        "rel_type": "SUPERSEDES",
+        "scope": "Bãi bỏ khoản 2 Điều 4",
+        "effective_date": "2023-09-18"
+      },
+      {
+        "source_doc_id": "70/2023/ND-CP",
+        "target_doc_id": "Luật Tổ chức Chính phủ",
+        "source_article_id": null,
+        "target_article_id": null,
+        "rel_type": "GUIDES",
+        "scope": "Guides Luật Tổ chức Chính phủ",
+        "effective_date": "2023-09-18"
+      },
+      {
+        "source_doc_id": "70/2023/ND-CP",
+        "target_doc_id": "Bộ luật Lao động",
+        "source_article_id": null,
+        "target_article_id": null,
+        "rel_type": "GUIDES",
+        "scope": "Guides Bộ luật Lao động",
         "effective_date": "2023-09-18"
       }
     ]
@@ -281,5 +364,115 @@
       }
     ],
     "cross_references": []
+  },
+  "152/2020/ND-CP": {
+    "doc_id": "152/2020/ND-CP",
+    "title": "Quy định về người lao động nước ngoài làm việc tại Việt Nam và tuyển dụng, quản lý người lao động Việt Nam làm việc cho tổ chức, cá nhân nước ngoài tại Việt Nam",
+    "doc_type": "Nghị Định",
+    "issuer": "Chính Phủ",
+    "issue_date": "2020-12-30",
+    "effective_date": "2020-12-30",
+    "status": "in_force",
+    "articles": [
+      {
+        "article": "Điều 1",
+        "title": "Phạm vi điều chỉnh",
+        "content": "Nghị định này quy định về người lao động nước ngoài làm việc tại Việt Nam và tuyển dụng, quản lý người lao động Việt Nam làm việc cho tổ chức, cá nhân nước ngoài tại Việt Nam theo các quy định của Bộ luật Lao động.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Nghị định này quy định về người lao động nước ngoài làm việc tại Việt Nam và tuyển dụng, quản lý người lao động Việt Nam làm việc cho tổ chức, cá nhân nước ngoài tại Việt Nam theo các quy định của Bộ luật Lao động."
+          }
+        ]
+      },
+      {
+        "article": "Điều 2",
+        "title": "Đối tượng áp dụng",
+        "content": "1. Người lao động nước ngoài làm việc tại Việt Nam theo các hình thức sau:\na) Thực hiện hợp đồng lao động;\nb) Di chuyển trong nội bộ doanh nghiệp;\nc) Thực hiện các loại hợp đồng hoặc thỏa thuận về kinh tế, thương mại, tài chính, ngân hàng, bảo hiểm, khoa học kỹ thuật, văn hóa, thể thao, giáo dục, giáo dục nghề nghiệp và y tế.\n2. Cơ quan, tổ chức, doanh nghiệp, nhà thầu và cá nhân sử dụng người lao động nước ngoài.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Người lao động nước ngoài làm việc tại Việt Nam theo các hình thức sau:\na) Thực hiện hợp đồng lao động;\nb) Di chuyển trong nội bộ doanh nghiệp;\nc) Thực hiện các loại hợp đồng hoặc thỏa thuận về kinh tế, thương mại, tài chính, ngân hàng, bảo hiểm, khoa học kỹ thuật, văn hóa, thể thao, giáo dục, giáo dục nghề nghiệp và y tế."
+          },
+          {
+            "clause_number": "2",
+            "content": "Cơ quan, tổ chức, doanh nghiệp, nhà thầu và cá nhân sử dụng người lao động nước ngoài."
+          }
+        ]
+      },
+      {
+        "article": "Điều 3",
+        "title": "Giải thích từ ngữ",
+        "content": "1. Chuyên gia là người lao động nước ngoài thuộc một trong các trường hợp sau:\na) Có bằng đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc trong chuyên ngành được đào tạo phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam;\nb) Có ít nhất 5 năm kinh nghiệm và có chứng chỉ hành nghề phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam.\n2. Giám đốc điều hành là người đứng đầu chi nhánh, văn phòng đại diện hoặc địa điểm kinh doanh của doanh nghiệp.\n3. Lao động kỹ thuật là người lao động nước ngoài thuộc một trong các trường hợp sau:\na) Được đào tạo chuyên ngành kỹ thuật hoặc chuyên ngành khác ít nhất 1 năm và làm việc ít nhất 3 năm trong chuyên ngành được đào tạo;\nb) Có ít nhất 5 năm kinh nghiệm làm công việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam.\n\nChương II\nCẤP GIẤY PHÉP LAO ĐỘNG VÀ XÁC NHẬN KHÔNG THUỘC DIỆN CẤP GIẤY PHÉP LAO ĐỘNG",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Chuyên gia là người lao động nước ngoài thuộc một trong các trường hợp sau:\na) Có bằng đại học trở lên hoặc tương đương và có ít nhất 3 năm kinh nghiệm làm việc trong chuyên ngành được đào tạo phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam;\nb) Có ít nhất 5 năm kinh nghiệm và có chứng chỉ hành nghề phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam."
+          },
+          {
+            "clause_number": "2",
+            "content": "Giám đốc điều hành là người đứng đầu chi nhánh, văn phòng đại diện hoặc địa điểm kinh doanh của doanh nghiệp."
+          },
+          {
+            "clause_number": "3",
+            "content": "Lao động kỹ thuật là người lao động nước ngoài thuộc một trong các trường hợp sau:\na) Được đào tạo chuyên ngành kỹ thuật hoặc chuyên ngành khác ít nhất 1 năm và làm việc ít nhất 3 năm trong chuyên ngành được đào tạo;\nb) Có ít nhất 5 năm kinh nghiệm làm công việc phù hợp với vị trí công việc mà người lao động nước ngoài dự kiến làm việc tại Việt Nam.\n\nChương II\nCẤP GIẤY PHÉP LAO ĐỘNG VÀ XÁC NHẬN KHÔNG THUỘC DIỆN CẤP GIẤY PHÉP LAO ĐỘNG"
+          }
+        ]
+      },
+      {
+        "article": "Điều 4",
+        "title": "Giải trình nhu cầu sử dụng người lao động nước ngoài",
+        "content": "1. Trước ít nhất 30 ngày kể từ ngày dự kiến sử dụng người lao động nước ngoài, người sử dụng lao động (trừ nhà thầu) có trách nhiệm xác định nhu cầu sử dụng người lao động nước ngoài đối với từng vị trí công việc mà người lao động Việt Nam chưa đáp ứng được và báo cáo giải trình với Bộ Lao động - Thương binh và Xã hội hoặc Ủy ban nhân dân cấp tỉnh.\n2. Trường hợp người sử dụng lao động thay đổi nhu cầu sử dụng người lao động nước ngoài thì phải báo cáo giải trình điều chỉnh trước ít nhất 30 ngày kể từ ngày dự kiến sử dụng người lao động nước ngoài.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Trước ít nhất 30 ngày kể từ ngày dự kiến sử dụng người lao động nước ngoài, người sử dụng lao động (trừ nhà thầu) có trách nhiệm xác định nhu cầu sử dụng người lao động nước ngoài đối với từng vị trí công việc mà người lao động Việt Nam chưa đáp ứng được và báo cáo giải trình với Bộ Lao động - Thương binh và Xã hội hoặc Ủy ban nhân dân cấp tỉnh."
+          },
+          {
+            "clause_number": "2",
+            "content": "Trường hợp người sử dụng lao động thay đổi nhu cầu sử dụng người lao động nước ngoài thì phải báo cáo giải trình điều chỉnh trước ít nhất 30 ngày kể từ ngày dự kiến sử dụng người lao động nước ngoài."
+          }
+        ]
+      },
+      {
+        "article": "Điều 8",
+        "title": "Các trường hợp người lao động nước ngoài không thuộc diện cấp giấy phép lao động",
+        "content": "1. Là chủ sở hữu hoặc thành viên góp vốn của công ty trách nhiệm hữu hạn có giá trị góp vốn từ 3 tỷ đồng trở lên.\n2. Là Chủ tịch Hội đồng quản trị hoặc thành viên Hội đồng quản trị của công ty cổ phần có giá trị góp vốn từ 3 tỷ đồng trở lên.\n3. Vào Việt Nam làm việc tại vị trí chuyên gia, nhà quản lý, giám đốc điều hành hoặc lao động kỹ thuật có thời gian làm việc dưới 30 ngày và không quá 03 lần trong 01 năm.",
+        "clauses": [
+          {
+            "clause_number": "1",
+            "content": "Là chủ sở hữu hoặc thành viên góp vốn của công ty trách nhiệm hữu hạn có giá trị góp vốn từ 3 tỷ đồng trở lên."
+          },
+          {
+            "clause_number": "2",
+            "content": "Là Chủ tịch Hội đồng quản trị hoặc thành viên Hội đồng quản trị của công ty cổ phần có giá trị góp vốn từ 3 tỷ đồng trở lên."
+          },
+          {
+            "clause_number": "3",
+            "content": "Vào Việt Nam làm việc tại vị trí chuyên gia, nhà quản lý, giám đốc điều hành hoặc lao động kỹ thuật có thời gian làm việc dưới 30 ngày và không quá 03 lần trong 01 năm."
+          }
+        ]
+      }
+    ],
+    "cross_references": [
+      {
+        "source_doc_id": "152/2020/ND-CP",
+        "target_doc_id": "Luật Tổ chức Chính phủ",
+        "source_article_id": null,
+        "target_article_id": null,
+        "rel_type": "GUIDES",
+        "scope": "Guides Luật Tổ chức Chính phủ",
+        "effective_date": "2020-12-30"
+      },
+      {
+        "source_doc_id": "152/2020/ND-CP",
+        "target_doc_id": "Bộ luật Lao động",
+        "source_article_id": null,
+        "target_article_id": null,
+        "rel_type": "GUIDES",
+        "scope": "Guides Bộ luật Lao động",
+        "effective_date": "2020-12-30"
+      }
+    ]
   }
 }

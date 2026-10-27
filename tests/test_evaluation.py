@@ -48,6 +48,7 @@ class TestEvaluationMetrics(unittest.TestCase):
             normalize_article_id("Điều 15 Thông tư 12/2022/TT-NHNN"), "12/2022/tt-nhnn_15"
         )
         self.assertEqual(normalize_article_id("52/2024/ND-CP:Điều 22"), "52/2024/nd-cp_22")
+        self.assertEqual(normalize_article_id("152/2020/ND-CP:Article_1"), "152/2020/nd-cp_1")
         self.assertEqual(normalize_article_id(""), "")
 
     def test_precision_at_k(self) -> None:
@@ -252,6 +253,18 @@ class TestBaselinesAndEvaluator(unittest.TestCase):
         test_out = Path("data/benchmarks/test_benchmark_results.json")
         if test_out.exists():
             test_out.unlink()
+
+    def test_multihop_benchmark_queries_present(self) -> None:
+        """Tests that the authentic TVPL benchmark contains verified multi-article reasoning questions."""
+        self.assertEqual(len(self.evaluator.dataset), 100)
+        multihop = [q for q in self.evaluator.dataset if len(q.get("relevant_articles", [])) > 1]
+        self.assertEqual(len(multihop), 9)
+        # Verify known authentic multi-hop questions from ACIIDS TVPL testset
+        q_map = {q["question_id"]: q for q in self.evaluator.dataset}
+        for qid in [2, 3, 17, 23, 40, 43, 49, 90, 97]:
+            self.assertIn(qid, q_map)
+            self.assertGreaterEqual(len(q_map[qid]["relevant_articles"]), 2)
+            self.assertTrue(len(q_map[qid]["reference_answer"]) > 20)
 
 
 if __name__ == "__main__":
