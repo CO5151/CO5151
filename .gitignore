@@ -42,7 +42,9 @@ venv.bak/
 *.env.*.local
 .env
 *.pem
+*.crt
 *.key
+docker-compose.override.yml
 credentials.json
 service_account.json
 configs/searxng/settings.yml

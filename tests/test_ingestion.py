@@ -183,3 +183,83 @@ def test_cli_ingestion_help():
     assert res.returncode == 0
     assert "--file" in res.stdout
     assert "--dir" in res.stdout
+
+
+def test_extract_article_cross_references_decree_70():
+    """Tests fine-grained Article AMENDS and SUPERSEDES extraction from Decree 70/2023."""
+    txt_70 = Path("data/raw/70_2023_ND-CP.txt").read_text(encoding="utf-8")
+    doc_70 = parse_legal_document(txt_70)
+    refs = extract_cross_references(doc_70, txt_70)
+
+    # 1. Verify Document-level AMENDS
+    doc_amends = [r for r in refs if r.rel_type == "AMENDS" and r.target_article_id is None]
+    assert len(doc_amends) == 1
+    assert doc_amends[0].target_doc_id == "152/2020/ND-CP"
+
+    # 2. Verify Article-level AMENDS (Articles 3, 4, 8)
+    art_amends = [r for r in refs if r.rel_type == "AMENDS" and r.target_article_id is not None]
+    assert len(art_amends) == 3
+    amended_target_articles = {r.target_article_id for r in art_amends}
+    assert amended_target_articles == {
+        "152/2020/ND-CP:Article_3",
+        "152/2020/ND-CP:Article_4",
+        "152/2020/ND-CP:Article_8",
+    }
+    for r in art_amends:
+        assert r.source_article_id == "70/2023/ND-CP:Article_1"
+
+    # 3. Verify Article-level SUPERSEDES (Article 4 Clause 2)
+    repeals = [r for r in refs if r.rel_type == "SUPERSEDES"]
+    assert len(repeals) >= 1
+    art4_repeal = next(
+        (r for r in repeals if r.target_article_id == "152/2020/ND-CP:Article_4"),
+        None,
+    )
+    assert art4_repeal is not None
+    assert art4_repeal.source_article_id == "70/2023/ND-CP:Article_2"
+    assert "khoản 2 Điều 4" in str(art4_repeal.scope)
+
+
+def test_extract_article_statutory_citations():
+    """Tests extraction of statutory citations (CITES) including cross-statute and intra-statute."""
+    citation_text = """CHÍNH PHỦ
+Số: 888/2025/NĐ-CP
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+Hà Nội, ngày 01 tháng 01 năm 2025
+
+NGHỊ ĐỊNH
+Quy định về thủ tục cấp phép kinh doanh
+
+Điều 1. Phạm vi áp dụng
+1. Hồ sơ cấp phép thực hiện theo quy định tại Điều 13 Nghị định số 52/2024/NĐ-CP.
+2. Tiêu chuẩn nhân sự kỹ thuật căn cứ theo Điều 5 của Nghị định số 152/2020/NĐ-CP.
+
+Điều 2. Quy trình kiểm tra
+1. Trình tự thanh tra đối chiếu với quy định tại Điều 1 của Nghị định này.
+2. Các biện pháp bảo đảm thực hiện theo quy định tại Thông tư số 12/2022/TT-NHNN.
+"""
+    doc = parse_legal_document(citation_text)
+    refs = extract_cross_references(doc, citation_text)
+
+    cites = [r for r in refs if r.rel_type == "CITES"]
+    assert len(cites) >= 4
+
+    # Cross-statute Article citations
+    cite_52 = next((r for r in cites if r.target_article_id == "52/2024/ND-CP:Article_13"), None)
+    assert cite_52 is not None
+    assert cite_52.source_article_id == "888/2025/ND-CP:Article_1"
+
+    cite_152 = next((r for r in cites if r.target_article_id == "152/2020/ND-CP:Article_5"), None)
+    assert cite_152 is not None
+    assert cite_152.source_article_id == "888/2025/ND-CP:Article_1"
+
+    # Intra-statute Article citation (Article 2 citing Article 1 of same decree)
+    cite_intra = next((r for r in cites if r.target_article_id == "888/2025/ND-CP:Article_1"), None)
+    assert cite_intra is not None
+    assert cite_intra.source_article_id == "888/2025/ND-CP:Article_2"
+
+    # Cross-statute document-level citation (citing 12/2022/TT-NHNN)
+    cite_doc = next((r for r in cites if r.target_doc_id == "12/2022/TT-NHNN"), None)
+    assert cite_doc is not None
+    assert cite_doc.target_article_id is None
