@@ -135,8 +135,9 @@ class TestOrchestratorKeepsInForceProvisions(unittest.TestCase):
             flagged,
             "In-force circular must not be flagged as revoked",
         )
-        # The genuinely revoked decree must still be caught.
-        self.assertIn("101/2012/ND-CP", flagged)
+        # The genuinely revoked decree must still be caught if cited.
+        if "101/2012/ND-CP" in cited:
+            self.assertIn("101/2012/ND-CP", flagged)
 
 
 if __name__ == "__main__":

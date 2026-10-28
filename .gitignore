@@ -42,20 +42,29 @@ venv.bak/
 *.env.*.local
 .env
 *.pem
+*.crt
 *.key
+docker-compose.override.yml
 credentials.json
 service_account.json
+configs/searxng/settings.yml
+!configs/searxng/settings.yml.example
 
 # Testing & Coverage
 .coverage
 .coverage.*
 htmlcov/
 .pytest_cache/
+.hypothesis/
 .tox/
 .nox/
 coverage.xml
 *.cover
 *.py,cover
+
+# SQLite WAL and temporary files
+*.db-shm
+*.db-wal
 
 # Linting & Formatting
 .ruff_cache/

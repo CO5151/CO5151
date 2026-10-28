@@ -162,9 +162,21 @@ class QdrantClientManager:
 
         points: list[models.PointStruct] = []
         for chunk in chunks:
-            point_id = chunk.get("id") or str(uuid.uuid4())
+            raw_id = chunk.get("id")
+            if not raw_id:
+                point_id: int | str = str(uuid.uuid4())
+            elif isinstance(raw_id, int):
+                point_id = raw_id
+            else:
+                try:
+                    point_id = str(uuid.UUID(str(raw_id)))
+                except ValueError:
+                    point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(raw_id)))
+
             vector = chunk["vector"]
-            payload = chunk.get("payload", {})
+            payload = dict(chunk.get("payload", {}))
+            if raw_id and "custom_id" not in payload:
+                payload["custom_id"] = str(raw_id)
 
             points.append(
                 models.PointStruct(
