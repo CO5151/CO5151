@@ -1,0 +1,2158 @@
+[
+  {
+    "question_id": 43,
+    "arm": "adk",
+    "question": "Thời gian lựa chọn và nội dung kiểm toán độc lập đối với ngân hàng thương mại được quy định như thế nào?",
+    "reference": "Theo Thông tư 51/2024/TT-NHNN, quy định về thời gian lựa chọn và nội dung kiểm toán như sau:\n\n1.  **Thời gian lựa chọn (Điều 6):** Tổ chức tín dụng, chi nhánh ngân hàng nước ngoài phải lựa chọn tổ chức kiểm toán độc lập **trước khi kết thúc năm tài chính** để thực hiện kiểm toán cho năm tài chính tiếp theo.\n\n2.  **Nội dung kiểm toán (Điều 8):** Việc kiểm toán độc lập bao gồm hai nội dung chính:\n    * **Kiểm toán báo cáo tài chính:** Bao gồm Báo cáo tình hình tài chính, Báo cáo kết quả hoạt động, Báo cáo lưu chuyển tiền tệ, và Thuyết minh báo cáo tài chính.\n    * **Dịch vụ bảo đảm về hệ thống kiểm soát nội bộ:** Thực hiện dịch vụ bảo đảm đối với hoạt động của hệ thống kiểm soát nội bộ trong việc lập và trình bày báo cáo tài chính.",
+    "articles": "51/2024/tt-nhnn_6, 51/2024/tt-nhnn_8",
+    "candidate": "Căn cứ Thông tư 51/2024/TT-NHNN (Điều 6 và Điều 8):\n\n**Thời gian lựa chọn:** Tổ chức tín dụng, chi nhánh ngân hàng nước ngoài phải lựa chọn tổ chức kiểm toán độc lập **trước khi kết thúc năm tài chính** để thực hiện kiểm toán cho năm tài chính tiếp theo.\n\n**Nội dung kiểm toán độc lập** gồm hai nội dung chính:\n- Kiểm toán báo cáo tài chính (bao gồm Báo cáo tình hình tài chính...);\n- (Nội dung thứ hai theo Điều 8 — nguồn trích dẫn không nêu đầy đủ nội dung chi tiết).\n\nLưu ý: Điều 7 Thông tư 51/2024/TT-NHNN quy định thẩm quyền quyết định lựa chọn tổ chức kiểm toán độc lập đối với tổ chức tín dụng là công ty TNHH thuộc Hội đồng thành viên.\n\n*Lưu ý: nội dung chi tiết thứ hai của Điều 8 không được nêu đầy đủ trong nguồn trích dẫn.*",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "Dịch vụ bảo đảm về hệ thống kiểm soát nội bộ trong việc lập và trình bày báo cáo tài chính"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng thời gian lựa chọn và Điều 6, 8; thiếu nội dung thứ hai của Điều 8; thêm Điều 7 ngoài căn cứ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 42,
+    "arm": "adk",
+    "question": "Ai có thẩm quyền quyết định lựa chọn tổ chức kiểm toán độc lập để kiểm toán một tổ chức tín dụng là công ty trách nhiệm hữu hạn?",
+    "reference": "Căn cứ khoản 1 Điều 7 Thông tư 51/2024/TT-NHNN, thẩm quyền quyết định lựa chọn tổ chức kiểm toán độc lập để kiểm toán một tổ chức tín dụng là công ty trách nhiệm hữu hạn thuộc về **Hội đồng thành viên** của tổ chức tín dụng đó.",
+    "articles": "51/2024/tt-nhnn_7",
+    "candidate": "Theo khoản 1 Điều 7 Thông tư 51/2024/TT-NHNN, thẩm quyền quyết định lựa chọn tổ chức kiểm toán độc lập để kiểm toán một tổ chức tín dụng là công ty trách nhiệm hữu hạn thuộc về **Hội đồng thành viên** của tổ chức tín dụng đó.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng Hội đồng thành viên và đúng căn cứ khoản 1 Điều 7 Thông tư 51/2024/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 92,
+    "arm": "adk",
+    "question": "Tổ chức cung ứng dịch vụ trung gian thanh toán phải ban hành các quy trình nội bộ tối thiểu nào?",
+    "reference": "Tổ chức cung ứng dịch vụ trung gian thanh toán phải ban hành tối thiểu các quy trình nội bộ sau (Căn cứ khoản 1 Điều 9 Thông tư 40/2024/TT-NHNN):\n1. **Quy trình nghiệp vụ kỹ thuật** của dịch vụ trung gian thanh toán (bao gồm sơ đồ, diễn giải các bước nghiệp vụ, quy trình dòng tiền).\n2. **Quy trình kiểm tra, kiểm soát nội bộ** (bao gồm mục đích, yêu cầu, trình tự thực hiện, trách nhiệm).\n3. **Quy trình quản lý rủi ro, đảm bảo an toàn, bảo mật** (bao gồm đánh giá rủi ro và biện pháp xử lý, tuân thủ quy định về ngân hàng điện tử, chứng từ điện tử).\n4. **Các nguyên tắc chung và quy định nội bộ về phòng, chống rửa tiền, tài trợ khủng bố** và tài trợ phổ biến vũ khí hủy diệt hàng loạt.\n5. **Quy trình và thủ tục giải quyết yêu cầu tra soát, khiếu nại, tranh chấp** (bao gồm kênh tiếp nhận, quy trình xử lý nội bộ, thời gian trả lời).\n6. (Đối với dịch vụ chuyển mạch tài chính quốc tế) **Quy định nội bộ về tiêu chuẩn lựa chọn hệ thống thanh toán quốc tế** để kết nối và quy trình nghiệp vụ với các biện pháp quản lý rủi ro.",
+    "articles": "40/2024/tt-nhnn_9",
+    "candidate": "Không đủ căn cứ để trả lời.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Quy trình nghiệp vụ kỹ thuật",
+        "Quy trình kiểm tra, kiểm soát nội bộ",
+        "Quy trình quản lý rủi ro, an toàn, bảo mật",
+        "Quy định nội bộ về phòng, chống rửa tiền",
+        "Quy trình giải quyết tra soát, khiếu nại, tranh chấp",
+        "Quy định lựa chọn hệ thống thanh toán quốc tế (chuyển mạch tài chính quốc tế)"
+      ],
+      "wrong": [
+        "Từ chối trả lời, không nêu nội dung nào"
+      ],
+      "reason": "Không trả lời, không nêu quy trình nào theo Điều 9 Thông tư 40/2024/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 10,
+    "arm": "adk",
+    "question": "Giải pháp cho vay ngang hàng là gì?",
+    "reference": "Căn cứ khoản 3 Điều 3 Nghị định 94/2025/NĐ-CP, giải pháp cho vay ngang hàng là một giải pháp ứng dụng công nghệ thông tin do một công ty cho vay ngang hàng (một loại công ty Fintech) cung cấp. Mục đích của giải pháp này là để kết nối thông tin và hỗ trợ việc giao kết hợp đồng trên nền tảng số giữa hai bên: bên đi vay và bên cho vay. Đồng tiền được sử dụng trong các giao dịch này phải là đồng Việt Nam.",
+    "articles": "94/2025/nd-cp_3",
+    "candidate": "Theo khoản 3 Điều 3 Nghị định 94/2025/NĐ-CP, giải pháp cho vay ngang hàng là giải pháp ứng dụng công nghệ thông tin do một công ty cho vay ngang hàng (một loại công ty Fintech) cung cấp, nhằm kết nối thông tin và hỗ trợ giao kết hợp đồng trên nền tảng số giữa bên đi vay và bên cho vay; đồng tiền sử dụng trong giao dịch phải là đồng Việt Nam.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ ý chính: ứng dụng CNTT do công ty cho vay ngang hàng cung cấp, kết nối thông tin, hỗ trợ giao kết hợp đồng trên nền tảng số, đồng Việt Nam; đúng căn cứ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 66,
+    "arm": "adk",
+    "question": "Những đối tượng nào được phép mở tài khoản thanh toán?",
+    "reference": "Căn cứ Điều 11 Thông tư 17/2024/TT-NHNN, các đối tượng được mở tài khoản thanh toán bao gồm:\n\n**1. Cá nhân:**\n* Người từ đủ 15 tuổi trở lên và có đầy đủ năng lực hành vi dân sự.\n* Người chưa đủ 15 tuổi, người bị hạn chế hoặc mất năng lực hành vi dân sự (mở tài khoản thông qua người đại diện theo pháp luật).\n* Người có khó khăn trong nhận thức, làm chủ hành vi (mở tài khoản thông qua người giám hộ).\n\n**2. Tổ chức:**\n* Các tổ chức được thành lập và hoạt động hợp pháp tại Việt Nam, bao gồm: pháp nhân (Việt Nam và nước ngoài), doanh nghiệp tư nhân, hộ kinh doanh và các tổ chức khác.",
+    "articles": "17/2024/tt-nhnn_11",
+    "candidate": "Căn cứ Điều 11 Thông tư 17/2024/TT-NHNN, các đối tượng được mở tài khoản thanh toán bao gồm:\n\n**1. Cá nhân:**\n- Người từ đủ 15 tuổi trở lên và có đầy đủ năng lực hành vi dân sự.\n- Người chưa đủ 15 tuổi, người bị hạn chế hoặc mất năng lực hành vi dân sự (mở tài khoản thông qua người đại diện theo pháp luật).\n- Người có khó khăn trong nhận thức, làm chủ hành vi (mở tài khoản thông qua người giám hộ).\n\n**2. Tổ chức:** Các tổ chức được thành lập và hoạt động hợp pháp.\n\nNgoài ra, theo Điều 3 Thông tư 17/2024/TT-NHNN, tài khoản thanh toán gồm 03 hình thức: của cá nhân, của tổ chức và tài khoản thanh toán chung (từ hai chủ thể cá nhân hoặc tổ chức trở lên cùng đứng tên).",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 5,
+      "missing": [
+        "liệt kê cụ thể các loại tổ chức: pháp nhân Việt Nam và nước ngoài, doanh nghiệp tư nhân, hộ kinh doanh và tổ chức khác"
+      ],
+      "wrong": [],
+      "reason": "Nêu đủ cá nhân (3 nhóm) và tổ chức hợp pháp; chỉ thiếu liệt kê chi tiết loại tổ chức; trích thêm Điều 3 không sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 51,
+    "arm": "adk",
+    "question": "Trách nhiệm thu giữ tiền giả và tạm thu giữ tiền nghi giả được quy định cụ thể ra sao?",
+    "reference": "Căn cứ Điều 4 Thông tư 58/2024/TT-NHNN, trách nhiệm này được quy định như sau:\n\n* **Đối tượng có trách nhiệm:** Sở Giao dịch Ngân hàng Nhà nước, Ngân hàng Nhà nước chi nhánh, các tổ chức tín dụng và chi nhánh ngân hàng nước ngoài có trách nhiệm thu giữ tiền giả và tạm thu giữ tiền nghi giả khi phát hiện trong giao dịch tiền mặt với khách hàng. Tuyệt đối không được trả lại tiền giả, tiền nghi giả cho khách hàng.\n* **Yêu cầu đối với nhân sự:** Người làm công tác thu giữ, tạm thu giữ phải được bồi dưỡng kỹ năng nhận biết tiền thật, tiền giả theo chương trình của Ngân hàng Nhà nước hoặc được đào tạo về nghiệp vụ giám định tiền.",
+    "articles": "58/2024/tt-nhnn_4",
+    "candidate": "Theo Điều 4 Thông tư 58/2024/TT-NHNN, Sở Giao dịch Ngân hàng Nhà nước, Ngân hàng Nhà nước chi nhánh, các tổ chức tín dụng và chi nhánh ngân hàng nước ngoài có trách nhiệm thu giữ tiền giả và tạm thu giữ tiền nghi giả khi phát hiện trong giao dịch tiền mặt với khách hàng; tuyệt đối không được trả lại tiền giả, tiền nghi giả cho khách hàng.\n\nTheo Điều 8 Thông tư 58/2024/TT-NHNN, trách nhiệm đóng gói và niêm phong tiền giả thuộc về Ngân hàng Nhà nước chi nhánh và Sở Giao dịch, phải đóng dấu “TIỀN GIẢ” và bảo quản riêng trong kho tiền.\n\nTheo khoản 3 Điều 9 Thông tư 58/2024/TT-NHNN, Ngân hàng Nhà nước chi nhánh và Sở Giao dịch phải giao nộp tiền giả về Kho tiền Trung ương ít nhất 6 tháng một lần.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Yêu cầu đối với nhân sự làm công tác thu giữ, tạm thu giữ (bồi dưỡng kỹ năng nhận biết tiền thật, tiền giả hoặc đào tạo nghiệp vụ giám định tiền)"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng đối tượng trách nhiệm và không trả lại tiền giả; thiếu ý yêu cầu nhân sự; trích thêm Điều 8, Điều 9 ngoài căn cứ",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 2,
+    "arm": "adk",
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "reference": "Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài: bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu;\n+ Trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ: bên đi vay hoàn thành Đơn đăng ký khoản vay nước ngoài theo Phụ lục 01 ban hành kèm theo Thông tư 12/2022/TT-NHNN.\n- Ngân hàng Nhà nước có văn bản xác nhận hoặc từ chối xác nhận đăng ký khoản vay (có nêu rõ lý do) trong thời hạn:\n+ 12 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử;\n+ 15 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử;\n- Cơ quan có thẩm quyền xác nhận đăng ký, xác nhận đăng ký thay đổi khoản vay nước ngoài theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN có trách nhiệm:\n+ Kiểm tra tính thống nhất, chính xác của hồ sơ đăng ký khoản vay với các thông tin khai báo trên Trang điện tử; cập nhật tình hình xử lý h0ồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài;\n+ Nhập các thông tin liên quan của khoản vay trên Trang điện tử để tạo mã khoản vay và lưu trữ thông tin vào cơ sở dữ liệu vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài; cập nhật tình hình xử lý hồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi.",
+    "articles": "12/2022/tt-nhnn_15, 08/2023/tt-nhnn_21, 12/2022/tt-nhnn_20",
+    "candidate": "Theo khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN (được nêu tại Điều 20 Thông tư 12/2022/TT-NHNN), trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh gồm:\n\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh: nếu bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ thì in Đơn từ Trang điện tử, ký và đóng dấu; các trường hợp khác thực hiện theo quy định tương ứng.\n\nVề thời hạn, theo khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN (nêu tại Điều 11), bên đi vay gửi 01 bộ hồ sơ đăng ký khoản vay tới Cơ quan có thẩm quyền xác nhận đăng ký theo Điều 20 Thông tư 12/2022/TT-NHNN trong thời hạn 30 ngày làm việc kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn; 30 ngày làm việc kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn…",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "Thời hạn NHNN xác nhận/từ chối: 12 ngày làm việc (đã khai báo Trang điện tử) và 15 ngày làm việc (không khai báo)",
+        "Trách nhiệm cơ quan có thẩm quyền: kiểm tra tính thống nhất hồ sơ, nhập thông tin tạo mã khoản vay, cập nhật tình hình xử lý trên Trang điện tử",
+        "Trường hợp không khai báo trước: lập Đơn theo Phụ lục 01 Thông tư 12/2022"
+      ],
+      "wrong": [],
+      "reason": "Chỉ nêu một phần bước chuẩn bị Đơn, thiếu thời hạn xác nhận và trách nhiệm cơ quan; thêm nội dung khoản 2 Điều 15 và Điều 11 ngoài đáp án chuẩn.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 71,
+    "arm": "adk",
+    "question": "Hệ thống giám sát và theo dõi hoạt động của hệ thống Online Banking được quy định như thế nào?",
+    "reference": "Căn cứ Điều 15 Thông tư 50/2024/TT-NHNN, hệ thống giám sát hoạt động Online Banking được quy định như sau:\n\n1.  **Thu thập nhật ký (log):** Đơn vị phải thiết lập hệ thống giám sát có khả năng thu thập đầy đủ nhật ký từ tất cả các thành phần của hệ thống Online Banking. Mục đích là để phát hiện và điều tra các sự kiện bất thường hoặc các hành vi tấn công mạng.\n2.  **Cảnh báo giao dịch bất thường:** Đơn vị phải xây dựng các tiêu chí và phần mềm để tự động cảnh báo các giao dịch có dấu hiệu bất thường, dựa trên các yếu tố như thời gian, vị trí địa lý, tần suất, số tiền giao dịch, số lần đăng nhập sai, và các dấu hiệu khác.",
+    "articles": "50/2024/tt-nhnn_15",
+    "candidate": "Căn cứ Điều 15 Thông tư 50/2024/TT-NHNN, hệ thống giám sát hoạt động Online Banking được quy định như sau:\n\n1. **Thu thập nhật ký (log):** Đơn vị phải thiết lập hệ thống giám sát có khả năng thu thập đầy đủ nhật ký từ tất cả các thành phần của hệ thống Online Banking, nhằm phát hiện và điều tra các sự kiện bất thường hoặc hành vi tấn công mạng.\n\n2. **Cảnh báo giao dịch bất thường:** Đơn vị phải xây dựng các tiêu chí và phần mềm để tự động cảnh báo các giao dịch bất thường.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "các yếu tố tiêu chí cảnh báo (thời gian, vị trí, tần suất, số tiền, số lần đăng nhập sai)"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng hai ý chính theo Điều 15 Thông tư 50/2024/TT-NHNN, chỉ lược bớt các yếu tố liệt kê chi tiết.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 16,
+    "arm": "adk",
+    "question": "Thông tư 02/2025/TT-NHNN khi nào có hiệu lực?",
+    "reference": "Căn cứ Điều 18 Thông tư 02/2025/TT-NHNN, Thông tư này có hiệu lực thi hành kể từ ngày 16 tháng 6 năm 2025. Thông tư này sẽ bãi bỏ Thông tư 01/2021/TT-NHNN và một phần của Thông tư 12/2021/TT-NHNN.",
+    "articles": "02/2025/tt-nhnn_18",
+    "candidate": "Thông tư 02/2025/TT-NHNN có hiệu lực thi hành kể từ ngày 16 tháng 6 năm 2025 (Căn cứ Điều 18 Thông tư 02/2025/TT-NHNN).",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng ngày 16/6/2025 và đúng Điều 18 Thông tư 02/2025/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 79,
+    "arm": "adk",
+    "question": "Trong những trường hợp nào Ngân hàng Nhà nước sẽ xem xét thu hồi Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán?",
+    "reference": "Căn cứ khoản 1 Điều 27 Nghị định 52/2024/NĐ-CP, Ngân hàng Nhà nước sẽ xem xét thu hồi Giấy phép nếu tổ chức cung ứng dịch vụ trung gian thanh toán rơi vào một trong các trường hợp sau:\n\n* **Chấm dứt hoạt động:** Bị giải thể, phá sản, hoặc tự nguyện có đơn đề nghị thu hồi Giấy phép do chấm dứt hoạt động.\n* **Vi phạm pháp luật nghiêm trọng:** Có bản án hoặc quyết định của cơ quan có thẩm quyền yêu cầu thu hồi; hoặc bị phát hiện sử dụng dịch vụ cho các hoạt động bất hợp pháp như đánh bạc, lừa đảo, rửa tiền, tài trợ khủng bố.\n* **Không khắc phục vi phạm:** Sau 03 tháng kể từ ngày Ngân hàng Nhà nước có văn bản thông báo, tổ chức không khắc phục được các vi phạm về điều kiện cung ứng dịch vụ hoặc yêu cầu về hệ thống kỹ thuật.\n* **Không hoạt động:** Bị phát hiện không thực hiện hoạt động cung ứng dịch vụ được cấp phép cho khách hàng trong 06 tháng liên tục.\n* **Báo cáo không trung thực:** Tái phạm việc báo cáo không trung thực về số dư và số lượng ví điện tử.",
+    "articles": "52/2024/nd-cp_27",
+    "candidate": "Căn cứ khoản 1 Điều 27 Nghị định 52/2024/NĐ-CP, Ngân hàng Nhà nước xem xét thu hồi Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán trong các trường hợp:\n\n- **Chấm dứt hoạt động:** tổ chức bị giải thể, phá sản, hoặc tự nguyện có đơn đề nghị thu hồi Giấy phép do chấm dứt hoạt động.\n- **Vi phạm pháp luật nghiêm trọng:** có bản án hoặc quyết định của cơ quan có thẩm quyền yêu cầu thu hồi; hoặc bị phát hiện sử dụng dịch vụ cho các hoạt động bất hợp pháp.\n\nĐây là các căn cứ được quy định tại Điều 27 Nghị định 52/2024/NĐ-CP.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Không khắc phục vi phạm sau 03 tháng kể từ ngày NHNN thông báo",
+        "Không hoạt động cung ứng dịch vụ cho khách hàng 06 tháng liên tục",
+        "Tái phạm báo cáo không trung thực về số dư và số lượng ví điện tử"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 2/5 trường hợp thu hồi giấy phép, thiếu 3 trường hợp còn lại; trích dẫn căn cứ chính xác.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 74,
+    "arm": "adk",
+    "question": "Khi hợp đồng cho thuê tài chính chấm dứt trước hạn, việc xử lý tiền thuê được thực hiện như thế nào?",
+    "reference": "Theo Điều 21 Thông tư 26/2024/TT-NHNN, việc xử lý tiền thuê khi hợp đồng chấm dứt trước hạn phụ thuộc vào lý do chấm dứt:\n\n* **Trường hợp do bên thuê vi phạm hoặc tài sản bị mất/hỏng:**\n    * Bên thuê tài chính phải thanh toán ngay toàn bộ số tiền thuê còn lại (bao gồm nợ gốc, tiền lãi, và lãi chậm trả nếu có) tính đến thời điểm chấm dứt.\n    * Nếu không thanh toán đúng hạn, bên thuê phải trả thêm lãi quá hạn trên số nợ gốc và lãi chậm trả trên số tiền lãi chưa thanh toán.\n\n* **Trường hợp do bên cho thuê vi phạm hoặc các lý do khác:** Việc xử lý tiền thuê sẽ được thực hiện theo thỏa thuận trong hợp đồng cho thuê tài chính và các quy định pháp luật liên quan.",
+    "articles": "26/2024/tt-nhnn_21",
+    "candidate": "Căn cứ Điều 21 Thông tư 26/2024/TT-NHNN, việc xử lý tiền thuê khi hợp đồng cho thuê tài chính chấm dứt trước hạn phụ thuộc vào lý do chấm dứt. Cụ thể, khi chấm dứt theo điểm a, b khoản 1 Điều 20 Thông tư 26/2024/TT-NHNN, bên thuê tài chính phải thanh toán hết toàn bộ số tiền thuê còn lại (gồm nợ gốc, lãi, lãi chậm trả nếu có) tính đến thời điểm chấm dứt. Thời điểm thanh toán do các bên thỏa thuận; nếu không có thỏa thuận thì tại thời điểm chấm dứt hợp đồng. Trường hợp bên thuê không thanh toán, bên cho thuê có quyền xử lý theo quy định tại Điều 21 Thông tư 26/2024/TT-NHNN.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "trường hợp bên cho thuê vi phạm hoặc lý do khác: xử lý theo thỏa thuận trong hợp đồng và pháp luật liên quan",
+        "nghĩa vụ lãi quá hạn trên nợ gốc và lãi chậm trả trên lãi chưa thanh toán khi không thanh toán đúng hạn"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng Điều 21 và trường hợp bên thuê vi phạm, nhưng thiếu trường hợp bên cho thuê vi phạm/lý do khác và chế tài lãi quá hạn.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 11,
+    "arm": "adk",
+    "question": "Hồ sơ đăng ký tham gia Cơ chế thử nghiệm có kiểm soát đối với giải pháp cho vay ngang hàng bao gồm những tài liệu nào?",
+    "reference": "Theo Điều 12 Nghị định 94/2025/NĐ-CP, hồ sơ đăng ký tham gia Cơ chế thử nghiệm (Sandbox) cho giải pháp cho vay ngang hàng bao gồm:\n\n1.  **Đơn đăng ký** theo Mẫu số 03 của Phụ lục 1.\n2.  Tài liệu mô tả **cơ cấu tổ chức, quản lý, điều hành** khi triển khai.\n3.  **Nghị quyết** của Hội đồng thành viên/Hội đồng quản trị/Đại hội đồng cổ đông về việc thông qua Đề án tham gia Cơ chế thử nghiệm.\n4.  **Đề án chi tiết** mô tả giải pháp cho vay ngang hàng, theo hướng dẫn tại Phụ lục 3.\n5.  **Kế hoạch thử nghiệm**, bao gồm thời gian, không gian, phạm vi, kinh phí, nguồn lực và kế hoạch chấm dứt thử nghiệm.\n6.  **Hồ sơ nhân sự** của người đại diện theo pháp luật và Tổng giám đốc (Giám đốc), bao gồm lý lịch, phiếu lý lịch tư pháp, bằng cấp chuyên môn.\n7.  Bản sao các **tài liệu pháp lý** của công ty Fintech như Giấy phép thành lập và Điều lệ công ty.",
+    "articles": "94/2025/nd-cp_12",
+    "candidate": "Căn cứ Điều 12 Nghị định 94/2025/NĐ-CP, hồ sơ đăng ký tham gia Cơ chế thử nghiệm có kiểm soát đối với giải pháp cho vay ngang hàng bao gồm:\n\n1. Đơn đăng ký theo Mẫu số 03 của Phụ lục 1.\n2. Tài liệu mô tả cơ cấu tổ chức, quản lý, điều hành khi triển khai.\n3. Nghị quyết của Hội đồng thành viên/Hội đồng quản trị/Đại hội đồng cổ đông về việc thông qua Đề án tham gia Cơ chế thử nghiệm.\n4. Đề án chi tiết mô tả giải pháp cho vay ngang hàng, theo hướng dẫn tại Phụ lục (nội dung tại Điều 12).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Kế hoạch thử nghiệm (thời gian, không gian, phạm vi, kinh phí, nguồn lực, kế hoạch chấm dứt)",
+        "Hồ sơ nhân sự của người đại diện theo pháp luật và Tổng giám đốc (Giám đốc)",
+        "Bản sao tài liệu pháp lý của công ty Fintech (Giấy phép thành lập, Điều lệ)"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 4/7 tài liệu, thiếu 3 nhóm hồ sơ quan trọng; không sai nội dung.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 56,
+    "arm": "adk",
+    "question": "Một tài khoản thanh toán ngân hàng sẽ bị đóng trong những trường hợp nào?",
+    "reference": "Căn cứ khoản 1 Điều 12 Nghị định 52/2024/NĐ-CP, việc đóng tài khoản thanh toán được thực hiện trong các trường hợp sau:\n\n1.  Chủ tài khoản có yêu cầu và đã hoàn thành mọi nghĩa vụ liên quan.\n2.  Chủ tài khoản là cá nhân bị chết hoặc bị tuyên bố đã chết.\n3.  Tổ chức có tài khoản chấm dứt hoạt động theo pháp luật.\n4.  Chủ tài khoản vi phạm các hành vi bị cấm như mở/duy trì tài khoản nặc danh, mạo danh; mua, bán, thuê, cho thuê tài khoản; hoặc sử dụng tài khoản để thực hiện các hành vi vi phạm pháp luật.\n5.  Các trường hợp khác đã được thỏa thuận trước bằng văn bản giữa chủ tài khoản và ngân hàng.\n6.  Các trường hợp khác theo quy định của pháp luật.",
+    "articles": "52/2024/nd-cp_12",
+    "candidate": "Căn cứ khoản 1 Điều 12 Nghị định 52/2024/NĐ-CP, tài khoản thanh toán bị đóng trong các trường hợp:\n\n1. Chủ tài khoản có yêu cầu và đã hoàn thành mọi nghĩa vụ liên quan.\n2. Chủ tài khoản là cá nhân bị chết hoặc bị tuyên bố đã chết.\n3. Tổ chức có tài khoản chấm dứt hoạt động theo pháp luật.\n4. Chủ tài khoản vi phạm các hành vi bị cấm như mở/duy trì tài khoản nặc danh, mạo danh; mua, bán, thuê, cho thuê tài khoản; hoặc sử dụng tài khoản để thực hiện hành vi vi phạm pháp luật.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Trường hợp khác đã được thỏa thuận trước bằng văn bản giữa chủ tài khoản và ngân hàng",
+        "Các trường hợp khác theo quy định của pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 4/6 trường hợp theo Điều 12, thiếu hai trường hợp khác; dẫn căn cứ chính xác, không sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 57,
+    "arm": "adk",
+    "question": "Chủ tài khoản thanh toán có những nghĩa vụ gì đối với tài khoản ngân hàng của mình?",
+    "reference": "Theo khoản 2 Điều 20 Thông tư 17/2024/TT-NHNN, chủ tài khoản có các nghĩa vụ chính sau:\n\n* **Đảm bảo số dư:** Có đủ tiền trong tài khoản để thực hiện các lệnh thanh toán, hoặc tuân thủ thỏa thuận thấu chi.\n* **Tuân thủ quy định:** Chấp hành các quy định về mở và sử dụng tài khoản của ngân hàng và pháp luật.\n* **Thông báo kịp thời:** Báo ngay cho ngân hàng khi phát hiện sai sót, nhầm lẫn hoặc nghi ngờ tài khoản bị lợi dụng.\n* **Hoàn trả tiền:** Hoàn trả hoặc phối hợp với ngân hàng để hoàn trả các khoản tiền được ghi Có vào tài khoản do sai sót, nhầm lẫn.\n* **Cung cấp thông tin:** Cung cấp đầy đủ, chính xác và cập nhật kịp thời thông tin trong hồ sơ tài khoản.\n* **Duy trì số dư tối thiểu:** Duy trì số dư tối thiểu theo quy định của ngân hàng (nếu có).\n* **Không vi phạm các điều cấm:** Không thực hiện các hành vi bị cấm liên quan đến việc mở và sử dụng tài khoản thanh toán.",
+    "articles": "17/2024/tt-nhnn_20",
+    "candidate": "Theo khoản 2 Điều 20 Thông tư 17/2024/TT-NHNN, chủ tài khoản thanh toán có các nghĩa vụ chính sau:\n\n- **Đảm bảo số dư:** Có đủ tiền trong tài khoản để thực hiện các lệnh thanh toán, hoặc tuân thủ thỏa thuận thấu chi.\n- **Tuân thủ quy định:** Chấp hành các quy định về mở và sử dụng tài khoản của ngân hàng và pháp luật.\n- **Thông báo kịp thời:** Báo ngay cho ngân hàng khi phát hiện sai sót, nhầm lẫn hoặc nghi ngờ tài khoản bị lợi dụng.\n- **Hoàn trả tiền:** Hoàn trả hoặc phối hợp xử lý theo quy định.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Cung cấp thông tin đầy đủ, chính xác, cập nhật",
+        "Duy trì số dư tối thiểu theo quy định ngân hàng (nếu có)",
+        "Không thực hiện các hành vi bị cấm về mở và sử dụng tài khoản"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 4/6 nghĩa vụ, thiếu 3 ý; trích đúng Điều 20 Thông tư 17/2024/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 73,
+    "arm": "adk",
+    "question": "Ngân hàng thực hiện nghiệp vụ thư tín dụng có những quyền và nghĩa vụ gì?",
+    "reference": "Căn cứ Điều 19 Thông tư 21/2024/TT-NHNN, quyền và nghĩa vụ của ngân hàng khi thực hiện nghiệp vụ thư tín dụng được quy định như sau:\n\n**1. Quyền của ngân hàng:**\n* Chấp nhận hoặc từ chối đề nghị của khách hàng.\n* Yêu cầu khách hàng và các bên liên quan cung cấp thông tin, tài liệu cần thiết cho việc thẩm định.\n* Yêu cầu khách hàng hoàn trả đầy đủ gốc, lãi và phí theo thỏa thuận.\n* Khởi kiện theo quy định của pháp luật khi các bên vi phạm nghĩa vụ đã cam kết.\n* Các quyền khác theo thỏa thuận và phù hợp với pháp luật, tập quán thương mại quốc tế.\n\n**2. Nghĩa vụ của ngân hàng:**\n* Thực hiện đúng các nội dung đã cam kết với khách hàng.\n* Các nghĩa vụ khác theo thỏa thuận và phù hợp với quy định của Thông tư này cũng như tập quán thương mại quốc tế về thư tín dụng.",
+    "articles": "21/2024/tt-nhnn_19",
+    "candidate": "Căn cứ Điều 19 Thông tư 21/2024/TT-NHNN, ngân hàng thực hiện nghiệp vụ thư tín dụng có các quyền sau: chấp nhận hoặc từ chối đề nghị của khách hàng; yêu cầu khách hàng và các bên liên quan cung cấp thông tin, tài liệu cần thiết cho việc thẩm định; yêu cầu khách hàng hoàn trả đầy đủ gốc, lãi và phí theo thỏa thuận; khởi kiện theo quy định của pháp luật khi các bên vi phạm nghĩa vụ đã cam kết; và các quyền khác theo quy định (nội dung trích dẫn bị cắt, không nêu chi tiết).\n\nVề nghĩa vụ của ngân hàng, các điều khoản được cung cấp (Điều 19, 21, 22, 23 Thông tư 21/2024/TT-NHNN) không quy định đầy đủ. Do đó, không đủ căn cứ để trả lời trọn vẹn về nghĩa vụ của ngân hàng.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": false,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Nghĩa vụ thực hiện đúng các nội dung cam kết với khách hàng",
+        "Nghĩa vụ khác theo thỏa thuận và phù hợp Thông tư/tập quán thương mại quốc tế"
+      ],
+      "wrong": [
+        "Khẳng định Điều 19 và các điều 21-23 không quy định đầy đủ nghĩa vụ, không đủ căn cứ"
+      ],
+      "reason": "Nêu đúng quyền nhưng thiếu toàn bộ nghĩa vụ và sai khi nói không đủ căn cứ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 46,
+    "arm": "adk",
+    "question": "Đề án thành lập chi nhánh ngân hàng thương mại ở nước ngoài cần có những nội dung gì?",
+    "reference": "Căn cứ khoản 5 Điều 13 Thông tư 32/2024/TT-NHNN, đề án thành lập chi nhánh hoặc ngân hàng con ở nước ngoài phải có các nội dung tối thiểu sau:\n\n* **Thông tin cơ bản:** Tên, địa điểm, mức vốn cấp, nội dung và thời hạn hoạt động.\n* **Lý do và Kế hoạch:** Lý do thành lập và lựa chọn nước sở tại, nghiên cứu khả thi, phân tích thị trường, phương án kinh doanh dự kiến trong 3 năm đầu.\n* **Tổ chức và Kiểm soát:** Cơ cấu tổ chức, mạng lưới dự kiến, và phương thức kiểm soát của ngân hàng mẹ đối với chi nhánh/ngân hàng con.\n* **Pháp lý:** Liệt kê các quy định pháp lý liên quan của nước sở tại.\n* **Đánh giá tác động và rủi ro:** Phân tích tác động đến an toàn hoạt động của ngân hàng mẹ, các chỉ số an toàn vốn, và phương án xử lý trong trường hợp chi nhánh/ngân hàng con gặp khó khăn.",
+    "articles": "32/2024/tt-nhnn_13",
+    "candidate": "Căn cứ khoản 5 Điều 13 Thông tư 32/2024/TT-NHNN, Đề án thành lập chi nhánh ngân hàng thương mại ở nước ngoài phải có các nội dung tối thiểu:\n\n- **Thông tin cơ bản:** tên, địa điểm, mức vốn cấp, nội dung và thời hạn hoạt động.\n- **Lý do và kế hoạch:** lý do thành lập và lựa chọn nước sở tại, nghiên cứu khả thi, phân tích thị trường, phương án kinh doanh dự kiến trong 3 năm đầu.\n- **Tổ chức và kiểm soát:** cơ cấu tổ chức, mạng lưới dự kiến và phương thức kiểm soát (nội dung bị cắt trong danh sách trích xuất).\n\nNgoài ra, hồ sơ phải lập bằng tiếng Việt; giấy tờ nước ngoài phải hợp pháp hóa lãnh sự và dịch thuật công chứng (Điều 23 Nghị định 52/2024/NĐ-CP).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Liệt kê quy định pháp lý của nước sở tại",
+        "Đánh giá tác động đến an toàn ngân hàng mẹ, chỉ số an toàn vốn, phương án xử lý khi gặp khó khăn"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3/5 nhóm nội dung, thiếu phần pháp lý nước sở tại và đánh giá tác động/rủi ro; trích thêm Nghị định 52/2024.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 49,
+    "arm": "adk",
+    "question": "Khi hợp đồng cho thuê tài chính chấm dứt trước hạn, việc xử lý tiền thuê được thực hiện như thế nào?",
+    "reference": "Theo Điều 21 Thông tư 26/2024/TT-NHNN, việc xử lý tiền thuê khi hợp đồng chấm dứt trước hạn phụ thuộc vào lý do chấm dứt:\n\n1.  **Trường hợp chấm dứt theo điểm a, b khoản 1 Điều 20:**\n    * Bên thuê tài chính phải thanh toán hết toàn bộ số tiền thuê còn lại (gồm nợ gốc, lãi, lãi chậm trả nếu có) tính đến thời điểm chấm dứt.\n    * Thời điểm thanh toán do các bên thỏa thuận, nếu không có thỏa thuận thì là tại thời điểm chấm dứt hợp đồng.\n    * Nếu bên thuê không thanh toán đúng hạn, họ phải trả lãi quá hạn trên nợ gốc và lãi chậm trả trên số tiền lãi chưa thanh toán theo thỏa thuận.\n\n2.  **Trường hợp chấm dứt theo điểm c, d khoản 1 Điều 20:** Việc xử lý tiền thuê sẽ được thực hiện theo thỏa thuận trong hợp đồng cho thuê tài chính và các quy định pháp luật liên quan.\n\nViệc xử lý tài sản cho thuê và các vấn đề khác sẽ được thực hiện theo quy định tại hợp đồng và pháp luật có liên quan.",
+    "articles": "26/2024/tt-nhnn_21, 26/2024/tt-nhnn_20",
+    "candidate": "Căn cứ Điều 21 Thông tư 26/2024/TT-NHNN, việc xử lý tiền thuê khi hợp đồng cho thuê tài chính chấm dứt trước hạn phụ thuộc vào lý do chấm dứt:\n\n**Trường hợp chấm dứt theo điểm a, b khoản 1 Điều 20 Thông tư 26/2024/TT-NHNN:**\n- Bên thuê tài chính phải thanh toán hết toàn bộ số tiền thuê còn lại (gồm nợ gốc, lãi, lãi chậm trả nếu có) tính đến thời điểm chấm dứt.\n- Thời điểm thanh toán do các bên thỏa thuận; nếu không có thỏa thuận thì là tại thời điểm chấm dứt hợp đồng.\n- Nếu bên thuê không thanh toán được, bên cho thuê xử lý tài sản bảo đảm theo quy định.\n\nĐối với các trường hợp chấm dứt khác, nội dung trích lược của Điều 21 không nêu rõ, nên không đủ căn cứ chi tiết cho các trường hợp này.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Trường hợp chấm dứt theo điểm c, d khoản 1 Điều 20: xử lý theo thỏa thuận trong hợp đồng và pháp luật liên quan",
+        "Nghĩa vụ trả lãi quá hạn trên nợ gốc và lãi chậm trả trên số lãi chưa thanh toán khi không thanh toán đúng hạn"
+      ],
+      "wrong": [
+        "Nêu việc xử lý tài sản bảo đảm thay cho quy định lãi quá hạn/lãi chậm trả (không có trong đáp án chuẩn)"
+      ],
+      "reason": "Nêu đúng ý 1 nhưng thiếu ý 2 (điểm c, d) và quy định lãi quá hạn; không bịa căn cứ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 93,
+    "arm": "adk",
+    "question": "Hồ sơ mở ví điện tử gồm những gì?",
+    "reference": "Hồ sơ mở ví điện tử bao gồm các tài liệu, thông tin, dữ liệu sau (Căn cứ Điều 18 Thông tư 40/2024/TT-NHNN):\n1. **Thỏa thuận mở và sử dụng ví điện tử**.\n2. Các tài liệu, thông tin, dữ liệu để **xác minh thông tin nhận biết khách hàng**:\n   - **Khách hàng cá nhân (công dân Việt Nam)**: Thẻ căn cước công dân, thẻ căn cước/căn cước điện tử (qua VNeID mức độ 02) hoặc Chứng minh nhân dân/Giấy khai sinh (với người dưới 14 tuổi).\n   - **Khách hàng cá nhân (người nước ngoài)**: Hộ chiếu (cần thêm thị thực/giấy miễn thị thực nếu cư trú tại Việt Nam) hoặc Danh tính điện tử (qua VNeID mức độ 02).\n   - **Khách hàng tổ chức**: Các tài liệu, thông tin, dữ liệu để xác minh thông tin nhận biết tổ chức và người đại diện hợp pháp theo quy định của Luật Phòng, chống rửa tiền 2022.",
+    "articles": "40/2024/tt-nhnn_18",
+    "candidate": "Căn cứ Thông tư 40/2024/TT-NHNN, Điều 18 (Hồ sơ mở ví điện tử), khoản 1: hồ sơ mở ví điện tử gồm thỏa thuận mở và sử dụng ví điện tử theo mẫu của tổ chức cung ứng dịch vụ.\n\nNgoài ra, theo Thông tư 40/2024/TT-NHNN, Điều 23 (Xác thực thông tin khách hàng khi mở ví điện tử), khoản 2: tổ chức cung ứng dịch vụ ví điện tử phải áp dụng các giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư.\n\nCác điều khoản trên không liệt kê đầy đủ danh mục giấy tờ, tài liệu khác trong hồ sơ mở ví điện tử.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "tài liệu, thông tin, dữ liệu xác minh thông tin nhận biết khách hàng (cá nhân/tổ chức)"
+      ],
+      "wrong": [],
+      "reason": "Chỉ nêu thỏa thuận, thiếu nhóm tài liệu xác minh khách hàng; trích thêm Điều 23.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 77,
+    "arm": "adk",
+    "question": "Việc quản lý nhiệm vụ khoa học và công nghệ của Ngân hàng Nhà nước Việt Nam phải đảm bảo những nguyên tắc gì?",
+    "reference": "Theo khoản 1 Điều 7 Thông tư 45/2024/TT-NHNN, việc quản lý các nhiệm vụ khoa học và công nghệ của Ngân hàng Nhà nước phải đảm bảo 04 nguyên tắc sau:\n\n1.  **Tập trung, thống nhất:** Đảm bảo việc quản lý được thực hiện một cách tập trung và thống nhất trong toàn ngành Ngân hàng.\n2.  **Chủ động, sáng tạo:** Đảm bảo quyền chủ động, phát huy sự sáng tạo và nâng cao trách nhiệm của các tổ chức, cá nhân tham gia thực hiện.\n3.  **Hiệu quả:** Đảm bảo sử dụng hiệu quả các nguồn lực của Ngân hàng Nhà nước.\n4.  **Tuân thủ:** Đảm bảo tuân thủ đầy đủ các quy định của pháp luật về hoạt động khoa học và công nghệ, cũng như các chiến lược, kế hoạch phát triển của ngành.",
+    "articles": "45/2024/tt-nhnn_7",
+    "candidate": "Căn cứ khoản 1 Điều 7 Thông tư 45/2024/TT-NHNN, việc quản lý nhiệm vụ khoa học và công nghệ của Ngân hàng Nhà nước phải đảm bảo 04 nguyên tắc:\n\n1. **Tập trung, thống nhất:** Quản lý được thực hiện tập trung, thống nhất trong toàn ngành Ngân hàng.\n2. **Chủ động, sáng tạo:** Đảm bảo quyền chủ động, phát huy sáng tạo và nâng cao trách nhiệm của các tổ chức, cá nhân tham gia thực hiện.\n3. **Hiệu quả:** Đảm bảo sử dụng hiệu quả các nguồn lực.\n4. Nguyên tắc thứ tư được quy định tại khoản 1 Điều 7 Thông tư 45/2024/TT-NHNN (nội dung chi tiết không được trích đầy đủ trong danh sách).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Nguyên tắc thứ 4: tuân thủ quy định pháp luật về khoa học và công nghệ, chiến lược, kế hoạch phát triển của ngành"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3/4 nguyên tắc, nguyên tắc tuân thủ chỉ ghi nhận chung chung không có nội dung; không sai, dẫn căn cứ đúng.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 38,
+    "arm": "adk",
+    "question": "Danh mục Open API cơ bản được tổ chức thành những nhóm nào?",
+    "reference": "Căn cứ Điều 6 Thông tư 64/2024/TT-NHNN, danh mục Open API cơ bản được chia thành 03 nhóm chính:\n\n1.  **Nhóm truy vấn thông tin của Ngân hàng:**\n    * API lấy thông tin lãi suất.\n    * API lấy thông tin tỷ giá.\n\n2.  **Nhóm truy vấn thông tin của khách hàng:**\n    * Bao gồm các API để xác nhận và lấy sự đồng ý của khách hàng, quản lý mã truy cập (lấy/làm mới/thu hồi), lấy danh sách tài khoản, thông tin tài khoản và lịch sử giao dịch.\n\n3.  **Nhóm khởi tạo giao dịch:**\n    * **Open API khởi tạo thanh toán:** Gồm các API để bắt đầu một thanh toán, xác nhận khách hàng, lấy trạng thái giao dịch...\n    * **Open API nạp tiền vào ví điện tử:** Gồm các API để nạp tiền vào ví, xác nhận OTP, cập nhật và lấy trạng thái giao dịch...\n    * **Open API rút tiền ra khỏi ví điện tử.**",
+    "articles": "64/2024/tt-nhnn_6",
+    "candidate": "Căn cứ Điều 6 Thông tư 64/2024/TT-NHNN, danh mục Open API cơ bản được chia thành 03 nhóm chính:\n\n1. **Nhóm truy vấn thông tin của Ngân hàng:** API lấy thông tin lãi suất; API lấy thông tin tỷ giá.\n\n2. **Nhóm truy vấn thông tin của khách hàng:** các API xác nhận và lấy sự đồng ý của khách hàng, quản lý mã truy cập (lấy/làm mới/thu hồi), lấy danh sách tài khoản, thông tin tài khoản và lịch sử giao dịch.\n\n3. **Nhóm khởi tạo giao dịch.**\n\n(Nội dung tương ứng cũng được nêu tại Điều 5 Thông tư 64/2024/TT-NHNN.)",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Chi tiết các Open API thuộc nhóm khởi tạo giao dịch: khởi tạo thanh toán, nạp tiền ví điện tử, rút tiền ví điện tử"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3 nhóm chính; thiếu chi tiết các API khởi tạo giao dịch; có trích thêm Điều 5.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 31,
+    "arm": "adk",
+    "question": "Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức nào?",
+    "reference": "Căn cứ theo Khoản 1 Điều 7 Thông tư 17/2024/TT-NHNN, Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức sau:\n\n* Tổ chức tín dụng (chỉ áp dụng cho trụ sở chính).\n* Chi nhánh ngân hàng nước ngoài tại Việt Nam.\n* Kho bạc Nhà nước Trung ương.\n* Các tổ chức khác theo quy định tại Khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP.",
+    "articles": "17/2024/tt-nhnn_7",
+    "candidate": "Căn cứ Khoản 1 Điều 7 Thông tư 17/2024/TT-NHNN, Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức sau:\n\n- Tổ chức tín dụng (chỉ áp dụng cho trụ sở chính).\n- Chi nhánh ngân hàng nước ngoài tại Việt Nam.\n- Kho bạc Nhà nước Trung ương.\n- Các tổ chức khác theo quy định tại Khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Trùng khớp đầy đủ với đáp án chuẩn, nêu đúng Thông tư 17/2024/TT-NHNN Điều 7 và liệt kê đủ bốn nhóm tổ chức.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 22,
+    "arm": "adk",
+    "question": "Tổ chức được cấp phép phải cung ứng dịch vụ trung gian thanh toán ra thị trường trong thời hạn tối đa là bao lâu?",
+    "reference": "Căn cứ khoản 3 Điều 22 Nghị định 52/2024/NĐ-CP, trong thời hạn tối đa 06 tháng kể từ ngày được Ngân hàng Nhà nước cấp Giấy phép, tổ chức được cấp phép phải cung ứng dịch vụ trung gian thanh toán ra thị trường.\n\n**Lưu ý quan trọng:** Tổ chức chỉ được phép chính thức cung ứng dịch vụ sau khi đã triển khai hệ thống kỹ thuật đáp ứng đầy đủ các quy định liên quan tại khoản 2 Điều 22 của Nghị định này.",
+    "articles": "52/2024/nd-cp_22",
+    "candidate": "Căn cứ khoản 3 Điều 22 Nghị định 52/2024/NĐ-CP, trong thời hạn tối đa **06 tháng** kể từ ngày được Ngân hàng Nhà nước cấp Giấy phép, tổ chức được cấp phép phải cung ứng dịch vụ trung gian thanh toán ra thị trường.\n\nLưu ý: Tổ chức chỉ được chính thức cung ứng dịch vụ sau khi đã triển khai hệ thống kỹ thuật đáp ứng đầy đủ các quy định tại khoản 2 Điều 22 Nghị định này.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Khớp đáp án chuẩn: 06 tháng, khoản 3 Điều 22 Nghị định 52/2024/NĐ-CP, kèm lưu ý khoản 2 Điều 22.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 33,
+    "arm": "adk",
+    "question": "Ngân hàng Nhà nước chi nhánh và Sở Giao dịch phải giao nộp tiền giả về Kho tiền Trung ương theo định kỳ bao lâu một lần?",
+    "reference": "Căn cứ khoản 3 Điều 9 Thông tư 58/2024/TT-NHNN, Ngân hàng Nhà nước chi nhánh và Sở Giao dịch phải giao nộp tiền giả về Kho tiền Trung ương theo định kỳ **ít nhất 6 tháng một lần** (nếu có). Việc giao nộp này có thể được kết hợp với các đợt điều chuyển tiền khác của Ngân hàng Nhà nước. Riêng đối với tiền giả loại mới, việc giao nộp được thực hiện theo yêu cầu của Cục Phát hành và Kho quỹ.",
+    "articles": "58/2024/tt-nhnn_9",
+    "candidate": "Căn cứ khoản 3 Điều 9 Thông tư 58/2024/TT-NHNN, Ngân hàng Nhà nước chi nhánh và Sở Giao dịch phải giao nộp tiền giả về Kho tiền Trung ương theo định kỳ **ít nhất 6 tháng một lần** (nếu có). Việc giao nộp có thể kết hợp với các đợt điều chuyển tiền khác của Ngân hàng Nhà nước. Riêng tiền giả loại mới, việc giao nộp thực hiện theo yêu cầu của Cục Phát hành và Kho quỹ.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng định kỳ ít nhất 6 tháng một lần, đúng căn cứ Điều 9 Thông tư 58/2024/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 97,
+    "arm": "adk",
+    "question": "Thẻ ngân hàng được hiểu như thế nào? Đồng tiền sử dụng trong giao dịch thẻ ngân hàng là đồng gì?",
+    "reference": "Thẻ ngân hàng là **phương tiện thanh toán** do tổ chức phát hành thẻ phát hành để thực hiện giao dịch thẻ theo các điều kiện và điều khoản được các bên thoả thuận (Căn cứ khoản 1 Điều 3 Thông tư 18/2024/TT-NHNN).\n\nĐồng tiền sử dụng trong giao dịch thẻ:\n- **Trong lãnh thổ Việt Nam**:\n  - Giao dịch **rút tiền mặt** phải thực hiện bằng **Đồng Việt Nam (VND)**.\n  - Đối với **các giao dịch khác**: Đồng tiền giao dịch là **VND** (có thể là VND và ngoại tệ nếu được phép); Đồng tiền thanh toán là **VND** (Đơn vị chấp nhận thanh toán chỉ được nhận thanh toán bằng VND).\n- **Ngoài lãnh thổ Việt Nam**: Chủ thẻ phải thanh toán cho Tổ chức phát hành thẻ bằng **Đồng Việt Nam** theo tỷ giá thỏa thuận.\n(Căn cứ Điều 4 Thông tư 18/2024/TT-NHNN).",
+    "articles": "18/2024/tt-nhnn_3, 18/2024/tt-nhnn_4",
+    "candidate": "**Thẻ ngân hàng** là phương tiện thanh toán do tổ chức phát hành thẻ phát hành để thực hiện giao dịch thẻ theo các điều kiện và điều khoản được các bên thoả thuận (căn cứ khoản 1 Điều 3 Thông tư 18/2024/TT-NHNN).\n\n**Đồng tiền sử dụng trong giao dịch thẻ** (căn cứ Điều 3 Thông tư 18/2024/TT-NHNN):\n- Trong lãnh thổ Việt Nam: giao dịch rút tiền mặt phải thực hiện bằng Đồng Việt Nam (VND); đối với các giao dịch khác, đồng tiền giao dịch là VND (có thể là VND và ngoại tệ nếu được phép).\n\nLưu ý: nội dung về đồng tiền tại Điều 3 trong danh sách bị cắt ngắn (\"Đồ...\"), nên phần giao dịch ngoài lãnh thổ Việt Nam không đủ căn cứ để trình bày đầy đủ.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 3,
+      "missing": [
+        "đồng tiền thanh toán là VND (đơn vị chấp nhận thanh toán chỉ nhận VND)",
+        "ngoài lãnh thổ Việt Nam: chủ thẻ thanh toán cho tổ chức phát hành bằng VND theo tỷ giá thỏa thuận"
+      ],
+      "wrong": [
+        "dẫn Điều 3 cho nội dung đồng tiền, đúng phải là Điều 4 Thông tư 18/2024/TT-NHNN"
+      ],
+      "reason": "Nêu đúng định nghĩa thẻ; thiếu đồng tiền thanh toán và quy định ngoài lãnh thổ; dẫn sai Điều cho phần tiền tệ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 81,
+    "arm": "adk",
+    "question": "Để thực hiện giao dịch mua và cho thuê lại, tài sản của công ty cho thuê tài chính cần đáp ứng những điều kiện gì?",
+    "reference": "Căn cứ Điều 27 Thông tư 26/2024/TT-NHNN, khi thực hiện giao dịch mua và cho thuê lại, tài sản phải đáp ứng đủ 05 điều kiện sau:\n\n1.  Phải thuộc quyền sở hữu hợp pháp của bên bán (bên sẽ thuê lại).\n2.  Không có tranh chấp.\n3.  Không được sử dụng để làm tài sản bảo đảm cho một nghĩa vụ khác.\n4.  Đang ở trong tình trạng hoạt động bình thường.\n5.  Phải là loại tài sản được phép cho thuê tài chính theo quy định (máy móc, thiết bị, phương tiện vận tải... không thuộc danh mục cấm).",
+    "articles": "26/2024/tt-nhnn_27",
+    "candidate": "Căn cứ Điều 27 Thông tư 26/2024/TT-NHNN, tài sản trong giao dịch mua và cho thuê lại phải đáp ứng đủ 05 điều kiện:\n\n1. Thuộc quyền sở hữu hợp pháp của bên bán (bên sẽ thuê lại).\n2. Không có tranh chấp.\n3. Không được sử dụng để làm tài sản bảo đảm cho một nghĩa vụ khác.\n4. Đang ở trong tình trạng hoạt động bình thường.\n5. Là loại tài sản được phép cho thuê tài chính theo quy định (máy móc, thiết bị, phương tiện vận tải... không thuộc danh mục cấm).",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 05 điều kiện, đúng Điều 27 Thông tư 26/2024/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 50,
+    "arm": "adk",
+    "question": "Kết quả giám định tiền tại Ngân hàng Nhà nước chi nhánh, Sở Giao dịch được xử lý như thế nào?",
+    "reference": "Theo khoản 2 Điều 11 Thông tư 58/2024/TT-NHNN, kết quả giám định được xử lý theo ba trường hợp sau:\n\n1.  **Kết quả là tiền thật:** Số tiền thật sẽ được thu đổi cho người đề nghị giám định theo quy định về thu đổi tiền không đủ tiêu chuẩn lưu thông.\n2.  **Kết quả là tiền giả (loại đã có thông báo):** Thực hiện thu giữ, đóng dấu và bấm lỗ tiền giả.\n3.  **Kết quả là tiền giả (loại mới):** Thực hiện thu giữ, đồng thời thông báo ngay cho Công an địa phương (Phòng An ninh Kinh tế) và báo cáo bằng văn bản về Cục Phát hành và Kho quỹ.",
+    "articles": "58/2024/tt-nhnn_11",
+    "candidate": "Căn cứ khoản 2 Điều 11 Thông tư 58/2024/TT-NHNN, kết quả giám định tiền được xử lý theo ba trường hợp:\n\n1. **Kết quả là tiền thật:** số tiền thật được thu đổi cho người đề nghị giám định theo quy định về thu đổi tiền không đủ tiêu chuẩn lưu thông.\n2. **Kết quả là tiền giả (loại đã có thông báo):** thực hiện thu giữ, đóng dấu và bấm lỗ tiền giả.\n3. **Kết quả là tiền giả (loại mới):** thực hiện thu giữ, đồng thời thông báo ngay cho Công an địa phương (Phòng An ninh...).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Trường hợp tiền giả loại mới còn thiếu việc báo cáo bằng văn bản về Cục Phát hành và Kho quỹ"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng ba trường hợp và căn cứ, nhưng trường hợp tiền giả mới thiếu báo cáo văn bản Cục Phát hành và Kho quỹ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 84,
+    "arm": "adk",
+    "question": "Văn bản báo cáo khai trương hoạt động văn phòng đại diện trong nước của ngân hàng thương mại phải bao gồm những thông tin gì?",
+    "reference": "Văn bản báo cáo khai trương hoạt động văn phòng đại diện trong nước của ngân hàng thương mại phải bao gồm các thông tin sau (Căn cứ khoản 1 Điều 16 Thông tư 32/2024/TT-NHNN):\n- **Ngày dự kiến khai trương hoạt động**;\n- **Thông tin về người đứng đầu**;\n- **Tên và địa chỉ của văn phòng đại diện**.\nNgân hàng thương mại phải gửi văn bản báo cáo Ngân hàng Nhà nước chi nhánh nơi đặt trụ sở văn phòng đại diện chậm nhất **07 ngày làm việc** trước ngày khai trương hoạt động.",
+    "articles": "32/2024/tt-nhnn_16",
+    "candidate": "Theo khoản 1 Điều 16 Thông tư 32/2024/TT-NHNN, văn bản báo cáo khai trương hoạt động văn phòng đại diện trong nước của ngân hàng thương mại phải bao gồm các thông tin sau:\n- Ngày dự kiến khai trương hoạt động;\n- Thông tin về người đứng đầu;\n- Tên và địa chỉ của văn phòng đại diện.\n\nNgân hàng thương mại phải gửi văn bản báo cáo Ngân hàng Nhà nước chi nhánh nơi đặt trụ sở văn phòng đại diện chậm nhất 07 ngày làm việc trước ngày khai trương hoạt động.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 3 thông tin, đúng căn cứ Điều 16 Thông tư 32/2024/TT-NHNN và thời hạn 07 ngày làm việc.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 27,
+    "arm": "adk",
+    "question": "Bảo lãnh ngân hàng có những hình thức nào?",
+    "reference": "Theo Điều 3 Thông tư 61/2024/TT-NHNN, bảo lãnh ngân hàng có các hình thức chính sau:\n\n1.  **Bảo lãnh đối ứng:** Là hình thức một bên bảo lãnh (bên bảo lãnh đối ứng) cam kết với một bên bảo lãnh khác về việc sẽ thực hiện nghĩa vụ tài chính nếu bên bảo lãnh đó phải trả tiền thay cho khách hàng.\n2.  **Xác nhận bảo lãnh:** Là hình thức một bên (bên xác nhận bảo lãnh) cam kết sẽ thực hiện nghĩa vụ thay cho bên bảo lãnh chính nếu bên bảo lãnh chính không thực hiện được cam kết của mình với bên nhận bảo lãnh.\n3.  **Bảo lãnh trong bán, cho thuê mua nhà ở hình thành trong tương lai:** Là cam kết của ngân hàng thương mại với người mua nhà về việc sẽ thực hiện nghĩa vụ tài chính thay cho chủ đầu tư nếu chủ đầu tư không bàn giao nhà đúng hạn mà không hoàn trả hoặc hoàn trả không đầy đủ nghĩa vụ tài chính cho người mua.\n4.  **Đồng bảo lãnh:** Là hình thức từ hai tổ chức tín dụng trở lên cùng thực hiện bảo lãnh cho một nghĩa vụ.",
+    "articles": "61/2024/tt-nhnn_3",
+    "candidate": "Theo Điều 3 Thông tư 61/2024/TT-NHNN, bảo lãnh ngân hàng có các hình thức chính sau:\n\n1. **Bảo lãnh đối ứng:** Một bên bảo lãnh (bên bảo lãnh đối ứng) cam kết với một bên bảo lãnh khác về việc sẽ thực hiện nghĩa vụ tài chính nếu bên bảo lãnh đó phải trả tiền thay cho khách hàng.\n\n2. **Xác nhận bảo lãnh:** Một bên (bên xác nhận bảo lãnh) cam kết sẽ thực hiện nghĩa vụ thay cho bên bảo lãnh chính nếu bên bảo lãnh chính không thực hiện được cam kết.\n\nCăn cứ: Thông tư 61/2024/TT-NHNN, Điều 3.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Bảo lãnh trong bán, cho thuê mua nhà ở hình thành trong tương lai",
+        "Đồng bảo lãnh"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 2/4 hình thức, thiếu bảo lãnh nhà ở hình thành trong tương lai và đồng bảo lãnh; không sai, dẫn căn cứ đúng.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 88,
+    "arm": "adk",
+    "question": "Ngân hàng quyết định phát hành thư tín dụng khi khách hàng có phương án sử dụng vốn khả thi đúng không?",
+    "reference": "Đúng, nhưng **chưa đủ**. Ngân hàng xem xét, quyết định phát hành thư tín dụng khi khách hàng có đủ **4 điều kiện** sau (Căn cứ khoản 1 Điều 21 Thông tư 21/2024/TT-NHNN):\n- Có **năng lực pháp luật dân sự, năng lực hành vi dân sự**;\n- Nhu cầu mở thư tín dụng để phục vụ hoạt động **mua bán hàng hóa, dịch vụ hợp pháp**;\n- Có **phương án sử dụng vốn khả thi**;\n- Có **khả năng tài chính để thanh toán** hợp đồng mua bán hàng hóa, dịch vụ.",
+    "articles": "21/2024/tt-nhnn_21",
+    "candidate": "Đúng, nhưng **chưa đủ**. Căn cứ khoản 1 Điều 21 Thông tư 21/2024/TT-NHNN, ngân hàng xem xét, quyết định phát hành thư tín dụng khi khách hàng có đủ **4 điều kiện**:\n- Có năng lực pháp luật dân sự, năng lực hành vi dân sự;\n- Nhu cầu mở thư tín dụng để phục vụ hoạt động mua bán hàng hóa, dịch vụ hợp pháp;\n- Có phương án sử dụng vốn khả thi;\n- Có khả năng tài chính để thanh toán hợp đồng mua bán hàng hóa, dịch vụ.\n\nNhư vậy, \"phương án sử dụng vốn khả thi\" chỉ là một trong bốn điều kiện, không phải điều kiện duy nhất.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 4 điều kiện và đúng căn cứ khoản 1 Điều 21 Thông tư 21/2024/TT-NHNN, khớp đáp án chuẩn.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 34,
+    "arm": "adk",
+    "question": "Tổ chức tín dụng có cần phải thông báo bằng văn bản cho các đơn vị trong hệ thống của mình để phòng ngừa tiền giả không?",
+    "reference": "Có. Theo khoản 3 Điều 13 Thông tư 58/2024/TT-NHNN, khi nhận được thông báo bằng văn bản về một loại tiền giả mới từ Ngân hàng Nhà nước, các tổ chức tín dụng và chi nhánh ngân hàng nước ngoài **bắt buộc phải thông báo bằng văn bản** cho tất cả các đơn vị trong hệ thống của mình để chủ động phòng ngừa.",
+    "articles": "58/2024/tt-nhnn_13",
+    "candidate": "Có. Căn cứ khoản 3 Điều 13 Thông tư 58/2024/TT-NHNN: khi nhận được thông báo bằng văn bản về một loại tiền giả mới từ Ngân hàng Nhà nước, các tổ chức tín dụng và chi nhánh ngân hàng nước ngoài bắt buộc phải thông báo bằng văn bản cho tất cả các đơn vị trong hệ thống của mình để chủ động phòng ngừa.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Trả lời đúng, nêu đủ ý và đúng căn cứ Điều 13 Thông tư 58/2024/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 9,
+    "arm": "adk",
+    "question": "Tổ chức tín dụng cho vay phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn cho vay trong trường hợp nào?",
+    "reference": "Căn cứ khoản 2 Điều 4 Thông tư 21/2017/TT-NHNN, tổ chức tín dụng phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn vay vào tài khoản thanh toán của khách hàng trong các trường hợp sau:\n\n1.  Khi pháp luật quy định các khoản thanh toán, chi trả cho mục đích sử dụng vốn vay phải được thực hiện thông qua tài khoản thanh toán của khách hàng.\n\n2.  Khi khách hàng là bên thụ hưởng có tài khoản thanh toán và đã dùng vốn tự có của mình để trả trước các chi phí thuộc phương án, dự án kinh doanh (hoặc phục vụ đời sống) đã được tổ chức tín dụng duyệt cho vay.\n\n3.  Khi khách hàng trực tiếp thanh toán tiền mua các sản phẩm nông, lâm, diêm nghiệp và thủy sản từ các cá nhân, hộ gia đình, trang trại, hộ kinh doanh, và tổ hợp tác ở khu vực nông thôn để thực hiện phương án sản xuất kinh doanh phù hợp với mục đích vay.",
+    "articles": "21/2017/tt-nhnn_4",
+    "candidate": "Căn cứ khoản 2 Điều 4 Thông tư 21/2017/TT-NHNN, tổ chức tín dụng cho vay phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn vay vào tài khoản thanh toán của khách hàng trong các trường hợp:\n\n1. Khi pháp luật quy định các khoản thanh toán, chi trả cho mục đích sử dụng vốn vay phải được thực hiện thông qua tài khoản thanh toán của khách hàng.\n\n2. Khi khách hàng là bên thụ hưởng có tài khoản thanh toán và đã dùng vốn tự có của mình để trả trước các chi phí (nội dung điều khoản bị cắt trong dữ liệu trích xuất).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Trường hợp khách hàng trực tiếp thanh toán tiền mua sản phẩm nông, lâm, diêm nghiệp, thủy sản từ cá nhân, hộ gia đình, trang trại, hộ kinh doanh, tổ hợp tác ở khu vực nông thôn",
+        "Ý 2 bị cắt, không nêu đầy đủ nội dung về chi phí thuộc phương án, dự án kinh doanh đã được duyệt cho vay"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng căn cứ và 2/3 trường hợp, thiếu trường hợp thứ ba và ý 2 chưa đầy đủ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 48,
+    "arm": "adk",
+    "question": "Hợp đồng cho thuê tài chính của công ty cho thuê tài chính phải có những nội dung tối thiểu nào?",
+    "reference": "Căn cứ khoản 1 Điều 18 Thông tư 26/2024/TT-NHNN, một hợp đồng cho thuê tài chính phải được lập thành văn bản và có các nội dung tối thiểu sau:\n\n* **Thông tin cơ bản:** Tên, địa chỉ của bên cho thuê và bên thuê.\n* **Thông tin tài sản thuê:** Tên, đặc tính kỹ thuật, chủng loại, giá cả, thời hạn giao nhận, bảo hành, và chất lượng tài sản.\n* **Điều khoản tài chính:** Mục đích sử dụng tài sản; đồng tiền thuê và trả nợ; số tiền thuê, lãi suất (cách xác định lãi suất điều chỉnh), các loại phí.\n* **Điều khoản trả nợ:** Thời hạn cho thuê, kỳ hạn trả nợ, quy định về cơ cấu lại thời hạn trả nợ, lãi suất quá hạn, lãi chậm trả, và thứ tự thu hồi nợ.\n* **Xử lý hợp đồng:** Các trường hợp chấm dứt hợp đồng trước hạn và cách xử lý; trách nhiệm do vi phạm hợp đồng; quyền và nghĩa vụ các bên.\n* **Các điều khoản khác:** Biện pháp đảm bảo quyền sở hữu của bên cho thuê; phương thức giải quyết tranh chấp; và các thỏa thuận khác phù hợp với pháp luật.",
+    "articles": "26/2024/tt-nhnn_18",
+    "candidate": "Căn cứ khoản 1 Điều 18 Thông tư 26/2024/TT-NHNN, hợp đồng cho thuê tài chính phải lập thành văn bản và có các nội dung tối thiểu:\n\n- Tên, địa chỉ của bên cho thuê và bên thuê;\n- Tên, đặc tính kỹ thuật, chủng loại, giá cả, thời hạn giao nhận, bảo hành và chất lượng tài sản thuê;\n- Mục đích sử dụng tài sản; đồng tiền thuê và trả nợ; số tiền thuê, lãi suất (cách xác định lãi suất điều chỉnh…).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Thời hạn cho thuê, kỳ hạn trả nợ, cơ cấu lại thời hạn trả nợ, lãi suất quá hạn, lãi chậm trả, thứ tự thu hồi nợ",
+        "Các trường hợp chấm dứt hợp đồng trước hạn và cách xử lý; trách nhiệm do vi phạm hợp đồng; quyền và nghĩa vụ các bên",
+        "Biện pháp đảm bảo quyền sở hữu của bên cho thuê; phương thức giải quyết tranh chấp; các thỏa thuận khác",
+        "Các loại phí"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng căn cứ và 3 nhóm nội dung đầu, thiếu nhóm trả nợ, chấm dứt hợp đồng và điều khoản khác",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 60,
+    "arm": "adk",
+    "question": "Ngân hàng không được cho vay đối với những nhu cầu vay vốn nào?",
+    "reference": "Căn cứ Điều 8 Thông tư 39/2016/TT-NHNN (đã được sửa đổi, bổ sung), ngân hàng không được cho vay đối với các nhu cầu vốn sau:\n\n1.  Để đầu tư, kinh doanh các ngành, nghề bị pháp luật cấm.\n2.  Để thanh toán chi phí hoặc mua sắm hàng hóa, dịch vụ thuộc các ngành, nghề cấm đầu tư kinh doanh.\n3.  Để mua vàng miếng.\n4.  Để trả nợ một khoản vay khác tại chính ngân hàng cho vay (trừ một số trường hợp đặc biệt).\n5.  Để trả nợ một khoản vay tại một tổ chức tín dụng khác hoặc một khoản vay nước ngoài (trừ trường hợp vay để trả nợ trước hạn và đáp ứng đủ các điều kiện cụ thể).\n6.  Để gửi tiền.",
+    "articles": "39/2016/tt-nhnn_8",
+    "candidate": "Căn cứ Điều 8 Thông tư 39/2016/TT-NHNN (đã được sửa đổi, bổ sung), ngân hàng không được cho vay đối với các nhu cầu vốn:\n\n1. Để đầu tư, kinh doanh các ngành, nghề bị pháp luật cấm.\n2. Để thanh toán chi phí hoặc mua sắm hàng hóa, dịch vụ thuộc các ngành, nghề cấm đầu tư kinh doanh.\n3. Để mua vàng miếng.\n4. Để trả nợ một khoản vay khác tại chính ngân hàng cho vay (trừ một số trường hợp đặc biệt).\n5. Để trả nợ một khoản vay tại một tổ chức tín dụng khác hoặc một… (các trường hợp tiếp theo theo quy định tại Điều này).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Để gửi tiền"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng Điều 8 Thông tư 39/2016, đủ ý 1-4 và một phần ý 5, nhưng thiếu ý 6 (để gửi tiền).",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 64,
+    "arm": "adk",
+    "question": "Đối với tài khoản ngân hàng của công ty thì cần cập nhật sinh trắc học của ai?",
+    "reference": "Căn cứ khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN, đối với tài khoản ngân hàng của công ty (khách hàng tổ chức), cần phải cập nhật thông tin sinh trắc học của **người đại diện theo pháp luật** của công ty hoặc **người đại diện theo ủy quyền hợp pháp**. Việc này là bắt buộc để có thể thực hiện các giao dịch rút tiền và thanh toán bằng phương tiện điện tử từ tài khoản của công ty.",
+    "articles": "17/2024/tt-nhnn_17",
+    "candidate": "Không đủ căn cứ để trả lời.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "người đại diện theo pháp luật/người đại diện theo ủy quyền hợp pháp của công ty",
+        "căn cứ khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN"
+      ],
+      "wrong": [],
+      "reason": "Không trả lời, từ chối đưa ra nội dung so với đáp án chuẩn.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 75,
+    "arm": "adk",
+    "question": "Hợp đồng cho thuê tài chính của công ty cho thuê tài chính phải có những nội dung tối thiểu nào?",
+    "reference": "Căn cứ khoản 1 Điều 18 Thông tư 26/2024/TT-NHNN, một hợp đồng cho thuê tài chính phải được lập thành văn bản và có các nội dung tối thiểu sau:\n\n* **Thông tin cơ bản:** Tên, địa chỉ của bên cho thuê và bên thuê.\n* **Thông tin tài sản thuê:** Tên, đặc tính kỹ thuật, chủng loại, giá cả, thời hạn giao nhận, bảo hành, và chất lượng tài sản.\n* **Điều khoản tài chính:** Mục đích sử dụng tài sản; đồng tiền thuê và trả nợ; số tiền thuê, lãi suất (cách xác định lãi suất điều chỉnh), các loại phí.\n* **Điều khoản trả nợ:** Thời hạn cho thuê, kỳ hạn trả nợ, quy định về cơ cấu lại thời hạn trả nợ, lãi suất quá hạn, lãi chậm trả, và thứ tự thu hồi nợ.\n* **Xử lý hợp đồng:** Các trường hợp chấm dứt hợp đồng trước hạn và cách xử lý; trách nhiệm do vi phạm hợp đồng; quyền và nghĩa vụ các bên.\n* **Các điều khoản khác:** Biện pháp đảm bảo quyền sở hữu của bên cho thuê; phương thức giải quyết tranh chấp; và các thỏa thuận khác phù hợp với pháp luật.",
+    "articles": "26/2024/tt-nhnn_18",
+    "candidate": "Căn cứ khoản 1 Điều 18 Thông tư 26/2024/TT-NHNN, hợp đồng cho thuê tài chính phải lập thành văn bản với các nội dung tối thiểu:\n\n- **Thông tin cơ bản:** tên, địa chỉ của bên cho thuê và bên thuê.\n- **Thông tin tài sản thuê:** tên, đặc tính kỹ thuật, chủng loại, giá cả, thời hạn giao nhận, bảo hành và chất lượng tài sản.\n- **Điều khoản tài chính:** mục đích sử dụng tài sản; đồng tiền thuê và trả nợ; số tiền thuê, lãi suất (cách xác định lãi suất điều chỉnh), thời hạn thuê, kỳ hạn trả tiền, phương thức thanh toán.\n- **Quyền và nghĩa vụ của các bên**, xử lý vi phạm, giải quyết tranh chấp và các nội dung khác theo thỏa thuận.\n\nLưu ý: nội dung trích dẫn tại [1] bị cắt ở phần điều khoản tài chính, nên các nội dung sau đó cần đối chiếu trực tiếp toàn văn Điều 18 để bảo đảm đầy đủ.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 3,
+      "missing": [
+        "cơ cấu lại thời hạn trả nợ, lãi suất quá hạn, lãi chậm trả, thứ tự thu hồi nợ",
+        "các trường hợp chấm dứt hợp đồng trước hạn và cách xử lý",
+        "biện pháp đảm bảo quyền sở hữu của bên cho thuê"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng căn cứ và phần lớn nội dung nhưng thiếu các điều khoản trả nợ chi tiết, chấm dứt trước hạn và bảo đảm quyền sở hữu.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 45,
+    "arm": "adk",
+    "question": "Thời hạn hiệu lực của thỏa thuận cấp bảo lãnh là bao lâu?",
+    "reference": "Căn cứ khoản 2 Điều 20 Thông tư 61/2024/TT-NHNN, thời hạn hiệu lực của thỏa thuận cấp bảo lãnh được quy định như sau:\n\n* **Thời hạn:** Do các bên tự thỏa thuận.\n* **Điều kiện tối thiểu:** Thời hạn hiệu lực của thỏa thuận cấp bảo lãnh phải **tối thiểu bằng** thời hạn hiệu lực của cam kết bảo lãnh được phát hành dựa trên thỏa thuận đó.\n* **Ngày hết hạn:** Nếu ngày hết hiệu lực trùng vào ngày nghỉ, lễ, tết thì sẽ được chuyển sang ngày làm việc tiếp theo.\n* **Gia hạn:** Việc gia hạn thời hạn hiệu lực do các bên thỏa thuận và phải phù hợp với quy định của pháp luật.",
+    "articles": "61/2024/tt-nhnn_20",
+    "candidate": "Căn cứ Điều 20 Thông tư 61/2024/TT-NHNN: thời hạn hiệu lực của thỏa thuận cấp bảo lãnh do các bên thỏa thuận, nhưng tối thiểu phải bằng thời hạn hiệu lực của cam kết bảo lãnh. Thời hạn hiệu lực của cam kết bảo lãnh được xác định từ thời điểm phát hành (hoặc sau đó theo thỏa thuận) cho đến khi nghĩa vụ bảo lãnh chấm dứt theo quy định tại Điều 23 Thông tư 61/2024/TT-NHNN.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "ngày hết hiệu lực trùng ngày nghỉ/lễ/tết thì chuyển sang ngày làm việc tiếp theo",
+        "gia hạn thời hạn hiệu lực do các bên thỏa thuận, phù hợp pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng thời hạn do các bên thỏa thuận và tối thiểu bằng thời hạn cam kết bảo lãnh; thiếu quy định ngày nghỉ và gia hạn; trích thêm Điều 23.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 99,
+    "arm": "adk",
+    "question": "Đối tượng điều tra thống kê tiền tệ và ngân hàng là ai?",
+    "reference": "Đối tượng điều tra thống kê tiền tệ và ngân hàng là **tổ chức, cá nhân được điều tra thống kê** (Căn cứ khoản 6 Điều 3 Thông tư 26/2018/TT-NHNN).",
+    "articles": "26/2018/tt-nhnn_3",
+    "candidate": "**Căn cứ: Thông tư 26/2018/TT-NHNN, Điều 3.**\n\nĐối tượng điều tra thống kê tiền tệ và ngân hàng là **tổ chức, cá nhân được điều tra thống kê** (theo khoản 6 Điều 3 Thông tư 26/2018/TT-NHNN).",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng đối tượng điều tra và đúng căn cứ khoản 6 Điều 3 Thông tư 26/2018/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 53,
+    "arm": "adk",
+    "question": "Hợp đồng cung ứng dịch vụ ngân quỹ phải có tối thiểu những nội dung nào?",
+    "reference": "Theo khoản 2 Điều 6 Thông tư 60/2024/TT-NHNN, một hợp đồng cung ứng dịch vụ ngân quỹ phải có tối thiểu 06 nội dung sau:\n\n1.  Thông tin của các bên tham gia hợp đồng.\n2.  Phạm vi cung cấp dịch vụ và thời gian thực hiện hợp đồng.\n3.  Phương thức quản lý vốn tiền mặt trong các giao dịch.\n4.  Mức phí áp dụng và phương thức thanh toán.\n5.  Quy định về xử lý sai sót, thừa thiếu, giải quyết tranh chấp và vi phạm hợp đồng.\n6.  Quyền và nghĩa vụ của các bên tham gia hợp đồng.",
+    "articles": "60/2024/tt-nhnn_6",
+    "candidate": "Theo khoản 2 Điều 6 Thông tư 60/2024/TT-NHNN, hợp đồng cung ứng dịch vụ ngân quỹ phải có tối thiểu 06 nội dung sau:\n\n1. Thông tin của các bên tham gia hợp đồng.\n2. Phạm vi cung cấp dịch vụ và thời gian thực hiện hợp đồng.\n3. Phương thức quản lý vốn tiền mặt trong các giao dịch.\n4. Mức phí áp dụng và phương thức thanh toán.\n5. Quy định về xử lý sai sót, thừa thiếu, giải quyết tranh chấp và vi phạm hợp đồng.\n6. Quyền và nghĩa vụ của các bên tham gia hợp đồng.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 6 nội dung, đúng Điều 6 Thông tư 60/2024/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 86,
+    "arm": "adk",
+    "question": "Tài khoản thanh toán có mấy hình thức?",
+    "reference": "Tài khoản thanh toán có **03 hình thức**, bao gồm:\n- **Tài khoản thanh toán của cá nhân**;\n- **Tài khoản thanh toán của tổ chức**;\n- **Tài khoản thanh toán chung** (có ít nhất hai chủ thể cùng đứng tên).\n(Căn cứ khoản 1 Điều 3 Thông tư 17/2024/TT-NHNN).",
+    "articles": "17/2024/tt-nhnn_3",
+    "candidate": "Căn cứ Điều 3 Thông tư 17/2024/TT-NHNN, tài khoản thanh toán có 03 hình thức chính:\n\n1. **Tài khoản thanh toán của cá nhân:** do một khách hàng là cá nhân mở tại tổ chức cung ứng dịch vụ thanh toán.\n2. **Tài khoản thanh toán của tổ chức:** do một khách hàng là tổ chức mở tại tổ chức cung ứng dịch vụ thanh toán.\n3. **Tài khoản thanh toán chung:** có từ hai chủ thể (cá nhân hoặc tổ chức) trở lên cùng đứng tên mở tài khoản.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 3 hình thức, đúng căn cứ Điều 3 Thông tư 17/2024/TT-NHNN, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 13,
+    "arm": "adk",
+    "question": "Sổ tiết kiệm gồm có các nội dung gì?",
+    "reference": "Theo Điều 7 Thông tư 48/2018/TT-NHNN, một sổ tiết kiệm phải có các nội dung tối thiểu sau:\n\n1.  **Thông tin tổ chức tín dụng:** Tên, con dấu; họ tên và chữ ký của giao dịch viên cùng người đại diện hợp pháp của tổ chức tín dụng.\n\n2.  **Thông tin người gửi tiền:**\n    * Họ tên, số và ngày cấp Giấy tờ xác minh thông tin của người gửi tiền (hoặc của tất cả những người gửi tiền nếu là sổ chung).\n    * Thông tin của người đại diện theo pháp luật nếu gửi tiền thông qua người đại diện.\n\n3.  **Thông tin khoản gửi:**\n    * Số sổ tiết kiệm, số tiền, loại đồng tiền.\n    * Ngày gửi tiền, thời hạn gửi, ngày đến hạn (nếu có kỳ hạn).\n    * Lãi suất và phương thức trả lãi.\n\n4.  **Thông tin khác:**\n    * Biện pháp để người gửi tiền tra cứu khoản tiết kiệm của mình.\n    * Quy định xử lý khi sổ bị nhàu nát, rách hoặc bị mất.\n\nNgoài ra, tổ chức tín dụng có thể bổ sung các nội dung khác theo quy định riêng.",
+    "articles": "48/2018/tt-nhnn_7",
+    "candidate": "Căn cứ Điều 7 Thông tư 48/2018/TT-NHNN, một sổ tiết kiệm phải có các nội dung tối thiểu sau:\n\n1. **Thông tin tổ chức tín dụng:** tên, con dấu; họ tên và chữ ký của giao dịch viên cùng người đại diện hợp pháp của tổ chức tín dụng.\n\n2. **Thông tin người gửi tiền:** họ tên, số và ngày cấp Giấy tờ xác minh thông tin của người gửi tiền (hoặc của tất cả những người gửi tiền nếu là sổ chung); thông tin của người đại diện theo pháp luật nếu gửi tiền thông qua người đại diện.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Thông tin khoản gửi: số sổ tiết kiệm, số tiền, loại đồng tiền, ngày gửi tiền, thời hạn gửi, ngày đến hạn, lãi suất và phương thức trả lãi",
+        "Thông tin khác: biện pháp tra cứu khoản tiết kiệm, quy định xử lý khi sổ nhàu nát, rách hoặc bị mất",
+        "Tổ chức tín dụng có thể bổ sung nội dung khác theo quy định riêng"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng điểm 1, 2 nhưng thiếu thông tin khoản gửi và thông tin khác nên chỉ đạt một phần.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 37,
+    "arm": "adk",
+    "question": "Các nguyên tắc triển khai Open API trong ngành ngân hàng từ ngày 01/03/2025 là gì?",
+    "reference": "Theo Điều 5 Thông tư 64/2024/TT-NHNN, việc triển khai Open API phải tuân thủ các nguyên tắc sau:\n\n1.  **Đối với Open API cơ bản:** Khi triển khai các Open API cơ bản (được liệt kê tại Điều 6), Ngân hàng bắt buộc phải tuân thủ các quy định tại Phụ lục 01 và Phụ lục 02 của Thông tư này.\n\n2.  **Đối với Open API khác:** Khi triển khai các Open API khác ngoài danh mục cơ bản theo nhu cầu thực tế, Ngân hàng phải tuân thủ các quy định tại Phụ lục 02 của Thông tư này.\n\n3.  **Giới hạn đối tác:** Đối với nhóm Open API khởi tạo thanh toán và giao dịch ví điện tử, Ngân hàng chỉ được phép triển khai cho các bên thứ ba là Ngân hàng hoặc tổ chức cung ứng dịch vụ trung gian thanh toán.",
+    "articles": "64/2024/tt-nhnn_5",
+    "candidate": "Căn cứ Điều 5 Thông tư 64/2024/TT-NHNN, từ ngày 01/03/2025, việc triển khai Open API trong ngành Ngân hàng thực hiện theo các nguyên tắc sau:\n\n1. **Danh mục Open API cơ bản** (Điều 5, Điều 6) gồm 03 nhóm:\n   - Nhóm truy vấn thông tin của Ngân hàng: API lấy thông tin lãi suất, tỷ giá.\n   - Nhóm truy vấn thông tin khách hàng: xác nhận và lấy sự đồng ý của khách hàng, quản lý mã truy cập (lấy/làm mới/thu hồi), lấy danh sách tài khoản, thông tin tài khoản và lịch sử giao dịch.\n   - Nhóm khởi tạo giao dịch (thanh toán, giao dịch ví điện tử).\n\n2. **Công khai thông tin** (Điều 9): trước khi kết nối, xử lý dữ liệu với bên thứ ba, ngân hàng phải công khai trên website chính thức thông tin về Hệ thống thử nghiệm Open API và danh mục Open API đang triển khai.\n\n3. **Trách nhiệm kỹ thuật, hạ tầng** (Điều 11): hoàn thiện hạ tầng, xây dựng tài liệu hướng dẫn kết nối; bảo đảm an toàn, an ninh mạng cấp độ 3 trở lên; có giải pháp giới hạn số lần truy vấn tự động từ bên thứ ba.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Nguyên tắc Open API cơ bản phải tuân thủ Phụ lục 01 và Phụ lục 02",
+        "Open API khác phải tuân thủ Phụ lục 02",
+        "Giới hạn đối tác: nhóm khởi tạo thanh toán, ví điện tử chỉ cho ngân hàng/tổ chức trung gian thanh toán"
+      ],
+      "wrong": [],
+      "reason": "Nêu Điều 5 nhưng nội dung là danh mục, công khai thông tin, hạ tầng; thiếu ba nguyên tắc chính của Điều 5",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 24,
+    "arm": "adk",
+    "question": "Các nguyên tắc khi lập và gửi hồ sơ đề nghị cấp Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán là gì?",
+    "reference": "Căn cứ Điều 23 Nghị định 52/2024/NĐ-CP, việc lập và gửi hồ sơ phải tuân thủ các nguyên tắc sau:\n\n1.  **Ngôn ngữ:** Hồ sơ phải được lập bằng tiếng Việt. Giấy tờ nước ngoài phải được hợp pháp hóa lãnh sự và dịch thuật công chứng.\n2.  **Bản sao:** Các bản sao phải được chứng thực hoặc là bản sao cấp từ sổ gốc, hoặc kèm bản chính để đối chiếu.\n3.  **Sơ yếu lý lịch:** Chữ ký trên sơ yếu lý lịch cá nhân phải được chứng thực.\n4.  **Phương thức nộp:** Hồ sơ có thể được nộp qua đường bưu điện, nộp trực tiếp tại Bộ phận Một cửa của Ngân hàng Nhà nước, hoặc nộp trực tuyến qua Cổng dịch vụ công.\n5.  **Trách nhiệm:** Tổ chức đề nghị cấp Giấy phép phải chịu hoàn toàn trách nhiệm trước pháp luật về tính chính xác và trung thực của thông tin trong hồ sơ.",
+    "articles": "52/2024/nd-cp_23",
+    "candidate": "Căn cứ Điều 10 Thông tư 57/2024/TT-NHNN, các nguyên tắc khi lập và gửi hồ sơ đề nghị cấp Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán gồm:\n\n- **Ký tên và định dạng:** Các văn bản phải do Trưởng Ban trù bị ký. Các mẫu đơn theo Phụ lục của Thông tư phải là bản gốc, các tài liệu khác là bản sao có chứng thực.\n- **Hồ sơ trong nước:** Lập 01 bộ bằng tiếng Việt.\n- **Hồ sơ liên doanh, 100% vốn nước ngoài:** Lập 02 bộ (01 bộ tiếng Việt, 01 bộ tiếng Anh). Bộ hồ sơ tiếng Anh phải được hợp pháp hóa lãnh sự.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "phương thức nộp hồ sơ (bưu điện, trực tiếp, trực tuyến)",
+        "trách nhiệm về tính chính xác, trung thực của hồ sơ",
+        "chữ ký sơ yếu lý lịch phải chứng thực",
+        "hợp pháp hóa lãnh sự và dịch thuật công chứng giấy tờ nước ngoài"
+      ],
+      "wrong": [],
+      "reason": "Nêu được ý ngôn ngữ và bản sao chứng thực nhưng dẫn sai căn cứ (Thông tư 57 thay vì Điều 23 Nghị định 52/2024) và thiếu nhiều nguyên tắc chính.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 40,
+    "arm": "adk",
+    "question": "Thời hạn hiệu lực của cam kết bảo lãnh và thỏa thuận cấp bảo lãnh được quy định như thế nào?",
+    "reference": "Theo Điều 20 Thông tư 61/2024/TT-NHNN, thời hạn hiệu lực được quy định như sau:\n\n* **Đối với cam kết bảo lãnh:** Thời hạn hiệu lực được xác định từ thời điểm phát hành (hoặc sau đó theo thỏa thuận) cho đến khi nghĩa vụ bảo lãnh chấm dứt theo quy định tại Điều 23 của Thông tư này.\n* **Đối với thỏa thuận cấp bảo lãnh:** Thời hạn hiệu lực do các bên thỏa thuận, nhưng tối thiểu phải bằng thời hạn hiệu lực của cam kết bảo lãnh.\n* **Trường hợp ngày hết hiệu lực là ngày nghỉ, lễ, tết:** Ngày hết hiệu lực sẽ được chuyển sang ngày làm việc tiếp theo.\n* **Gia hạn:** Việc gia hạn thời hạn hiệu lực do các bên thỏa thuận và phải phù hợp với quy định của pháp luật.",
+    "articles": "61/2024/tt-nhnn_20, 61/2024/tt-nhnn_23",
+    "candidate": "Căn cứ Điều 20 Thông tư 61/2024/TT-NHNN:\n\n- **Cam kết bảo lãnh:** Thời hạn hiệu lực được xác định từ thời điểm phát hành (hoặc sau đó theo thỏa thuận) cho đến khi nghĩa vụ bảo lãnh chấm dứt theo quy định tại Điều 23 Thông tư 61/2024/TT-NHNN.\n\n- **Thỏa thuận cấp bảo lãnh:** Thời hạn hiệu lực do các bên thỏa thuận, nhưng tối thiểu phải bằng thời hạn hiệu lực của cam kết bảo lãnh.\n\n- Trường hợp ngày hết hiệu lực là ngày nghỉ thì được xử lý theo quy định tại Điều 20 Thông tư 61/2024/TT-NHNN (nội dung chi tiết về trường hợp này không được trích dẫn đầy đủ trong danh sách).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Quy định cụ thể ngày hết hiệu lực là ngày nghỉ thì chuyển sang ngày làm việc tiếp theo",
+        "Ý về gia hạn thời hạn hiệu lực theo thỏa thuận và phù hợp pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng hai ý chính về cam kết và thỏa thuận cấp bảo lãnh; thiếu ý gia hạn và chưa nêu rõ xử lý ngày nghỉ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 41,
+    "arm": "adk",
+    "question": "Nghĩa vụ bảo lãnh ngân hàng chấm dứt trong những trường hợp nào?",
+    "reference": "Căn cứ Điều 23 Thông tư 61/2024/TT-NHNN, nghĩa vụ bảo lãnh ngân hàng sẽ chấm dứt khi xảy ra một trong các trường hợp sau:\n\n1.  Nghĩa vụ của bên được bảo lãnh đã chấm dứt.\n2.  Bên bảo lãnh đã thực hiện xong nghĩa vụ bảo lãnh của mình.\n3.  Việc bảo lãnh được hủy bỏ hoặc thay thế bằng biện pháp bảo đảm khác theo thỏa thuận.\n4.  Cam kết bảo lãnh đã hết hiệu lực.\n5.  Bên nhận bảo lãnh miễn thực hiện nghĩa vụ cho bên bảo lãnh.\n6.  Theo thỏa thuận của các bên.\n7.  Các trường hợp khác theo quy định của pháp luật.",
+    "articles": "61/2024/tt-nhnn_23",
+    "candidate": "Không đủ căn cứ để trả lời.\n\nCác điều khoản được truy xuất chỉ đề cập hình thức bảo lãnh (Điều 3 Thông tư 61/2024/TT-NHNN), thời hạn hiệu lực của cam kết bảo lãnh và dẫn chiếu chung đến việc chấm dứt nghĩa vụ bảo lãnh \"theo quy định tại Điều 23 Thông tư này\" (Điều 20 Thông tư 61/2024/TT-NHNN), nhưng nội dung Điều 23 về các trường hợp chấm dứt không được cung cấp. Do đó không có căn cứ cụ thể để nêu các trường hợp chấm dứt nghĩa vụ bảo lãnh ngân hàng.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "Nghĩa vụ của bên được bảo lãnh đã chấm dứt",
+        "Bên bảo lãnh đã thực hiện xong nghĩa vụ bảo lãnh",
+        "Bảo lãnh được hủy bỏ hoặc thay thế bằng biện pháp bảo đảm khác theo thỏa thuận",
+        "Cam kết bảo lãnh đã hết hiệu lực",
+        "Bên nhận bảo lãnh miễn thực hiện nghĩa vụ cho bên bảo lãnh",
+        "Theo thỏa thuận của các bên",
+        "Các trường hợp khác theo quy định của pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Không trả lời nội dung Điều 23, chỉ nói thiếu căn cứ; nêu thêm Điều 3, Điều 20 cùng văn bản.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 19,
+    "arm": "adk",
+    "question": "Việc triển khai thử nghiệm cho vay ngang hàng có được gia hạn không và phải nộp đơn trước bao lâu?",
+    "reference": "Có. Theo khoản 1 Điều 20 Nghị định 94/2025/NĐ-CP, việc triển khai thử nghiệm cho vay ngang hàng có thể được gia hạn. Tổ chức tham gia có nhu cầu gia hạn phải thực hiện thủ tục gia hạn trong khoảng thời gian tối thiểu là 90 ngày trước khi kết thúc thời gian thử nghiệm đã được cấp phép.",
+    "articles": "94/2025/nd-cp_20",
+    "candidate": "Không đủ căn cứ để trả lời.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Có được gia hạn theo khoản 1 Điều 20 Nghị định 94/2025/NĐ-CP",
+        "Phải nộp đơn gia hạn tối thiểu 90 ngày trước khi kết thúc thời gian thử nghiệm"
+      ],
+      "wrong": [
+        "Trả lời không đủ căn cứ, không đưa ra nội dung"
+      ],
+      "reason": "Không trả lời, bỏ toàn bộ ý chính về gia hạn và thời hạn 90 ngày.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 67,
+    "arm": "adk",
+    "question": "Hệ quản trị cơ sở dữ liệu của hệ thống Online Banking từ 01/01/2025 phải đáp ứng những yêu cầu gì?",
+    "reference": "Theo Điều 6 Thông tư 50/2024/TT-NHNN, từ ngày 01/01/2025, hệ quản trị cơ sở dữ liệu của hệ thống Online Banking phải đáp ứng các yêu cầu sau:\n\n1.  Phải có cơ chế bảo vệ và phân quyền truy cập đối với các tài nguyên trong cơ sở dữ liệu.\n2.  Hệ thống phải có cơ sở dữ liệu dự phòng thảm họa, có khả năng thay thế cơ sở dữ liệu chính và đảm bảo toàn vẹn dữ liệu giao dịch của khách hàng.\n3.  Phải được kiểm tra, nâng cao mức độ an toàn, bảo mật (hardening) và cập nhật các bản vá lỗi một cách thường xuyên.\n4.  Đơn vị chủ quản phải có biện pháp giám sát và ghi lại nhật ký (log) các truy cập và thao tác trên cơ sở dữ liệu.",
+    "articles": "50/2024/tt-nhnn_6",
+    "candidate": "Căn cứ Điều 6 Thông tư 50/2024/TT-NHNN, từ ngày 01/01/2025, hệ quản trị cơ sở dữ liệu của hệ thống Online Banking phải đáp ứng các yêu cầu:\n\n1. Có cơ chế bảo vệ và phân quyền truy cập đối với các tài nguyên trong cơ sở dữ liệu.\n2. Có cơ sở dữ liệu dự phòng thảm họa, có khả năng thay thế cơ sở dữ liệu chính và đảm bảo toàn vẹn dữ liệu giao dịch của khách hàng.\n3. Phải được kiểm tra, nâng cao mức độ an toàn, bảo mật (hardening) và cập nhật các bản vá.\n\nDanh sách trích xuất không nêu chi tiết đầy đủ nội dung khoản 3 (bị cắt cụt), nên chỉ nêu được đến đây.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Biện pháp giám sát và ghi lại nhật ký (log) các truy cập, thao tác trên cơ sở dữ liệu"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3/4 yêu cầu, thiếu yêu cầu giám sát và ghi log; dẫn căn cứ chính xác, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 62,
+    "arm": "adk",
+    "question": "Các hình thức của tài khoản thanh toán được quy định như thế nào?",
+    "reference": "Căn cứ Điều 3 Thông tư 17/2024/TT-NHNN, tài khoản thanh toán có 03 hình thức chính sau:\n\n1.  **Tài khoản thanh toán của cá nhân:** Là tài khoản do một khách hàng là cá nhân mở tại tổ chức cung ứng dịch vụ thanh toán.\n2.  **Tài khoản thanh toán của tổ chức:** Là tài khoản do một khách hàng là tổ chức mở tại tổ chức cung ứng dịch vụ thanh toán.\n3.  **Tài khoản thanh toán chung:** Là tài khoản có từ hai chủ thể (cá nhân hoặc tổ chức) trở lên cùng đứng tên mở tài khoản.",
+    "articles": "17/2024/tt-nhnn_3",
+    "candidate": "Căn cứ Điều 3 Thông tư 17/2024/TT-NHNN, tài khoản thanh toán có 03 hình thức chính:\n\n1. **Tài khoản thanh toán của cá nhân:** do một khách hàng là cá nhân mở tại tổ chức cung ứng dịch vụ thanh toán.\n2. **Tài khoản thanh toán của tổ chức:** do một khách hàng là tổ chức mở tại tổ chức cung ứng dịch vụ thanh toán.\n3. **Tài khoản thanh toán chung:** có từ hai chủ thể (cá nhân hoặc tổ chức) trở lên cùng đứng tên mở tài khoản.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 3 hình thức tài khoản thanh toán theo đúng Điều 3 Thông tư 17/2024/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 61,
+    "arm": "adk",
+    "question": "Khi nào ngân hàng phải chịu trách nhiệm về những thiệt hại phát sinh trong hoạt động cung ứng dịch vụ?",
+    "reference": "Căn cứ điểm g khoản 2 Điều 21 Thông tư 17/2024/TT-NHNN, ngân hàng phải chịu trách nhiệm về những thiệt hại phát sinh trong các trường hợp sau:\n\n1.  Thiệt hại do sai sót hoặc lỗi của chính ngân hàng, bao gồm cả việc không tuân thủ các quy định pháp luật về an toàn, bảo mật khi cung cấp dịch vụ.\n2.  Thiệt hại do ngân hàng không thực hiện đúng yêu cầu của cơ quan có thẩm quyền về việc xử lý các vụ việc liên quan đến gian lận, lừa đảo, hoặc vi phạm pháp luật.\n3.  Thiệt hại do ngân hàng không áp dụng các biện pháp xử lý rủi ro theo quy định nội bộ sau khi nhận được thông báo từ cơ quan có thẩm quyền về việc một khách hàng hoặc tài khoản của khách hàng có liên quan đến gian lận, lừa đảo, hoặc vi phạm pháp luật.",
+    "articles": "17/2024/tt-nhnn_21",
+    "candidate": "Căn cứ điểm g khoản 2 Điều 21 Thông tư 17/2024/TT-NHNN, ngân hàng phải chịu trách nhiệm về những thiệt hại phát sinh trong hoạt động cung ứng dịch vụ khi:\n\n1. Thiệt hại do sai sót hoặc lỗi của chính ngân hàng, bao gồm cả việc không tuân thủ các quy định pháp luật về an toàn, bảo mật khi cung cấp dịch vụ.\n2. Thiệt hại do ngân hàng không thực hiện đúng yêu cầu của cơ quan có thẩm quyền về việc xử lý các vụ việc liên quan đến gian lận, lừa đảo, hoặc vi phạm pháp luật.\n3. Các trường hợp thiệt hại khác theo quy định tại Điều 21 Thông tư 17/2024/TT-NHNN.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Thiệt hại do ngân hàng không áp dụng các biện pháp xử lý rủi ro theo quy định nội bộ sau khi nhận được thông báo từ cơ quan có thẩm quyền về khách hàng/tài khoản liên quan đến gian lận, lừa đảo, vi phạm pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng ý 1, 2 nhưng ý 3 thay bằng quy định chung, thiếu nội dung biện pháp xử lý rủi ro theo quy định nội bộ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 8,
+    "arm": "adk",
+    "question": "Tổ chức tín dụng cho vay xem xét quyết định việc áp dụng phương thức giải ngân vốn cho vay dựa trên những thông tin nào?",
+    "reference": "Theo điểm a khoản 1 Điều 8 Thông tư 21/2017/TT-NHNN, tổ chức tín dụng cho vay xem xét và quyết định phương thức giải ngân vốn cho vay dựa trên cơ sở các thông tin, tài liệu, và chứng từ thanh toán do khách hàng cung cấp. Tổ chức tín dụng phải tự chịu trách nhiệm về quyết định giải ngân của mình.",
+    "articles": "21/2017/tt-nhnn_8",
+    "candidate": "Căn cứ điểm a khoản 1 Điều 8 Thông tư 21/2017/TT-NHNN, tổ chức tín dụng cho vay xem xét và quyết định việc áp dụng phương thức giải ngân vốn cho vay dựa trên cơ sở các thông tin, tài liệu và chứng từ thanh toán do khách hàng cung cấp. Tổ chức tín dụng phải tự chịu trách nhiệm về quyết định giải ngân của mình.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Khớp đầy đủ đáp án chuẩn, nêu đúng Thông tư 21/2017/TT-NHNN Điều 8, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 35,
+    "arm": "adk",
+    "question": "Việc triển khai Open API trong ngành Ngân hàng sẽ bắt đầu từ ngày nào?",
+    "reference": "Căn cứ Điều 5 Thông tư 64/2024/TT-NHNN, việc triển khai Giao diện lập trình ứng dụng mở (Open API) trong ngành Ngân hàng sẽ được thực hiện theo các nguyên tắc quy định từ ngày **01 tháng 3 năm 2025**.\n\nCác Open API cơ bản được triển khai bao gồm các nhóm chính:\n1.  **Truy vấn thông tin tỷ giá, lãi suất.**\n2.  **Truy vấn thông tin khách hàng** (lấy sự đồng ý, danh sách tài khoản, lịch sử giao dịch...).\n3.  **Khởi tạo thanh toán và giao dịch ví điện tử** (nạp tiền, rút tiền...).",
+    "articles": "64/2024/tt-nhnn_5",
+    "candidate": "Căn cứ Điều 5 Thông tư 64/2024/TT-NHNN, việc triển khai Giao diện lập trình ứng dụng mở (Open API) trong ngành Ngân hàng sẽ bắt đầu từ ngày **01 tháng 3 năm 2025**, thực hiện theo các nguyên tắc quy định tại Điều này.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng mốc 01/3/2025 và đúng Điều 5 Thông tư 64/2024/TT-NHNN, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 100,
+    "arm": "adk",
+    "question": "Nguyên tắc của hoạt động điều tra thống kê tiền tệ và ngân hàng bao gồm những gì?",
+    "reference": "Nguyên tắc của hoạt động điều tra thống kê tiền tệ và ngân hàng bao gồm (Căn cứ Điều 4 Thông tư 26/2018/TT-NHNN):\n1. Bảo đảm tính **trung thực, khách quan, chính xác, đầy đủ, kịp thời**.\n2. Bảo đảm tính **độc lập** về chuyên môn, nghiệp vụ thống kê.\n3. Bảo đảm tính **thống nhất** về nghiệp vụ; **không tổ chức điều tra trùng lặp, chồng chéo**.\n4. **Công khai** về phương pháp thực hiện điều tra và công bố thông tin theo quy định.\n5. Có tính **so sánh**.\n6. Bảo đảm quyền **bình đẳng** trong việc tiếp cận và sử dụng thông tin đã được công bố.\n7. Dữ liệu, thông tin về từng tổ chức, cá nhân phải được sử dụng **đúng mục đích và được bảo mật** theo quy định.",
+    "articles": "26/2018/tt-nhnn_4",
+    "candidate": "Căn cứ Điều 4 Thông tư 26/2018/TT-NHNN, nguyên tắc của hoạt động điều tra thống kê tiền tệ và ngân hàng bao gồm:\n\n1. Bảo đảm tính trung thực, khách quan, chính xác, đầy đủ, kịp thời.\n2. Bảo đảm tính độc lập về chuyên môn, nghiệp vụ thống kê.\n3. Bảo đảm tính thống nhất về nghiệp vụ; không tổ chức điều tra trùng lặp, chồng chéo.\n4. Công khai về phương pháp thực hiện điều tra và công bố thông tin theo quy định.\n5. Có tính so sánh.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Bảo đảm quyền bình đẳng trong việc tiếp cận và sử dụng thông tin đã được công bố",
+        "Dữ liệu, thông tin về từng tổ chức, cá nhân phải được sử dụng đúng mục đích và được bảo mật theo quy định"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 5/7 nguyên tắc, dẫn đúng Điều 4 Thông tư 26/2018/TT-NHNN; thiếu nguyên tắc 6 và 7.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 47,
+    "arm": "adk",
+    "question": "Một ngân hàng thương mại được thành lập tối đa bao nhiêu chi nhánh tại nội thành Hà Nội?",
+    "reference": "Theo khoản 1 Điều 8 Thông tư 32/2024/TT-NHNN, một ngân hàng thương mại được thành lập **tối đa 10 chi nhánh** tại khu vực nội thành thành phố Hà Nội. Quy định tương tự cũng được áp dụng cho khu vực nội thành thành phố Hồ Chí Minh. Ngoài ra, ngân hàng còn phải tuân thủ các giới hạn khác về số lượng chi nhánh được mở mỗi năm tùy thuộc vào thời gian hoạt động.",
+    "articles": "32/2024/tt-nhnn_8",
+    "candidate": "Căn cứ khoản 1 Điều 8 Thông tư 32/2024/TT-NHNN, một ngân hàng thương mại được thành lập tối đa **10 chi nhánh** tại khu vực nội thành thành phố Hà Nội (quy định tương tự áp dụng cho nội thành thành phố Hồ Chí Minh). Ngoài ra, ngân hàng còn phải tuân thủ các giới hạn khác về số lượng chi nhánh được mở mỗi năm tùy thuộc vào thời gian hoạt động.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng Điều 8 Thông tư 32/2024/TT-NHNN và giới hạn tối đa 10 chi nhánh tại nội thành Hà Nội, đầy đủ ý chính.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 3,
+    "arm": "adk",
+    "question": "Thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh là bao lâu?",
+    "reference": "Tại khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN có quy định về thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\nBên đi vay gửi 01 bộ hồ sơ đăng ký khoản vay nước ngoài tới Cơ quan có thẩm quyền xác nhận đăng ký theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN trong thời hạn:\n- 30 ngày làm việc kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn;\n- 30 ngày làm việc kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn thành trung, dài hạn đối với khoản vay quy định tại khoản 2 Điều 11 Thông tư này mà ngày ký thỏa thuận gia hạn trong vòng 01 năm kể từ ngày rút vốn đầu tiên;\n- 30 ngày làm việc kể từ ngày bên đi vay được cấp Giấy chứng nhận đăng ký doanh nghiệp, Giấy phép thành lập và hoạt động theo pháp luật chuyên ngành, ngày ký hợp đồng đầu tư theo phương thức đối tác công tư (hợp đồng PPP), ngày các bên ký thỏa thuận vay nước ngoài để chuyển số tiền chuẩn bị đầu tư thành vốn vay (tùy thuộc ngày nào đến sau), áp dụng đối với khoản vay nước ngoài phát sinh từ việc chuyển số tiền thực hiện chuẩn bị đầu tư của các dự án đã được cấp Giấy chứng nhận đăng ký đầu tư thành vốn vay nước ngoài.\n- 60 ngày làm việc tính từ ngày tròn 01 năm kể từ ngày rút vốn đầu tiên đối với:\nKhoản vay quy định tại khoản 2 Điều 11 Thông tư 12/2022/TT-NHNN mà ngày ký thỏa thuận gia hạn sau 01 năm kể từ ngày rút vốn đầu tiên; và\nKhoản vay quy định tại khoản 3 Điều 11 Thông tư 12/2022/TT-NHNN.",
+    "articles": "12/2022/tt-nhnn_15, 12/2022/tt-nhnn_20, 12/2022/tt-nhnn_11",
+    "candidate": "Căn cứ Điều 11 Thông tư 12/2022/TT-NHNN, thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh là:\n\n- **30 ngày làm việc** kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn;\n- **30 ngày làm việc** kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn.\n\nBên đi vay gửi 01 bộ hồ sơ đăng ký tới Cơ quan có thẩm quyền xác nhận đăng ký theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": false,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 4,
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 52,
+    "arm": "adk",
+    "question": "Nghĩa vụ bảo lãnh ngân hàng chấm dứt trong những trường hợp nào?",
+    "reference": "Căn cứ Điều 23 Thông tư 61/2024/TT-NHNN, nghĩa vụ bảo lãnh ngân hàng sẽ chấm dứt khi xảy ra một trong các trường hợp sau:\n\n1.  Nghĩa vụ của bên được bảo lãnh đã chấm dứt.\n2.  Bên bảo lãnh đã thực hiện xong nghĩa vụ bảo lãnh của mình.\n3.  Việc bảo lãnh được hủy bỏ hoặc thay thế bằng biện pháp bảo đảm khác theo thỏa thuận.\n4.  Cam kết bảo lãnh đã hết hiệu lực.\n5.  Bên nhận bảo lãnh miễn thực hiện nghĩa vụ cho bên bảo lãnh.\n6.  Theo thỏa thuận của các bên.\n7.  Các trường hợp khác theo quy định của pháp luật.",
+    "articles": "61/2024/tt-nhnn_23",
+    "candidate": "Không đủ căn cứ để trả lời.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Nghĩa vụ của bên được bảo lãnh đã chấm dứt",
+        "Bên bảo lãnh đã thực hiện xong nghĩa vụ bảo lãnh",
+        "Bảo lãnh được hủy bỏ hoặc thay thế bằng biện pháp bảo đảm khác",
+        "Cam kết bảo lãnh đã hết hiệu lực",
+        "Bên nhận bảo lãnh miễn thực hiện nghĩa vụ cho bên bảo lãnh",
+        "Theo thỏa thuận của các bên",
+        "Các trường hợp khác theo quy định của pháp luật"
+      ],
+      "wrong": [
+        "Từ chối trả lời, không nêu bất kỳ trường hợp chấm dứt nào"
+      ],
+      "reason": "Câu trả lời từ chối, không nêu nội dung hay căn cứ Điều 23 Thông tư 61/2024/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 17,
+    "arm": "adk",
+    "question": "Theo Nghị định 94, thời gian thử nghiệm cho vay ngang hàng có phải tối đa là 02 năm không?",
+    "reference": "Đúng vậy. Căn cứ theo khoản 2 Điều 1 và khoản 1 Điều 6 Nghị định 94/2025/NĐ-CP, cho vay ngang hàng là một trong các giải pháp Fintech được tham gia Cơ chế thử nghiệm có kiểm soát (Sandbox). Thời gian thử nghiệm tối đa là 02 năm, tính từ thời điểm được Ngân hàng Nhà nước cấp Giấy chứng nhận tham gia. Tuy nhiên, thời gian thử nghiệm này có thể được gia hạn theo quy định tại Điều 20 của Nghị định.",
+    "articles": "94/2025/nd-cp_1, 94/2025/nd-cp_6, 94/2025/nd-cp_20",
+    "candidate": "Đúng vậy. Căn cứ khoản 2 Điều 1 và khoản 1 Điều 6 Nghị định 94/2025/NĐ-CP, cho vay ngang hàng là giải pháp Fintech tham gia Cơ chế thử nghiệm có kiểm soát (Sandbox), với thời gian thử nghiệm tối đa là 02 năm, tính từ thời điểm được Ngân hàng Nhà nước cấp Giấy chứng nhận tham gia. Thời gian này có thể được gia hạn theo quy định tại Điều 20 Nghị định 94/2025/NĐ-CP.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng thời gian thử nghiệm tối đa 02 năm, đúng căn cứ Điều 1, 6, 20 Nghị định 94/2025/NĐ-CP.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 39,
+    "arm": "adk",
+    "question": "Thỏa thuận cấp bảo lãnh ngân hàng từ ngày 01/4/2025 phải có những nội dung chính nào?",
+    "reference": "Căn cứ khoản 2 Điều 15 Thông tư 61/2024/TT-NHNN, từ ngày 01/4/2025, một thỏa thuận cấp bảo lãnh ngân hàng phải bao gồm 12 nội dung chính sau:\n\n1.  **Pháp luật áp dụng** (mặc định là pháp luật Việt Nam nếu không có thỏa thuận khác).\n2.  **Thông tin về các bên** trong quan hệ bảo lãnh.\n3.  **Nghĩa vụ được bảo lãnh.**\n4.  **Số tiền và đồng tiền bảo lãnh.**\n5.  **Hình thức phát hành** cam kết bảo lãnh.\n6.  **Điều kiện thực hiện** nghĩa vụ bảo lãnh.\n7.  **Quyền và nghĩa vụ** của các bên.\n8.  **Phí bảo lãnh.**\n9.  **Thỏa thuận về việc nhận nợ trả thay**, lãi suất áp dụng và nghĩa vụ hoàn trả nợ.\n10. **Số hiệu, ngày ký, và hiệu lực** của thỏa thuận.\n11. **Phương thức giải quyết tranh chấp.**\n12. **Các nội dung khác** không trái quy định của pháp luật.",
+    "articles": "61/2024/tt-nhnn_15",
+    "candidate": "Căn cứ khoản 2 Điều 15 Thông tư 61/2024/TT-NHNN, từ ngày 01/4/2025, thỏa thuận cấp bảo lãnh ngân hàng phải bao gồm 12 nội dung chính:\n\n1. Pháp luật áp dụng (mặc định là pháp luật Việt Nam nếu không có thỏa thuận khác).\n2. Thông tin về các bên trong quan hệ bảo lãnh.\n3. Nghĩa vụ được bảo lãnh.\n4. Số tiền và đồng tiền bảo lãnh.\n5. Hình thức phát hành cam kết bảo lãnh.\n6. Điều kiện thực hiện nghĩa vụ bảo lãnh.\n7. Quyền và nghĩa vụ các bên (nội dung tiếp theo của Điều 15).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Phí bảo lãnh",
+        "Thỏa thuận về việc nhận nợ trả thay, lãi suất và nghĩa vụ hoàn trả nợ",
+        "Số hiệu, ngày ký và hiệu lực của thỏa thuận",
+        "Phương thức giải quyết tranh chấp",
+        "Các nội dung khác không trái quy định pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng căn cứ và 7/12 nội dung, thiếu 5 nội dung chính cuối.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 59,
+    "arm": "adk",
+    "question": "Khi vay tiền ngân hàng có thể phát sinh những loại phí nào?",
+    "reference": "Theo Điều 14 Thông tư 39/2016/TT-NHNN, các loại phí khi vay tiền ngân hàng sẽ do ngân hàng và khách hàng thỏa thuận. Các loại phí phổ biến bao gồm:\n\n1.  **Phí trả nợ trước hạn:** Áp dụng khi khách hàng thanh toán khoản vay sớm hơn thời hạn trong hợp đồng.\n2.  **Phí trả cho hạn mức tín dụng dự phòng:** Phí duy trì một hạn mức tín dụng mà khách hàng có thể sử dụng khi cần.\n3.  **Phí thu xếp cho vay hợp vốn:** Phí cho việc tổ chức một khoản vay được đồng tài trợ bởi nhiều tổ chức tín dụng.\n4.  **Phí cam kết rút vốn:** Phí tính từ khi hợp đồng vay có hiệu lực đến lần giải ngân đầu tiên.\n5.  **Các loại phí khác** liên quan đến hoạt động cho vay theo quy định của pháp luật.",
+    "articles": "39/2016/tt-nhnn_14",
+    "candidate": "Căn cứ Điều 14 Thông tư 39/2016/TT-NHNN, các loại phí khi vay tiền ngân hàng do ngân hàng và khách hàng thỏa thuận. Các loại phí phổ biến gồm:\n\n1. **Phí trả nợ trước hạn**: áp dụng khi khách hàng thanh toán khoản vay sớm hơn thời hạn trong hợp đồng.\n2. **Phí trả cho hạn mức tín dụng dự phòng**: phí duy trì hạn mức tín dụng khách hàng có thể sử dụng khi cần.\n3. **Phí thu xếp cho vay hợp vốn**: phí cho việc tổ chức khoản vay được đồng tài trợ bởi nhiều tổ chức tín dụng.\n\nNgoài ra, theo Điều 11 Thông tư 60/2024/TT-NHNN, phí dịch vụ ngân quỹ do tổ chức cung ứng dịch vụ xây dựng, thỏa thuận trực tiếp với khách hàng trên nguyên tắc bình đẳng, tự nguyện, được quy định cụ thể trong hợp đồng và phải niêm yết công khai tại các địa điểm giao dịch hợp pháp.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Phí cam kết rút vốn",
+        "Các loại phí khác liên quan đến hoạt động cho vay"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3/5 loại phí và đúng Điều 14 Thông tư 39/2016/TT-NHNN; thiếu phí cam kết rút vốn và phí khác.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 69,
+    "arm": "adk",
+    "question": "Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán có thời hạn bao lâu?",
+    "reference": "Thời hạn hoạt động ghi trên Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán là **10 năm**, tính từ ngày tổ chức được Ngân hàng Nhà nước cấp Giấy phép (Căn cứ khoản 5 Điều 24 Nghị định 52/2024/NĐ-CP). Đối với **dịch vụ chuyển mạch tài chính quốc tế**, thời hạn hoạt động **không được vượt quá** thời hạn hoạt động ghi trên Giấy phép cung ứng dịch vụ chuyển mạch tài chính.",
+    "articles": "52/2024/nđ-cp_24",
+    "candidate": "Căn cứ khoản 5 Điều 24 Nghị định 52/2024/NĐ-CP, thời hạn hoạt động ghi trên Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán là **10 năm**, tính từ ngày tổ chức được Ngân hàng Nhà nước cấp Giấy phép.\n\nĐối với dịch vụ chuyển mạch tài chính quốc tế, thời hạn hoạt động không được vượt quá thời hạn hoạt động ghi trên Giấy phép cung ứng dịch vụ chuyển mạch tài chính (Điều 24 Nghị định 52/2024/NĐ-CP).\n\nLưu ý thêm theo Điều 22 Nghị định 52/2024/NĐ-CP: trong thời hạn tối đa 06 tháng kể từ ngày được cấp Giấy phép, tổ chức phải cung ứng dịch vụ ra thị trường; chỉ được chính thức cung ứng sau khi hệ thống kỹ thuật đáp ứng đầy đủ quy định tại khoản 2 Điều 22.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 10 năm, mốc tính từ ngày cấp phép và giới hạn dịch vụ chuyển mạch tài chính quốc tế; dẫn đúng Điều 24 Nghị định 52/2024, thêm Điều 22 không sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 23,
+    "arm": "adk",
+    "question": "Hồ sơ đề nghị cấp Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán bao gồm những thành phần nào?",
+    "reference": "Theo khoản 2 Điều 24 Nghị định 52/2024/NĐ-CP, hồ sơ đề nghị cấp Giấy phép bao gồm các tài liệu chính sau:\n\n1.  **Đơn đề nghị** cấp Giấy phép (theo Mẫu số 07).\n2.  **Nghị quyết** của cấp có thẩm quyền (HĐQT, HĐTV...) về việc thông qua Đề án cung ứng dịch vụ.\n3.  **Đề án cung ứng dịch vụ** trung gian thanh toán (theo Mẫu số 08).\n4.  **Bản thuyết minh giải pháp kỹ thuật**.\n5.  **Hồ sơ nhân sự** chủ chốt (sơ yếu lý lịch, bằng cấp, phiếu lý lịch tư pháp...).\n6.  **Tài liệu pháp lý** của tổ chức (giấy chứng nhận đăng ký doanh nghiệp, điều lệ...).\n7.  **Văn bản cam kết** và tài liệu chứng minh về việc đảm bảo duy trì vốn điều lệ.\n8.  **Tài liệu bổ sung** đối với dịch vụ chuyển mạch tài chính, bù trừ điện tử (phương án quyết toán, văn bản thỏa thuận kết nối...).\n9.  **Tài liệu bổ sung** đối với dịch vụ chuyển mạch tài chính quốc tế (quy định nội bộ, tài liệu pháp lý của đối tác quốc tế...).",
+    "articles": "52/2024/nd-cp_24, 52/2024/nd-cp_22",
+    "candidate": "Căn cứ khoản 2 Điều 24 Nghị định 52/2024/NĐ-CP, hồ sơ đề nghị cấp Giấy phép hoạt động cung ứng dịch vụ trung gian thanh toán gồm các thành phần chính:\n\n1. Đơn đề nghị cấp Giấy phép (Mẫu số 07).\n2. Nghị quyết của cấp có thẩm quyền (HĐQT, HĐTV...) về việc thông qua Đề án cung ứng dịch vụ.\n3. Đề án cung ứng dịch vụ trung gian thanh toán (Mẫu số 08).\n4. Bản thuyết minh giải pháp kỹ thuật.\n5. Hồ sơ nhân sự chủ chốt (sơ yếu lý lịch, bằng cấp, phiếu lý lịch tư pháp...).\n6. Các tài liệu khác theo quy định tại Điều 24.\n\nLưu ý: Điều 18 Thông tư 40/2024/TT-NHNN chỉ quy định hồ sơ mở ví điện tử, không điều chỉnh hồ sơ cấp Giấy phép; Điều 6 Thông tư 60/2024/TT-NHNN quy định nội dung hợp đồng dịch vụ ngân quỹ, không liên quan.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Tài liệu pháp lý của tổ chức (giấy chứng nhận đăng ký doanh nghiệp, điều lệ)",
+        "Văn bản cam kết và tài liệu chứng minh duy trì vốn điều lệ",
+        "Tài liệu bổ sung đối với dịch vụ chuyển mạch tài chính, bù trừ điện tử",
+        "Tài liệu bổ sung đối với dịch vụ chuyển mạch tài chính quốc tế"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 5/9 thành phần, thiếu tài liệu pháp lý, cam kết vốn và tài liệu bổ sung chuyển mạch; dẫn đúng Điều 24 Nghị định 52/2024.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 63,
+    "arm": "adk",
+    "question": "Khi nào ngân hàng phải chịu trách nhiệm về những thiệt hại phát sinh trong hoạt động cung ứng dịch vụ?",
+    "reference": "Căn cứ điểm g khoản 2 Điều 21 Thông tư 17/2024/TT-NHNN, ngân hàng phải chịu trách nhiệm về những thiệt hại phát sinh trong các trường hợp sau:\n\n1.  Thiệt hại do sai sót hoặc lỗi của chính ngân hàng, bao gồm cả việc không tuân thủ các quy định pháp luật về an toàn, bảo mật khi cung cấp dịch vụ.\n2.  Thiệt hại do ngân hàng không thực hiện đúng yêu cầu của cơ quan có thẩm quyền về việc xử lý các vụ việc liên quan đến gian lận, lừa đảo, hoặc vi phạm pháp luật.\n3.  Thiệt hại do ngân hàng không áp dụng các biện pháp xử lý rủi ro theo quy định nội bộ sau khi nhận được thông báo từ cơ quan có thẩm quyền về việc một khách hàng hoặc tài khoản của khách hàng có liên quan đến gian lận, lừa đảo, hoặc vi phạm pháp luật.",
+    "articles": "17/2024/tt-nhnn_21",
+    "candidate": "Căn cứ điểm g khoản 2 Điều 21 Thông tư 17/2024/TT-NHNN, ngân hàng phải chịu trách nhiệm về thiệt hại phát sinh trong hoạt động cung ứng dịch vụ khi:\n\n1. Thiệt hại do sai sót hoặc lỗi của chính ngân hàng, bao gồm cả việc không tuân thủ quy định pháp luật về an toàn, bảo mật khi cung cấp dịch vụ.\n2. Thiệt hại do ngân hàng không thực hiện đúng yêu cầu của cơ quan có thẩm quyền về xử lý các vụ việc liên quan đến gian lận, lừa đảo hoặc vi phạm pháp luật.\n\nNgoài ra, Điều 17 Thông tư 17/2024/TT-NHNN quy định ngân hàng phải hướng dẫn khách hàng sử dụng tài khoản thanh toán phù hợp phạm vi, hạn mức và đảm bảo đủ thông tin xác minh khách hàng.\n\nCác điều khoản khác trong danh sách (Điều 11 Thông tư 64/2024/TT-NHNN, Điều 23 Thông tư 40/2024/TT-NHNN, Điều 24 Nghị định 94/2025/NĐ-CP) không quy định trực tiếp về trách nhiệm bồi thường thiệt hại trong cung ứng dịch vụ.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "Thiệt hại do ngân hàng không áp dụng biện pháp xử lý rủi ro theo quy định nội bộ sau khi nhận thông báo từ cơ quan có thẩm quyền về khách hàng/tài khoản liên quan gian lận, lừa đảo, vi phạm pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 2/3 ý chính, thiếu ý thứ ba về biện pháp xử lý rủi ro nội bộ; trích thêm điều khoản ngoài căn cứ nhưng không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 25,
+    "arm": "adk",
+    "question": "Nghị định 26/2025/NĐ-CP có hiệu lực thi hành từ ngày nào?",
+    "reference": "Căn cứ theo khoản 1 Điều 4 Nghị định 26/2025/NĐ-CP, Nghị định này có hiệu lực thi hành kể từ ngày 01 tháng 3 năm 2025. Nghị định này sẽ bãi bỏ các Nghị định số 102/2022/NĐ-CP, 26/2014/NĐ-CP, và 43/2019/NĐ-CP.",
+    "articles": "26/2025/nd-cp_4",
+    "candidate": "Nghị định 26/2025/NĐ-CP có hiệu lực thi hành kể từ ngày 01 tháng 3 năm 2025 (căn cứ khoản 1 Điều 4 Nghị định 26/2025/NĐ-CP).",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng ngày hiệu lực 01/3/2025 và đúng căn cứ khoản 1 Điều 4 Nghị định 26/2025/NĐ-CP.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 6,
+    "arm": "adk",
+    "question": "Ngân hàng hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo những nguyên tắc nào?",
+    "reference": "Theo Khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN, ngân hàng phải hướng dẫn khách hàng sử dụng tài khoản thanh toán đảm bảo các nguyên tắc sau:\n\n1.  **Phù hợp phạm vi và hạn mức:** Xác định phạm vi sử dụng và hạn mức giao dịch phù hợp với từng đối tượng khách hàng, quy định quản lý rủi ro và thỏa thuận đã ký kết.\n\n2.  **Đủ thông tin xác minh:** Luôn có đủ thông tin cần thiết để kiểm tra, đối chiếu và xác minh nhận biết khách hàng trong suốt quá trình sử dụng tài khoản.\n\n3.  **Xác thực sinh trắc học:** Chỉ thực hiện rút tiền hoặc giao dịch điện tử khi đã hoàn thành việc đối chiếu khớp đúng giấy tờ tùy thân và dữ liệu sinh trắc học của chủ tài khoản với các nguồn dữ liệu tin cậy như: chip trên thẻ CCCD, tài khoản định danh điện tử VNeID, Cơ sở dữ liệu quốc gia về dân cư, hoặc dữ liệu thu thập trực tiếp (đối với người nước ngoài).\n\n4.  **Áp dụng biện pháp xác thực:** Tuân thủ các biện pháp xác thực cho từng loại giao dịch điện tử theo quy định của Ngân hàng Nhà nước về an toàn, bảo mật.\n\n5.  **Tuân thủ quy định ngoại hối:** Việc sử dụng tài khoản VND của người không cư trú, người nước ngoài và tài khoản ngoại tệ phải tuân thủ các quy định pháp luật về quản lý ngoại hối.",
+    "articles": "17/2024/tt-nhnn_17",
+    "candidate": "Căn cứ Khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN, ngân hàng hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo các nguyên tắc:\n\n1. Phù hợp phạm vi và hạn mức: Xác định phạm vi sử dụng và hạn mức giao dịch phù hợp với từng đối tượng khách hàng, quy định quản lý rủi ro và thỏa thuận đã ký kết.\n\n2. Đủ thông tin xác minh: Luôn có đủ thông tin cần thiết để kiểm tra, đối chiếu và xác minh nhận biết khách hàng trong suốt quá trình sử dụng tài khoản.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Xác thực sinh trắc học khi rút tiền/giao dịch điện tử",
+        "Áp dụng biện pháp xác thực theo quy định an toàn bảo mật",
+        "Tuân thủ quy định ngoại hối"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng căn cứ và 2/5 nguyên tắc, thiếu 3 nguyên tắc còn lại",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 7,
+    "arm": "adk",
+    "question": "Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức nào?",
+    "reference": "Căn cứ theo Khoản 1 Điều 7 Thông tư 17/2024/TT-NHNN, Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức sau:\n\n* Tổ chức tín dụng (chỉ áp dụng cho trụ sở chính).\n* Chi nhánh ngân hàng nước ngoài tại Việt Nam.\n* Kho bạc Nhà nước Trung ương.\n* Các tổ chức khác theo quy định tại Khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP.",
+    "articles": "17/2024/tt-nhnn_7",
+    "candidate": "Căn cứ khoản 1 Điều 7 Thông tư 17/2024/TT-NHNN, Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức sau:\n\n- Tổ chức tín dụng (chỉ áp dụng cho trụ sở chính);\n- Chi nhánh ngân hàng nước ngoài tại Việt Nam;\n- Kho bạc Nhà nước Trung ương;\n- Các tổ chức khác theo quy định tại khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Khớp đầy đủ đáp án chuẩn, trích đúng Thông tư 17/2024/TT-NHNN Điều 7; có nêu thêm Nghị định 52/2024/NĐ-CP.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 68,
+    "arm": "adk",
+    "question": "Khi công bố kết quả điều tra thống kê tiền tệ và ngân hàng ngoài thống kê nhà nước phải thực hiện điều gì?",
+    "reference": "Khi công bố kết quả điều tra thống kê tiền tệ và ngân hàng ngoài thống kê nhà nước, tổ chức, cá nhân phải **trích dẫn đầy đủ** các thông tin sau (Căn cứ khoản 4 Điều 17 Thông tư 26/2018/TT-NHNN):\n- **Phương pháp điều tra**.\n- **Mẫu điều tra**.\n- **Phạm vi tiến hành điều tra**.\n- **Thời gian và thời điểm tiến hành, kết thúc** cuộc điều tra.",
+    "articles": "26/2018/tt-nhnn_17",
+    "candidate": "Căn cứ khoản 4 Điều 17 Thông tư 26/2018/TT-NHNN: Khi công bố kết quả điều tra thống kê tiền tệ và ngân hàng ngoài thống kê nhà nước, tổ chức, cá nhân phải trích dẫn đầy đủ các thông tin sau:\n\n- Phương pháp điều tra;\n- Mẫu điều tra;\n- Phạm vi tiến hành điều tra;\n- Thời gian và thời điểm tiến hành, kết thúc cuộc điều tra.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đầy đủ 4 thông tin phải trích dẫn và đúng căn cứ khoản 4 Điều 17 Thông tư 26/2018/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 83,
+    "arm": "adk",
+    "question": "Ngân hàng Hợp tác xã Việt Nam cho vay đặc biệt trong các trường hợp nào?",
+    "reference": "Ngân hàng Hợp tác xã Việt Nam cho vay đặc biệt trong các trường hợp sau (Căn cứ khoản 2 Điều 4 Thông tư 37/2024/TT-NHNN):\n- Cho vay đặc biệt đối với **quỹ tín dụng nhân dân bị rút tiền hàng loạt** để chi trả tiền gửi cho người gửi tiền;\n- Cho vay đặc biệt đối với **quỹ tín dụng nhân dân được kiểm soát đặc biệt** để thực hiện phương án phục hồi đã được phê duyệt.",
+    "articles": "37/2024/tt-nhnn_4",
+    "candidate": "Căn cứ khoản 2 Điều 4 Thông tư số 37/2024/TT-NHNN, Ngân hàng Hợp tác xã Việt Nam cho vay đặc biệt trong các trường hợp sau:\n\n- Cho vay đặc biệt đối với quỹ tín dụng nhân dân bị rút tiền hàng loạt để chi trả tiền gửi cho người gửi tiền;\n- Cho vay đặc biệt đối với quỹ tín dụng nhân dân được kiểm soát đặc biệt để thực hiện phương án phục hồi đã được phê duyệt.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ cả hai trường hợp, đúng căn cứ khoản 2 Điều 4 Thông tư 37/2024/TT-NHNN, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 20,
+    "arm": "adk",
+    "question": "Có được triển khai thử nghiệm các giải pháp Fintech có kiểm soát trong lĩnh vực ngân hàng xuyên biên giới không?",
+    "reference": "Không. Căn cứ theo khoản 2 Điều 6 Nghị định 94/2025/NĐ-CP, việc triển khai thử nghiệm các giải pháp Fintech được giới hạn hoàn toàn trong không gian lãnh thổ Việt Nam và không được phép thực hiện thử nghiệm xuyên biên giới.",
+    "articles": "94/2025/nd-cp_6",
+    "candidate": "Căn cứ [94/2025/ND-CP] khoản 2 Điều 1, khoản 1 Điều 6 và Điều 20: cho vay ngang hàng là giải pháp Fintech được tham gia Cơ chế thử nghiệm có kiểm soát (Sandbox), thời gian thử nghiệm tối đa 02 năm kể từ khi được Ngân hàng Nhà nước cấp Giấy chứng nhận tham gia và có thể gia hạn theo Điều 20. Tuy nhiên, các điều khoản này chỉ xác định giải pháp Fintech (cho vay ngang hàng) thuộc Sandbox và thời hạn thử nghiệm, không đề cập đến yếu tố \"xuyên biên giới\". Các điều khoản còn lại ([40/2024/TT-NHNN] Điều 18; [52/2024/ND-CP] Điều 23 khoản 2) chỉ liên quan ví điện tử và tỷ lệ sở hữu nhà đầu tư nước ngoài, không quy định việc thử nghiệm Fintech xuyên biên giới.\n\nKết luận: Không đủ căn cứ để trả lời.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": false,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "kết luận Không được thử nghiệm xuyên biên giới",
+        "căn cứ khoản 2 Điều 6 Nghị định 94/2025/NĐ-CP"
+      ],
+      "wrong": [
+        "cho rằng không đủ căn cứ trả lời",
+        "nói Điều 6 không đề cập xuyên biên giới"
+      ],
+      "reason": "Không đưa ra kết luận 'Không' và bỏ sót khoản 2 Điều 6, trái đáp án chuẩn.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 80,
+    "arm": "adk",
+    "question": "Công ty tài chính tổng hợp muốn cho thuê tài chính bằng ngoại tệ phải đáp ứng những yêu cầu nào?",
+    "reference": "Căn cứ khoản 2 Điều 9 Thông tư 26/2024/TT-NHNN, việc cho thuê tài chính bằng ngoại tệ chỉ được thực hiện khi đáp ứng đủ 03 yêu cầu sau:\n\n1.  Bên cho thuê phải dùng ngoại tệ để thanh toán tiền nhập khẩu tài sản cho bên cung ứng, và bên thuê cũng phải nhận nợ và thanh toán tiền thuê bằng chính loại ngoại tệ đó.\n2.  Bên thuê phải sử dụng tài sản thuê để phục vụ cho hoạt động sản xuất, kinh doanh.\n3.  Bên thuê phải chứng minh có đủ nguồn thu bằng ngoại tệ từ hoạt động sản xuất, kinh doanh của mình để trả nợ tiền thuê.",
+    "articles": "26/2024/tt-nhnn_9",
+    "candidate": "Căn cứ khoản 2 Điều 9 Thông tư 26/2024/TT-NHNN, việc cho thuê tài chính bằng ngoại tệ chỉ được thực hiện khi đáp ứng đủ 03 yêu cầu sau:\n\n1. Bên cho thuê phải dùng ngoại tệ để thanh toán tiền nhập khẩu tài sản cho bên cung ứng, và bên thuê cũng phải nhận nợ và thanh toán tiền thuê bằng chính loại ngoại tệ đó.\n2. Bên thuê phải sử dụng tài sản thuê để phục vụ cho hoạt động sản xuất, kinh doanh.\n3. Bên thuê phải chứng minh có đủ nguồn thu bằng ngoại tệ từ hoạt động sản xuất, kinh doanh để trả tiền thuê.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 3 yêu cầu, đúng căn cứ khoản 2 Điều 9 Thông tư 26/2024/TT-NHNN; chỉ khác cách diễn đạt không đổi nghĩa.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 44,
+    "arm": "adk",
+    "question": "Ai có thẩm quyền lựa chọn tổ chức kiểm toán độc lập cho ngân hàng thương mại?",
+    "reference": "Theo Điều 7 Thông tư 51/2024/TT-NHNN, thẩm quyền lựa chọn tổ chức kiểm toán độc lập phụ thuộc vào loại hình của tổ chức tín dụng:\n\n* **Đối với công ty trách nhiệm hữu hạn:** Thẩm quyền thuộc về **Hội đồng thành viên**.\n* **Đối với công ty cổ phần:** Thẩm quyền thuộc về **Đại hội đồng cổ đông** (trừ trường hợp bị kiểm soát đặc biệt).\n* **Đối với công ty cổ phần bị kiểm soát đặc biệt:** Thẩm quyền thuộc về **Hội đồng quản trị**.\n* **Đối với chi nhánh ngân hàng nước ngoài:** Thẩm quyền thuộc về **Tổng giám đốc (Giám đốc)**.",
+    "articles": "51/2024/tt-nhnn_7",
+    "candidate": "Căn cứ khoản 1 Điều 7 Thông tư 51/2024/TT-NHNN, thẩm quyền quyết định lựa chọn tổ chức kiểm toán độc lập để kiểm toán một tổ chức tín dụng thuộc về **Hội đồng thành viên** của tổ chức tín dụng đó.\n\nLưu ý: Điều khoản được truy xuất chỉ nêu rõ trường hợp tổ chức tín dụng là công ty trách nhiệm hữu hạn, và không có điều khoản nào trong danh sách quy định riêng thẩm quyền đối với ngân hàng thương mại cổ phần (ví dụ Đại hội đồng cổ đông hay Hội đồng quản trị). Do đó, với ngân hàng thương mại cổ phần, danh sách không đủ căn cứ để xác định chính xác thẩm quyền.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": false,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "công ty cổ phần: Đại hội đồng cổ đông",
+        "công ty cổ phần bị kiểm soát đặc biệt: Hội đồng quản trị",
+        "chi nhánh ngân hàng nước ngoài: Tổng giám đốc (Giám đốc)"
+      ],
+      "wrong": [
+        "khẳng định không có điều khoản quy định thẩm quyền cho ngân hàng thương mại cổ phần, trái với đáp án chuẩn (Đại hội đồng cổ đông/Hội đồng quản trị)"
+      ],
+      "reason": "Chỉ nêu đúng trường hợp công ty TNHH; phủ nhận quy định cho công ty cổ phần, thiếu 3 trường hợp còn lại.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 91,
+    "arm": "adk",
+    "question": "Quy định về sử dụng tài khoản đảm bảo thanh toán cho dịch vụ ví điện tử như thế nào?",
+    "reference": "Quy định về sử dụng tài khoản đảm bảo thanh toán cho dịch vụ ví điện tử bao gồm (Căn cứ Điều 27 Thông tư 40/2024/TT-NHNN):\n* **Yêu cầu về số dư:** Tổ chức cung ứng dịch vụ phải đảm bảo **tổng số dư** trên tất cả các tài khoản đảm bảo thanh toán **không thấp hơn tổng số dư** tất cả các ví điện tử đã phát hành cho khách hàng tại cùng một thời điểm.\n* **Tách bạch tài khoản:** Nếu đồng thời cung ứng dịch vụ ví điện tử và dịch vụ hỗ trợ thu hộ, chi hộ, tài khoản đảm bảo thanh toán cho dịch vụ ví điện tử **không được sử dụng chung** với tài khoản đảm bảo cho dịch vụ thu hộ, chi hộ và phải tách bạch với các tài khoản thanh toán khác.\n* **Mục đích sử dụng:** Tài khoản đảm bảo thanh toán **chỉ được sử dụng** vào các mục đích như chuyển tiền đến tài khoản/thẻ của chủ ví điện tử tại ngân hàng liên kết/ngân hàng khác; chuyển tiền giữa các tài khoản đảm bảo thanh toán của chính tổ chức/tổ chức khác; thanh toán vào tài khoản của đơn vị chấp nhận thanh toán, đơn vị cung ứng dịch vụ công; hoàn trả tiền cho chủ ví điện tử; và rút tiền phí dịch vụ đã được khấu trừ.",
+    "articles": "40/2024/tt-nhnn_27",
+    "candidate": "Căn cứ Điều 29 Thông tư 40/2024/TT-NHNN: trước khi cung ứng dịch vụ ví điện tử, tổ chức cung ứng phải ký hợp đồng/thỏa thuận với ngân hàng hợp tác và các bên liên quan phù hợp với Giấy phép NHNN cấp; đồng thời thực hiện các nội dung đảm bảo an toàn trong cung ứng dịch vụ trung gian thanh toán theo Điều 9 Thông tư 40/2024/TT-NHNN (quy trình nghiệp vụ, kiểm soát nội bộ, quản lý rủi ro, phòng chống rửa tiền...).\n\nNgoài ra, Điều 18 Thông tư 40/2024/TT-NHNN quy định hồ sơ mở ví điện tử gồm thỏa thuận mở và sử dụng ví điện tử theo mẫu của tổ chức cung ứng dịch vụ; Điều 22 Nghị định 52/2024/NĐ-CP yêu cầu tổ chức không phải ngân hàng cung ứng ví điện tử có vốn điều lệ thực góp tối thiểu 50 tỷ đồng.\n\nCác điều khoản trên không quy định trực tiếp về việc sử dụng tài khoản đảm bảo thanh toán cho dịch vụ ví điện tử.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "Số dư tài khoản đảm bảo thanh toán không thấp hơn tổng số dư ví điện tử đã phát hành",
+        "Tách bạch tài khoản đảm bảo thanh toán với tài khoản thu hộ, chi hộ và tài khoản thanh toán khác",
+        "Mục đích sử dụng tài khoản đảm bảo thanh toán",
+        "Căn cứ Điều 27 Thông tư 40/2024/TT-NHNN"
+      ],
+      "wrong": [],
+      "reason": "Không nêu nội dung Điều 27 về sử dụng tài khoản đảm bảo thanh toán; chỉ dẫn điều khoản khác.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 21,
+    "arm": "adk",
+    "question": "Nguyên tắc xét duyệt tổ chức tham gia Cơ chế thử nghiệm có kiểm soát trong lĩnh vực ngân hàng là gì?",
+    "reference": "Theo Điều 5 Nghị định 94/2025/NĐ-CP, việc xét duyệt các tổ chức tham gia Cơ chế thử nghiệm (Sandbox) tuân theo 03 nguyên tắc chính để đảm bảo tính công bằng, khách quan và minh bạch:\n\n1.  **Minh bạch trong xét duyệt:** Quá trình xét duyệt phải minh bạch về tiêu chí, điều kiện, quy trình đánh giá và lựa chọn.\n\n2.  **Tham gia không đồng nghĩa với đáp ứng điều kiện kinh doanh:** Việc được tham gia Cơ chế thử nghiệm không có nghĩa là tổ chức đó sẽ tự động đáp ứng các điều kiện kinh doanh và đầu tư khác theo quy định của pháp luật.\n\n3.  **Tuân thủ pháp luật hiện hành:** Các tổ chức không tham gia hoặc chưa được duyệt tham gia Cơ chế thử nghiệm vẫn phải hoạt động và tuân thủ theo các quy định của pháp luật hiện hành về doanh nghiệp, đầu tư và các luật liên quan khác.",
+    "articles": "94/2025/nd-cp_5",
+    "candidate": "Theo **Điều 5 Nghị định 94/2025/NĐ-CP**, xét duyệt tổ chức tham gia Cơ chế thử nghiệm có kiểm soát trong lĩnh vực ngân hàng tuân theo 03 nguyên tắc:\n\n1. **Minh bạch trong xét duyệt:** Quá trình xét duyệt phải minh bạch về tiêu chí, điều kiện, quy trình đánh giá và lựa chọn.\n\n2. **Tham gia không đồng nghĩa với đáp ứng điều kiện kinh doanh:** Việc được tham gia Cơ chế thử nghiệm không có nghĩa tổ chức đó tự động đáp ứng các điều kiện kinh doanh tương ứng.\n\n3. Nguyên tắc thứ ba được quy định tại Điều 5 nhằm bảo đảm tính công bằng, khách quan trong quá trình xét duyệt (nội dung chi tiết của nguyên tắc này không được trích dẫn đầy đủ trong dữ liệu hiện có).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Nguyên tắc 3: tổ chức không tham gia/chưa được duyệt vẫn phải tuân thủ pháp luật hiện hành về doanh nghiệp, đầu tư và luật liên quan"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng Điều 5 và 2/3 nguyên tắc; thiếu nội dung nguyên tắc thứ ba, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 1,
+    "arm": "adk",
+    "question": "Khoản vay nước ngoài là gì?",
+    "reference": "Tại khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN có định nghĩa về khoản vay nước ngoài như sau:\nKhoản vay nước ngoài là cụm từ dùng chung để chi khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.",
+    "articles": "12/2022/tt-nhnn_3",
+    "candidate": "**Căn cứ:** Khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN.\n\n**Định nghĩa:** Khoản vay nước ngoài là cụm từ dùng chung để chỉ:\n- **Khoản vay nước ngoài không được Chính phủ bảo lãnh** (gọi là khoản vay tự vay, tự trả); và\n- **Khoản vay nước ngoài được Chính phủ bảo lãnh** dưới mọi hình thức vay nước ngoài.\n\nCác hình thức vay nước ngoài bao gồm: thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường...",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "cụm 'trên thị trường quốc tế của bên đi vay' bị cắt"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng định nghĩa, đúng căn cứ; chỉ thiếu đuôi 'quốc tế của bên đi vay'.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 96,
+    "arm": "adk",
+    "question": "Nguyên tắc phân loại nợ của tổ chức tài chính vi mô được quy định như thế nào?",
+    "reference": "Nguyên tắc phân loại nợ của tổ chức tài chính vi mô được quy định như sau (Căn cứ Điều 4 Thông tư 14/2024/TT-NHNN):\n1. **Nguyên tắc phân loại toàn bộ dư nợ**: Toàn bộ dư nợ của một khách hàng tại một TCTCVM phải được phân loại vào **cùng một nhóm nợ**. Nếu khách hàng có từ 02 khoản nợ trở lên và có bất kỳ một khoản nợ nào bị phân loại vào nhóm có mức độ rủi ro cao hơn (Nhóm 2, 3, 4, hoặc 5), TCTCVM phải phân loại lại các khoản nợ còn lại của khách hàng đó vào **nhóm có mức độ rủi ro cao nhất**.\n2. **Nguyên tắc đối với ủy thác cho vay chưa giải ngân**: Số tiền đã ủy thác nhưng chưa giải ngân hết phải được TCTCVM ủy thác phân loại như một khoản cho vay đối với bên nhận ủy thác. Thời gian quá hạn được tính từ thời điểm bên nhận ủy thác không giải ngân đúng theo thời hạn quy định tại hợp đồng ủy thác.",
+    "articles": "14/2024/tt-nhnn_4",
+    "candidate": "Căn cứ Điều 4 và Điều 5 Thông tư 14/2024/TT-NHNN:\n\n**Nguyên tắc phân loại toàn bộ dư nợ (Điều 4):** Toàn bộ dư nợ của một khách hàng tại một TCTCVM phải được phân loại vào cùng một nhóm nợ. Nếu khách hàng có từ 02 khoản nợ trở lên và có bất kỳ một khoản nợ nào bị phân loại vào nhóm có mức độ rủi ro cao hơn (Nhóm 2, 3, 4 hoặc 5), TCTCVM phải phân loại lại các khoản nợ còn lại của khách hàng đó vào nhóm có mức độ rủi ro cao nhất.\n\n**Phân loại theo 05 nhóm (Điều 5):**\n- Nhóm 1 (Nợ đủ tiêu chuẩn): nợ trong hạn; nợ quá hạn dưới 10 ngày.\n- Nhóm 2 (Nợ cần chú ý): nợ quá hạn từ 10 đến dưới 30 ngày; nợ cơ cấu lại thời hạn trả nợ lần đầu.\n- Nhóm 3 (Nợ dưới tiêu chuẩn): nợ quá hạn từ 30 đến dưới 90 ngày; nợ cơ cấu lại thời hạn trả nợ...",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Nguyên tắc đối với ủy thác cho vay chưa giải ngân"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng nguyên tắc phân loại toàn bộ dư nợ nhưng thiếu nguyên tắc ủy thác cho vay chưa giải ngân; trích thêm Điều 5.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 58,
+    "arm": "adk",
+    "question": "Nguyên tắc lập hồ sơ đề nghị cấp Giấy phép cho tổ chức tín dụng phi ngân hàng được quy định như thế nào?",
+    "reference": "Theo Điều 10 Thông tư 57/2024/TT-NHNN, việc lập hồ sơ đề nghị cấp Giấy phép phải tuân thủ các nguyên tắc sau:\n\n* **Ký tên và định dạng:** Các văn bản phải do Trưởng Ban trù bị ký. Các mẫu đơn theo Phụ lục của Thông tư phải là bản gốc, các tài liệu khác là bản sao có chứng thực.\n* **Hồ sơ trong nước:** Lập 01 bộ bằng tiếng Việt.\n* **Hồ sơ liên doanh, 100% vốn nước ngoài:** Lập 02 bộ (01 bộ tiếng Việt, 01 bộ tiếng Anh). Bộ hồ sơ tiếng Anh phải được hợp pháp hóa lãnh sự (trừ một số trường hợp ngoại lệ). Các bản dịch từ tiếng Anh sang tiếng Việt phải được chứng thực chữ ký của người dịch.\n* **Đối chiếu bản sao:** Nếu bản sao không được chứng thực, phải xuất trình bản chính để đối chiếu.\n* **Danh mục:** Mỗi bộ hồ sơ phải có danh mục tài liệu đi kèm.",
+    "articles": "57/2024/tt-nhnn_10",
+    "candidate": "Căn cứ Điều 10 Thông tư 57/2024/TT-NHNN, nguyên tắc lập hồ sơ đề nghị cấp Giấy phép như sau:\n\n- **Ký tên và định dạng:** Các văn bản phải do Trưởng Ban trù bị ký. Các mẫu đơn theo Phụ lục của Thông tư phải là bản gốc, các tài liệu khác là bản sao có chứng thực.\n- **Hồ sơ trong nước:** Lập 01 bộ bằng tiếng Việt.\n- **Hồ sơ liên doanh, 100% vốn nước ngoài:** Lập 02 bộ (01 bộ tiếng Việt, 01 bộ tiếng Anh); bộ hồ sơ tiếng Anh phải được hợp pháp hóa lãnh sự.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "bộ tiếng Anh trừ một số trường hợp ngoại lệ",
+        "bản dịch phải chứng thực chữ ký người dịch",
+        "đối chiếu bản chính khi bản sao không chứng thực",
+        "mỗi bộ hồ sơ phải có danh mục tài liệu"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3 ý đầu theo Điều 10 Thông tư 57/2024/TT-NHNN nhưng thiếu ý về ngoại lệ, chứng thực dịch, đối chiếu bản sao và danh mục.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 94,
+    "arm": "adk",
+    "question": "Thỏa thuận cấp tín dụng trong nghiệp vụ phát hành thư tín dụng có những nội dung gì?",
+    "reference": "Thỏa thuận cấp tín dụng trong nghiệp vụ phát hành thư tín dụng phải có tối thiểu các nội dung sau (Căn cứ khoản 1 Điều 23 Thông tư 21/2024/TT-NHNN):\n- Thông tin về các bên;\n- Loại tiền, số tiền đề nghị phát hành;\n- Hợp đồng mua bán hàng hóa, dịch vụ;\n- Loại thư tín dụng;\n- Nguồn tiền thanh toán hợp đồng;\n- Phí, lãi suất, lãi phạt (nếu có);\n- Biện pháp đảm bảo (nếu có);\n- Nhận nợ bắt buộc, trích tài khoản ký quỹ/tiền gửi (nếu có);\n- Mua bán ngoại tệ (nếu có);\n- Ngày đến hạn thanh toán thư tín dụng;\n- Thời hạn cấp tín dụng;\n- Giải quyết tranh chấp phát sinh;\n- Các nội dung khác không trái với quy định của pháp luật.",
+    "articles": "21/2024/tt-nhnn_23",
+    "candidate": "Căn cứ khoản 1 Điều 23 Thông tư 21/2024/TT-NHNN, thỏa thuận cấp tín dụng trong nghiệp vụ phát hành thư tín dụng phải có tối thiểu các nội dung:\n\n- Thông tin về các bên;\n- Loại tiền, số tiền đề nghị phát hành;\n- Hợp đồng mua bán hàng hóa, dịch vụ;\n- Loại thư tín dụng;\n- Nguồn tiền thanh toán hợp đồng;\n- Phí, lãi suất, lãi phạt (nếu có);\n- Biện pháp đảm bảo (nếu có);\n- Nhận nợ bắt buộc, trích tài khoản ký quỹ/tiền gửi (nếu có);\n- Mua bán ngoại tệ (nếu có);\n- Ngày đến hạn thanh toán và các nội dung khác theo thỏa thuận.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Thời hạn cấp tín dụng",
+        "Giải quyết tranh chấp phát sinh",
+        "Các nội dung khác không trái với quy định của pháp luật"
+      ],
+      "wrong": [],
+      "reason": "Nêu phần lớn nội dung, đúng căn cứ, nhưng gộp và thiếu thời hạn cấp tín dụng, giải quyết tranh chấp.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 54,
+    "arm": "adk",
+    "question": "Phí dịch vụ ngân quỹ được quy định như thế nào?",
+    "reference": "Căn cứ Điều 11 Thông tư 60/2024/TT-NHNN, phí dịch vụ ngân quỹ được quy định như sau:\n\n* **Mức phí:** Do tổ chức cung ứng dịch vụ xây dựng, thỏa thuận trực tiếp với khách hàng và được quy định cụ thể trong hợp đồng, dựa trên nguyên tắc bình đẳng và tự nguyện.\n* **Niêm yết:** Mức phí phải được niêm yết công khai tại các địa điểm giao dịch hợp pháp của tổ chức cung ứng dịch vụ.",
+    "articles": "60/2024/tt-nhnn_11",
+    "candidate": "Căn cứ Điều 11 Thông tư 60/2024/TT-NHNN, phí dịch vụ ngân quỹ được quy định như sau:\n\n- **Mức phí:** Do tổ chức cung ứng dịch vụ xây dựng, thỏa thuận trực tiếp với khách hàng và quy định cụ thể trong hợp đồng, dựa trên nguyên tắc bình đẳng và tự nguyện.\n- **Niêm yết:** Mức phí phải được niêm yết công khai tại các địa điểm giao dịch hợp pháp của tổ chức cung ứng dịch vụ.\n\nNgoài ra, theo khoản 2 Điều 6 Thông tư 60/2024/TT-NHNN, hợp đồng cung ứng dịch vụ ngân quỹ phải có nội dung về mức phí áp dụng và phương thức thanh toán.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ mức phí và niêm yết theo Điều 11; trích thêm khoản 2 Điều 6 không trái đáp án chuẩn.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 90,
+    "arm": "adk",
+    "question": "Các biện pháp đảm bảo an toàn qua ví điện tử cho khách hàng?",
+    "reference": "Trước khi cung ứng dịch vụ ví điện tử, tổ chức cung ứng dịch vụ phải thực hiện các biện pháp đảm bảo an toàn sau (Căn cứ Điều 29 Thông tư 40/2024/TT-NHNN):\n1. **Ký hợp đồng/thỏa thuận** với ngân hàng hợp tác và các bên liên quan, phù hợp với Giấy phép NHNN cấp.\n2. Thực hiện các nội dung đảm bảo an toàn trong cung ứng dịch vụ trung gian thanh toán quy định tại **Điều 9 Thông tư 40/2024/TT-NHNN** (về quy trình nghiệp vụ, kiểm soát nội bộ, quản lý rủi ro, phòng chống rửa tiền, giải quyết khiếu nại).\n3. Phối hợp với ngân hàng hợp tác có cơ chế **đảm bảo khả năng thanh toán** đối với dịch vụ ví điện tử, tuân thủ quy định về tài khoản đảm bảo thanh toán tại **Điều 27 Thông tư 40/2024/TT-NHNN**.\n4. Ban hành **quy định nội bộ** về biện pháp xử lý để **ngăn chặn khách hàng sử dụng ví điện tử khi chưa liên kết hoặc không còn liên kết** ví điện tử với tài khoản đồng Việt Nam hoặc thẻ ghi nợ của chính khách hàng.",
+    "articles": "40/2024/tt-nhnn_29, 40/2024/tt-nhnn_9, 40/2024/tt-nhnn_27",
+    "candidate": "Theo **Điều 29 Thông tư 40/2024/TT-NHNN**, trước khi cung ứng dịch vụ ví điện tử, tổ chức cung ứng phải:\n1. Ký hợp đồng/thỏa thuận với ngân hàng hợp tác và các bên liên quan, phù hợp với Giấy phép NHNN cấp.\n2. Thực hiện các nội dung đảm bảo an toàn trong cung ứng dịch vụ trung gian thanh toán theo **Điều 9 Thông tư 40/2024/TT-NHNN** (quy trình nghiệp vụ, kiểm soát nội bộ, quản lý rủi ro, phòng chống rửa tiền…).\n\nBên cạnh đó, khi mở ví điện tử, tổ chức cung ứng phải áp dụng giải pháp công nghệ đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư (khoản 2 **Điều 23 Thông tư 40/2024/TT-NHNN**), và phải có thỏa thuận mở, sử dụng ví điện tử theo mẫu của tổ chức (khoản 1 **Điều 18 Thông tư 40/2024/TT-NHNN**).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Cơ chế đảm bảo khả năng thanh toán với ngân hàng hợp tác theo Điều 27 Thông tư 40/2024/TT-NHNN",
+        "Quy định nội bộ ngăn chặn khách hàng sử dụng ví khi chưa/không còn liên kết ví với tài khoản/thẻ"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng ý 1, 2 nhưng thiếu ý 3 và 4 của đáp án chuẩn; trích thêm Điều 23, 18 không sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 26,
+    "arm": "adk",
+    "question": "Từ ngày 1/3/2025, Ngân hàng Nhà nước Việt Nam có nhiệm vụ và quyền hạn gì trong quản lý ngoại hối và kinh doanh vàng?",
+    "reference": "Theo khoản 14 Điều 2 Nghị định 26/2025/NĐ-CP, từ ngày 01/3/2025, Ngân hàng Nhà nước có các nhiệm vụ và quyền hạn chính sau đây trong quản lý ngoại hối và kinh doanh vàng:\n\n1.  **Quản lý hoạt động ngoại hối:** Bao gồm các giao dịch vãng lai, giao dịch vốn, sử dụng ngoại hối trên lãnh thổ Việt Nam và hoạt động ngoại hối tại khu vực biên giới.\n2.  **Quản lý dự trữ ngoại hối Nhà nước:** Thực hiện mua, bán ngoại hối trên thị trường trong nước và quốc tế vì mục tiêu chính sách tiền tệ quốc gia.\n3.  **Quản lý tỷ giá:** Công bố tỷ giá hối đoái và quyết định cơ chế điều hành tỷ giá.\n4.  **Cấp phép:** Cấp và thu hồi văn bản chấp thuận kinh doanh, cung ứng dịch vụ ngoại hối.\n5.  **Quản lý ngoại hối trong đầu tư:** Quản lý ngoại hối đối với hoạt động đầu tư nước ngoài vào Việt Nam và đầu tư của Việt Nam ra nước ngoài.\n6.  **Quản lý kinh doanh vàng:** Quản lý hoạt động kinh doanh vàng theo quy định của pháp luật.\n7.  **Quản lý vay, trả nợ nước ngoài:** Quản lý hoạt động vay, trả nợ nước ngoài của người cư trú và hướng dẫn thủ tục đăng ký các khoản vay được Chính phủ bảo lãnh.\n8.  **Quản lý cho vay nước ngoài:** Quản lý hoạt động cho vay và thu hồi nợ nước ngoài của các tổ chức tín dụng và tổ chức kinh tế.",
+    "articles": "26/2025/nd-cp_2",
+    "candidate": "Căn cứ khoản 14 Điều 2 Nghị định 26/2025/NĐ-CP, từ ngày 01/3/2025, Ngân hàng Nhà nước Việt Nam có các nhiệm vụ và quyền hạn sau trong quản lý ngoại hối và kinh doanh vàng:\n\n1. **Quản lý hoạt động ngoại hối:** gồm các giao dịch vãng lai, giao dịch vốn, sử dụng ngoại hối trên lãnh thổ Việt Nam và hoạt động ngoại hối tại khu vực biên giới.\n2. **Quản lý dự trữ ngoại hối Nhà nước:** thực hiện mua, bán ngoại hối trên thị trường trong nước và quốc tế vì mục tiêu chính sách.\n\nCác điều khoản còn lại trong danh sách (về quản lý nhiệm vụ khoa học và công nghệ, hồ sơ vay nước ngoài, cho vay đặc biệt, cơ chế thử nghiệm, điều kiện cho vay) không quy định về nhiệm vụ, quyền hạn trong quản lý ngoại hối và kinh doanh vàng.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Quản lý tỷ giá: công bố tỷ giá, cơ chế điều hành tỷ giá",
+        "Cấp và thu hồi văn bản chấp thuận kinh doanh, cung ứng dịch vụ ngoại hối",
+        "Quản lý ngoại hối trong đầu tư nước ngoài vào Việt Nam và đầu tư ra nước ngoài",
+        "Quản lý hoạt động kinh doanh vàng",
+        "Quản lý vay, trả nợ nước ngoài và hướng dẫn đăng ký khoản vay được Chính phủ bảo lãnh",
+        "Quản lý cho vay và thu hồi nợ nước ngoài của tổ chức tín dụng, tổ chức kinh tế"
+      ],
+      "wrong": [],
+      "reason": "Chỉ nêu 2/8 ý của khoản 14 Điều 2; thiếu tỷ giá, cấp phép, đầu tư, vàng, vay nợ, cho vay nước ngoài.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 72,
+    "arm": "adk",
+    "question": "Việc xác minh thông tin nhận biết khách hàng qua phương tiện điện tử được áp dụng cho hai đối tượng nào?",
+    "reference": "Theo khoản 2 Điều 18 Thông tư 21/2024/TT-NHNN, khi thực hiện nhận biết và xác minh thông tin khách hàng lần đầu qua phương tiện điện tử (trừ các trường hợp ngoại lệ như qua SWIFT hoặc có chữ ký điện tử), ngân hàng sẽ áp dụng quy trình cho 02 đối tượng sau:\n\n1.  **Đối với khách hàng là người cư trú:** Ngân hàng thực hiện theo quy định của Ngân hàng Nhà nước về việc mở và sử dụng tài khoản thanh toán.\n2.  **Đối với khách hàng là người không cư trú:** Ngân hàng sẽ tự đánh giá mức độ rủi ro để lựa chọn và quyết định các biện pháp, công nghệ xác thực phù hợp, đồng thời tự chịu rủi ro phát sinh.",
+    "articles": "21/2024/tt-nhnn_18",
+    "candidate": "Căn cứ khoản 2 Điều 18 Thông tư 21/2024/TT-NHNN, khi nhận biết và xác minh thông tin khách hàng lần đầu qua phương tiện điện tử, ngân hàng áp dụng quy trình cho 02 đối tượng:\n\n1. **Khách hàng là người cư trú:** thực hiện theo quy định của Ngân hàng Nhà nước về việc mở và sử dụng tài khoản thanh toán.\n2. **Khách hàng là người không cư trú:** ngân hàng tự đáp ứng theo quy định nội bộ (nội dung điều khoản bị cắt cụt tại \"tự đá...\").\n\nLưu ý: Điều 23 Thông tư 40/2024/TT-NHNN về xác thực thông tin khi mở ví điện tử và Điều 18 Thông tư 40/2024/TT-NHNN về hồ sơ mở ví điện tử không quy định về hai đối tượng này, nên không dùng làm căn cứ.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": false,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "đối với người không cư trú: tự đánh giá rủi ro, lựa chọn biện pháp/công nghệ xác thực và tự chịu rủi ro"
+      ],
+      "wrong": [
+        "nói người không cư trú tự đáp ứng theo quy định nội bộ"
+      ],
+      "reason": "Nêu đúng hai đối tượng và căn cứ, nhưng sai nội dung xử lý với người không cư trú; có trích thêm Thông tư 40/2024.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 85,
+    "arm": "adk",
+    "question": "Dịch vụ thanh toán nào không qua tài khoản thanh toán của khách hàng?",
+    "reference": "Các dịch vụ thanh toán không qua tài khoản thanh toán của khách hàng bao gồm:\n- Thực hiện dịch vụ thanh toán: **chuyển tiền**, **thu hộ**, **chi hộ**;\n- Các dịch vụ thanh toán khác không qua tài khoản thực hiện theo quy định của Ngân hàng Nhà nước.\n(Căn cứ khoản 1 Điều 18 Nghị định 52/2024/NĐ-CP).",
+    "articles": "52/2024/nđ-cp_18",
+    "candidate": "Căn cứ khoản 1 Điều 18 Nghị định 52/2024/NĐ-CP, các dịch vụ thanh toán không qua tài khoản thanh toán của khách hàng bao gồm:\n\n- Chuyển tiền;\n- Thu hộ;\n- Chi hộ.\n\nNgoài ra, các dịch vụ thanh toán khác không qua tài khoản được thực hiện theo quy định của Ngân hàng Nhà nước.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ chuyển tiền, thu hộ, chi hộ và quy định khác của NHNN; đúng Điều 18 khoản 1 Nghị định 52/2024/NĐ-CP.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 78,
+    "arm": "adk",
+    "question": "Hợp đồng cung cấp dịch vụ khác liên quan đến bao thanh toán được lập bằng ngôn ngữ nào?",
+    "reference": "Theo khoản 1 Điều 27 Thông tư 20/2024/TT-NHNN, hợp đồng cung cấp dịch vụ khác liên quan đến bao thanh toán có thể được lập bằng **tiếng Việt**, **tiếng nước ngoài**, hoặc **đồng thời bằng cả tiếng Việt và tiếng nước ngoài**.\n\nTrong trường hợp hợp đồng sử dụng tiếng nước ngoài và có yêu cầu của cơ quan có thẩm quyền, đơn vị cung cấp dịch vụ phải cung cấp bản dịch tiếng Việt có xác nhận của người đại diện hợp pháp hoặc phải được công chứng.",
+    "articles": "20/2024/tt-nhnn_27",
+    "candidate": "Căn cứ khoản 1 Điều 27 Thông tư 20/2024/TT-NHNN, hợp đồng cung cấp dịch vụ khác liên quan đến bao thanh toán có thể được lập bằng tiếng Việt, tiếng nước ngoài, hoặc đồng thời bằng cả tiếng Việt và tiếng nước ngoài. Trường hợp hợp đồng sử dụng tiếng nước ngoài, khi có yêu cầu của cơ quan có thẩm quyền, đơn vị cung cấp dịch vụ phải cung cấp bản dịch tiếng Việt có xác nhận của người đại diện hợp pháp hoặc phải được công chứng.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Khớp đầy đủ đáp án chuẩn, nêu đúng Điều 27 Thông tư 20/2024/TT-NHNN và các ngôn ngữ được phép.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 65,
+    "arm": "adk",
+    "question": "Người chưa đủ 15 tuổi có được sử dụng tài khoản thanh toán cá nhân không?",
+    "reference": "Có. Theo khoản 2 Điều 17 Thông tư 17/2024/TT-NHNN, người chưa đủ 15 tuổi được phép sử dụng tài khoản thanh toán cá nhân, nhưng việc sử dụng tài khoản này phải được thực hiện **thông qua người đại diện theo pháp luật**. Người đại diện sẽ thực hiện các giao dịch thanh toán trên tài khoản của người được đại diện theo quy định của pháp luật dân sự.",
+    "articles": "17/2024/tt-nhnn_17",
+    "candidate": "Theo Điều 11 Thông tư 17/2024/TT-NHNN, người chưa đủ 15 tuổi **được mở tài khoản thanh toán**, nhưng phải thực hiện **thông qua người đại diện theo pháp luật**. Thông tư không quy định người chưa đủ 15 tuổi tự mình sử dụng tài khoản thanh toán cá nhân, mà chỉ nêu đối tượng này thuộc nhóm được mở tài khoản thông qua người đại diện theo pháp luật. Do đó, việc sử dụng tài khoản của người chưa đủ 15 tuổi gắn với vai trò của người đại diện theo pháp luật.\n\nCăn cứ: Điều 11 Thông tư 17/2024/TT-NHNN.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "Kết luận rõ 'được sử dụng tài khoản thanh toán cá nhân'",
+        "Căn cứ khoản 2 Điều 17 Thông tư 17/2024/TT-NHNN",
+        "Người đại diện thực hiện giao dịch thanh toán theo pháp luật dân sự"
+      ],
+      "wrong": [],
+      "reason": "Nêu được phải qua người đại diện nhưng dẫn Điều 11 thay vì khoản 2 Điều 17 và không trả lời thẳng là được sử dụng.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 30,
+    "arm": "adk",
+    "question": "Ngân hàng hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo những nguyên tắc nào?",
+    "reference": "Theo Khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN, ngân hàng phải hướng dẫn khách hàng sử dụng tài khoản thanh toán đảm bảo các nguyên tắc sau:\n\n1.  **Phù hợp phạm vi và hạn mức:** Xác định phạm vi sử dụng và hạn mức giao dịch phù hợp với từng đối tượng khách hàng, quy định quản lý rủi ro và thỏa thuận đã ký kết.\n\n2.  **Đủ thông tin xác minh:** Luôn có đủ thông tin cần thiết để kiểm tra, đối chiếu và xác minh nhận biết khách hàng trong suốt quá trình sử dụng tài khoản.\n\n3.  **Xác thực sinh trắc học:** Chỉ thực hiện rút tiền hoặc giao dịch điện tử khi đã hoàn thành việc đối chiếu khớp đúng giấy tờ tùy thân và dữ liệu sinh trắc học của chủ tài khoản với các nguồn dữ liệu tin cậy như: chip trên thẻ CCCD, tài khoản định danh điện tử VNeID, Cơ sở dữ liệu quốc gia về dân cư, hoặc dữ liệu thu thập trực tiếp (đối với người nước ngoài).\n\n4.  **Áp dụng biện pháp xác thực:** Tuân thủ các biện pháp xác thực cho từng loại giao dịch điện tử theo quy định của Ngân hàng Nhà nước về an toàn, bảo mật.\n\n5.  **Tuân thủ quy định ngoại hối:** Việc sử dụng tài khoản VND của người không cư trú, người nước ngoài và tài khoản ngoại tệ phải tuân thủ các quy định pháp luật về quản lý ngoại hối.",
+    "articles": "17/2024/tt-nhnn_17",
+    "candidate": "Theo Khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN, ngân hàng hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo các nguyên tắc:\n\n1. **Phù hợp phạm vi và hạn mức:** Xác định phạm vi sử dụng và hạn mức giao dịch phù hợp với từng đối tượng khách hàng, quy định quản lý rủi ro và thỏa thuận đã ký kết.\n\n2. **Đủ thông tin xác minh:** Luôn có đủ thông tin cần thiết để kiểm tra, đối chiếu và xác minh nhận biết khách hàng trong suốt quá trình sử dụng tài khoản.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Xác thực sinh trắc học khi rút tiền/giao dịch điện tử",
+        "Áp dụng biện pháp xác thực theo quy định an toàn bảo mật",
+        "Tuân thủ quy định ngoại hối"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 2/5 nguyên tắc, thiếu 3 nguyên tắc còn lại; trích đúng căn cứ.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 28,
+    "arm": "adk",
+    "question": "Ngân hàng có bắt buộc phải công khai thông tin về Open API trên trang thông tin điện tử không?",
+    "reference": "Có. Theo Điều 9 Thông tư 64/2024/TT-NHNN, trước khi chính thức kết nối và xử lý dữ liệu với bên thứ ba, Ngân hàng bắt buộc phải công khai thông tin về Open API trên trang thông tin điện tử (website) chính thức của mình. Các thông tin tối thiểu phải công khai bao gồm:\n\n1.  Thông tin về Hệ thống thử nghiệm Open API.\n2.  Danh mục các Open API mà Ngân hàng đang triển khai.",
+    "articles": "64/2024/tt-nhnn_9",
+    "candidate": "Có. Theo Điều 9 Thông tư 64/2024/TT-NHNN, trước khi chính thức kết nối và xử lý dữ liệu với bên thứ ba, Ngân hàng bắt buộc phải công khai thông tin về Open API trên trang thông tin điện tử chính thức của mình. Thông tin tối thiểu phải công khai gồm: (1) thông tin về Hệ thống thử nghiệm Open API; (2) danh mục các Open API mà Ngân hàng đang triển khai.\n\nViệc triển khai Open API được thực hiện theo nguyên tắc tại Điều 5 Thông tư 64/2024/TT-NHNN, áp dụng từ ngày 01/3/2025, với các nhóm Open API cơ bản: truy vấn tỷ giá, lãi suất; truy vấn thông tin khách hàng; khởi tạo thanh toán và giao dịch ví điện tử.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ ý chính và đúng căn cứ Điều 9 Thông tư 64/2024/TT-NHNN; thêm Điều 5 cùng văn bản ngoài căn cứ, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 89,
+    "arm": "adk",
+    "question": "Có được gia hạn thời hạn cấp tín dụng trong nghiệp vụ phát hành thư tín dụng hay không?",
+    "reference": "Có. Việc **gia hạn thời hạn cấp tín dụng** trong nghiệp vụ phát hành thư tín dụng do **các bên thỏa thuận**, với điều kiện thỏa thuận phải phù hợp với **tập quán thương mại quốc tế về thư tín dụng** (Căn cứ khoản 2 Điều 22 Thông tư 21/2024/TT-NHNN).",
+    "articles": "21/2024/tt-nhnn_22",
+    "candidate": "Có. Việc gia hạn thời hạn cấp tín dụng trong nghiệp vụ phát hành thư tín dụng do các bên thỏa thuận, với điều kiện thỏa thuận phải phù hợp với tập quán thương mại quốc tế về thư tín dụng (Căn cứ khoản 2 Điều 22 Thông tư 21/2024/TT-NHNN).",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Trùng khớp đáp án chuẩn: có gia hạn, do các bên thỏa thuận, phù hợp tập quán thương mại quốc tế, dẫn đúng khoản 2 Điều 22 Thông tư 21/2024/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 98,
+    "arm": "adk",
+    "question": "Tổ chức nào được phát hành thẻ ngân hàng?",
+    "reference": "Các tổ chức sau được phép phát hành thẻ ngân hàng (Căn cứ Điều 8 Thông tư 18/2024/TT-NHNN):\n1. **Ngân hàng thương mại, ngân hàng hợp tác xã, chi nhánh ngân hàng nước ngoài**: Khi hoạt động cung ứng dịch vụ thẻ được ghi trong Giấy phép do Ngân hàng Nhà nước (NHNN) cấp.\n2. **Ngân hàng chính sách**: Phát hành thẻ theo quy định của Chính phủ và Thông tư 18/2024/TT-NHNN.\n3. **Công ty tài chính tổng hợp và công ty tài chính tín dụng tiêu dùng**: Được phát hành **thẻ tín dụng** khi hoạt động phát hành thẻ tín dụng được ghi trong Giấy phép do NHNN cấp.",
+    "articles": "18/2024/tt-nhnn_8",
+    "candidate": "Căn cứ Điều 8 Thông tư 18/2024/TT-NHNN, các tổ chức sau được phát hành thẻ ngân hàng:\n\n1. **Ngân hàng thương mại, ngân hàng hợp tác xã, chi nhánh ngân hàng nước ngoài**: khi hoạt động cung ứng dịch vụ thẻ được ghi trong Giấy phép do Ngân hàng Nhà nước cấp.\n2. **Ngân hàng chính sách**: phát hành thẻ theo quy định của Chính phủ và Thông tư 18/2024/TT-NHNN.\n3. **Công ty tài chính tổng hợp và công ty tài chính tín dụng tiêu dùng**: được phát hành thẻ tín dụng (theo nội dung điều khoản được trích dẫn).",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "điều kiện hoạt động phát hành thẻ tín dụng được ghi trong Giấy phép do NHNN cấp (ý 3)"
+      ],
+      "wrong": [],
+      "reason": "Nêu đủ 3 nhóm tổ chức, đúng Điều 8 Thông tư 18/2024/TT-NHNN, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 5,
+    "arm": "adk",
+    "question": "Việc xác thực thông tin khách hàng khi mở ví điện tử được quy định như thế nào?",
+    "reference": "Theo Điều 23 Thông tư 40/2024/TT-NHNN, việc xác thực thông tin khách hàng được quy định như sau:\n\n* **Về phía khách hàng (chủ ví):**\n    * Phải cung cấp, cập nhật đầy đủ và chính xác tất cả thông tin, tài liệu trong hồ sơ mở ví.\n    * Chịu hoàn toàn trách nhiệm về tính trung thực của các thông tin, tài liệu đã cung cấp.\n\n* **Về phía tổ chức cung ứng dịch vụ ví điện tử:**\n    * Phải kiểm tra, đối chiếu để đảm bảo hồ sơ mở ví và thông tin khách hàng là đầy đủ, hợp lệ theo quy định.\n\n**Lưu ý:** Một số quy định cụ thể về giao dịch tại Điều 25 và Điều 27 của Thông tư này sẽ có hiệu lực từ ngày 01/07/2025.",
+    "articles": "40/2024/tt-nhnn_23",
+    "candidate": "Theo Thông tư 40/2024/TT-NHNN:\n\n- **Điều 23 khoản 2**: Tổ chức cung ứng dịch vụ ví điện tử phải áp dụng các giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư.\n\n- **Điều 18 khoản 2**: Hồ sơ mở ví điện tử phải có tài liệu, thông tin, dữ liệu để xác minh thông tin khách hàng cá nhân hoặc tổ chức theo quy định pháp luật.\n\nNhư vậy, việc xác thực thông tin khách hàng khi mở ví điện tử được thực hiện bằng giải pháp công nghệ đối chiếu với cơ sở dữ liệu quốc gia về dân cư, trên cơ sở hồ sơ, tài liệu, dữ liệu xác minh theo quy định pháp luật.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Khách hàng phải cung cấp, cập nhật đầy đủ, chính xác thông tin hồ sơ mở ví và chịu trách nhiệm về tính trung thực",
+        "Tổ chức cung ứng phải kiểm tra, đối chiếu bảo đảm hồ sơ mở ví và thông tin khách hàng đầy đủ, hợp lệ"
+      ],
+      "wrong": [],
+      "reason": "Nêu Điều 23 nhưng chỉ nói giải pháp công nghệ, thiếu nghĩa vụ của khách hàng và việc kiểm tra hồ sơ của tổ chức; thêm Điều 18.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 55,
+    "arm": "adk",
+    "question": "Nếu chưa cập nhật sinh trắc học, có thể rút tiền bằng thẻ được không?",
+    "reference": "Có thể. Theo phân tích quy định tại điểm c khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN, việc xác thực sinh trắc học là bắt buộc đối với việc rút tiền và giao dịch thanh toán **bằng phương tiện điện tử** (ví dụ: rút tiền bằng mã QR). Tuy nhiên, pháp luật không đề cập đến yêu cầu này đối với việc rút tiền mặt **bằng thẻ vật lý** tại ATM. Do đó, khách hàng chưa cập nhật sinh trắc học vẫn có thể rút tiền mặt bằng thẻ vật lý của mình.",
+    "articles": "17/2024/tt-nhnn_17",
+    "candidate": "Không đủ căn cứ để trả lời.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "kết luận có thể rút tiền mặt bằng thẻ vật lý dù chưa cập nhật sinh trắc học",
+        "căn cứ điểm c khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN"
+      ],
+      "wrong": [
+        "trả lời không đủ căn cứ, không đưa ra kết luận"
+      ],
+      "reason": "Không trả lời câu hỏi, không nêu kết luận 'có thể' và không dẫn căn cứ theo đáp án chuẩn.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 76,
+    "arm": "adk",
+    "question": "Có bao nhiêu phương thức để giao nhiệm vụ khoa học và công nghệ?",
+    "reference": "Căn cứ Điều 6 Thông tư 45/2024/TT-NHNN, có 02 phương thức để giao nhiệm vụ khoa học và công nghệ, bao gồm:\n\n1.  **Tuyển chọn:** Đây là phương thức áp dụng cho đa số các nhiệm vụ thông thường.\n2.  **Giao trực tiếp:** Phương thức này chỉ áp dụng cho các trường hợp đặc biệt, bao gồm:\n    * Nhiệm vụ thuộc bí mật nhà nước, đặc thù an ninh, quốc phòng.\n    * Nhiệm vụ có tính chất đột xuất.\n    * Nhiệm vụ mà chỉ có duy nhất một tổ chức có đủ năng lực để thực hiện.",
+    "articles": "45/2024/tt-nhnn_6",
+    "candidate": "Căn cứ Điều 6 Thông tư 45/2024/TT-NHNN, có **02 phương thức** để giao nhiệm vụ khoa học và công nghệ:\n\n1. **Tuyển chọn** – áp dụng cho đa số nhiệm vụ thông thường.\n2. **Giao trực tiếp** – chỉ áp dụng cho các trường hợp đặc biệt: nhiệm vụ thuộc bí mật nhà nước, đặc thù an ninh, quốc phòng; nhiệm vụ có tính chất đột xuất; nhiệm vụ mà chỉ có duy nhất một tổ chức có đủ năng lực thực hiện.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng 02 phương thức, đúng căn cứ Điều 6 Thông tư 45/2024/TT-NHNN, không có thông tin sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 12,
+    "arm": "adk",
+    "question": "Trình tự, thủ tục đăng ký tham gia Cơ chế thử nghiệm có kiểm soát đối với giải pháp cho vay ngang hàng được thực hiện như thế nào?",
+    "reference": "Căn cứ Điều 13 Nghị định 94/2025/NĐ-CP, quy trình đăng ký tham gia Cơ chế thử nghiệm (Sandbox) cho vay ngang hàng gồm các bước:\n\n1.  **Nộp hồ sơ:** Tổ chức gửi 02 bộ hồ sơ giấy và 06 bản quét (trên CD hoặc USB) tới Bộ phận Một cửa của Ngân hàng Nhà nước.\n\n2.  **Kiểm tra tính hợp lệ:** Trong 05 ngày làm việc, Ngân hàng Nhà nước xác nhận đã nhận đủ hồ sơ hợp lệ hoặc yêu cầu bổ sung. Nếu không bổ sung hoặc bổ sung không đủ, hồ sơ sẽ bị trả lại.\n\n3.  **Thẩm định hồ sơ:** Trong 90 ngày làm việc kể từ khi có hồ sơ hợp lệ, Ngân hàng Nhà nước phối hợp với các bộ liên quan để thẩm định, có thể bao gồm cả kiểm tra tại chỗ. Trong quá trình này, Ngân hàng Nhà nước sẽ lấy ý kiến các bộ và có thể yêu cầu tổ chức giải trình, hoàn thiện hồ sơ (chỉ được giải trình 1 lần).\n\n4.  **Cấp Giấy chứng nhận:** Sau khi thẩm định, nếu hồ sơ đáp ứng đủ điều kiện, Ngân hàng Nhà nước sẽ cấp Giấy chứng nhận tham gia Cơ chế thử nghiệm. Nếu từ chối, sẽ có văn bản trả lời và nêu rõ lý do.\n\n5.  **Triển khai:** Trong vòng 90 ngày kể từ ngày được cấp Giấy chứng nhận, tổ chức phải tiến hành triển khai giải pháp cho vay ngang hàng theo phạm vi đã được duyệt.",
+    "articles": "94/2025/nd-cp_13",
+    "candidate": "Căn cứ Điều 13 Nghị định 94/2025/NĐ-CP, trình tự, thủ tục đăng ký tham gia Cơ chế thử nghiệm có kiểm soát cho giải pháp cho vay ngang hàng như sau:\n\n1. **Nộp hồ sơ:** Tổ chức gửi 02 bộ hồ sơ giấy và 06 bản quét (trên CD hoặc USB) tới Bộ phận Một cửa của Ngân hàng Nhà nước.\n2. **Kiểm tra tính hợp lệ:** Trong 05 ngày làm việc, Ngân hàng Nhà nước xác nhận đã nhận đủ hồ sơ hợp lệ hoặc yêu cầu bổ sung. Nếu không bổ sung hoặc bổ sung không đủ, hồ sơ bị trả lại.\n3. **Thẩm định hồ sơ:** (nội dung tiếp theo của Điều 13).\n\nHồ sơ đăng ký được quy định tại Điều 12 Nghị định 94/2025/NĐ-CP, gồm: Đơn đăng ký (Mẫu số 03 Phụ lục 1); tài liệu mô tả cơ cấu tổ chức, quản lý, điều hành; Nghị quyết của Hội đồng thành viên/Hội đồng quản trị/Đại hội đồng cổ đông thông qua Đề án; Đề án chi tiết mô tả giải pháp cho vay ngang hàng.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "Bước 3: thời hạn 90 ngày, phối hợp bộ liên quan, kiểm tra tại chỗ, lấy ý kiến, giải trình 1 lần",
+        "Bước 4: cấp Giấy chứng nhận hoặc từ chối có văn bản nêu lý do",
+        "Bước 5: triển khai trong 90 ngày kể từ ngày cấp Giấy chứng nhận"
+      ],
+      "wrong": [],
+      "reason": "Chỉ nêu đủ bước 1-2; bước 3 bỏ trống, thiếu bước 4-5; trích thêm Điều 12.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 70,
+    "arm": "adk",
+    "question": "Những thông tin tối thiểu nào về dịch vụ Online Banking mà khách hàng phải được biết?",
+    "reference": "Theo khoản 2 Điều 17 Thông tư 50/2024/TT-NHNN, đơn vị cung cấp dịch vụ phải thông báo cho khách hàng các điều khoản trong thỏa thuận sử dụng dịch vụ Online Banking, bao gồm tối thiểu các nội dung sau:\n\n* Quyền lợi và nghĩa vụ của khách hàng.\n* Các loại dữ liệu khách hàng bị thu thập, mục đích sử dụng, và trách nhiệm bảo mật dữ liệu của đơn vị cung cấp.\n* Cam kết về khả năng đảm bảo hoạt động liên tục của hệ thống, nêu rõ thời gian gián đoạn dịch vụ tối đa trong một lần và trong một năm (trừ các trường hợp bất khả kháng hoặc bảo trì đã thông báo trước).\n* Các nội dung khác liên quan đến dịch vụ (nếu có).",
+    "articles": "50/2024/tt-nhnn_17",
+    "candidate": "Căn cứ khoản 2 Điều 17 Thông tư 50/2024/TT-NHNN, đơn vị cung cấp dịch vụ Online Banking phải thông báo cho khách hàng các điều khoản trong thỏa thuận sử dụng dịch vụ, bao gồm tối thiểu:\n\n- Quyền lợi và nghĩa vụ của khách hàng.\n- Các loại dữ liệu khách hàng bị thu thập, mục đích sử dụng và trách nhiệm bảo mật dữ liệu của đơn vị cung cấp.\n- Cam kết về khả năng đảm bảo hoạt động liên tục của hệ thống, nêu rõ thời gian gián đoạn dịch vụ tối đa trong một khoảng thời gian xác định.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [
+        "Các nội dung khác liên quan đến dịch vụ (nếu có)",
+        "Chi tiết thời gian gián đoạn dịch vụ tối đa trong một lần và trong một năm"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3/4 ý, thiếu ý nội dung khác; ý thời gian gián đoạn chưa nêu rõ trong một lần và một năm.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 87,
+    "arm": "adk",
+    "question": "Số dư tài khoản thanh toán được tính lãi như thế nào?",
+    "reference": "Số dư trên tài khoản thanh toán được tính lãi theo **mức lãi suất tiền gửi không kỳ hạn**. Mức lãi suất này do ngân hàng, chi nhánh ngân hàng nước ngoài ấn định và niêm yết công khai, phù hợp với quyết định của Thống đốc Ngân hàng Nhà nước trong từng thời kỳ (Căn cứ khoản 1 Điều 4 Thông tư 17/2024/TT-NHNN).",
+    "articles": "17/2024/tt-nhnn_4",
+    "candidate": "Theo khoản 1 Điều 4 Thông tư 17/2024/TT-NHNN, số dư trên tài khoản thanh toán được tính lãi theo mức lãi suất tiền gửi không kỳ hạn. Mức lãi suất này do ngân hàng, chi nhánh ngân hàng nước ngoài ấn định và niêm yết công khai, phù hợp với quyết định của Thống đốc Ngân hàng Nhà nước trong từng thời kỳ.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ ý chính, trích đúng Điều 4 Thông tư 17/2024/TT-NHNN, không sai lệch.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 14,
+    "arm": "adk",
+    "question": "Đồng tiền nhận tiền gửi tiết kiệm là đồng tiền nào?",
+    "reference": "Căn cứ Điều 10 Thông tư 48/2018/TT-NHNN, đồng tiền được nhận để gửi tiết kiệm bao gồm **đồng Việt Nam (VND)** và **ngoại tệ**. \n\nTổ chức tín dụng sẽ tự quyết định và công bố các loại ngoại tệ cụ thể mà họ chấp nhận nhận tiền gửi tiết kiệm. Về nguyên tắc, đồng tiền chi trả (cả gốc và lãi) sẽ là loại đồng tiền mà người gửi đã gửi ban đầu.",
+    "articles": "48/2018/tt-nhnn_10",
+    "candidate": "Căn cứ Điều 10 Thông tư 48/2018/TT-NHNN, đồng tiền nhận tiền gửi tiết kiệm gồm **đồng Việt Nam (VND)** và **ngoại tệ**. Tổ chức tín dụng tự quyết định và công bố các loại ngoại tệ cụ thể mà mình chấp nhận. Đồng tiền chi trả cả gốc và lãi là loại đồng tiền người gửi đã gửi ban đầu.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng đồng tiền gồm VND và ngoại tệ, TCTD tự quyết định và công bố, chi trả theo đồng tiền gửi ban đầu; trích đúng Điều 10 Thông tư 48/2018/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 18,
+    "arm": "adk",
+    "question": "Ngân hàng Nhà nước có những trách nhiệm gì trong việc triển khai thử nghiệm cho vay ngang hàng?",
+    "reference": "Theo khoản 1 Điều 24 Nghị định 94/2025/NĐ-CP, Ngân hàng Nhà nước Việt Nam có các trách nhiệm chính sau:\n\n1.  **Thẩm định và Cấp phép:** Chủ trì thẩm định hồ sơ đăng ký và cấp Giấy chứng nhận tham gia Cơ chế thử nghiệm.\n2.  **Quản lý quá trình thử nghiệm:** Xử lý các vấn đề phát sinh như điều chỉnh giải pháp, dùng thử nghiệm, thu hồi giấy chứng nhận, gia hạn thời gian và cấp giấy chứng nhận hoàn thành.\n3.  **Giám sát và Hỗ trợ:** Theo dõi, hướng dẫn, xử lý vướng mắc và cảnh báo rủi ro cho các tổ chức tham gia.\n4.  **Công khai thông tin:** Công bố các thông tin liên quan đến quá trình thử nghiệm trên Cổng thông tin điện tử của mình.\n5.  **Kiểm tra:** Chủ trì việc kiểm tra, giám sát quá trình thử nghiệm.\n6.  **Quyết định hạn mức:** Thống đốc Ngân hàng Nhà nước quyết định dư nợ cho vay tối đa đối với một bên đi vay.\n7.  **Hướng dẫn kết nối thông tin:** Hướng dẫn các công ty cho vay ngang hàng kết nối và báo cáo thông tin tín dụng với Trung tâm Thông tin tín dụng Quốc gia Việt Nam (CIC).\n8.  **Báo cáo Thủ tướng:** Định kỳ hàng năm tổng hợp, báo cáo Thủ tướng Chính phủ về kết quả thực hiện và đề xuất chính sách.",
+    "articles": "94/2025/nd-cp_24",
+    "candidate": "Căn cứ khoản 1 Điều 24 Nghị định 94/2025/NĐ-CP, Ngân hàng Nhà nước có các trách nhiệm chính trong triển khai thử nghiệm cho vay ngang hàng:\n\n1. **Thẩm định và cấp phép:** Chủ trì thẩm định hồ sơ đăng ký và cấp Giấy chứng nhận tham gia Cơ chế thử nghiệm.\n2. **Quản lý quá trình thử nghiệm:** Xử lý các vấn đề phát sinh như điều chỉnh giải pháp, dừng thử nghiệm, thu hồi giấy chứng nhận, gia hạn thời gian và cấp giấy chứng nhận hoàn thành.\n3. **Giám sát và hỗ trợ:** Theo dõi, hướng dẫn, xử lý vướng mắc trong quá trình thử nghiệm.\n\nNgoài ra, theo Điều 1 Nghị định 94/2025/NĐ-CP, cho vay ngang hàng là một trong các giải pháp Fintech tham gia Cơ chế thử nghiệm có kiểm soát, với thời gian thử nghiệm tối đa 02 năm kể từ khi được cấp Giấy chứng nhận, có thể gia hạn theo Điều 20 Nghị định này.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Công khai thông tin trên Cổng thông tin điện tử",
+        "Chủ trì kiểm tra, giám sát quá trình thử nghiệm",
+        "Thống đốc quyết định dư nợ cho vay tối đa với một bên đi vay",
+        "Hướng dẫn kết nối, báo cáo thông tin tín dụng với CIC",
+        "Báo cáo Thủ tướng Chính phủ hàng năm"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 3/8 trách nhiệm, thiếu công khai thông tin, kiểm tra, hạn mức, CIC, báo cáo Thủ tướng",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 29,
+    "arm": "adk",
+    "question": "Ngân hàng có những trách nhiệm gì trong việc triển khai Open API?",
+    "reference": "Theo Điều 11 Thông tư 64/2024/TT-NHNN (có hiệu lực từ 01/03/2025), Ngân hàng có các trách nhiệm chính sau khi triển khai Open API:\n\n* **Về Kỹ thuật và Hạ tầng:**\n    * Hoàn thiện hạ tầng hệ thống thông tin, sẵn sàng cho việc kết nối.\n    * Xây dựng tài liệu hướng dẫn kết nối và xử lý dữ liệu.\n    * Đảm bảo an toàn, an ninh mạng cho hệ thống ở cấp độ 3 trở lên.\n    * Có giải pháp công nghệ để giới hạn số lần truy vấn tự động từ bên thứ ba.\n\n* **Về Dữ liệu và Khách hàng:**\n    * Đảm bảo chất lượng dữ liệu và phối hợp xử lý sai lệch.\n    * Cung cấp công cụ cho phép khách hàng tra cứu dữ liệu đã đồng ý chia sẻ và rút lại sự đồng ý đó.\n    * Thiết lập thời hạn mặc định cho phép truy vấn thông tin là không quá 180 ngày.\n\n* **Về Quản lý và Giám sát:**\n    * Chịu trách nhiệm lựa chọn, thẩm định, giám sát và quản lý bên thứ ba.\n    * Cập nhật hoặc thu hồi quyền truy cập dữ liệu của bên thứ ba khi hợp đồng thay đổi.\n    * Giám sát hoạt động truy cập để phát hiện và ngăn chặn hành vi bất thường, trái phép.\n    * Ghi nhật ký (log) toàn bộ việc sử dụng Open API và lưu trữ để phục vụ kiểm tra.\n\n* **Về Phối hợp và Báo cáo:**\n    * Báo cáo tình hình triển khai cho Ngân hàng Nhà nước khi được yêu cầu.\n    * Phối hợp với các bên liên quan để giải quyết vướng mắc, tranh chấp.",
+    "articles": "64/2024/tt-nhnn_11",
+    "candidate": "Căn cứ Điều 11 Thông tư 64/2024/TT-NHNN, ngân hàng có các trách nhiệm chính khi triển khai Open API:\n\n- **Kỹ thuật, hạ tầng:** Hoàn thiện hạ tầng hệ thống thông tin, sẵn sàng kết nối; xây dựng tài liệu hướng dẫn kết nối và xử lý dữ liệu; đảm bảo an toàn, an ninh mạng ở cấp độ 3 trở lên; có giải pháp công nghệ giới hạn số lần truy vấn tự động từ bên thứ ba.\n- **Dữ liệu và khách hàng:** (như quy định tại Điều 11).\n\nNgoài ra, theo Điều 9 Thông tư 64/2024/TT-NHNN, trước khi chính thức kết nối và xử lý dữ liệu với bên thứ ba, ngân hàng bắt buộc phải công khai trên website chính thức thông tin về Hệ thống thử nghiệm Open API và danh mục các Open API đang triển khai.\n\nTheo Điều 21 Thông tư 17/2024/TT-NHNN, ngân hàng phải chịu trách nhiệm về thiệt hại do sai sót hoặc lỗi của chính ngân hàng, bao gồm cả việc không tuân thủ quy định pháp luật về an toàn, bảo mật khi cung cấp dịch vụ.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 3,
+      "missing": [
+        "thiết lập thời hạn mặc định truy vấn không quá 180 ngày",
+        "công cụ tra cứu và rút lại đồng ý của khách hàng",
+        "đảm bảo chất lượng dữ liệu, phối hợp xử lý sai lệch",
+        "lựa chọn, thẩm định, giám sát bên thứ ba",
+        "cập nhật/thu hồi quyền truy cập khi hợp đồng thay đổi",
+        "giám sát truy cập, phát hiện hành vi bất thường",
+        "ghi nhật ký sử dụng Open API",
+        "báo cáo NHNN khi được yêu cầu",
+        "phối hợp giải quyết vướng mắc, tranh chấp"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng Điều 11 nhưng chỉ trình bày nhóm kỹ thuật, nhóm dữ liệu khách hàng bỏ trống; thiếu nhiều ý chính.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 32,
+    "arm": "adk",
+    "question": "Cơ quan nào có trách nhiệm thực hiện việc đóng gói và niêm phong tiền giả?",
+    "reference": "Theo Điều 8 Thông tư 58/2024/TT-NHNN, trách nhiệm đóng gói và niêm phong tiền giả thuộc về **Ngân hàng Nhà nước chi nhánh** và **Sở Giao dịch**. Quy trình niêm phong tuân theo quy định như đối với tiền thật nhưng phải được đóng dấu **“TIỀN GIẢ”** để phân biệt. Tiền giả sau đó được bảo quản riêng trong kho tiền.",
+    "articles": "58/2024/tt-nhnn_8",
+    "candidate": "Căn cứ Điều 8 Thông tư 58/2024/TT-NHNN, trách nhiệm đóng gói và niêm phong tiền giả thuộc về **Ngân hàng Nhà nước chi nhánh** và **Sở Giao dịch**. Việc niêm phong thực hiện theo quy định như đối với tiền thật nhưng phải đóng dấu **“TIỀN GIẢ”** để phân biệt; tiền giả sau đó được bảo quản riêng trong kho tiền.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng cơ quan, đúng căn cứ Điều 8 Thông tư 58/2024/TT-NHNN và các ý về niêm phong, bảo quản.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 36,
+    "arm": "adk",
+    "question": "Ngân hàng phải công khai thông tin về Open API ở đâu?",
+    "reference": "Theo Điều 9 Thông tư 64/2024/TT-NHNN, trước khi chính thức kết nối và xử lý dữ liệu với bên thứ ba, Ngân hàng bắt buộc phải công khai thông tin về Open API trên **trang thông tin điện tử (website) chính thức của Ngân hàng**. Các thông tin tối thiểu phải được công khai bao gồm:\n\n* Thông tin về Hệ thống thử nghiệm Open API.\n* Danh mục các Open API mà Ngân hàng triển khai.",
+    "articles": "64/2024/tt-nhnn_9",
+    "candidate": "Không đủ căn cứ để trả lời.",
+    "verdict": {
+      "correct": "incorrect",
+      "faithful": true,
+      "cites_expected": false,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "Công khai trên trang thông tin điện tử chính thức của Ngân hàng",
+        "Thông tin tối thiểu: Hệ thống thử nghiệm Open API và danh mục Open API",
+        "Căn cứ Điều 9 Thông tư 64/2024/TT-NHNN"
+      ],
+      "wrong": [
+        "Từ chối trả lời dù có đủ căn cứ"
+      ],
+      "reason": "Câu trả lời không giải đáp, chỉ nói không đủ căn cứ, trái với yêu cầu về địa điểm công khai Open API.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 95,
+    "arm": "adk",
+    "question": "Tổ chức tài chính vi mô thực hiện phân loại nợ theo những nhóm nào?",
+    "reference": "Tổ chức tài chính vi mô thực hiện phân loại nợ theo **05 nhóm** với các tiêu chí cụ thể về số ngày quá hạn và cơ cấu lại thời hạn trả nợ như sau (Căn cứ Điều 5 Thông tư 14/2024/TT-NHNN):\n- **Nhóm 1 (Nợ đủ tiêu chuẩn)**: Nợ trong hạn; nợ quá hạn **dưới 10 ngày**.\n- **Nhóm 2 (Nợ cần chú ý)**: Nợ quá hạn **từ 10 ngày đến dưới 30 ngày**; nợ cơ cấu lại thời hạn trả nợ **lần đầu**.\n- **Nhóm 3 (Nợ dưới tiêu chuẩn)**: Nợ quá hạn **từ 30 ngày đến dưới 90 ngày**; nợ cơ cấu lại lần đầu quá hạn **dưới 30 ngày** theo thời hạn mới; nợ được miễn hoặc giảm lãi.\n- **Nhóm 4 (Nợ nghi ngờ mất vốn)**: Nợ quá hạn **từ 90 ngày đến dưới 180 ngày**; nợ cơ cấu lại lần đầu quá hạn **từ 30 ngày đến dưới 90 ngày** theo thời hạn mới; nợ cơ cấu lại thời hạn trả nợ **lần thứ hai**.\n- **Nhóm 5 (Nợ có khả năng mất vốn)**: Nợ quá hạn **từ 180 ngày trở lên**; nợ cơ cấu lại lần đầu quá hạn **từ 90 ngày trở lên** theo thời hạn mới; nợ cơ cấu lại lần thứ hai quá hạn theo thời hạn mới; nợ cơ cấu lại thời hạn trả nợ **lần thứ ba trở lên**.",
+    "articles": "14/2024/tt-nhnn_5",
+    "candidate": "Căn cứ Điều 5 Thông tư 14/2024/TT-NHNN, tổ chức tài chính vi mô thực hiện phân loại nợ theo **05 nhóm**:\n\n- **Nhóm 1 (Nợ đủ tiêu chuẩn)**: nợ trong hạn; nợ quá hạn dưới 10 ngày.\n- **Nhóm 2 (Nợ cần chú ý)**: nợ quá hạn từ 10 ngày đến dưới 30 ngày; nợ cơ cấu lại thời hạn trả nợ lần đầu.\n- **Nhóm 3 (Nợ dưới tiêu chuẩn)**: nợ quá hạn từ 30 ngày đến dưới 90 ngày; nợ cơ cấu lại thời hạn trả nợ…\n- **Nhóm 4** và **Nhóm 5**: các mức quá hạn và cơ cấu lại thời hạn trả nợ tiếp theo.\n\nNgoài ra, theo Điều 4 Thông tư 14/2024/TT-NHNN, toàn bộ dư nợ của một khách hàng tại một tổ chức tài chính vi mô phải được phân loại vào cùng một nhóm nợ; nếu có bất kỳ khoản nợ nào thuộc nhóm rủi ro cao hơn thì các khoản nợ còn lại cũng được phân loại vào nhóm rủi ro cao hơn đó.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "tiêu chí chi tiết Nhóm 3 (miễn/giảm lãi, quá hạn theo thời hạn mới)",
+        "chi tiết Nhóm 4 (90-180 ngày, cơ cấu lần 2)",
+        "chi tiết Nhóm 5 (từ 180 ngày, cơ cấu lần 3 trở lên)"
+      ],
+      "wrong": [],
+      "reason": "Nêu đúng 05 nhóm và Nhóm 1-2, nhưng Nhóm 3-5 chỉ tóm tắt, thiếu tiêu chí cụ thể.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 4,
+    "arm": "adk",
+    "question": "Hồ sơ mở ví điện tử gồm những giấy tờ gì?",
+    "reference": "Theo Điều 18 Thông tư 40/2024/TT-NHNN, hồ sơ mở ví điện tử bao gồm:\n\n1.  **Thỏa thuận mở và sử dụng ví điện tử.**\n\n2.  **Tài liệu, thông tin, dữ liệu để xác minh thông tin khách hàng, cụ thể:\n    * **Đối với cá nhân là công dân Việt Nam:**\n        * CCCD, thẻ Căn cước, hoặc Căn cước điện tử (qua tài khoản định danh điện tử mức 2).\n        * CMND (còn hiệu lực).\n        * Giấy khai sinh (đối với người dưới 14 tuổi).\n    * **Đối với cá nhân là người gốc Việt Nam chưa có quốc tịch:** Giấy chứng nhận căn cước.\n    * **Đối với cá nhân là người nước ngoài:**\n        * Hộ chiếu (kèm thị thực hoặc giấy tờ chứng minh miễn thị thực nếu đang cư trú tại Việt Nam).\n        * Danh tính điện tử (qua tài khoản định danh điện tử mức 2).\n    * **Đối với khách hàng là tổ chức:**\n        * Tài liệu xác minh thông tin theo quy định tại Luật Phòng, chống rửa tiền 2022.\n        * Tài liệu tùy thân của người đại diện hợp pháp của tổ chức.\n\n3.  **Trường hợp mở ví thông qua người đại diện/giám hộ:** Cần bổ sung giấy tờ chứng minh tư cách đại diện hợp pháp và thông tin nhận biết của người đại diện đó.",
+    "articles": "40/2024/tt-nhnn_18",
+    "candidate": "Theo khoản 1 Điều 18 Thông tư 40/2024/TT-NHNN, hồ sơ mở ví điện tử gồm: **thỏa thuận mở và sử dụng ví điện tử theo mẫu của tổ chức cung ứng dịch vụ**.\n\nNgoài ra, theo khoản 2 Điều 23 Thông tư 40/2024/TT-NHNN, tổ chức cung ứng dịch vụ ví điện tử phải áp dụng các giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư.\n\nCác điều khoản được truy xuất không quy định chi tiết danh mục giấy tờ, tài liệu khác trong hồ sơ mở ví điện tử.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": false,
+      "cites_expected": true,
+      "extra_cites": true,
+      "conciseness": 4,
+      "missing": [
+        "Tài liệu xác minh thông tin khách hàng theo Điều 18",
+        "Giấy tờ tùy thân của cá nhân, tổ chức, người đại diện/giám hộ"
+      ],
+      "wrong": [
+        "Cho rằng không có quy định chi tiết danh mục giấy tờ khác trong hồ sơ mở ví điện tử"
+      ],
+      "reason": "Chỉ nêu thỏa thuận, thiếu phần lớn tài liệu xác minh; còn nói sai là không có quy định chi tiết.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 15,
+    "arm": "adk",
+    "question": "Có những hình thức chuyển quyền sở hữu chứng chỉ tiền gửi nào?",
+    "reference": "Theo Điều 12 Thông tư 02/2025/TT-NHNN, chứng chỉ tiền gửi có thể được chuyển quyền sở hữu dưới các hình thức sau:\n\n* Mua, bán\n* Cho, tặng\n* Trao đổi\n* Thừa kế\n* Các hình thức khác phù hợp với quy định của pháp luật.\n\n**Lưu ý:** Chứng chỉ tiền gửi do công ty tài chính tổng hợp hoặc công ty tài chính chuyên ngành phát hành chỉ được phép chuyển quyền sở hữu giữa các tổ chức với nhau.",
+    "articles": "02/2025/tt-nhnn_12",
+    "candidate": "Theo Điều 12 Thông tư 02/2025/TT-NHNN, chứng chỉ tiền gửi có thể được chuyển quyền sở hữu dưới các hình thức sau:\n\n- Mua, bán;\n- Cho, tặng;\n- Trao đổi;\n- Thừa kế;\n- Các hình thức khác phù hợp với quy định của pháp luật.\n\n**Lưu ý:** Chứng chỉ tiền gửi do công ty tài chính tổng hợp hoặc công ty tài chính chuyên ngành phát hành chỉ được phép chuyển quyền sở hữu giữa các tổ chức với nhau.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đủ 5 hình thức và lưu ý về chuyển quyền giữa các tổ chức, đúng Điều 12 Thông tư 02/2025/TT-NHNN.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 82,
+    "arm": "adk",
+    "question": "Theo Thông tư 26, quyền và nghĩa vụ của các bên trong giao dịch mua và cho thuê lại được quy định như thế nào?",
+    "reference": "Căn cứ Điều 29 Thông tư 26/2024/TT-NHNN, quyền và nghĩa vụ của các bên được quy định như sau:\n\n**1. Bên mua và cho thuê lại (Công ty cho thuê tài chính):**\n* **Quyền:** Yêu cầu bên bán cung cấp đầy đủ thông tin, tài liệu về tài sản; yêu cầu xuất hóa đơn và giao toàn bộ giấy tờ sở hữu; yêu cầu bồi thường thiệt hại nếu có tranh chấp về tài sản.\n* **Nghĩa vụ:** Thanh toán tiền mua tài sản theo thỏa thuận; thực hiện đúng các điều khoản trong hợp đồng mua.\n\n**2. Bên bán và thuê lại (Khách hàng):**\n* **Quyền:** Nhận tiền bán tài sản theo thỏa thuận.\n* **Nghĩa vụ:** Cung cấp thông tin đầy đủ, chính xác về tài sản; xuất hóa đơn và giao toàn bộ giấy tờ sở hữu; bồi thường thiệt hại nếu có tranh chấp về tài sản; thực hiện đúng các điều khoản trong hợp đồng mua.",
+    "articles": "26/2024/tt-nhnn_29",
+    "candidate": "Căn cứ Điều 29 Thông tư 26/2024/TT-NHNN:\n\n**1. Bên mua và cho thuê lại (công ty cho thuê tài chính):**\n- Quyền: yêu cầu bên bán cung cấp đầy đủ thông tin, tài liệu về tài sản; yêu cầu xuất hóa đơn và giao toàn bộ giấy tờ sở hữu; yêu cầu bồi thường thiệt hại nếu có tranh chấp về tài sản.\n- Nghĩa vụ: thanh toán tiền mua tài sản theo thỏa thuận; thực hiện đúng các điều khoản trong hợp đồng mua.\n\n**2. Bên bán (bên thuê lại):** quyền và nghĩa vụ tương ứng được quy định tại Điều 29 Thông tư 26/2024/TT-NHNN (nội dung chi tiết về bên bán không được trích dẫn đầy đủ trong căn cứ hiện có).",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "extra_cites": false,
+      "conciseness": 4,
+      "missing": [
+        "quyền của bên bán và thuê lại: nhận tiền bán tài sản theo thỏa thuận",
+        "nghĩa vụ của bên bán và thuê lại: cung cấp thông tin đầy đủ, chính xác về tài sản; xuất hóa đơn và giao giấy tờ sở hữu; bồi thường thiệt hại nếu có tranh chấp; thực hiện đúng các điều khoản trong hợp đồng mua"
+      ],
+      "wrong": [],
+      "reason": "Đúng phần bên mua và cho thuê lại; thiếu toàn bộ quyền, nghĩa vụ của bên bán và thuê lại.",
+      "served_model": "deepseek-flash"
+    }
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "tokens_mean": 4495.1,
+  "tokens_std": 224.0,
+  "lat_mean_ms": 6991.9,
+  "lat_std_ms": 1028.8,
+  "llm_calls_mean": 2,
+  "acc": 100.0,
+  "_metadata": {
+    "method": "measured",
+    "runtime": "Google ADK (google-adk + LiteLLM)",
+    "entrypoint": "src/agents/orchestrator.py::LegalOrchestrator.run",
+    "model": "deepseek/deepseek-chat",
+    "query": "Doanh nghiệp muốn xin cấp phép cung ứng dịch vụ Ví điện tử thì vốn điều lệ tối thiểu cần bao nhiêu tiền và căn cứ theo văn bản quy phạm pháp luật nào hiện hành?",
+    "runs": 10,
+    "timestamp": "2026-10-19T09:21:25",
+    "script": "scripts/benchmark_adk_10_runs.py",
+    "token_source": "LiteLLM usage.total_tokens (CustomLogger)"
+  }
+}

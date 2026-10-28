@@ -1,0 +1,39 @@
+{
+  "token_mean": 2922.7,
+  "token_std": 240.9,
+  "lat_mean_ms": 3310.4,
+  "lat_std_ms": 558.6,
+  "doc_hit_rate": 100.0,
+  "k_mean": 3,
+  "p_at_k": 44.44,
+  "r_at_k": 100.0,
+  "hit_at_k": 100.0,
+  "citation_recall": 100.0,
+  "article_hit": 77.78,
+  "n_errors": 0,
+  "_metadata": {
+    "method": "measured",
+    "runtime": "Google ADK 2.12.0 (SequentialAgent + LoopAgent + Runner + DatabaseSessionService/SQLite)",
+    "graph": "LegalPilotPipeline",
+    "sub_agents": [
+      "PlannerAgent",
+      "RetrievalWorker",
+      "RetrieveAuditLoop",
+      "DrafterAgent"
+    ],
+    "entrypoint": "src/agents/adk_pipeline.py::LegalPilotADK.run",
+    "model": "deepseek/deepseek-chat (alias -> DeepSeek Flash V4.1)",
+    "retriever": "dense",
+    "concise": true,
+    "testset": "data/benchmarks/sbv_testset_tvpl.json",
+    "questions": [
+      1,
+      2,
+      3
+    ],
+    "n_questions": 3,
+    "timestamp": "2026-10-20T14:52:24",
+    "script": "scripts/benchmark_adk_pipeline.py",
+    "token_source": "LiteLLM usage.total_tokens (CustomLogger)"
+  }
+}

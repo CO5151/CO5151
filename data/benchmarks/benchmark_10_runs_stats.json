@@ -1,0 +1,41 @@
+{
+  "workflow": {
+    "token_mean": 848.8,
+    "token_std": 10.9321,
+    "token_min": 832,
+    "token_max": 865,
+    "lat_mean_ms": 3201.77,
+    "lat_std_ms": 233.9588,
+    "acc": 0.0
+  },
+  "react": {
+    "token_mean": 6313.4,
+    "token_std": 125.3778,
+    "token_min": 6085,
+    "token_max": 6470,
+    "lat_mean_ms": 5545.04,
+    "lat_std_ms": 507.9983,
+    "acc": 100.0,
+    "step_mean": 3
+  },
+  "multi_agent": {
+    "token_mean": 2759.9,
+    "token_std": 513.2661,
+    "token_min": 2218,
+    "token_max": 3507,
+    "lat_mean_ms": 7444.27,
+    "lat_std_ms": 1755.6015,
+    "acc": 100.0
+  },
+  "_metadata": {
+    "method": "measured",
+    "model": "deepseek-chat (DeepSeek-V3)",
+    "temperature": 0.1,
+    "query": "Doanh nghiệp muốn xin cấp phép cung ứng dịch vụ Ví điện tử thì vốn điều lệ tối thiểu cần bao nhiêu tiền và căn cứ theo văn bản quy phạm pháp luật nào hiện hành?",
+    "runs": 10,
+    "timestamp": "2026-10-17T14:49:22",
+    "script": "scripts/benchmark_10_runs.py",
+    "token_source": "DeepSeek API usage_metadata.total_tokens",
+    "workspace": "/Users/tungdl/Documents/CO5151/CO5151"
+  }
+}

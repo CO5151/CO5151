@@ -1,0 +1,82 @@
+{
+  "workflow": {
+    "token_mean": 968.8,
+    "token_std": 180.8,
+    "lat_mean_ms": 2665.1,
+    "lat_std_ms": 590.7,
+    "k_mean": 1.5,
+    "p_at_k": 80.0,
+    "r_at_k": 100.0,
+    "hit_at_k": 100.0,
+    "doc_hit_rate": 100.0,
+    "citation_recall": 100.0,
+    "article_hit": 90.0,
+    "token_f1": 67.06,
+    "empty_answers": 0
+  },
+  "react": {
+    "token_mean": 6812,
+    "token_std": 3226.8,
+    "lat_mean_ms": 5873.4,
+    "lat_std_ms": 1634.4,
+    "k_mean": 2.3,
+    "p_at_k": 59.17,
+    "r_at_k": 100.0,
+    "hit_at_k": 100.0,
+    "doc_hit_rate": 100.0,
+    "citation_recall": 100.0,
+    "article_hit": 96.67,
+    "token_f1": 49.88,
+    "empty_answers": 0,
+    "step_mean": 3.2
+  },
+  "multi_agent": {
+    "token_mean": 2859.6,
+    "token_std": 656.2,
+    "lat_mean_ms": 8102.4,
+    "lat_std_ms": 1949.7,
+    "k_mean": 2.7,
+    "p_at_k": 50.0,
+    "r_at_k": 100.0,
+    "hit_at_k": 100.0,
+    "doc_hit_rate": 100.0,
+    "citation_recall": 100.0,
+    "article_hit": 93.33,
+    "token_f1": 30.79,
+    "empty_answers": 0
+  },
+  "_metadata": {
+    "method": "measured",
+    "model": "deepseek-chat (DeepSeek-V3)",
+    "temperature": 0.1,
+    "testset": "data/benchmarks/sbv_testset_tvpl.json",
+    "questions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "n_questions": 10,
+    "runs": 1,
+    "timestamp": "2026-10-19T10:10:39",
+    "script": "scripts/benchmark_10_questions.py",
+    "corpus_chunks": 103,
+    "corpus_documents": 29,
+    "patched": {
+      "recovery_worker": "generic (state['user_query'])",
+      "wf_synthesizer": "generic prompt (original hard-codes 'mức phạt')"
+    },
+    "metrics": {
+      "doc_hit_rate": "% câu trả lời có trích đúng ít nhất 1 văn bản chuẩn",
+      "citation_recall": "% văn bản chuẩn được trích (trung bình)",
+      "article_hit": "% điều khoản chuẩn được nêu đúng số Điều",
+      "token_f1": "F1 token với reference_answer (bỏ dấu)"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+# SearXNG config for LegalPilot-VN.
+#
+# Only the minimum needed for a local JSON API: the `json` format has to be
+# listed explicitly, otherwise /search?format=json answers 403.
+use_default_settings: true
+
+general:
+  instance_name: "LegalPilot search"
+  debug: false
+
+search:
+  safe_search: 1
+  formats:
+    - html
+    - json
+
+server:
+  # Local-only demo: no auth, bound to the compose port.
+  bind_address: "0.0.0.0"
+  port: 8080
+  limiter: false
+  image_proxy: false
+
+ui:
+  static_use_hash: true
+
+engines:
+  # General engines feed the whitelist filter; keep a few reliable ones.
+  - name: duckduckgo
+    disabled: false
+  - name: bing
+    disabled: false
+  - name: google
+    disabled: false
+  - name: wikipedia
+    disabled: true

@@ -1,0 +1,69 @@
+[
+  {
+    "question_id": 1,
+    "question": "Khoản vay nước ngoài là gì?",
+    "gt_docs": [
+      "12/2022/TT-NHNN"
+    ],
+    "tokens": 2706,
+    "llm_calls": 2,
+    "latency_ms": 3475.9,
+    "retrieval_attempts": 1,
+    "retrieved": 6,
+    "retrieval": {
+      "k": 3,
+      "p_at_k": 0.3333,
+      "r_at_k": 1.0,
+      "hit_at_k": 1.0
+    },
+    "citation_recall": 1.0,
+    "article_hit": 1.0,
+    "output": "Theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ:\n\n- **Khoản vay nước ngoài không được Chính phủ bảo lãnh** (còn gọi là khoản vay tự vay, tự trả); và\n- **Khoản vay nước ngoài được Chính phủ bảo lãnh** dưới mọi hình thức vay nước ngoài, bao gồm: thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường.\n\nCăn cứ: Thông tư 12/2022/TT-NHNN, Điều 3.",
+    "error": ""
+  },
+  {
+    "question_id": 2,
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "gt_docs": [
+      "12/2022/TT-NHNN",
+      "08/2023/TT-NHNN"
+    ],
+    "tokens": 3182,
+    "llm_calls": 2,
+    "latency_ms": 3767.5,
+    "retrieval_attempts": 1,
+    "retrieved": 6,
+    "retrieval": {
+      "k": 3,
+      "p_at_k": 0.6667,
+      "r_at_k": 1.0,
+      "hit_at_k": 1.0
+    },
+    "citation_recall": 1.0,
+    "article_hit": 0.6667,
+    "output": "Căn cứ khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN, trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh gồm:\n\n- **Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:**\n  + Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ: bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu;\n  + Trường hợp khác: thực hiện theo quy định tương ứng tại các khoản nêu trên.\n\n- **Thời hạn gửi hồ sơ** (khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN): bên đi vay gửi 01 bộ hồ sơ đăng ký khoản vay tới Cơ quan có thẩm quyền xác nhận đăng ký trong thời hạn 30 ngày làm việc kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn; 30 ngày làm việc kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn.\n\nHồ sơ phải lập bằng tiếng Việt; giấy tờ nước ngoài hợp pháp hóa lãnh sự và dịch thuật công chứng; bản sao chứng thực hoặc cấp từ sổ gốc (Điều 23 Nghị định 52/2024/NĐ-CP).",
+    "error": ""
+  },
+  {
+    "question_id": 3,
+    "question": "Thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh là bao lâu?",
+    "gt_docs": [
+      "12/2022/TT-NHNN"
+    ],
+    "tokens": 2880,
+    "llm_calls": 2,
+    "latency_ms": 2687.7,
+    "retrieval_attempts": 1,
+    "retrieved": 6,
+    "retrieval": {
+      "k": 3,
+      "p_at_k": 0.3333,
+      "r_at_k": 1.0,
+      "hit_at_k": 1.0
+    },
+    "citation_recall": 1.0,
+    "article_hit": 0.6667,
+    "output": "Theo khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN (được dẫn tại Điều 11 Thông tư 12/2022/TT-NHNN), thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh là:\n\n- 30 ngày làm việc kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn;\n- 30 ngày làm việc kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn.",
+    "error": ""
+  }
+]

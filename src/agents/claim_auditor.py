@@ -142,39 +142,40 @@ class ClaimAuditorAgent(ADKAgent):
             )
 
         # Proposal Section 3.2 & 6.1: Claim Auditor Agent as Adversarial Critic
-        # Deconstructs claims and evaluates validity via LLM Critic
-        try:
-            from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
+        # Only invoke LLM Critic when ungrounded or expired claims exist (0 token for valid runs)
+        if not is_fully_verified:
+            try:
+                from src.agents.base import GoogleAgent, get_default_model, invoke_adk_agent
 
-            critic_agent = GoogleAgent(
-                name="ClaimAuditorCritic",
-                model=get_default_model(),
-                instruction=(
-                    "Bạn là Claim Auditor Agent (Adversarial Critic). Nhiệm vụ của bạn là kiểm tra, phản biện "
-                    "các căn cứ pháp lý: chỉ ra các điều khoản/văn bản hết hiệu lực hoặc bị bãi bỏ, "
-                    "và đưa ra feedback yêu cầu khắc phục ngắn gọn."
-                ),
-            )
-            evidence_summary = "\n".join(
-                [
-                    f"- {c.cited_statute} ({c.cited_article}): {'HỢP LỆ' if c.is_statute_active else 'HẾT HIỆU LỰC (BÃI BỎ)'}"
-                    for c in claims
-                ]
-            )
-            critic_prompt = (
-                f"Hãy đánh giá và phê bình các căn cứ pháp lý sau cho câu hỏi tuân thủ:\n"
-                f"{evidence_summary}\n\n"
-                f"Nếu có văn bản hết hiệu lực, hãy nêu rõ cảnh báo rủi ro pháp lý và yêu cầu chuyển hướng tra cứu."
-            )
-            llm_critique = invoke_adk_agent(critic_agent, critic_prompt).strip()
-            if llm_critique:
-                feedback = (
-                    f"{feedback}\n[Phản biện từ Auditor LLM]: {llm_critique}"
-                    if feedback
-                    else f"[Phản biện từ Auditor LLM]: {llm_critique}"
+                critic_agent = GoogleAgent(
+                    name="ClaimAuditorCritic",
+                    model=get_default_model(),
+                    instruction=(
+                        "Bạn là Claim Auditor Agent (Adversarial Critic). Nhiệm vụ của bạn là kiểm tra, phản biện "
+                        "các căn cứ pháp lý: chỉ ra các điều khoản/văn bản hết hiệu lực hoặc bị bãi bỏ, "
+                        "và đưa ra feedback yêu cầu khắc phục ngắn gọn."
+                    ),
                 )
-        except Exception as e:
-            logger.warning("ClaimAuditor LLM evaluation failed: %s", e)
+                evidence_summary = "\n".join(
+                    [
+                        f"- {c.cited_statute} ({c.cited_article}): {'HỢP LỆ' if c.is_statute_active else 'HẾT HIỆU LỰC (BÃI BỎ)'}"
+                        for c in claims
+                    ]
+                )
+                critic_prompt = (
+                    f"Hãy đánh giá và phê bình các căn cứ pháp lý sau cho câu hỏi tuân thủ:\n"
+                    f"{evidence_summary}\n\n"
+                    f"Nếu có văn bản hết hiệu lực, hãy nêu rõ cảnh báo rủi ro pháp lý và yêu cầu chuyển hướng tra cứu."
+                )
+                llm_critique = invoke_adk_agent(critic_agent, critic_prompt).strip()
+                if llm_critique:
+                    feedback = (
+                        f"{feedback}\n[Phản biện từ Auditor LLM]: {llm_critique}"
+                        if feedback
+                        else f"[Phản biện từ Auditor LLM]: {llm_critique}"
+                    )
+            except Exception as e:
+                logger.warning("ClaimAuditor LLM evaluation failed: %s", e)
 
         report = AuditReport(
             total_claims=total,

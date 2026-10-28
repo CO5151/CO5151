@@ -52,20 +52,13 @@ from src.agents.lawgraph import LawGraphAgent  # noqa: E402
 retriever = LawGraphAgent()
 auditor = ClaimAuditorAgent()
 
-# Supplementary web search. It only *finds* documents on official domains; it
-# never decides validity, and its hits stay in `web_findings`. Set
-# WEB_FINDING=0 to demonstrate the graph without the extra step.
-WEB_FINDING = os.getenv("WEB_FINDING", "1").strip().lower() not in ("0", "false", "no")
-
-# with_intake=True because `adk web` does not seed session state; the intake
-# step copies the user message into `user_query` so the Drafter template
-# resolves. The benchmark seeds that key itself and keeps the default False.
+# Architecture matches D2 Interim Report: OrchestratorAgent -> DrafterAuditorLoop (DrafterAgent <-> AuditorAgent)
 root_agent = build_legal_pipeline(
     retriever,
     auditor,
-    with_intake=True,
-    with_web_finding=WEB_FINDING,
-    drafter_instruction=WEB_DRAFTER_INSTRUCTION if WEB_FINDING else None,
+    with_intake=False,
+    with_web_finding=False,
+    drafter_instruction=None,
 )
 
 __all__ = ["root_agent", "DEFAULT_MODEL"]

@@ -1,0 +1,513 @@
+[
+  {
+    "question_id": 1,
+    "question": "Khoản vay nước ngoài là gì?",
+    "gt_docs": [
+      "12/2022/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 907,
+      "latency_ms": 2537.6,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.8065,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ khoản vay nước ngoài không được Chính phủ bảo lãnh (khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\nLưu ý: Căn cứ [94/2025/ND-CP] [Điều 3] được cung cấp đề cập đến giải pháp cho vay ngang hàng, không liên quan đến định nghĩa khoản vay nước ngoài, nên không được sử dụng để trả lời câu hỏi này."
+    },
+    "react": {
+      "tokens": 6163,
+      "latency_ms": 6522.4,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.4235,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "## Định nghĩa \"khoản vay nước ngoài\"\n\nTheo **khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN** (Ngân hàng Nhà nước Việt Nam), **khoản vay nước ngoài** được định nghĩa như sau:\n\n> **Khoản vay nước ngoài** là cụm từ dùng chung để chỉ:\n> - **Khoản vay nước ngoài không được Chính phủ bảo lãnh** (gọi là khoản vay **tự vay, tự trả**); và\n> - **Khoản vay nước ngoài được Chính phủ bảo lãnh** dưới mọi hình thức vay nước ngoài thông qua:\n>   - Hợp đồng vay;\n>   - Hợp đồng nhập khẩu hàng hóa trả chậm;\n>   - Hợp đồng ủy thác cho vay;\n>   - Hợp đồng cho thuê tài chính; hoặc\n>   - Phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\n### Phân tích các yếu tố cấu thành\n\nTừ định nghĩa trên, có thể thấy \"khoản vay nước ngoài\" bao gồm **hai nhóm chính**:\n\n1. **Khoản vay tự vay, tự trả** – khoản vay nước ngoài mà bên đi vay tự chịu trách nhiệm, **không** có bảo lãnh của Chính phủ.\n\n2. **Khoản vay được Chính phủ bảo lãnh** – khoản vay có bảo lãnh của Chính phủ, được thực hiện dưới **nhiều hình thức linh hoạt**, không chỉ giới hạn ở hợp đồng vay thông thường mà còn gồm nhập khẩu trả chậm, ủy thác cho vay, cho thuê tài chính và phát hành công cụ nợ quốc tế.\n\n### Lưu ý về hiệu lực văn bản\n\n⚠️ Khi kiểm tra hiệu lực, hệ thống ghi nhận Thông tư 12/2022/TT-NHNN **chưa có thông tin ghi nhận bãi bỏ** trong đồ thị pháp luật, nhưng trạng thái được đánh dấu là **\"Chưa rõ\"**. Điều này có nghĩa là chưa thể khẳng định chắc chắn văn bản vẫn còn hiệu lực đầy đủ tại thời điểm hiện tại.\n\nĐể đảm bảo tính chính xác khi áp dụng vào thực tế (đặc biệt với các giao dịch cụ thể), bạn nên:\n- Kiểm tra lại trên Cơ sở dữ liệu quốc gia về văn bản pháp luật hoặc cổng thông tin của Ngân hàng Nhà nước;\n- Xem xét các văn bản sửa đổi, bổ sung (ví dụ Thông tư 08/2023/TT-NHNN đã được đề cập trong kết quả tra cứu) có thể đã điều chỉnh nội dung liên quan.\n\nBạn có muốn tôi tra cứu thêm về **thủ tục đăng ký khoản vay nước ngoài** hoặc **các quy định sửa đổi, bổ sung** liên quan không?"
+    },
+    "multi_agent": {
+      "tokens": 3604,
+      "latency_ms": 11035.2,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.3333,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.1665,
+      "output": "# BẢN TƯ VẤN PHÁP LÝ\n\n**Về: Định nghĩa và phạm vi khái niệm \"Khoản vay nước ngoài\"**\n\n---\n\n## I. CĂN CỨ PHÁP LÝ\n\nBản tư vấn này được xây dựng trên cơ sở các văn bản quy phạm pháp luật đã được xác thực còn hiệu lực tại thời điểm soạn thảo:\n\n1. **Thông tư số 12/2022/TT-NHNN** của Ngân hàng Nhà nước Việt Nam (được viện dẫn tại khoản 1 Điều 3).\n2. **Nghị định số 94/2025/NĐ-CP** của Chính phủ (được viện dẫn tại khoản 3 Điều 3).\n3. **Nghị định số 26/2025/NĐ-CP** của Chính phủ (được viện dẫn tại khoản 14 Điều 2).\n\n---\n\n## II. NỘI DUNG TƯ VẤN\n\n### 1. Định nghĩa \"Khoản vay nước ngoài\"\n\nCăn cứ **khoản 1 Điều 3 Thông tư số 12/2022/TT-NHNN**, khái niệm \"khoản vay nước ngoài\" được định nghĩa như sau:\n\n> \"Khoản vay nước ngoài là cụm từ dùng chung để chỉ khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\"\n\n**Phân tích định nghĩa:**\n\nTheo quy định trên, \"khoản vay nước ngoài\" là một **khái niệm bao trùm (umbrella term)**, bao gồm hai nhóm chính:\n\n| Nhóm | Đặc điểm |\n|------|----------|\n| **(i) Khoản vay tự vay, tự trả** | Khoản vay nước ngoài **không** được Chính phủ bảo lãnh; bên đi vay tự chịu trách nhiệm về nghĩa vụ trả nợ. |\n| **(ii) Khoản vay được Chính phủ bảo lãnh** | Khoản vay nước ngoài **có** bảo lãnh của Chính phủ. |\n\n**Các hình thức vay nước ngoài được pháp luật ghi nhận** (áp dụng cho cả hai nhóm nêu trên), bao gồm:\n\n1. Hợp đồng vay;\n2. Hợp đồng nhập khẩu hàng hóa trả chậm;\n3. Hợp đồng ủy thác cho vay;\n4. Hợp đồng cho thuê tài chính;\n5. Phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\nNhư vậy, định nghĩa pháp lý không giới hạn ở hình thức \"hợp đồng vay\" thuần túy, mà mở rộng ra nhiều phương thức huy động vốn từ nước ngoài khác nhau, miễn là phát sinh nghĩa vụ nợ của bên đi vay đối với bên nước ngoài.\n\n### 2. Phân biệt với các khái niệm liên quan\n\nĐể tránh nhầm lẫn, cần lưu ý phân biệt \"khoản vay nước ngoài\" với một số khái niệm khác:\n\n- **Cho vay ngang hàng (P2P lending):** Căn cứ **khoản 3 Điều 3 Nghị định số 94/2025/NĐ-CP**, đây là giải pháp ứng dụng công nghệ thông tin do công ty Fintech cung cấp nhằm kết nối bên đi vay và bên cho vay trên nền tảng số. Điểm khác biệt căn bản: **đồng tiền sử dụng trong giao dịch cho vay ngang hàng phải là đồng Việt Nam**, do đó không thuộc phạm vi khái niệm \"khoản vay nước ngoài\" theo định nghĩa tại Thông tư 12/2022/TT-NHNN.\n\n- **Quản lý ngoại hối và hoạt động vay nước ngoài:** Căn cứ **khoản 14 Điều 2 Nghị định số 26/2025/NĐ-CP** (có hiệu lực từ ngày 01/3/2025), Ngân hàng Nhà nước có nhiệm vụ, quyền hạn quản lý hoạt động ngoại hối bao gồm giao dịch vãng lai, giao dịch vốn, sử dụng ngoại hối trên lãnh thổ Việt Nam và hoạt động ngoại hối tại khu vực biên giới. Đây là cơ sở xác định cơ quan quản lý nhà nước đối với hoạt động vay nước ngoài.\n\n### 3. Lưu ý về hiệu lực áp dụng\n\n- **Thông tư số 12/2022/TT-NHNN** là văn bản hiện hành quy định về quản lý ngoại hối đối với hoạt động vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh. Định nghĩa tại khoản 1 Điều 3 là cơ sở pháp lý trực tiếp để xác định khái niệm \"khoản vay nước ngoài\".\n- **Nghị định số 94/2025/NĐ-CP** và **Nghị định số 26/2025/NĐ-CP** là các văn bản mới được ban hành trong năm 2025, cần được theo dõi để cập nhật các quy định chuyển tiếp (nếu có) và bảo đảm áp dụng đúng phiên bản hiện hành.\n\n---\n\n## III. CẢNH BÁO VỀ VĂN BẢN CŨ ĐÃ HẾT HIỆU LỰC\n\nTrên cơ sở danh mục căn cứ pháp lý đã được xác thực, **chưa ghi nhận** văn bản cụ thể nào bị thay thế trực tiếp bởi các văn bản nêu trên trong phạm vi nội dung tư vấn này. Tuy nhiên, cần lưu ý nguyên tắc chung:\n\n- Các văn bản trước đây quy định về quản lý vay, trả nợ nước ngoài (nếu có nội dung khác với Thông tư 12/2022/TT-NHNN) cần được rà soát hiệu lực trước khi viện dẫn, đặc biệt là các thông tư của Ngân hàng Nhà nước về quản lý ngoại hối đối với hoạt động vay, trả nợ nước ngoài của doanh nghiệp.\n- Đối với Nghị định số 26/2025/NĐ-CP (hiệu lực từ 01/3/2025), cần kiểm tra các quy định chuyển tiếp đối với hoạt động ngoại hối phát sinh trước ngày có hiệu lực.\n- Khuyến nghị tra cứu tại **Cơ sở dữ liệu quốc gia về văn bản pháp luật** hoặc **Cổng thông tin điện tử Ngân hàng Nhà nước** để xác nhận tình trạng hiệu lực tại thời điểm áp dụng cụ thể.\n\n---\n\n## IV. KẾT LUẬN\n\n**Khoản vay nước ngoài** theo **khoản 1 Điều 3 Thông tư số 12/2022/TT-NHNN** là khái niệm chung chỉ hai loại: (i) khoản vay nước ngoài không được Chính phủ bảo lãnh (tự vay, tự trả) và (ii) khoản vay nước ngoài được Chính phủ bảo lãnh, được thực hiện dưới các hình thức: hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\n---\n\n## V. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ\n\n*Bản tư vấn này được soạn thảo trên cơ sở các căn cứ pháp lý đã được xác thực còn hiệu lực tại thời điểm soạn thảo và chỉ nhằm mục đích cung cấp thông tin tham khảo chung, không cấu thành ý kiến tư vấn pháp lý chính thức cho bất kỳ trường hợp cụ thể nào. Người sử dụng cần tham vấn luật sư hoặc chuyên gia pháp lý có chuyên môn để áp dụng cho tình huống thực tế của mình. Người soạn thảo không chịu trách nhiệm đối với bất kỳ thiệt hại nào phát sinh từ việc sử dụng nội dung bản tư vấn này. Các quy định pháp luật có thể thay đổi theo thời gian; người sử dụng có trách nhiệm kiểm tra tính hiệu lực của văn bản tại thời điểm áp dụng.*"
+    }
+  },
+  {
+    "question_id": 2,
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "gt_docs": [
+      "12/2022/TT-NHNN",
+      "08/2023/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 1408,
+      "latency_ms": 3891.5,
+      "citation_recall": 1.0,
+      "article_hit": 0.6667,
+      "token_f1": 0.5232,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ được cung cấp **không đủ để trả lời đầy đủ** câu hỏi về trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh.\n\nLý do: Các trích dẫn chỉ nêu một phần nội dung tại **khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN** và **điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN**, nhưng nội dung trích dẫn bị cắt giữa chừng (phần \"Trường hợp bên đi vay không khai báo t...\" không đầy đủ) và không bao quát toàn bộ trình tự, thủ tục (các bước tiếp theo sau khi chuẩn bị Đơn, thời hạn nộp hồ sơ, cơ quan tiếp nhận, xử lý hồ sơ, trả kết quả...). Do đó không thể trình bày đầy đủ trình tự, thủ tục theo quy định.\n\nNhững gì có thể xác định từ căn cứ:\n- **Thông tư 12/2022/TT-NHNN, Điều 15 khoản 1, 3, 4** và **Thông tư 08/2023/TT-NHNN, điểm a khoản 4 Điều 21** quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh.\n- Bước đầu tiên là **chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh**:\n  + Nếu bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ: in Đơn từ Trang điện tử, ký và đóng dấu.\n  + Nếu bên đi vay không khai báo trên Trang điện tử: (nội dung bị cắt, không đủ để xác định).\n\nĐể trả lời đầy đủ, cần tham chiếu toàn văn **Điều 15 Thông tư 12/2022/TT-NHNN** (được sửa đổi, bổ sung bởi **Thông tư 08/2023/TT-NHNN**) và các điều khoản liên quan về hồ sơ, thời hạn, cơ quan tiếp nhận."
+    },
+    "react": {
+      "tokens": 13698,
+      "latency_ms": 9276.1,
+      "steps": 4,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.636,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.6667,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Dựa trên kết quả tra cứu các văn bản pháp luật hiện hành, tôi xin trình bày trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh (khoản vay tự vay, tự trả) như sau:\n\n## Căn cứ pháp lý\n- **Thông tư 12/2022/TT-NHNN** (Điều 11, Điều 15, Điều 20) quy định về quản lý ngoại hối đối với hoạt động vay, trả nợ nước ngoài của doanh nghiệp.\n- **Thông tư 08/2023/TT-NHNN** (Điều 21) sửa đổi, bổ sung một số điều của Thông tư 12/2022/TT-NHNN.\n\n> *Lưu ý về hiệu lực:* Hệ thống tra cứu chưa ghi nhận thông tin bãi bỏ đối với hai Thông tư nêu trên (trạng thái \"chưa rõ\"). Bạn nên kiểm tra lại tính hiệu lực tại thời điểm áp dụng thực tế.\n\n## Trình tự, thủ tục thực hiện\n\n### Bước 1: Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh\nTheo khoản 1 Điều 15 Thông tư 12/2022/TT-NHNN (được sửa đổi bởi điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN):\n- **Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử** trước khi gửi hồ sơ: bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu.\n- **Trường hợp bên đi vay không khai báo thông tin** trên Trang điện tử: lập Đơn theo mẫu quy định.\n\n### Bước 2: Gửi hồ sơ đăng ký đến cơ quan có thẩm quyền xác nhận\nTheo khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN:\n- Bên đi vay gửi **01 bộ hồ sơ** đăng ký khoản vay nước ngoài tới **Cơ quan có thẩm quyền xác nhận đăng ký** (theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN — thông thường là Ngân hàng Nhà nước Việt Nam hoặc chi nhánh Ngân hàng Nhà nước tỉnh, thành phố tùy quy mô khoản vay).\n- **Thời hạn gửi hồ sơ:**\n  - Trong vòng **30 ngày làm việc** kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn;\n  - Trong vòng **30 ngày làm việc** kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn thành trung, dài hạn (đối với trường hợp chuyển đổi).\n\n### Bước 3: Cơ quan có thẩm quyền xem xét và xác nhận đăng ký\nCơ quan có thẩm quyền tiếp nhận, kiểm tra hồ sơ và thực hiện xác nhận đăng ký khoản vay theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN (bao gồm việc xem xét tính đầy đủ, hợp lệ của hồ sơ và cấp văn bản xác nhận đăng ký khoản vay nước ngoài).\n\n## Lưu ý quan trọng\n1. **Đối tượng áp dụng:** Khoản vay tự vay, tự trả là khoản vay nước ngoài không được Chính phủ bảo lãnh dưới mọi hình thức (hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế) — theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN.\n2. **Nghĩa vụ tuân thủ thời hạn:** Việc gửi hồ sơ đúng thời hạn 30 ngày làm việc là yêu cầu bắt buộc; gửi muộn có thể ảnh hưởng đến việc xác nhận đăng ký và các giao dịch ngoại hối liên quan.\n3. **Khai báo trên Trang điện tử:** Việc khai báo thông tin khoản vay trên Trang điện tử của Ngân hàng Nhà nước là bước cần thực hiện trước khi gửi hồ sơ (nếu thuộc trường hợp phải khai báo).\n\nĐể có thông tin đầy đủ và chính xác nhất về **thành phần hồ sơ chi tiết** và **thời hạn xử lý cụ thể của cơ quan xác nhận**, bạn nên tham chiếu trực tiếp toàn văn Điều 15 và Điều 20 Thông tư 12/2022/TT-NHNN (đã được sửa đổi bởi Thông tư 08/2023/TT-NHNN), hoặc liên hệ trực tiếp Ngân hàng Nhà nước để được hướng dẫn."
+    },
+    "multi_agent": {
+      "tokens": 4126,
+      "latency_ms": 11496.2,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 4,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 0.6667,
+      "token_f1": 0.4452,
+      "output": "# BẢN TƯ VẤN PHÁP LÝ\n\n## VỀ TRÌNH TỰ, THỦ TỤC ĐĂNG KÝ KHOẢN VAY NƯỚC NGOÀI KHÔNG ĐƯỢC CHÍNH PHỦ BẢO LÃNH\n\n---\n\n### I. CĂN CỨ PHÁP LÝ\n\nBản tư vấn này được xây dựng trên cơ sở các văn bản quy phạm pháp luật còn hiệu lực sau đây:\n\n1. **Thông tư số 12/2022/TT-NHNN** ngày 30/12/2022 của Ngân hàng Nhà nước Việt Nam quy định về quản lý ngoại hối đối với hoạt động vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh (sau đây gọi là \"**Thông tư 12/2022/TT-NHNN**\"), cụ thể tại **khoản 1, khoản 3 và khoản 4 Điều 15**.\n\n2. **Thông tư số 08/2023/TT-NHNN** ngày 30/6/2023 của Ngân hàng Nhà nước Việt Nam sửa đổi, bổ sung một số điều của Thông tư số 12/2022/TT-NHNN (sau đây gọi là \"**Thông tư 08/2023/TT-NHNN**\"), cụ thể tại **điểm a khoản 4 Điều 21**.\n\n---\n\n### II. NỘI DUNG TƯ VẤN\n\n#### 1. Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh\n\nCăn cứ khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN (được sửa đổi, bổ sung bởi điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN), trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như sau:\n\n**Bước 1: Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh**\n\nTùy thuộc vào việc bên đi vay có khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ hay không, việc chuẩn bị Đơn được thực hiện theo một trong hai cách thức:\n\n- **Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài:** Bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu;\n\n- **Trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử:** Bên đi vay lập Đơn theo mẫu quy định và nộp kèm hồ sơ đăng ký khoản vay theo hướng dẫn tại Thông tư 12/2022/TT-NHNN.\n\n**Bước 2: Hoàn thiện và nộp hồ sơ đăng ký khoản vay**\n\nBên đi vay hoàn thiện hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh theo quy định tại Thông tư 12/2022/TT-NHNN và gửi đến Ngân hàng Nhà nước Việt Nam (hoặc chi nhánh Ngân hàng Nhà nước nơi bên đi vay đặt trụ sở chính, tùy theo quy mô khoản vay) để được xác nhận đăng ký khoản vay.\n\n**Bước 3: Xử lý của Ngân hàng Nhà nước**\n\nNgân hàng Nhà nước tiếp nhận, kiểm tra hồ sơ và thực hiện xác nhận đăng ký khoản vay nước ngoài cho bên đi vay theo quy định tại Thông tư 12/2022/TT-NHNN (được sửa đổi, bổ sung bởi Thông tư 08/2023/TT-NHNN).\n\n> **Lưu ý:** Nội dung trích dẫn tại các văn bản được cung cấp trong yêu cầu chưa bao gồm toàn văn khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN. Để đảm bảo tính đầy đủ và chính xác khi thực hiện, đề nghị đối chiếu trực tiếp toàn văn các điều khoản nêu trên.\n\n---\n\n#### 2. Cảnh báo về các văn bản cũ đã hết hiệu lực\n\nTrước khi Thông tư 12/2022/TT-NHNN có hiệu lực, hoạt động vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh được điều chỉnh bởi **Thông tư số 03/2016/TT-NHNN** ngày 26/02/2016 của Ngân hàng Nhà nước Việt Nam (đã được sửa đổi, bổ sung bởi Thông tư số 05/2017/TT-NHNN). **Thông tư 03/2016/TT-NHNN đã hết hiệu lực** và được thay thế bởi Thông tư 12/2022/TT-NHNN kể từ ngày 15/02/2023 (trừ một số quy định chuyển tiếp).\n\nNgoài ra, **Thông tư số 12/2022/TT-NHNN** đã được sửa đổi, bổ sung bởi **Thông tư số 08/2023/TT-NHNN**. Do đó, khi tra cứu và áp dụng, cần sử dụng phiên bản hợp nhất của Thông tư 12/2022/TT-NHNN (đã bao gồm nội dung sửa đổi, bổ sung của Thông tư 08/2023/TT-NHNN) để tránh áp dụng sai quy định.\n\n> **Khuyến nghị:** Không áp dụng các quy định tại Thông tư 03/2016/TT-NHNN và Thông tư 05/2017/TT-NHNN cho các khoản vay phát sinh sau ngày Thông tư 12/2022/TT-NHNN có hiệu lực.\n\n---\n\n#### 3. Lưu ý về phạm vi áp dụng\n\nCác quy định nêu trên chỉ áp dụng đối với **khoản vay nước ngoài không được Chính phủ bảo lãnh** của doanh nghiệp. Đối với các khoản vay được Chính phủ bảo lãnh, trình tự thủ tục được thực hiện theo quy định riêng. Đối với hoạt động cho vay ngang hàng (P2P Lending) theo Cơ chế thử nghiệm tại Nghị định 94/2025/NĐ-CP, đây là lĩnh vực điều chỉnh khác, không thuộc phạm vi trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh.\n\n---\n\n### III. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ\n\nBản tư vấn này được soạn thảo trên cơ sở các văn bản quy phạm pháp luật được xác thực còn hiệu lực tại thời điểm soạn thảo, bao gồm Thông tư 12/2022/TT-NHNN và Thông tư 08/2023/TT-NHNN. Bản tư vấn chỉ mang tính chất tham khảo, không thay thế cho ý kiến tư vấn pháp lý chính thức của luật sư hoặc cơ quan có thẩm quyền trong từng trường hợp cụ thể.\n\nNgười sử dụng bản tư vấn này cần lưu ý:\n\n1. **Tính cập nhật:** Các quy định pháp luật có thể được sửa đổi, bổ sung hoặc thay thế bởi văn bản mới. Người sử dụng có trách nhiệm kiểm tra tính hiệu lực của các văn bản được viện dẫn tại thời điểm áp dụng thực tế.\n\n2. **Tính đầy đủ:** Nội dung trích dẫn trong bản tư vấn này dựa trên các thông tin được cung cấp và có thể chưa bao gồm toàn văn các điều khoản. Người sử dụng cần đối chiếu trực tiếp với văn bản gốc để đảm bảo áp dụng đúng và đầy đủ.\n\n3. **Tính cụ thể:** Trình tự, thủ tục thực tế có thể khác nhau tùy thuộc vào loại hình khoản vay, quy mô khoản vay, đối tượng vay và các yếu tố cụ thể khác. Người sử dụng nên tham khảo ý kiến của luật sư hoặc chuyên gia pháp lý có kinh nghiệm trong lĩnh vực quản lý ngoại hối để được tư vấn cụ thể cho trường hợp của mình.\n\n4. **Trách nhiệm:** Người soạn thảo bản tư vấn này không chịu trách nhiệm đối với bất kỳ thiệt hại nào phát sinh từ việc sử dụng hoặc áp dụng nội dung bản tư vấn này vào thực tế.\n\n---\n\n**Người soạn thảo:** Compliance Drafter Agent\n**Ngày soạn thảo:** [Ngày hiện tại]\n**Căn cứ xác thực:** Thông tư 12/2022/TT-NHNN (khoản 1, 3, 4 Điều 15); Thông tư 08/2023/TT-NHNN (điểm a khoản 4 Điều 21)"
+    }
+  },
+  {
+    "question_id": 3,
+    "question": "Thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh là bao lâu?",
+    "gt_docs": [
+      "12/2022/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 1038,
+      "latency_ms": 2354.1,
+      "citation_recall": 1.0,
+      "article_hit": 0.3333,
+      "token_f1": 0.4153,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN, thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh là:\n\n- **30 ngày làm việc** kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn;\n- **30 ngày làm việc** kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn thành trung, dài hạn.\n\nLưu ý: Phần trích dẫn căn cứ bị cắt cụt ở cuối (\"đối với k...\") nên chưa thể hiện đầy đủ trường hợp thứ hai; tuy nhiên nội dung chính về thời hạn 30 ngày làm việc đã được nêu rõ tại khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN."
+    },
+    "react": {
+      "tokens": 11330,
+      "latency_ms": 7709.0,
+      "steps": 4,
+      "citation_recall": 1.0,
+      "article_hit": 0.6667,
+      "token_f1": 0.5049,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Dựa trên kết quả tra cứu, tôi xin tổng hợp câu trả lời như sau:\n\n## Thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh\n\nCăn cứ **khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN** (quy định chi tiết về quản lý vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh), bên đi vay phải gửi **01 bộ hồ sơ đăng ký khoản vay nước ngoài** tới Cơ quan có thẩm quyền xác nhận đăng ký (theo Điều 20 Thông tư này) trong thời hạn:\n\n- **30 ngày làm việc** kể từ ngày ký **thỏa thuận vay nước ngoài trung, dài hạn**;\n- **30 ngày làm việc** kể từ ngày ký **thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn thành trung, dài hạn** (đối với khoản vay ngắn hạn được gia hạn thành trung, dài hạn).\n\n## Lưu ý về hiệu lực văn bản\n\n- Văn bản được tra cứu là **Thông tư 12/2022/TT-NHNN**. Hệ thống kiểm tra hiệu lực ghi nhận **chưa có thông tin ghi nhận bãi bỏ** đối với văn bản này (trạng thái: \"Chưa rõ\").\n- Đáng chú ý, trong quá trình tra cứu có xuất hiện **Thông tư 08/2023/TT-NHNN** – đây là văn bản **sửa đổi, bổ sung** một số điều của Thông tư 12/2022/TT-NHNN (cụ thể liên quan đến điểm a khoản 4 Điều 21). Điều này cho thấy Thông tư 12/2022 vẫn đang được áp dụng nhưng đã có sửa đổi.\n\n## Khuyến nghị\n\nĐể đảm bảo tính chính xác tuyệt đối khi áp dụng (đặc biệt về thời hạn và trình tự), bạn nên:\n1. Đối chiếu trực tiếp **khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN** cùng **Thông tư 08/2023/TT-NHNN** (văn bản sửa đổi) để nắm nội dung hợp nhất mới nhất;\n2. Xác nhận lại với Ngân hàng Nhà nước hoặc đơn vị tư vấn pháp lý về hiệu lực hiện hành tại thời điểm nộp hồ sơ, vì hệ thống tra cứu chưa xác định dứt khoát trạng thái hiệu lực của Thông tư 12/2022.\n\nNếu bạn cần, tôi có thể tra cứu tiếp nội dung chi tiết của Thông tư 08/2023/TT-NHNN để làm rõ những điểm đã được sửa đổi."
+    },
+    "multi_agent": {
+      "tokens": 2424,
+      "latency_ms": 5967.4,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 0.6667,
+      "token_f1": 0.5175,
+      "output": "Kính gửi Quý khách hàng,\n\nCăn cứ yêu cầu tư vấn pháp lý của Quý khách về thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh, chúng tôi xin đưa ra ý kiến tư vấn như sau:\n\n**1. Căn cứ pháp lý và nội dung tư vấn**\n\nTheo quy định tại **khoản 2 Điều 15 Thông tư số 12/2022/TT-NHNN** của Ngân hàng Nhà nước Việt Nam quy định về quản lý ngoại hối đối với hoạt động vay, trả nợ nước ngoài của doanh nghiệp (được xác thực còn hiệu lực), thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được quy định cụ thể như sau:\n\nBên đi vay phải gửi **01 bộ hồ sơ đăng ký khoản vay nước ngoài** tới Cơ quan có thẩm quyền xác nhận đăng ký (theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN) trong các thời hạn sau:\n\n- **30 ngày làm việc** kể từ ngày ký thỏa thuận vay nước ngoài trung, dài hạn;\n- **30 ngày làm việc** kể từ ngày ký thỏa thuận gia hạn khoản vay nước ngoài ngắn hạn thành trung, dài hạn (đối với trường hợp gia hạn khoản vay).\n\nNhư vậy, thời hạn tối đa để gửi hồ sơ đăng ký là **30 ngày làm việc** kể từ ngày ký kết thỏa thuận vay (hoặc thỏa thuận gia hạn) tương ứng.\n\nNgoài ra, khi chuẩn bị và gửi hồ sơ, Quý khách cần lưu ý tuân thủ các nguyên tắc về hình thức và phương thức nộp hồ sơ được quy định tại **Điều 23 Nghị định số 52/2024/NĐ-CP** (có hiệu lực thi hành), bao gồm:\n- Hồ sơ lập bằng tiếng Việt; giấy tờ nước ngoài phải hợp pháp hóa lãnh sự và dịch thuật công chứng;\n- Bản sao phải được chứng thực hoặc cấp từ sổ gốc, hoặc kèm bản chính để đối chiếu;\n- Chữ ký trên sơ yếu lý lịch cá nhân phải được chứng thực;\n- Hồ sơ có thể nộp qua đường bưu điện hoặc nộp trực tiếp.\n\n**2. Cảnh báo về văn bản cũ đã hết hiệu lực**\n\nQuý khách cần lưu ý **không áp dụng** các quy định tại **Thông tư số 03/2016/TT-NHNN** (đã được thay thế bởi Thông tư 12/2022/TT-NHNN) và các văn bản hướng dẫn trước đây về cùng nội dung, vì các văn bản này đã hết hiệu lực thi hành. Việc áp dụng sai văn bản có thể dẫn đến việc xác định sai thời hạn và ảnh hưởng đến tính hợp lệ của hồ sơ đăng ký.\n\n**3. Tuyên bố miễn trừ trách nhiệm pháp lý**\n\nBản tư vấn này được soạn thảo dựa trên các căn cứ pháp lý đã được xác thực còn hiệu lực tại thời điểm tư vấn. Tuy nhiên, các quy định pháp luật có thể thay đổi theo thời gian và nội dung tư vấn chỉ mang tính chất tham khảo, không thay thế cho ý kiến pháp lý chính thức trong từng trường hợp cụ thể. Quý khách nên kiểm tra lại tính hiệu lực của văn bản và tham vấn ý kiến của luật sư hoặc cơ quan có thẩm quyền trước khi thực hiện giao dịch. Chúng tôi không chịu trách nhiệm cho bất kỳ thiệt hại nào phát sinh từ việc áp dụng thông tin trong bản tư vấn này mà không có sự xác nhận lại.\n\nTrân trọng."
+    }
+  },
+  {
+    "question_id": 4,
+    "question": "Hồ sơ mở ví điện tử gồm những giấy tờ gì?",
+    "gt_docs": [
+      "40/2024/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 927,
+      "latency_ms": 3019.0,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.638,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ Điều 18 Thông tư 40/2024/TT-NHNN, hồ sơ mở ví điện tử bao gồm:\n\n1. **Thỏa thuận mở và sử dụng ví điện tử** (theo mẫu của tổ chức cung ứng dịch vụ trung gian thanh toán).\n\n2. **Tài liệu, thông tin, dữ liệu để xác minh thông tin khách hàng**, cụ thể:\n   - **Đối với cá nhân là công dân Việt Nam:**\n     - CCCD, thẻ Căn cước, hoặc Căn cước điện tử (qua tài khoản định danh điện tử mức 2);\n     - CMND (còn hiệu lực);\n     - Giấy khai sinh (đối với người dưới 14 tuổi).\n   - **Đối với cá nhân là người gốc Việt Nam chưa có quốc tịch:** Giấy chứng nhận (nội dung căn cứ bị cắt trong đoạn trích dẫn).\n\n**Lưu ý:** Phần căn cứ được cung cấp bị cắt cụt ở nội dung về giấy tờ đối với người gốc Việt Nam chưa có quốc tịch và chưa có thông tin về giấy tờ đối với khách hàng là tổ chức. Do đó, với các đối tượng này, căn cứ là **không đủ** để trả lời đầy đủ."
+    },
+    "react": {
+      "tokens": 5341,
+      "latency_ms": 4781.4,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.593,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Dựa trên tra cứu, quy định hiện hành là **Thông tư 40/2024/TT-NHNN** (hướng dẫn hoạt động cung ứng dịch vụ trung gian thanh toán) — văn bản này **vẫn còn hiệu lực**. Theo **Điều 18**, hồ sơ mở ví điện tử gồm:\n\n## 1. Thỏa thuận mở và sử dụng ví điện tử\nTheo mẫu của tổ chức cung ứng dịch vụ ví điện tử.\n\n## 2. Tài liệu, thông tin, dữ liệu để xác minh thông tin khách hàng\nTùy theo loại khách hàng:\n\n**Đối với cá nhân là công dân Việt Nam:**\n- Căn cước công dân (CCCD), thẻ Căn cước, hoặc Căn cước điện tử (qua tài khoản định danh điện tử mức 2);\n- Chứng minh nhân dân (CMND) còn hiệu lực;\n- Giấy khai sinh (đối với người dưới 14 tuổi).\n\n**Đối với cá nhân là người gốc Việt Nam chưa có quốc tịch:** Giấy chứng nhận (theo quy định cụ thể tại Điều 18).\n\n**Đối với khách hàng là tổ chức:** Tài liệu, thông tin, dữ liệu để xác minh thông tin theo quy định pháp luật.\n\n## Lưu ý quan trọng\n- **Về phía khách hàng (Điều 23):** Phải cung cấp, cập nhật đầy đủ, chính xác thông tin/tài liệu trong hồ sơ và chịu trách nhiệm về tính trung thực của chúng.\n- **Về phía tổ chức cung ứng dịch vụ:** Phải kiểm tra, đối chiếu để đảm bảo hồ sơ đầy đủ, hợp lệ; đồng thời áp dụng giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với **cơ sở dữ liệu quốc gia về dân cư**.\n\n> **Lưu ý:** Kết quả tra cứu hiển thị nội dung Điều 18 chưa đầy đủ ở phần liệt kê giấy tờ cho một số đối tượng (người gốc Việt Nam chưa có quốc tịch, khách hàng tổ chức). Để có danh mục giấy tờ chính xác và đầy đủ nhất, bạn nên đối chiếu trực tiếp toàn văn Điều 18 Thông tư 40/2024/TT-NHNN. Nếu bạn cho tôi biết cụ thể loại khách hàng (cá nhân/tổ chức, quốc tịch, độ tuổi), tôi có thể tư vấn chi tiết hơn."
+    },
+    "multi_agent": {
+      "tokens": 1856,
+      "latency_ms": 6118.0,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.4554,
+      "output": "**BẢN TƯ VẤN PHÁP LÝ**\n\n**Về hồ sơ mở ví điện tử**\n\n---\n\n**Căn cứ pháp lý:**\n- Thông tư số 40/2024/TT-NHNN ngày 02/7/2024 của Ngân hàng Nhà nước Việt Nam hướng dẫn hoạt động cung ứng dịch vụ trung gian thanh toán (sau đây gọi là \"Thông tư 40/2024/TT-NHNN\"), cụ thể tại **Điều 18**.\n\n---\n\n**NỘI DUNG TƯ VẤN**\n\nTheo quy định tại **Điều 18 Thông tư 40/2024/TT-NHNN**, hồ sơ mở ví điện tử bao gồm các giấy tờ, tài liệu sau:\n\n**1. Thỏa thuận mở và sử dụng ví điện tử**\n\nTheo **khoản 1 Điều 18 Thông tư 40/2024/TT-NHNN**, khách hàng phải có thỏa thuận mở và sử dụng ví điện tử theo mẫu do tổ chức cung ứng dịch vụ trung gian thanh toán ban hành.\n\n**2. Tài liệu, thông tin, dữ liệu để xác minh thông tin khách hàng**\n\nTùy thuộc vào loại chủ thể, hồ sơ xác minh thông tin khách hàng bao gồm:\n\n**2.1. Đối với cá nhân là công dân Việt Nam:**\n- Thẻ Căn cước công dân (CCCD), thẻ Căn cước, hoặc Căn cước điện tử (thông qua tài khoản định danh điện tử mức 2);\n- Chứng minh nhân dân (CMND) còn hiệu lực sử dụng;\n- Giấy khai sinh (đối với người dưới 14 tuổi).\n\n**2.2. Đối với cá nhân là người gốc Việt Nam chưa có quốc tịch:**\n- Giấy chứng nhận (theo quy định cụ thể tại Điều 18 Thông tư 40/2024/TT-NHNN).\n\n---\n\n**LƯU Ý VỀ VĂN BẢN ĐÃ HẾT HIỆU LỰC**\n\nTrước khi Thông tư 40/2024/TT-NHNN có hiệu lực, hoạt động mở ví điện tử được điều chỉnh bởi Thông tư số 23/2019/TT-NHNN và các văn bản sửa đổi, bổ sung. Các văn bản này **đã hết hiệu lực** (một phần hoặc toàn bộ) kể từ ngày Thông tư 40/2024/TT-NHNN có hiệu lực thi hành. Do đó, khách hàng và tổ chức cung ứng dịch vụ cần áp dụng đúng quy định tại Thông tư 40/2024/TT-NHNN để tránh sai sót.\n\nNgoài ra, cần lưu ý rằng Thông tư 40/2024/TT-NHNN đã được sửa đổi, bổ sung bởi các văn bản sau (nếu có hiệu lực tại thời điểm áp dụng):\n- Thông tư số 41/2025/TT-NHNN (nếu có) và các văn bản sửa đổi, bổ sung khác. Người đọc cần kiểm tra tính hiệu lực của văn bản tại thời điểm thực tế để đảm bảo áp dụng đúng.\n\n---\n\n**TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ**\n\nBản tư vấn này được soạn thảo dựa trên các căn cứ pháp lý đã được xác thực còn hiệu lực tại thời điểm soạn thảo. Tuy nhiên, quy định pháp luật có thể thay đổi theo thời gian. Bản tư vấn này chỉ mang tính chất tham khảo, không thay thế cho ý kiến tư vấn pháp lý chính thức từ luật sư hoặc cơ quan có thẩm quyền. Người sử dụng cần kiểm tra lại tính hiệu lực của các văn bản pháp luật tại thời điểm áp dụng thực tế và chịu trách nhiệm về quyết định của mình."
+    }
+  },
+  {
+    "question_id": 5,
+    "question": "Việc xác thực thông tin khách hàng khi mở ví điện tử được quy định như thế nào?",
+    "gt_docs": [
+      "40/2024/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 995,
+      "latency_ms": 2675.0,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.7087,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ Điều 23 Thông tư 40/2024/TT-NHNN, việc xác thực thông tin khách hàng khi mở ví điện tử được quy định như sau:\n\n**Về phía khách hàng (chủ ví):**\n- Phải cung cấp, cập nhật đầy đủ và chính xác tất cả thông tin, tài liệu trong hồ sơ mở ví.\n- Chịu hoàn toàn trách nhiệm về tính trung thực của các thông tin, tài liệu đã cung cấp.\n\n**Về phía tổ chức cung ứng dịch vụ ví điện tử:**\n- Phải kiểm tra, đối chiếu để đảm bảo hồ sơ mở ví và thông tin khách hàng là đầy đủ, hợp lệ theo quy định.\n- Theo Khoản 2 Điều 23 Thông tư 40/2024/TT-NHNN, tổ chức cung ứng dịch vụ ví điện tử phải áp dụng các giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư.\n\n**Lưu ý:** Nội dung căn cứ được cung cấp có đoạn bị cắt (\"Một\") nên không đủ để xác định đầy đủ toàn bộ quy định tại Điều 23; tuy nhiên, các nội dung nêu trên là những điểm chính đã được trích dẫn rõ ràng."
+    },
+    "react": {
+      "tokens": 6386,
+      "latency_ms": 5650.9,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.4222,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Dựa trên kết quả tra cứu, tôi xin tổng hợp quy định pháp lý về việc xác thực thông tin khách hàng khi mở ví điện tử như sau:\n\n## Căn cứ pháp lý\n\n**Điều 23 Thông tư 40/2024/TT-NHNN** (Hướng dẫn hoạt động cung ứng dịch vụ trung gian thanh toán) — văn bản **đang còn hiệu lực** (trạng thái: IN_FORCE).\n\n## Nội dung quy định\n\n**1. Trách nhiệm của khách hàng (Khoản 1):**\n- Khách hàng chịu trách nhiệm về tính chính xác, trung thực của các thông tin, tài liệu cung cấp cho tổ chức cung ứng dịch vụ ví điện tử.\n- Phải cung cấp, cập nhật đầy đủ và chính xác tất cả thông tin, tài liệu trong hồ sơ mở ví.\n\n**2. Trách nhiệm của tổ chức cung ứng dịch vụ ví điện tử:**\n- **Kiểm tra, đối chiếu** để đảm bảo hồ sơ mở ví và thông tin khách hàng là đầy đủ, hợp lệ theo quy định.\n- **Khoản 2:** Phải áp dụng các **giải pháp công nghệ để đối chiếu, xác thực thông tin khách hàng với cơ sở dữ liệu quốc gia về dân cư** (tức là thực hiện định danh điện tử/eKYC).\n\n## Hồ sơ, tài liệu xác minh (dẫn chiếu Điều 18)\nĐể xác thực thông tin, hồ sơ mở ví điện tử bao gồm thỏa thuận mở và sử dụng ví điện tử cùng tài liệu xác minh khách hàng, cụ thể:\n- **Cá nhân là công dân Việt Nam:** CCCD, thẻ Căn cước, hoặc Căn cước điện tử (qua tài khoản định danh điện tử mức 2); CMND còn hiệu lực; Giấy khai sinh (đối với người dưới 14 tuổi).\n- **Cá nhân là người gốc Việt Nam chưa có quốc tịch:** Giấy chứng nhận... (theo quy định chi tiết tại Điều 18).\n\n## Lưu ý\nKết quả tra cứu hiện chỉ thể hiện rõ nội dung Khoản 1 và Khoản 2 của Điều 23. Điều 23 có thể còn các khoản khác (Khoản 3, 4...) quy định chi tiết hơn về phương thức xác thực (ví dụ: xác thực qua tài khoản định danh mức 2, xác thực sinh trắc học, hạn mức giao dịch theo mức độ xác thực). Nếu bạn cần làm rõ các nội dung này, tôi có thể tra cứu bổ sung toàn văn Điều 23 để cung cấp đầy đủ hơn.\n\nBạn có muốn tôi tra cứu chi tiết thêm các khoản còn lại của Điều 23 hoặc quy định về hạn mức giao dịch tương ứng với từng mức độ xác thực không?"
+    },
+    "multi_agent": {
+      "tokens": 2338,
+      "latency_ms": 6450.8,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.2974,
+      "output": "**BẢN TƯ VẤN PHÁP LÝ**\n\n**Về việc xác thực thông tin khách hàng khi mở ví điện tử**\n\n---\n\n**I. CĂN CỨ PHÁP LÝ**\n\nBản tư vấn này được soạn thảo dựa trên các căn cứ pháp lý đã được xác thực còn hiệu lực, cụ thể:\n\n- **Thông tư số 40/2024/TT-NHNN** của Ngân hàng Nhà nước Việt Nam hướng dẫn hoạt động cung ứng dịch vụ trung gian thanh toán, **Điều 23** quy định về xác thực thông tin khách hàng khi mở ví điện tử.\n\n---\n\n**II. NỘI DUNG TƯ VẤN**\n\nTheo quy định tại **Điều 23 Thông tư số 40/2024/TT-NHNN**, việc xác thực thông tin khách hàng khi mở ví điện tử được quy định cụ thể như sau:\n\n**1. Trách nhiệm của khách hàng (chủ ví điện tử) — Khoản 1 Điều 23:**\n\n- Khách hàng có trách nhiệm cung cấp, cập nhật đầy đủ và chính xác các thông tin, tài liệu trong hồ sơ mở ví điện tử theo yêu cầu của tổ chức cung ứng dịch vụ ví điện tử.\n- Khách hàng **chịu trách nhiệm về tính chính xác, trung thực** của các thông tin, tài liệu đã cung cấp cho tổ chức cung ứng dịch vụ ví điện tử.\n\n**2. Trách nhiệm của tổ chức cung ứng dịch vụ ví điện tử — Khoản 2 Điều 23:**\n\n- Tổ chức cung ứng dịch vụ ví điện tử **phải áp dụng các giải pháp công nghệ** để đối chiếu, xác thực thông tin khách hàng với **cơ sở dữ liệu quốc gia về dân cư**.\n- Đồng thời, tổ chức cung ứng dịch vụ ví điện tử phải kiểm tra, đối chiếu để đảm bảo hồ sơ mở ví và thông tin khách hàng là đầy đủ, hợp lệ theo quy định.\n\n**3. Tóm tắt nghĩa vụ hai bên:**\n\n| Chủ thể | Nghĩa vụ chính |\n|---|---|\n| Khách hàng | Cung cấp thông tin đầy đủ, chính xác, trung thực; tự chịu trách nhiệm về tính chính xác của thông tin |\n| Tổ chức cung ứng ví điện tử | Áp dụng giải pháp công nghệ đối chiếu, xác thực thông tin với cơ sở dữ liệu quốc gia về dân cư; kiểm tra tính đầy đủ, hợp lệ của hồ sơ |\n\n---\n\n**III. CẢNH BÁO VỀ VĂN BẢN CŨ ĐÃ HẾT HIỆU LỰC**\n\nTrước khi Thông tư số 40/2024/TT-NHNN có hiệu lực, hoạt động cung ứng dịch vụ trung gian thanh toán (bao gồm ví điện tử) được điều chỉnh bởi **Thông tư số 39/2014/TT-NHNN** và các văn bản sửa đổi, bổ sung (như Thông tư số 23/2019/TT-NHNN). Các văn bản này **đã hết hiệu lực** và không còn được áp dụng cho các giao dịch phát sinh sau thời điểm Thông tư 40/2024/TT-NHNN có hiệu lực. Đề nghị Quý khách hàng và các tổ chức cung ứng dịch vụ không tiếp tục viện dẫn các văn bản cũ nêu trên khi thực hiện thủ tục mở ví điện tử.\n\n---\n\n**IV. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ**\n\nBản tư vấn này được soạn thảo trên cơ sở các quy định pháp luật hiện hành đã được xác thực còn hiệu lực tại thời điểm soạn thảo và chỉ nhằm mục đích cung cấp thông tin tham khảo chung. Bản tư vấn **không cấu thành ý kiến tư vấn pháp lý chính thức** cho bất kỳ trường hợp cụ thể nào, không thay thế cho việc tham vấn trực tiếp với luật sư hoặc chuyên gia pháp lý có thẩm quyền. Người sử dụng thông tin trong bản tư vấn này tự chịu trách nhiệm về các quyết định và hành vi của mình. Trong trường hợp có sự khác biệt giữa nội dung bản tư vấn và quy định pháp luật tại thời điểm áp dụng, quy định pháp luật hiện hành sẽ được ưu tiên áp dụng.\n\n---\n\n*Người soạn thảo: Compliance Drafter Agent*\n*Căn cứ xác thực: [40/2024/TT-NHNN:Article_23] — Điều 23 Thông tư 40/2024/TT-NHNN*"
+    }
+  },
+  {
+    "question_id": 6,
+    "question": "Ngân hàng hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo những nguyên tắc nào?",
+    "gt_docs": [
+      "17/2024/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 1049,
+      "latency_ms": 2639.4,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.6037,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ Khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN, ngân hàng hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo các nguyên tắc sau:\n\n1. **Phù hợp phạm vi và hạn mức:** Xác định phạm vi sử dụng và hạn mức giao dịch phù hợp với từng đối tượng khách hàng, quy định quản lý rủi ro và thỏa thuận đã ký kết.\n\n2. **Đủ thông tin xác minh:** Luôn có đủ thông tin cần thiết để kiểm tra, đối chiếu và xác minh nhận biết khách hàng trong suốt quá trình sử dụng tài khoản.\n\n3. **Xác thực sinh trắc học** (nội dung này được nêu trong căn cứ nhưng bị cắt ngắn, không đủ chi tiết để trình bày đầy đủ).\n\nLưu ý: Phần căn cứ trích dẫn Thông tư 21/2017/TT-NHNN (về giải ngân vốn vay qua tài khoản thanh toán) không liên quan đến câu hỏi về nguyên tắc hướng dẫn khách hàng sử dụng tài khoản thanh toán, nên không được sử dụng để trả lời."
+    },
+    "react": {
+      "tokens": 6795,
+      "latency_ms": 5132.6,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.5935,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.3333,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Dựa trên kết quả tra cứu, tôi xin tổng hợp nội dung tư vấn như sau:\n\n## Nguyên tắc hướng dẫn khách hàng sử dụng tài khoản thanh toán\n\nCăn cứ **Khoản 5 Điều 17 Thông tư 17/2024/TT-NHNN**, ngân hàng khi hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo các nguyên tắc sau:\n\n**1. Phù hợp phạm vi và hạn mức**\n- Xác định phạm vi sử dụng và hạn mức giao dịch phù hợp với từng đối tượng khách hàng, quy định quản lý rủi ro và thỏa thuận đã ký kết.\n\n**2. Đủ thông tin xác minh**\n- Luôn có đủ thông tin cần thiết để kiểm tra, đối chiếu và xác minh nhận biết khách hàng trong suốt quá trình sử dụng tài khoản.\n\n**3. Xác thực sinh trắc học**\n- (Nội dung chi tiết của nguyên tắc thứ 3 về xác thực sinh trắc học chưa được trích xuất đầy đủ trong kết quả tra cứu.)\n\n---\n\n### Lưu ý về hiệu lực văn bản\n- Thông tư **17/2024/TT-NHNN**: Hệ thống tra cứu **chưa ghi nhận thông tin bãi bỏ**, trạng thái hiệu lực hiện được xác định là **\"Chưa rõ\"**. Để đảm bảo tính chính xác tuyệt đối trước khi áp dụng, bạn nên kiểm tra lại trên Cơ sở dữ liệu quốc gia về pháp luật hoặc cổng thông tin Ngân hàng Nhà nước.\n\n### Khuyến nghị\nDo kết quả tra cứu chưa thể hiện đầy đủ nội dung nguyên tắc thứ 3 (xác thực sinh trắc học) và trạng thái hiệu lực chưa được xác nhận rõ ràng, bạn có thể:\n1. Tra cứu trực tiếp toàn văn Thông tư 17/2024/TT-NHNN để xem đầy đủ Khoản 5 Điều 17;\n2. Xác nhận lại hiệu lực hiện hành của Thông tư này.\n\nBạn có muốn tôi tra cứu thêm chi tiết về nguyên tắc xác thực sinh trắc học hoặc các quy định liên quan khác không?"
+    },
+    "multi_agent": {
+      "tokens": 2953,
+      "latency_ms": 7681.5,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.3333,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.3814,
+      "output": "Kính gửi Quý Khách hàng,\n\nCăn cứ yêu cầu tư vấn pháp lý về việc hướng dẫn khách hàng sử dụng tài khoản thanh toán, Công ty xin đưa ra ý kiến tư vấn như sau:\n\n**I. CĂN CỨ PHÁP LÝ**\n\nCác căn cứ pháp lý được xác thực còn hiệu lực tại thời điểm tư vấn:\n1. Thông tư số 17/2024/TT-NHNN của Ngân hàng Nhà nước Việt Nam quy định về việc mở và sử dụng tài khoản thanh toán tại tổ chức cung ứng dịch vụ thanh toán.\n2. Thông tư số 21/2017/TT-NHNN của Ngân hàng Nhà nước Việt Nam quy định về phương thức giải ngân vốn cho vay của tổ chức tín dụng, chi nhánh ngân hàng nước ngoài đối với khách hàng.\n3. Thông tư số 50/2024/TT-NHNN của Ngân hàng Nhà nước Việt Nam quy định về yêu cầu kỹ thuật về hệ thống công nghệ thông tin trong hoạt động ngân hàng.\n\n**II. NỘI DUNG TƯ VẤN**\n\nTheo quy định tại **Khoản 5 Điều 17 Thông tư số 17/2024/TT-NHNN**, ngân hàng khi hướng dẫn khách hàng sử dụng tài khoản thanh toán phải đảm bảo các nguyên tắc sau:\n\n**1. Nguyên tắc phù hợp phạm vi và hạn mức**\nNgân hàng phải xác định phạm vi sử dụng và hạn mức giao dịch phù hợp với từng đối tượng khách hàng, quy định quản lý rủi ro và thỏa thuận đã ký kết. Điều này đảm bảo việc sử dụng tài khoản được kiểm soát chặt chẽ, phù hợp với nhu cầu và khả năng của từng khách hàng.\n\n**2. Nguyên tắc đủ thông tin xác minh**\nNgân hàng phải đảm bảo luôn có đủ thông tin cần thiết để kiểm tra, đối chiếu và xác minh nhận biết khách hàng trong suốt quá trình sử dụng tài khoản. Nguyên tắc này nhằm đảm bảo tính minh bạch và tuân thủ quy định về nhận biết khách hàng (KYC).\n\n**3. Nguyên tắc xác thực sinh trắc học**\nTheo quy định tại Khoản 5 Điều 17 Thông tư số 17/2024/TT-NHNN, ngân hàng phải hướng dẫn khách hàng sử dụng tài khoản thanh toán đảm bảo nguyên tắc xác thực sinh trắc học theo quy định của pháp luật.\n\n**4. Liên quan đến giải ngân vốn vay qua tài khoản thanh toán**\nCăn cứ **Khoản 2 Điều 4 Thông tư số 21/2017/TT-NHNN**, tổ chức tín dụng phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn vay vào tài khoản thanh toán của khách hàng trong các trường hợp:\n- Khi pháp luật quy định các khoản thanh toán, chi trả cho mục đích sử dụng vốn vay phải được thực hiện thông qua tài khoản thanh toán của khách hàng;\n- Khi khách hàng là bên thụ hưởng có tài khoản thanh toán và đã dùng vốn tự có của mình để trả trước các chi phí thuộc phương án, dự án kinh doanh.\n\n**5. Yêu cầu về hệ thống công nghệ thông tin**\nTheo **Điều 6 Thông tư số 50/2024/TT-NHNN**, từ ngày 01/01/2025, hệ quản trị cơ sở dữ liệu của hệ thống Online Banking phải đáp ứng các yêu cầu:\n- Có cơ chế bảo vệ và phân quyền truy cập đối với các tài nguyên trong cơ sở dữ liệu;\n- Có cơ sở dữ liệu dự phòng thảm họa, có khả năng thay thế cơ sở dữ liệu chính và đảm bảo toàn vẹn dữ liệu giao dịch của khách hàng;\n- Được kiểm tra, nâng cao mức độ an toàn, bảo mật (hardening) và cập nhật các bản vá lỗi một cách thường xuyên.\n\n**III. CẢNH BÁO VỀ VĂN BẢN PHÁP LUẬT**\n\nTrong phạm vi các căn cứ pháp lý được cung cấp và xác thực, không ghi nhận văn bản nào đã hết hiệu lực. Tuy nhiên, Quý Khách hàng cần lưu ý:\n- Thông tư số 17/2024/TT-NHNN có hiệu lực thi hành và thay thế các quy định trước đây về mở và sử dụng tài khoản thanh toán. Các văn bản cũ (nếu có) liên quan đến cùng nội dung cần được rà soát để tránh áp dụng nhầm lẫn.\n- Thông tư số 50/2024/TT-NHNN có hiệu lực từ ngày 01/01/2025, do đó các yêu cầu kỹ thuật về hệ thống Online Banking cần được triển khai đúng thời hạn.\n\n**IV. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ**\n\nBản tư vấn này được soạn thảo dựa trên các căn cứ pháp lý đã được xác thực còn hiệu lực tại thời điểm tư vấn và chỉ nhằm mục đích tham khảo. Bản tư vấn không cấu thành ý kiến pháp lý chính thức cho bất kỳ trường hợp cụ thể nào và không thay thế cho việc tham vấn trực tiếp với luật sư có chuyên môn. Công ty không chịu trách nhiệm cho bất kỳ thiệt hại nào phát sinh từ việc sử dụng hoặc dựa vào thông tin trong bản tư vấn này. Quý Khách hàng nên xem xét kỹ lưỡng và tham khảo ý kiến chuyên gia pháp lý trước khi áp dụng vào thực tế.\n\nTrân trọng."
+    }
+  },
+  {
+    "question_id": 7,
+    "question": "Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức nào?",
+    "gt_docs": [
+      "17/2024/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 800,
+      "latency_ms": 2206.0,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.7291,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Dựa trên căn cứ pháp lý được cung cấp, Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức sau:\n\n1. **Tổ chức tín dụng** (chỉ áp dụng cho trụ sở chính).\n2. **Chi nhánh ngân hàng nước ngoài tại Việt Nam**.\n3. **Kho bạc Nhà nước Trung ương**.\n4. **Các tổ chức khác** theo quy định tại Khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP.\n\nCăn cứ: Khoản 1 Điều 7 Thông tư 17/2024/TT-NHNN.\n\nLưu ý: Căn cứ được cung cấp không bao gồm nội dung cụ thể của Khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP, nên không thể xác định chi tiết các \"tổ chức khác\" thuộc nhóm thứ 4."
+    },
+    "react": {
+      "tokens": 3682,
+      "latency_ms": 3827.7,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.5481,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.3333,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "## Trả lời\n\nCăn cứ **Khoản 1 Điều 7 Thông tư 17/2024/TT-NHNN**, Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức sau:\n\n1. **Tổ chức tín dụng** (chỉ áp dụng cho trụ sở chính);\n2. **Chi nhánh ngân hàng nước ngoài** tại Việt Nam;\n3. **Kho bạc Nhà nước Trung ương**;\n4. **Các tổ chức khác** theo quy định tại Khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP.\n\n### Lưu ý về hiệu lực văn bản\n- Thông tư 17/2024/TT-NHNN và Nghị định 52/2024/NĐ-CP: hệ thống tra cứu **chưa ghi nhận thông tin bãi bỏ**, trạng thái hiệu lực được ghi nhận là \"Chưa rõ\". Để đảm bảo chắc chắn trước khi áp dụng (đặc biệt với các giao dịch quan trọng), bạn nên đối chiếu thêm trên Cơ sở dữ liệu quốc gia về văn bản pháp luật hoặc kiểm tra các văn bản sửa đổi, bổ sung mới nhất.\n\nBạn có muốn tôi tra cứu thêm nội dung **Khoản 2 Điều 13 Nghị định 52/2024/NĐ-CP** để làm rõ nhóm \"các tổ chức khác\" không?"
+    },
+    "multi_agent": {
+      "tokens": 2889,
+      "latency_ms": 8786.5,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 4,
+        "p_at_k": 0.25,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.1542,
+      "output": "**BẢN TƯ VẤN PHÁP LÝ**\n\n**Về việc: Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức nào?**\n\n---\n\n**I. CĂN CỨ PHÁP LÝ**\n\nBản tư vấn này được lập trên cơ sở các văn bản quy phạm pháp luật còn hiệu lực sau đây:\n\n1. **Thông tư số 17/2024/TT-NHNN** của Ngân hàng Nhà nước Việt Nam quy định về mở và sử dụng tài khoản thanh toán tại Ngân hàng Nhà nước Việt Nam (sau đây gọi là \"Thông tư 17/2024/TT-NHNN\");\n2. **Nghị định số 52/2024/NĐ-CP** của Chính phủ quy định về thanh toán không dùng tiền mặt (sau đây gọi là \"Nghị định 52/2024/NĐ-CP\");\n3. **Thông tư số 18/2024/TT-NHNN** của Ngân hàng Nhà nước Việt Nam quy định về hoạt động thẻ ngân hàng (sau đây gọi là \"Thông tư 18/2024/TT-NHNN\").\n\n---\n\n**II. NỘI DUNG TƯ VẤN**\n\n**1. Các tổ chức được Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán**\n\nCăn cứ theo **Khoản 1 Điều 7 Thông tư 17/2024/TT-NHNN**, Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán cho các tổ chức sau đây:\n\n- **Tổ chức tín dụng** (chỉ áp dụng cho trụ sở chính);\n- **Chi nhánh ngân hàng nước ngoài tại Việt Nam**;\n- **Kho bạc Nhà nước Trung ương**;\n- **Các tổ chức khác** theo quy định tại **Khoản 2 Điều 13 Nghị định số 52/2024/NĐ-CP**.\n\nNhư vậy, đối tượng được Sở Giao dịch Ngân hàng Nhà nước mở tài khoản thanh toán bao gồm bốn nhóm tổ chức nêu trên. Trong đó, cần lưu ý:\n- Đối với tổ chức tín dụng, chỉ mở tài khoản thanh toán cho **trụ sở chính**, không áp dụng cho các chi nhánh, phòng giao dịch trực thuộc;\n- Đối với nhóm \"các tổ chức khác\", cần dẫn chiếu thêm quy định tại Khoản 2 Điều 13 Nghị định 52/2024/NĐ-CP để xác định cụ thể danh mục tổ chức.\n\n**2. Một số quy định liên quan về dịch vụ thanh toán và phương tiện thanh toán**\n\nĐể làm rõ phạm vi dịch vụ thanh toán gắn với tài khoản thanh toán, có thể tham khảo thêm:\n\n- **Khoản 1 Điều 18 Nghị định 52/2024/NĐ-CP** quy định các dịch vụ thanh toán không qua tài khoản thanh toán của khách hàng bao gồm: **chuyển tiền**, **thu hộ**, **chi hộ** và các dịch vụ thanh toán khác không qua tài khoản thực hiện theo quy định của Ngân hàng Nhà nước.\n\n- **Khoản 1 Điều 3 Thông tư 18/2024/TT-NHNN** quy định **thẻ ngân hàng** là phương tiện thanh toán do tổ chức phát hành thẻ phát hành để thực hiện giao dịch thẻ theo các điều kiện và điều khoản được các bên thỏa thuận. Về đồng tiền sử dụng trong giao dịch thẻ:\n  - Trong lãnh thổ Việt Nam: giao dịch **rút tiền mặt** phải thực hiện bằng **Đồng Việt Nam (VND)**; đối với các giao dịch khác, đồng tiền giao dịch là VND (có thể là VND và ngoại tệ nếu được phép), đồng tiền thanh toán là VND.\n\n*(Lưu ý: Các nội dung tại mục 2 mang tính chất tham khảo bổ trợ, không trực tiếp trả lời câu hỏi về đối tượng được mở tài khoản thanh toán tại Sở Giao dịch Ngân hàng Nhà nước.)*\n\n---\n\n**III. CẢNH BÁO VỀ VĂN BẢN CŨ ĐÃ HẾT HIỆU LỰC**\n\nTrong phạm vi các căn cứ pháp lý đã được xác thực nêu trên, **không ghi nhận văn bản cũ đã hết hiệu lực** cần cảnh báo liên quan trực tiếp đến nội dung tư vấn.\n\nTuy nhiên, để bảo đảm tính cập nhật, khuyến nghị Quý khách hàng lưu ý rằng Thông tư 17/2024/TT-NHNN và Nghị định 52/2024/NĐ-CP là các văn bản mới thay thế cho các quy định trước đây về mở và sử dụng tài khoản thanh toán tại Ngân hàng Nhà nước và về thanh toán không dùng tiền mặt. Trước khi áp dụng, Quý khách hàng nên tra cứu lại hiệu lực của các văn bản này tại thời điểm sử dụng để tránh áp dụng nhầm quy định đã bị thay thế, sửa đổi, bổ sung.\n\n---\n\n**IV. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ**\n\nBản tư vấn này được soạn thảo trên cơ sở các căn cứ pháp lý đã được xác thực còn hiệu lực tại thời điểm soạn thảo và chỉ nhằm mục đích cung cấp thông tin tham khảo chung, **không cấu thành ý kiến tư vấn pháp lý chính thức** cho bất kỳ trường hợp cụ thể nào, cũng không tạo ra quan hệ trách nhiệm pháp lý giữa bên soạn thảo và người đọc.\n\nNgười đọc cần tự mình hoặc thông qua luật sư/tổ chức tư vấn pháp lý có thẩm quyền kiểm tra, đối chiếu lại toàn bộ các căn cứ pháp lý, hiệu lực văn bản và các quy định liên quan tại thời điểm áp dụng thực tế. Bên soạn thảo **không chịu trách nhiệm** đối với bất kỳ thiệt hại, tổn thất nào phát sinh từ việc sử dụng hoặc áp dụng nội dung của bản tư vấn này vào một trường hợp cụ thể.\n\n---\n\n*Trân trọng./.*"
+    }
+  },
+  {
+    "question_id": 8,
+    "question": "Tổ chức tín dụng cho vay xem xét quyết định việc áp dụng phương thức giải ngân vốn cho vay dựa trên những thông tin nào?",
+    "gt_docs": [
+      "21/2017/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 770,
+      "latency_ms": 1707.4,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.9559,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ điểm a khoản 1 Điều 8 Thông tư 21/2017/TT-NHNN, tổ chức tín dụng cho vay xem xét và quyết định việc áp dụng phương thức giải ngân vốn cho vay dựa trên cơ sở các thông tin, tài liệu và chứng từ thanh toán do khách hàng cung cấp; tổ chức tín dụng phải tự chịu trách nhiệm về quyết định giải ngân của mình."
+    },
+    "react": {
+      "tokens": 3653,
+      "latency_ms": 4235.1,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.3926,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.3333,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "## Kết luận tư vấn pháp lý\n\n**Căn cứ pháp lý:** Điểm a khoản 1 Điều 8 Thông tư 21/2017/TT-NHNN (quy định về phương thức giải ngân vốn cho vay).\n\n### Nội dung quy định\n\nTổ chức tín dụng cho vay **xem xét và quyết định phương thức giải ngân vốn cho vay** dựa trên cơ sở:\n\n1. **Các thông tin** do khách hàng cung cấp;\n2. **Tài liệu** do khách hàng cung cấp;\n3. **Chứng từ thanh toán** do khách hàng cung cấp.\n\nĐồng thời, tổ chức tín dụng **phải tự chịu trách nhiệm về quyết định giải ngân của mình**.\n\n### Lưu ý về hiệu lực văn bản\n\nKết quả kiểm tra hiệu lực cho thấy Thông tư 21/2017/TT-NHNN **chưa có thông tin ghi nhận bị bãi bỏ** trong cơ sở dữ liệu (trạng thái: \"Chưa rõ\"). Để đảm bảo an toàn pháp lý khi áp dụng, bạn nên:\n\n- Kiểm tra thêm các văn bản sửa đổi, bổ sung hoặc thay thế Thông tư 21/2017/TT-NHNN (nếu có) tại thời điểm áp dụng thực tế;\n- Đối chiếu với các quy định hiện hành về hoạt động cho vay của tổ chức tín dụng đối với khách hàng để đảm bảo tính cập nhật.\n\n> **Khuyến nghị:** Nếu bạn cần xác nhận chắc chắn về hiệu lực hiện tại của Thông tư 21/2017/TT-NHNN, vui lòng tra cứu trực tiếp trên Cơ sở dữ liệu quốc gia về văn bản pháp luật hoặc cổng thông tin của Ngân hàng Nhà nước Việt Nam."
+    },
+    "multi_agent": {
+      "tokens": 2521,
+      "latency_ms": 7123.6,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.1618,
+      "output": "**BẢN TƯ VẤN PHÁP LÝ**\n\n**Về việc xem xét, quyết định phương thức giải ngân vốn cho vay của tổ chức tín dụng**\n\n---\n\n**I. CĂN CỨ PHÁP LÝ**\n\nCăn cứ điểm a khoản 1 Điều 8 Thông tư số 21/2017/TT-NHNN ngày 14/9/2017 của Ngân hàng Nhà nước Việt Nam quy định về phương thức giải ngân vốn cho vay của tổ chức tín dụng đối với khách hàng (sau đây gọi là \"Thông tư 21/2017/TT-NHNN\").\n\n---\n\n**II. NỘI DUNG TƯ VẤN**\n\nTheo quy định tại **điểm a khoản 1 Điều 8 Thông tư 21/2017/TT-NHNN**, tổ chức tín dụng cho vay xem xét và quyết định việc áp dụng phương thức giải ngân vốn cho vay dựa trên cơ sở các **thông tin, tài liệu và chứng từ thanh toán do khách hàng cung cấp**.\n\nCụ thể, các căn cứ để tổ chức tín dụng xem xét, quyết định phương thức giải ngân bao gồm:\n\n1. **Thông tin do khách hàng cung cấp:** Các thông tin liên quan đến mục đích sử dụng vốn vay, đối tượng thanh toán, tiến độ thực hiện phương án/dự án vay vốn, nhu cầu thanh toán thực tế của khách hàng.\n\n2. **Tài liệu do khách hàng cung cấp:** Hồ sơ, giấy tờ chứng minh mục đích sử dụng vốn vay hợp pháp, hợp đồng mua bán hàng hóa, hợp đồng cung cấp dịch vụ, hợp đồng thi công, các tài liệu liên quan đến phương án sản xuất kinh doanh, dự án đầu tư.\n\n3. **Chứng từ thanh toán do khách hàng cung cấp:** Hóa đơn, chứng từ, bảng kê, giấy đề nghị thanh toán và các chứng từ khác chứng minh tính hợp pháp, hợp lệ của việc sử dụng vốn vay.\n\nTrên cơ sở các thông tin, tài liệu và chứng từ nêu trên, tổ chức tín dụng **xem xét và quyết định** phương thức giải ngân phù hợp (giải ngân một lần, giải ngân nhiều lần, giải ngân theo tiến độ, hoặc các phương thức khác theo thỏa thuận).\n\n**Lưu ý về trách nhiệm:** Tổ chức tín dụng **phải tự chịu trách nhiệm về quyết định giải ngân của mình**. Điều này có nghĩa là tổ chức tín dụng có nghĩa vụ thẩm định, kiểm tra tính đầy đủ, hợp pháp, hợp lệ của các thông tin, tài liệu, chứng từ do khách hàng cung cấp trước khi ra quyết định giải ngân, và chịu trách nhiệm trước pháp luật về quyết định đó.\n\n---\n\n**III. CẢNH BÁO VỀ CÁC VĂN BẢN CÓ LIÊN QUAN**\n\nTrong phạm vi các căn cứ pháp lý đã được xác thực còn hiệu lực nêu trên, **không có văn bản cũ nào đã hết hiệu lực** cần cảnh báo liên quan trực tiếp đến nội dung tư vấn này.\n\n*Lưu ý bổ sung:* Các quy định tại Nghị định số 94/2025/NĐ-CP (về Cơ chế thử nghiệm có kiểm soát trong lĩnh vực ngân hàng) được cung cấp trong dữ liệu tham chiếu **không điều chỉnh trực tiếp** nội dung xem xét, quyết định phương thức giải ngân vốn cho vay của tổ chức tín dụng theo Thông tư 21/2017/TT-NHNN, do đó không được sử dụng làm căn cứ cho nội dung tư vấn này.\n\n---\n\n**IV. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ**\n\nBản tư vấn này được soạn thảo trên cơ sở các căn cứ pháp lý đã được xác thực còn hiệu lực tại thời điểm soạn thảo và chỉ nhằm mục đích cung cấp thông tin tham khảo chung. Bản tư vấn **không cấu thành ý kiến tư vấn pháp lý chính thức** cho bất kỳ trường hợp cụ thể nào, không thay thế cho việc nghiên cứu hồ sơ, tài liệu và hoàn cảnh thực tế của từng giao dịch. Người sử dụng cần tham vấn ý kiến của luật sư hoặc chuyên gia pháp lý có chuyên môn trước khi áp dụng vào thực tiễn. Người soạn thảo không chịu trách nhiệm đối với bất kỳ thiệt hại nào phát sinh từ việc sử dụng hoặc áp dụng nội dung bản tư vấn này. Các quy định pháp luật có thể được sửa đổi, bổ sung hoặc thay thế theo thời gian; người sử dụng có trách nhiệm kiểm tra tính cập nhật của các văn bản pháp luật được viện dẫn.\n\n---\n\n**Người soạn thảo:** Compliance Drafter Agent\n**Ngày soạn thảo:** [Ngày hiện tại]"
+    }
+  },
+  {
+    "question_id": 9,
+    "question": "Tổ chức tín dụng cho vay phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn cho vay trong trường hợp nào?",
+    "gt_docs": [
+      "21/2017/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 949,
+      "latency_ms": 3147.8,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.6889,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ khoản 2 Điều 4 Thông tư 21/2017/TT-NHNN, tổ chức tín dụng phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn cho vay vào tài khoản thanh toán của khách hàng trong các trường hợp sau:\n\n1. Khi pháp luật quy định các khoản thanh toán, chi trả cho mục đích sử dụng vốn vay phải được thực hiện thông qua tài khoản thanh toán của khách hàng.\n\n2. Khi khách hàng là bên thụ hưởng có tài khoản thanh toán và đã dùng vốn tự có của mình để trả trước các chi phí thuộc phương án, dự án kinh doanh (theo nội dung được cung cấp).\n\nLưu ý: Nội dung căn cứ được cung cấp bị cắt cụt ở cuối điểm 2 (\"dự án kin\"), nên câu trả lời cho trường hợp thứ hai chỉ phản ánh đúng phần nội dung đã được nêu; để đầy đủ và chính xác trọn vẹn, cần đối chiếu toàn văn khoản 2 Điều 4 Thông tư 21/2017/TT-NHNN."
+    },
+    "react": {
+      "tokens": 5333,
+      "latency_ms": 5787.2,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.4958,
+      "retrieval": {
+        "k": 4,
+        "p_at_k": 0.25,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Dựa trên kết quả tra cứu, tôi xin tư vấn như sau:\n\n## Các trường hợp tổ chức tín dụng phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn cho vay\n\nTheo **khoản 2 Điều 4 Thông tư 21/2017/TT-NHNN** (được trích dẫn tại Điều 4), tổ chức tín dụng phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn vay vào tài khoản thanh toán của khách hàng trong **02 trường hợp**:\n\n1. **Khi pháp luật quy định** các khoản thanh toán, chi trả cho mục đích sử dụng vốn vay phải được thực hiện thông qua tài khoản thanh toán của khách hàng.\n\n2. **Khi khách hàng là bên thụ hưởng có tài khoản thanh toán** và đã dùng vốn tự có của mình để trả trước các chi phí thuộc phương án, dự án kinh doanh... *(nội dung trích dẫn bị cắt, cần đọc đầy đủ điều luật để xác định chính xác điều kiện hoàn trả)*.\n\n## Lưu ý quan trọng\n\n- **Về thẩm quyền quyết định phương thức giải ngân:** Theo điểm a khoản 1 Điều 8 Thông tư 21/2017/TT-NHNN, ngoài các trường hợp bắt buộc nêu trên, tổ chức tín dụng **xem xét và quyết định phương thức giải ngân** dựa trên thông tin, tài liệu, chứng từ thanh toán do khách hàng cung cấp và **tự chịu trách nhiệm** về quyết định giải ngân của mình.\n\n- **Về hiệu lực văn bản:** Kết quả kiểm tra cho thấy Thông tư 21/2017/TT-NHNN **chưa ghi nhận thông tin bãi bỏ** trong hệ thống, trạng thái \"Chưa rõ\". Để đảm bảo áp dụng đúng, bạn nên đối chiếu thêm với các văn bản sửa đổi, bổ sung hoặc thay thế mới nhất (nếu có), đặc biệt trong bối cảnh các quy định về hoạt động cho vay của tổ chức tín dụng đã có nhiều thay đổi.\n\n## Khuyến nghị\n\nDo nội dung trích dẫn trường hợp thứ 2 bị cắt giữa chừng, để có câu trả lời đầy đủ và chính xác nhất, bạn nên:\n1. Đọc trực tiếp toàn văn **khoản 2 Điều 4 Thông tư 21/2017/TT-NHNN**;\n2. Kiểm tra tính còn hiệu lực của Thông tư này tại thời điểm áp dụng thực tế.\n\nBạn có muốn tôi tra cứu thêm toàn văn điều luật hoặc các văn bản sửa đổi liên quan không?"
+    },
+    "multi_agent": {
+      "tokens": 2707,
+      "latency_ms": 7391.0,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 4,
+        "p_at_k": 0.25,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.333,
+      "output": "**BẢN TƯ VẤN PHÁP LÝ**\n\n**Kính gửi: Quý Khách hàng,**\n\nLiên quan đến câu hỏi của Quý Khách hàng về việc tổ chức tín dụng phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn cho vay trong những trường hợp nào, chúng tôi xin đưa ra ý kiến tư vấn dựa trên các căn cứ pháp lý đã được xác thực còn hiệu lực như sau:\n\n**I. CĂN CỨ PHÁP LÝ**\n\nCăn cứ khoản 2 Điều 4 Thông tư số 21/2017/TT-NHNN của Ngân hàng Nhà nước Việt Nam quy định về phương thức giải ngân vốn cho vay của tổ chức tín dụng đối với khách hàng (sau đây gọi là \"Thông tư 21/2017/TT-NHNN\"), tổ chức tín dụng phải sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn cho vay vào tài khoản thanh toán của khách hàng trong các trường hợp sau:\n\n1.  **Trường hợp 1:** Khi pháp luật quy định các khoản thanh toán, chi trả cho mục đích sử dụng vốn vay phải được thực hiện thông qua tài khoản thanh toán của khách hàng.\n2.  **Trường hợp 2:** Khi khách hàng là bên thụ hưởng có tài khoản thanh toán và đã dùng vốn tự có của mình để trả trước các chi phí thuộc phương án, dự án kinh doanh mà tổ chức tín dụng đã đồng ý cho vay.\n\n**II. NỘI DUNG TƯ VẤN CHI TIẾT**\n\nTheo quy định tại khoản 2 Điều 4 Thông tư 21/2017/TT-NHNN, nghĩa vụ sử dụng dịch vụ thanh toán không dùng tiền mặt để giải ngân vốn cho vay của tổ chức tín dụng được áp dụng trong hai trường hợp cụ thể nêu trên. Cụ thể:\n\n- **Đối với Trường hợp 1:** Đây là trường hợp mà bản thân pháp luật chuyên ngành (ví dụ: pháp luật về thuế, pháp luật về quản lý ngoại hối, hoặc các quy định pháp luật khác có liên quan đến mục đích sử dụng vốn vay) có yêu cầu bắt buộc rằng các khoản thanh toán, chi trả cho mục đích sử dụng vốn vay đó phải được thực hiện thông qua tài khoản thanh toán của khách hàng. Khi đó, tổ chức tín dụng không được giải ngân bằng tiền mặt mà phải chuyển khoản vào tài khoản thanh toán của khách hàng.\n\n- **Đối với Trường hợp 2:** Đây là trường hợp khách hàng đã ứng trước vốn tự có của mình để thanh toán các chi phí thuộc phương án, dự án kinh doanh mà tổ chức tín dụng đã đồng ý cho vay. Điều kiện kèm theo là khách hàng phải là bên thụ hưởng và có tài khoản thanh toán. Trong trường hợp này, tổ chức tín dụng phải giải ngân vốn vay vào tài khoản thanh toán của khách hàng để hoàn trả lại khoản vốn tự có mà khách hàng đã ứng trước, thay vì giải ngân bằng tiền mặt.\n\n**III. CẢNH BÁO VỀ CÁC VĂN BẢN CŨ ĐÃ HẾT HIỆU LỰC**\n\nTrong phạm vi các căn cứ pháp lý đã được xác thực cung cấp cho chúng tôi, không có văn bản nào được xác định là đã hết hiệu lực liên quan trực tiếp đến nội dung tư vấn này. Tuy nhiên, Quý Khách hàng cần lưu ý rằng Thông tư 21/2017/TT-NHNN là văn bản quy phạm pháp luật cần được tra cứu và áp dụng đồng thời với các văn bản pháp luật khác có liên quan tại thời điểm thực hiện giao dịch để đảm bảo tính chính xác và đầy đủ.\n\n**IV. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM PHÁP LÝ**\n\nBản tư vấn pháp lý này được soạn thảo dựa trên các căn cứ pháp lý đã được xác thực còn hiệu lực tại thời điểm cung cấp thông tin và chỉ nhằm mục đích tham khảo. Bản tư vấn này không cấu thành một ý kiến pháp lý chính thức cho bất kỳ giao dịch cụ thể nào và không thể thay thế cho việc tra cứu, áp dụng pháp luật một cách đầy đủ, cập nhật nhất tại thời điểm Quý Khách hàng thực hiện giao dịch. Quý Khách hàng nên tham khảo ý kiến của luật sư hoặc chuyên gia pháp lý có chuyên môn để được tư vấn cụ thể cho trường hợp của mình.\n\nTrân trọng,"
+    }
+  },
+  {
+    "question_id": 10,
+    "question": "Giải pháp cho vay ngang hàng là gì?",
+    "gt_docs": [
+      "94/2025/ND-CP"
+    ],
+    "workflow": {
+      "tokens": 845,
+      "latency_ms": 2473.3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.6371,
+      "retrieval": {
+        "k": 1,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ khoản 3 Điều 3 Nghị định 94/2025/NĐ-CP, giải pháp cho vay ngang hàng là giải pháp ứng dụng công nghệ thông tin do công ty cho vay ngang hàng (loại công ty Fintech) cung cấp, nhằm kết nối thông tin và hỗ trợ giao kết hợp đồng trên nền tảng số giữa bên đi vay và bên cho vay, với đồng tiền giao dịch là đồng Việt Nam.\n\nĐồng thời, theo khoản 2 Điều 1 và khoản 1 Điều 6 Nghị định 94/2025/NĐ-CP, cho vay ngang hàng là một trong các giải pháp Fintech được tham gia Cơ chế thử nghiệm có kiểm soát (Sandbox), với thời gian thử nghiệm tối đa 02 năm kể từ khi được Ngân hàng Nhà nước cấp Giấy chứng nhận tham gia; thời gian này có thể được gia hạn theo quy định tại Điều 20 Nghị định 94/2025/NĐ-CP."
+    },
+    "react": {
+      "tokens": 5739,
+      "latency_ms": 5811.6,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.3784,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "## Giải pháp cho vay ngang hàng là gì?\n\nCăn cứ **khoản 3 Điều 3 Nghị định 94/2025/NĐ-CP**, **giải pháp cho vay ngang hàng** được định nghĩa như sau:\n\n> Là một **giải pháp ứng dụng công nghệ thông tin** do một **công ty cho vay ngang hàng** (một loại công ty Fintech) cung cấp, nhằm **kết nối thông tin và hỗ trợ việc giao kết hợp đồng trên nền tảng số** giữa hai bên: **bên đi vay** và **bên cho vay**. Đồng tiền sử dụng trong các giao dịch này phải là **đồng Việt Nam**.\n\n### Các đặc điểm chính:\n1. **Chủ thể cung cấp:** Công ty cho vay ngang hàng – một loại công ty Fintech.\n2. **Bản chất:** Là giải pháp công nghệ thông tin, đóng vai trò trung gian kết nối, không phải bên trực tiếp cho vay.\n3. **Chức năng:** Kết nối thông tin và hỗ trợ giao kết hợp đồng trên nền tảng số giữa bên đi vay và bên cho vay.\n4. **Đồng tiền giao dịch:** Bắt buộc là đồng Việt Nam.\n\n### Bối cảnh pháp lý liên quan:\nTheo **khoản 2 Điều 1 và khoản 1 Điều 6 Nghị định 94/2025/NĐ-CP**, cho vay ngang hàng là một trong các giải pháp Fintech được tham gia **Cơ chế thử nghiệm có kiểm soát (Sandbox)**. Thời gian thử nghiệm tối đa là **02 năm** kể từ khi được Ngân hàng Nhà nước cấp Giấy chứng nhận tham gia, và có thể được gia hạn theo quy định tại Điều 20 Nghị định này.\n\n### ⚠️ Lưu ý về hiệu lực văn bản:\nKết quả kiểm tra hiệu lực cho thấy Nghị định 94/2025/NĐ-CP **chưa có thông tin ghi nhận bãi bỏ** trong hệ thống, nhưng trạng thái được ghi nhận là **\"Chưa rõ\"**. Để đảm bảo tính chính xác khi áp dụng vào thực tế (đặc biệt với các giao dịch hoặc thủ tục cụ thể), bạn nên tra cứu thêm trên Cơ sở dữ liệu quốc gia về pháp luật hoặc tham vấn trực tiếp Ngân hàng Nhà nước để xác nhận tình trạng hiện hành của văn bản này.\n\nBạn có muốn tôi tra cứu thêm về điều kiện, thủ tục tham gia Sandbox hoặc quyền/nghĩa vụ của các bên trong hoạt động cho vay ngang hàng không?"
+    },
+    "multi_agent": {
+      "tokens": 3178,
+      "latency_ms": 8974.2,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.3333,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.1665,
+      "output": "**TƯ VẤN PHÁP LÝ: GIẢI PHÁP CHO VAY NGANG HÀNG**\n\n**Kính gửi Quý Khách hàng,**\n\nCăn cứ vào các quy định pháp luật hiện hành đã được xác thực, chúng tôi xin đưa ra ý kiến tư vấn pháp lý về câu hỏi của Quý Khách hàng như sau:\n\n---\n\n### 1. Căn cứ pháp lý\n\n- **Nghị định 94/2025/NĐ-CP** của Chính phủ quy định về cơ chế thử nghiệm có kiểm soát hoạt động công nghệ tài chính trong lĩnh vực ngân hàng (sau đây gọi là \"Nghị định 94/2025/NĐ-CP\").\n- **Thông tư 61/2024/TT-NHNN** của Ngân hàng Nhà nước Việt Nam quy định về bảo lãnh ngân hàng (sau đây gọi là \"Thông tư 61/2024/TT-NHNN\").\n- **Thông tư 26/2018/TT-NHNN** của Ngân hàng Nhà nước Việt Nam quy định về điều tra thống kê tiền tệ và ngân hàng (sau đây gọi là \"Thông tư 26/2018/TT-NHNN\").\n\n---\n\n### 2. Nội dung tư vấn\n\n#### 2.1. Khái niệm \"Giải pháp cho vay ngang hàng\"\n\nCăn cứ **khoản 3 Điều 3 Nghị định 94/2025/NĐ-CP**, giải pháp cho vay ngang hàng được định nghĩa như sau:\n\n> \"Giải pháp cho vay ngang hàng là một giải pháp ứng dụng công nghệ thông tin do một công ty cho vay ngang hàng (một loại công ty Fintech) cung cấp. Mục đích của giải pháp này là để kết nối thông tin và hỗ trợ việc giao kết hợp đồng trên nền tảng số giữa hai bên: bên đi vay và bên cho vay. Đồng tiền được sử dụng trong các giao dịch này phải là đồng Việt Nam.\"\n\nTheo đó, có thể hiểu giải pháp cho vay ngang hàng (Peer-to-Peer Lending) là một nền tảng công nghệ số do công ty Fintech vận hành, đóng vai trò trung gian kết nối người có nhu cầu vay vốn với người có nhu cầu cho vay, hỗ trợ hai bên giao kết hợp đồng vay trên môi trường số. Điểm lưu ý quan trọng là mọi giao dịch phát sinh từ giải pháp này **phải sử dụng đồng Việt Nam**.\n\n#### 2.2. Về các quy định liên quan đến bảo lãnh ngân hàng\n\nCăn cứ **Điều 3 Thông tư 61/2024/TT-NHNN**, các hình thức bảo lãnh ngân hàng bao gồm:\n\n1. **Bảo lãnh đối ứng:** Là hình thức một bên bảo lãnh (bên bảo lãnh đối ứng) cam kết với một bên bảo lãnh khác về việc sẽ thực hiện nghĩa vụ tài chính nếu bên bảo lãnh đó phải trả tiền thay cho khách hàng.\n2. **Xác nhận bảo lãnh:** Là hình thức một bên (bên xác nhận bảo lãnh) cam kết sẽ thực hiện nghĩa vụ thay cho bên bảo lãnh chính nếu bên bảo lãnh chính không thực hiện được cam kết của mình với bên nhận bảo lãnh.\n\n*(Lưu ý: Quy định này liên quan đến nghiệp vụ bảo lãnh ngân hàng truyền thống, có thể được viện dẫn tham khảo trong trường hợp giải pháp cho vay ngang hàng có cấu trúc bảo lãnh kèm theo, tuy nhiên cần đối chiếu với phạm vi hoạt động được phép của cơ chế thử nghiệm theo Nghị định 94/2025/NĐ-CP.)*\n\n#### 2.3. Về nguyên tắc điều tra thống kê tiền tệ và ngân hàng\n\nCăn cứ **Điều 4 Thông tư 26/2018/TT-NHNN**, hoạt động điều tra thống kê tiền tệ và ngân hàng phải tuân thủ các nguyên tắc:\n1. Bảo đảm tính **trung thực, khách quan, chính xác, đầy đủ, kịp thời**.\n2. Bảo đảm tính **độc lập** về chuyên môn, nghiệp vụ thống kê.\n3. Bảo đảm tính **thống nhất** về nghiệp vụ; **không tổ chức điều tra trùng lặp, chồng chéo**.\n4. **Công khai** về phương pháp thực hiện điều tra và công bố thông tin theo quy định.\n5. Có tính **so sánh**.\n6. Bảo đảm quyền **bình đẳng** trong việc tham gia điều tra.\n\n*(Lưu ý: Quy định này mang tính nguyên tắc chung đối với hoạt động thống kê, ít có mối liên hệ trực tiếp đến bản chất pháp lý của giải pháp cho vay ngang hàng, nhưng được nêu ra để bảo đảm tính đầy đủ theo yêu cầu.)*\n\n---\n\n### 3. Cảnh báo về văn bản đã hết hiệu lực\n\nTrong phạm vi các căn cứ pháp lý được cung cấp và xác thực, **không phát hiện văn bản nào đã hết hiệu lực** cần cảnh báo. Tuy nhiên, Quý Khách hàng cần lưu ý:\n\n- **Nghị định 94/2025/NĐ-CP** là văn bản mới, quy định về cơ chế thử nghiệm có kiểm soát (sandbox) cho hoạt động Fintech trong lĩnh vực ngân hàng. Các quy định tại Nghị định này có thể được sửa đổi, bổ sung hoặc thay thế trong tương lai. Đề nghị Quý Khách hàng thường xuyên cập nhật tình trạng hiệu lực của văn bản.\n- **Thông tư 61/2024/TT-NHNN** và **Thông tư 26/2018/TT-NHNN** là các văn bản chuyên ngành của Ngân hàng Nhà nước; cần kiểm tra tính còn hiệu lực tại thời điểm áp dụng cụ thể.\n\n---\n\n### 4. Tuyên bố miễn trừ trách nhiệm pháp lý\n\nBản tư vấn này được soạn thảo trên cơ sở các căn cứ pháp lý đã được xác thực và cung cấp tại thời điểm soạn thảo. Bản tư vấn chỉ mang tính chất tham khảo, **không cấu thành ý kiến tư vấn pháp lý chính thức** và không thay thế cho việc tham vấn trực tiếp với luật sư hoặc chuyên gia pháp lý có thẩm quyền trong từng trường hợp cụ thể.\n\nNgười soạn thảo **không chịu trách nhiệm** đối với bất kỳ thiệt hại, tổn thất nào phát sinh từ việc sử dụng, áp dụng hoặc diễn giải nội dung bản tư vấn này. Quý Khách hàng nên xem xét kỹ lưỡng các quy định pháp luật hiện hành và tham khảo ý kiến chuyên môn trước khi đưa ra quyết định.\n\n---\n\n**Trân trọng,**  \n**Compliance Drafter Agent**"
+    }
+  }
+]

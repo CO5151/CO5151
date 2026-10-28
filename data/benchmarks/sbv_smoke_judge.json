@@ -1,0 +1,165 @@
+[
+  {
+    "question_id": 2,
+    "arm": "react",
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "reference": "Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài: bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu;\n+ Trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ: bên đi vay hoàn thành Đơn đăng ký khoản vay nước ngoài theo Phụ lục 01 ban hành kèm theo Thông tư 12/2022/TT-NHNN.\n- Ngân hàng Nhà nước có văn bản xác nhận hoặc từ chối xác nhận đăng ký khoản vay (có nêu rõ lý do) trong thời hạn:\n+ 12 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử;\n+ 15 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử;\n- Cơ quan có thẩm quyền xác nhận đăng ký, xác nhận đăng ký thay đổi khoản vay nước ngoài theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN có trách nhiệm:\n+ Kiểm tra tính thống nhất, chính xác của hồ sơ đăng ký khoản vay với các thông tin khai báo trên Trang điện tử; cập nhật tình hình xử lý h0ồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài;\n+ Nhập các thông tin liên quan của khoản vay trên Trang điện tử để tạo mã khoản vay và lưu trữ thông tin vào cơ sở dữ liệu vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài; cập nhật tình hình xử lý hồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi.",
+    "articles": "12/2022/tt-nhnn_15, 08/2023/tt-nhnn_21, 12/2022/tt-nhnn_20",
+    "candidate": "Căn cứ Điều 15 Thông tư 12/2022/TT-NHNN (sửa đổi bởi Thông tư 08/2023/TT-NHNN), trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n\n1. **Chuẩn bị Đơn đăng ký**: Nếu đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ, bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu; nếu không khai báo trước thì lập Đơn theo mẫu.\n2. **Gửi hồ sơ**: Bên đi vay nộp hồ sơ đăng ký khoản vay đến Ngân hàng Nhà nước (theo hình thức trực tiếp hoặc qua Trang điện tử).\n3. **Xử lý của Ngân hàng Nhà nước**: Tiếp nhận, kiểm tra hồ sơ; nếu đầy đủ, hợp lệ thì xác nhận đăng ký khoản vay; nếu chưa đầy đủ thì yêu cầu bổ sung.\n4. **Xác nhận đăng ký**: Ngân hàng Nhà nước gửi văn bản xác nhận đăng ký khoản vay cho bên đi vay.\n\nLưu ý: hiệu lực của các văn bản trên chưa được xác nhận rõ trong dữ liệu tra cứu; cần kiểm tra lại trước khi áp dụng.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 4,
+      "missing": [
+        "thời hạn 12 ngày làm việc/15 ngày làm việc xác nhận hoặc từ chối",
+        "trách nhiệm cơ quan xác nhận: kiểm tra thống nhất hồ sơ, tạo mã khoản vay, nhập thông tin, cập nhật Trang điện tử"
+      ],
+      "wrong": [
+        "nêu NHNN yêu cầu bổ sung nếu hồ sơ chưa đầy đủ (không có trong đáp án chuẩn)",
+        "nêu hình thức nộp trực tiếp hoặc qua Trang điện tử (không có trong đáp án chuẩn)"
+      ],
+      "reason": "Nêu đúng Điều 15 và bước chuẩn bị Đơn nhưng thiếu thời hạn và trách nhiệm cơ quan xác nhận; thêm chi tiết ngoài đáp án.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 1,
+    "arm": "multi_agent",
+    "question": "Khoản vay nước ngoài là gì?",
+    "reference": "Tại khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN có định nghĩa về khoản vay nước ngoài như sau:\nKhoản vay nước ngoài là cụm từ dùng chung để chi khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.",
+    "articles": "12/2022/tt-nhnn_3",
+    "candidate": "Theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ: (i) khoản vay nước ngoài không được Chính phủ bảo lãnh (khoản vay tự vay, tự trả); và (ii) khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\nLưu ý: Thông tư 12/2022/TT-NHNN còn hiệu lực; không có văn bản cũ nào bị cảnh báo hết hiệu lực trong các căn cứ được xác thực nêu trên.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 4,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng định nghĩa và căn cứ theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN; có thêm lưu ý hiệu lực không sai.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 1,
+    "arm": "adk",
+    "question": "Khoản vay nước ngoài là gì?",
+    "reference": "Tại khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN có định nghĩa về khoản vay nước ngoài như sau:\nKhoản vay nước ngoài là cụm từ dùng chung để chi khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.",
+    "articles": "12/2022/tt-nhnn_3",
+    "candidate": "==============================================================================\nBÁO CÁO TƯ VẤN TUÂN THỦ PHÁP LÝ (LEGAL COMPLIANCE DOSSIER)\n==============================================================================\nYÊU CẦU TRA CỨU: Khoản vay nước ngoài là gì?\nTỶ LỆ XÁC THỰC CĂN CỨ (GROUNDING RATE): 100.0%\nTRẠNG THÁI KIỂM ĐỊNH HIỆU LỰC: HỢP LỆ HOÀN TOÀN\n------------------------------------------------------------------------------\n1. CĂN CỨ PHÁP LÝ ÁP DỤNG (ĐÃ ĐỐI SOÁT CƠ SỞ DỮ LIỆU VBQPPL):\n  [1] Quy định về thanh toán không dùng tiền mặt [52/2024/ND-CP] - Điều 23: Quy định về thanh toán không dùng tiền mặt\n      Nội dung: [Nghị Định 52/2024/ND-CP - Quy định về thanh toán không dùng tiền mặt] [Điều 23: Tỷ lệ tham gia của nhà đầu tư nước ngoài] [Khoản 1]: Tỷ lệ sở hữu phần vốn góp hoặc cổ phần của nhà đầu tư nước ngoài tại tổ chức cung ứng dịch vụ trung gian thanh toán thực hiện theo quy định của pháp luật về đầu tư và cam kết quốc tế của Việt Nam.\n[Nghị Định 52/2024/ND-CP - Quy định về thanh toán không dùng tiền mặt...\n      Hiệu lực thi hành: Từ ngày 2024-07-01\n  [2] Quy định về thanh toán không dùng tiền mặt [52/2024/ND-CP] - Điều 22: Quy định về thanh toán không dùng tiền mặt\n      Nội dung: [Nghị Định 52/2024/ND-CP - Quy định về thanh toán không dùng tiền mặt] [Điều 22: Điều kiện cung ứng dịch vụ trung gian thanh toán] [Khoản 1]: Tổ chức không phải là ngân hàng muốn cung ứng dịch vụ ví điện tử phải có vốn điều lệ thực góp hoặc được cấp tối thiểu là 50.000.000.000 đồng (năm mươi tỷ đồng).\n[Nghị Định 52/2024/ND-CP - Quy định về thanh toán không dùng tiền mặt] [Điều 22: Điều kiện cung ứ...\n      Hiệu lực thi hành: Từ ngày 2024-07-01\n  [3] Quy định tại 12/2022/TT-NHNN [12/2022/TT-NHNN] - Điều 3: Quy định tại 12/2022/TT-NHNN\n      Nội dung: [12/2022/TT-NHNN] [Điều 3]: Tại khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN có định nghĩa về khoản vay nước ngoài như sau:\nKhoản vay nước ngoài là cụm từ dùng chung để chi khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả c...\n      Hiệu lực thi hành: Từ ngày \n  [4] Quy định tại 12/2022/TT-NHNN [12/2022/TT-NHNN] - Điều 11: Quy định tại 12/2022/TT-NHNN\n      Nội dung: [12/2022/TT-NHNN] [Điều 11]: Tại khoản 2 Điều 15 Thông tư 12/2022/TT-NHNN có quy định về thời hạn gửi hồ sơ đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\nBên đi vay gửi 01 bộ hồ sơ đăng ký khoản vay nước ngoài tới Cơ quan có thẩm quyền xác nhận đăng ký theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN trong thời hạn:\n- 30 ngày làm việc kể từ ngày ký thỏa thuận vay nước ngoài...\n      Hiệu lực thi hành: Từ ngày \n  [5] Quy định tại 08/2023/TT-NHNN [08/2023/TT-NHNN] - Điều 21: Quy định tại 08/2023/TT-NHNN\n      Nội dung: [08/2023/TT-NHNN] [Điều 21]: Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi...\n      Hiệu lực thi hành: Từ ngày \n  [6] Quy định tại 12/2022/TT-NHNN [12/2022/TT-NHNN] - Điều 15: Quy định tại 12/2022/TT-NHNN\n      Nội dung: [12/2022/TT-NHNN] [Điều 15]: Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi...\n      Hiệu lực thi hành: Từ ngày \n------------------------------------------------------------------------------\n2. KẾT LUẬN & KHUYẾN NGHỊ THỰC THI:\n**KẾT LUẬN:** Khoản vay nước ngoài theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN là cụm từ chung chỉ khoản vay nước ngoài không được Chính phủ bảo lãnh (tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức: hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\n**KHUYẾN NGHỊ THỰC THI:**\n1. Xác định đúng loại khoản vay (có/không được Chính phủ bảo lãnh) để áp dụng đúng thủ tục.\n2. Với khoản vay tự vay tự trả trung, dài hạn: gửi 01 bộ hồ sơ đăng ký đến cơ quan có thẩm quyền trong **30 ngày làm việc** kể từ ngày ký thỏa thuận vay (hoặc kể từ ngày ký gia hạn khoản vay ngắn hạn thành trung, dài hạn).\n3. Khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ; in Đơn đăng ký, ký và đóng dấu theo Điều 15 Thông tư 12/2022/TT-NHNN và Điều 21 Thông tư 08/2023/TT-NHNN.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 2,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng định nghĩa khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN; nhưng dẫn thêm nhiều căn cứ không liên quan và trình bày dài dòng.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 2,
+    "arm": "adk",
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "reference": "Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài: bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu;\n+ Trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ: bên đi vay hoàn thành Đơn đăng ký khoản vay nước ngoài theo Phụ lục 01 ban hành kèm theo Thông tư 12/2022/TT-NHNN.\n- Ngân hàng Nhà nước có văn bản xác nhận hoặc từ chối xác nhận đăng ký khoản vay (có nêu rõ lý do) trong thời hạn:\n+ 12 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử;\n+ 15 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử;\n- Cơ quan có thẩm quyền xác nhận đăng ký, xác nhận đăng ký thay đổi khoản vay nước ngoài theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN có trách nhiệm:\n+ Kiểm tra tính thống nhất, chính xác của hồ sơ đăng ký khoản vay với các thông tin khai báo trên Trang điện tử; cập nhật tình hình xử lý h0ồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài;\n+ Nhập các thông tin liên quan của khoản vay trên Trang điện tử để tạo mã khoản vay và lưu trữ thông tin vào cơ sở dữ liệu vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài; cập nhật tình hình xử lý hồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi.",
+    "articles": "12/2022/tt-nhnn_15, 08/2023/tt-nhnn_21, 12/2022/tt-nhnn_20",
+    "candidate": "==============================================================================\nBÁO CÁO TƯ VẤN TUÂN THỦ PHÁP LÝ (LEGAL COMPLIANCE DOSSIER)\n==============================================================================\nYÊU CẦU TRA CỨU: Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?\nTỶ LỆ XÁC THỰC CĂN CỨ (GROUNDING RATE): 100.0%\nTRẠNG THÁI KIỂM ĐỊNH HIỆU LỰC: HỢP LỆ HOÀN TOÀN\n------------------------------------------------------------------------------\n1. CĂN CỨ PHÁP LÝ ÁP DỤNG (ĐÃ ĐỐI SOÁT CƠ SỞ DỮ LIỆU VBQPPL):\n  [1] Quy định tại 08/2023/TT-NHNN [08/2023/TT-NHNN] - Điều 21: Quy định tại 08/2023/TT-NHNN\n      Nội dung: [08/2023/TT-NHNN] [Điều 21]: Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi...\n      Hiệu lực thi hành: Từ ngày \n  [2] Quy định tại 12/2022/TT-NHNN [12/2022/TT-NHNN] - Điều 15: Quy định tại 12/2022/TT-NHNN\n      Nội dung: [12/2022/TT-NHNN] [Điều 15]: Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi...\n      Hiệu lực thi hành: Từ ngày \n  [3] Quy định tại 12/2022/TT-NHNN [12/2022/TT-NHNN] - Điều 20: Quy định tại 12/2022/TT-NHNN\n      Nội dung: [12/2022/TT-NHNN] [Điều 20]: Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi...\n      Hiệu lực thi hành: Từ ngày \n  [4] Quy định tại 12/2022/TT-NHNN [12/2022/TT-NHNN] - Điều 3: Quy định tại 12/2022/TT-NHNN\n      Nội dung: [12/2022/TT-NHNN] [Điều 3]: Tại khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN có định nghĩa về khoản vay nước ngoài như sau:\nKhoản vay nước ngoài là cụm từ dùng chung để chi khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả c...\n      Hiệu lực thi hành: Từ ngày \n  [5] Quy định về thanh toán không dùng tiền mặt [52/2024/ND-CP] - Điều 23: Quy định về thanh toán không dùng tiền mặt\n      Nội dung: [Nghị Định 52/2024/ND-CP - Quy định về thanh toán không dùng tiền mặt] [Điều 23: Tỷ lệ tham gia của nhà đầu tư nước ngoài] [Khoản 1]: Tỷ lệ sở hữu phần vốn góp hoặc cổ phần của nhà đầu tư nước ngoài tại tổ chức cung ứng dịch vụ trung gian thanh toán thực hiện theo quy định của pháp luật về đầu tư và cam kết quốc tế của Việt Nam.\n[Nghị Định 52/2024/ND-CP - Quy định về thanh toán không dùng tiền mặt...\n      Hiệu lực thi hành: Từ ngày 2024-07-01\n  [6] Quy định tại 61/2024/TT-NHNN [61/2024/TT-NHNN] - Điều 3: Quy định tại 61/2024/TT-NHNN\n      Nội dung: [61/2024/TT-NHNN] [Điều 3]: Theo Điều 3 Thông tư 61/2024/TT-NHNN, bảo lãnh ngân hàng có các hình thức chính sau:\n\n1.  **Bảo lãnh đối ứng:** Là hình thức một bên bảo lãnh (bên bảo lãnh đối ứng) cam kết với một bên bảo lãnh khác về việc sẽ thực hiện nghĩa vụ tài chính nếu bên bảo lãnh đó phải trả tiền thay cho khách hàng.\n2.  **Xác nhận bảo lãnh:** Là hình thức một bên (bên xác nhận bảo lãnh) cam kế...\n      Hiệu lực thi hành: Từ ngày \n------------------------------------------------------------------------------\n2. KẾT LUẬN & KHUYẾN NGHỊ THỰC THI:\n**KẾT LUẬN:** Trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh (tự vay, tự trả) thực hiện theo Điều 15 Thông tư 12/2022/TT-NHNN (sửa đổi bởi Điều 21 Thông tư 08/2023/TT-NHNN): (1) Chuẩn bị Đơn đăng ký — nếu đã khai báo trên Trang điện tử thì in Đơn, ký, đóng dấu; nếu chưa khai báo thì lập theo mẫu; (2) Hoàn thiện hồ sơ bằng tiếng Việt, giấy tờ nước ngoài hợp pháp hóa lãnh sự và dịch công chứng, bản sao chứng thực; (3) Nộp hồ sơ trực tiếp hoặc qua bưu điện cho Ngân hàng Nhà nước.\n\n**KHUYẾN NGHỊ:** Doanh nghiệp cần: rà soát loại khoản vay thuộc diện tự vay tự trả; đăng ký thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ; chuẩn bị đầy đủ hồ sơ hợp lệ (Đơn, hợp đồng vay, giấy tờ pháp lý); nộp đúng thẩm quyền, theo dõi tiến độ phản hồi. Lưu ý Nghị định 52/2024/NĐ-CP không điều chỉnh trực tiếp thủ tục này.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 3,
+      "missing": [
+        "thời hạn 12/15 ngày làm việc NHNN xác nhận hoặc từ chối",
+        "trách nhiệm cơ quan có thẩm quyền: kiểm tra hồ sơ, nhập thông tin tạo mã khoản vay trên Trang điện tử"
+      ],
+      "wrong": [],
+      "reason": "Nêu bước chuẩn bị Đơn và căn cứ đúng, nhưng thiếu thời hạn xác nhận và trách nhiệm cơ quan; có dẫn căn cứ không liên quan.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 1,
+    "arm": "react",
+    "question": "Khoản vay nước ngoài là gì?",
+    "reference": "Tại khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN có định nghĩa về khoản vay nước ngoài như sau:\nKhoản vay nước ngoài là cụm từ dùng chung để chi khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.",
+    "articles": "12/2022/tt-nhnn_3",
+    "candidate": "Theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ:\n\n1. **Khoản vay nước ngoài không được Chính phủ bảo lãnh** (gọi là khoản vay tự vay, tự trả);\n2. **Khoản vay nước ngoài được Chính phủ bảo lãnh** dưới mọi hình thức vay nước ngoài, gồm: hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\nLưu ý: chưa xác định được tình trạng hiệu lực hiện hành của Thông tư 12/2022/TT-NHNN trong dữ liệu tra cứu.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 4,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng định nghĩa, đủ hai loại khoản vay và dẫn đúng Thông tư 12/2022/TT-NHNN, Điều 3.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 2,
+    "arm": "multi_agent",
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "reference": "Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài: bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu;\n+ Trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ: bên đi vay hoàn thành Đơn đăng ký khoản vay nước ngoài theo Phụ lục 01 ban hành kèm theo Thông tư 12/2022/TT-NHNN.\n- Ngân hàng Nhà nước có văn bản xác nhận hoặc từ chối xác nhận đăng ký khoản vay (có nêu rõ lý do) trong thời hạn:\n+ 12 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử;\n+ 15 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử;\n- Cơ quan có thẩm quyền xác nhận đăng ký, xác nhận đăng ký thay đổi khoản vay nước ngoài theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN có trách nhiệm:\n+ Kiểm tra tính thống nhất, chính xác của hồ sơ đăng ký khoản vay với các thông tin khai báo trên Trang điện tử; cập nhật tình hình xử lý h0ồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài;\n+ Nhập các thông tin liên quan của khoản vay trên Trang điện tử để tạo mã khoản vay và lưu trữ thông tin vào cơ sở dữ liệu vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài; cập nhật tình hình xử lý hồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi.",
+    "articles": "12/2022/tt-nhnn_15, 08/2023/tt-nhnn_21, 12/2022/tt-nhnn_20",
+    "candidate": "Theo khoản 1, 3, 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN, trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh gồm: (i) Chuẩn bị Đơn đăng ký: nếu đã khai báo thông tin trên Trang điện tử thì in Đơn từ Trang điện tử, ký và đóng dấu; nếu không khai báo thì lập Đơn theo mẫu; (ii) Gửi hồ sơ đến Ngân hàng Nhà nước (hoặc chi nhánh NHNN nơi đặt trụ sở) để được xác nhận đăng ký khoản vay; (iii) NHNN xem xét, xác nhận hoặc có văn bản yêu cầu bổ sung trong thời hạn quy định. Lưu ý: Thông tư 03/2016/TT-NHNN và Thông tư 05/2016/TT-NHNN đã hết hiệu lực, không áp dụng.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 4,
+      "missing": [
+        "Thời hạn 12 ngày làm việc (đã khai báo Trang điện tử) và 15 ngày làm việc (không khai báo) để NHNN xác nhận hoặc từ chối, nêu rõ lý do",
+        "Trách nhiệm của cơ quan có thẩm quyền: kiểm tra tính thống nhất hồ sơ với Trang điện tử, nhập thông tin tạo mã khoản vay, cập nhật tình hình xử lý hồ sơ"
+      ],
+      "wrong": [
+        "Nêu 'có văn bản yêu cầu bổ sung' không có trong đáp án chuẩn",
+        "Đề cập Thông tư 03/2016/TT-NHNN và 05/2016/TT-NHNN ngoài phạm vi đáp án chuẩn"
+      ],
+      "reason": "Nêu đúng bước chuẩn bị Đơn và cơ quan xác nhận nhưng thiếu thời hạn 12/15 ngày và trách nhiệm nhập mã khoản vay.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 1,
+    "arm": "workflow",
+    "question": "Khoản vay nước ngoài là gì?",
+    "reference": "Tại khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN có định nghĩa về khoản vay nước ngoài như sau:\nKhoản vay nước ngoài là cụm từ dùng chung để chi khoản vay nước ngoài không được Chính phủ bảo lãnh (sau đây gọi là khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.",
+    "articles": "12/2022/tt-nhnn_3",
+    "candidate": "Theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ khoản vay nước ngoài không được Chính phủ bảo lãnh (khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.",
+    "verdict": {
+      "correct": "correct",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 5,
+      "missing": [],
+      "wrong": [],
+      "reason": "Nêu đúng định nghĩa khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, đầy đủ ý chính, trích dẫn đúng.",
+      "served_model": "deepseek-flash"
+    }
+  },
+  {
+    "question_id": 2,
+    "arm": "workflow",
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "reference": "Tại khoản 1, khoản 3 và khoản 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a Khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN có quy định về trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh như sau:\n- Chuẩn bị Đơn đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n+ Trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài: bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu;\n+ Trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ: bên đi vay hoàn thành Đơn đăng ký khoản vay nước ngoài theo Phụ lục 01 ban hành kèm theo Thông tư 12/2022/TT-NHNN.\n- Ngân hàng Nhà nước có văn bản xác nhận hoặc từ chối xác nhận đăng ký khoản vay (có nêu rõ lý do) trong thời hạn:\n+ 12 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử;\n+ 15 ngày làm việc kể từ ngày nhận được hồ sơ đầy đủ, hợp lệ của bên đi vay trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử;\n- Cơ quan có thẩm quyền xác nhận đăng ký, xác nhận đăng ký thay đổi khoản vay nước ngoài theo quy định tại Điều 20 Thông tư 12/2022/TT-NHNN có trách nhiệm:\n+ Kiểm tra tính thống nhất, chính xác của hồ sơ đăng ký khoản vay với các thông tin khai báo trên Trang điện tử; cập nhật tình hình xử lý h0ồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi trong trường hợp bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài;\n+ Nhập các thông tin liên quan của khoản vay trên Trang điện tử để tạo mã khoản vay và lưu trữ thông tin vào cơ sở dữ liệu vay, trả nợ nước ngoài của doanh nghiệp không được Chính phủ bảo lãnh trong trường hợp bên đi vay không khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ đăng ký khoản vay nước ngoài; cập nhật tình hình xử lý hồ sơ trên Trang điện tử để bên đi vay kịp thời theo dõi.",
+    "articles": "12/2022/tt-nhnn_15, 08/2023/tt-nhnn_21, 12/2022/tt-nhnn_20",
+    "candidate": "Căn cứ Điều 15 Thông tư 12/2022/TT-NHNN và điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN, trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh bắt đầu bằng việc chuẩn bị Đơn đăng ký khoản vay: nếu bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ thì in Đơn từ Trang điện tử, ký và đóng dấu; trường hợp không khai báo thì thực hiện theo hướng dẫn tương ứng (nội dung bị cắt trong căn cứ). Tuy nhiên, các căn cứ được cung cấp chỉ nêu bước chuẩn bị Đơn và bị ngắt giữa nội dung, không nêu đầy đủ các bước tiếp theo của trình tự, thủ tục. Do đó, không đủ căn cứ để trả lời đầy đủ trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh.",
+    "verdict": {
+      "correct": "partial",
+      "faithful": true,
+      "cites_expected": true,
+      "conciseness": 3,
+      "missing": [
+        "thời hạn 12/15 ngày làm việc để NHNN xác nhận hoặc từ chối",
+        "trách nhiệm của cơ quan có thẩm quyền xác nhận đăng ký (kiểm tra, nhập thông tin, tạo mã khoản vay)",
+        "trường hợp không khai báo thì lập Đơn theo Phụ lục 01 Thông tư 12/2022/TT-NHNN"
+      ],
+      "wrong": [],
+      "reason": "Chỉ nêu bước chuẩn bị Đơn, thiếu thời hạn xử lý và trách nhiệm cơ quan xác nhận; dẫn chiếu đúng.",
+      "served_model": "deepseek-flash"
+    }
+  }
+]

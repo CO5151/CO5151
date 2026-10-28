@@ -1,0 +1,105 @@
+[
+  {
+    "question_id": 1,
+    "question": "Khoản vay nước ngoài là gì?",
+    "gt_docs": [
+      "12/2022/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 929,
+      "latency_ms": 2443.8,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.9216,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ khoản vay nước ngoài không được Chính phủ bảo lãnh (khoản vay tự vay, tự trả) và khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay."
+    },
+    "react": {
+      "tokens": 5704,
+      "latency_ms": 3772.7,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.8261,
+      "retrieval": {
+        "k": 3,
+        "p_at_k": 0.3333,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ:\n\n1. **Khoản vay nước ngoài không được Chính phủ bảo lãnh** (gọi là khoản vay tự vay, tự trả);\n2. **Khoản vay nước ngoài được Chính phủ bảo lãnh** dưới mọi hình thức vay nước ngoài, gồm: hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\nLưu ý: chưa xác định được tình trạng hiệu lực hiện hành của Thông tư 12/2022/TT-NHNN trong dữ liệu tra cứu."
+    },
+    "multi_agent": {
+      "tokens": 1507,
+      "latency_ms": 2830.7,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 0.5,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 1.0,
+      "token_f1": 0.7983,
+      "output": "Theo khoản 1 Điều 3 Thông tư 12/2022/TT-NHNN, khoản vay nước ngoài là cụm từ dùng chung để chỉ: (i) khoản vay nước ngoài không được Chính phủ bảo lãnh (khoản vay tự vay, tự trả); và (ii) khoản vay nước ngoài được Chính phủ bảo lãnh dưới mọi hình thức vay nước ngoài thông qua hợp đồng vay, hợp đồng nhập khẩu hàng hóa trả chậm, hợp đồng ủy thác cho vay, hợp đồng cho thuê tài chính hoặc phát hành công cụ nợ trên thị trường quốc tế của bên đi vay.\n\nLưu ý: Thông tư 12/2022/TT-NHNN còn hiệu lực; không có văn bản cũ nào bị cảnh báo hết hiệu lực trong các căn cứ được xác thực nêu trên."
+    }
+  },
+  {
+    "question_id": 2,
+    "question": "Trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh được thực hiện như thế nào?",
+    "gt_docs": [
+      "12/2022/TT-NHNN",
+      "08/2023/TT-NHNN"
+    ],
+    "workflow": {
+      "tokens": 1188,
+      "latency_ms": 2823.5,
+      "citation_recall": 1.0,
+      "article_hit": 0.6667,
+      "token_f1": 0.3709,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ Điều 15 Thông tư 12/2022/TT-NHNN và điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN, trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh bắt đầu bằng việc chuẩn bị Đơn đăng ký khoản vay: nếu bên đi vay đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ thì in Đơn từ Trang điện tử, ký và đóng dấu; trường hợp không khai báo thì thực hiện theo hướng dẫn tương ứng (nội dung bị cắt trong căn cứ). Tuy nhiên, các căn cứ được cung cấp chỉ nêu bước chuẩn bị Đơn và bị ngắt giữa nội dung, không nêu đầy đủ các bước tiếp theo của trình tự, thủ tục. Do đó, không đủ căn cứ để trả lời đầy đủ trình tự, thủ tục đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh."
+    },
+    "react": {
+      "tokens": 6255,
+      "latency_ms": 4087.1,
+      "steps": 3,
+      "citation_recall": 1.0,
+      "article_hit": 0.3333,
+      "token_f1": 0.4678,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "output": "Căn cứ Điều 15 Thông tư 12/2022/TT-NHNN (sửa đổi bởi Thông tư 08/2023/TT-NHNN), trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh:\n\n1. **Chuẩn bị Đơn đăng ký**: Nếu đã khai báo thông tin khoản vay trên Trang điện tử trước khi gửi hồ sơ, bên đi vay in Đơn từ Trang điện tử, ký và đóng dấu; nếu không khai báo trước thì lập Đơn theo mẫu.\n2. **Gửi hồ sơ**: Bên đi vay nộp hồ sơ đăng ký khoản vay đến Ngân hàng Nhà nước (theo hình thức trực tiếp hoặc qua Trang điện tử).\n3. **Xử lý của Ngân hàng Nhà nước**: Tiếp nhận, kiểm tra hồ sơ; nếu đầy đủ, hợp lệ thì xác nhận đăng ký khoản vay; nếu chưa đầy đủ thì yêu cầu bổ sung.\n4. **Xác nhận đăng ký**: Ngân hàng Nhà nước gửi văn bản xác nhận đăng ký khoản vay cho bên đi vay.\n\nLưu ý: hiệu lực của các văn bản trên chưa được xác nhận rõ trong dữ liệu tra cứu; cần kiểm tra lại trước khi áp dụng."
+    },
+    "multi_agent": {
+      "tokens": 1389,
+      "latency_ms": 3083.1,
+      "subgoals": 2,
+      "retrieval": {
+        "k": 2,
+        "p_at_k": 1.0,
+        "r_at_k": 1.0,
+        "hit_at_k": 1.0
+      },
+      "citation_recall": 1.0,
+      "article_hit": 0.6667,
+      "token_f1": 0.3776,
+      "output": "Theo khoản 1, 3, 4 Điều 15 Thông tư 12/2022/TT-NHNN và điểm a khoản 4 Điều 21 Thông tư 08/2023/TT-NHNN, trình tự đăng ký khoản vay nước ngoài không được Chính phủ bảo lãnh gồm: (i) Chuẩn bị Đơn đăng ký: nếu đã khai báo thông tin trên Trang điện tử thì in Đơn từ Trang điện tử, ký và đóng dấu; nếu không khai báo thì lập Đơn theo mẫu; (ii) Gửi hồ sơ đến Ngân hàng Nhà nước (hoặc chi nhánh NHNN nơi đặt trụ sở) để được xác nhận đăng ký khoản vay; (iii) NHNN xem xét, xác nhận hoặc có văn bản yêu cầu bổ sung trong thời hạn quy định. Lưu ý: Thông tư 03/2016/TT-NHNN và Thông tư 05/2016/TT-NHNN đã hết hiệu lực, không áp dụng."
+    }
+  }
+]

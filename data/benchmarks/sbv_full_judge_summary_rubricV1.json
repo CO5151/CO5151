@@ -1,0 +1,62 @@
+{
+  "workflow": {
+    "n": 100,
+    "correct_rate": 47.0,
+    "partial_rate": 43.0,
+    "incorrect_rate": 10.0,
+    "faithful_rate": 87.0,
+    "cites_rate": 90.0,
+    "strict_pass_rate": 46.0,
+    "conciseness_mean": 4.37,
+    "answer_words_mean": 85.6,
+    "answer_words_median": 87.5
+  },
+  "react": {
+    "n": 100,
+    "correct_rate": 45.0,
+    "partial_rate": 46.0,
+    "incorrect_rate": 9.0,
+    "faithful_rate": 80.0,
+    "cites_rate": 93.0,
+    "strict_pass_rate": 43.0,
+    "conciseness_mean": 4.02,
+    "answer_words_mean": 109.8,
+    "answer_words_median": 119.0
+  },
+  "multi_agent": {
+    "n": 100,
+    "correct_rate": 40.0,
+    "partial_rate": 49.0,
+    "incorrect_rate": 11.0,
+    "faithful_rate": 55.0,
+    "cites_rate": 88.0,
+    "strict_pass_rate": 26.0,
+    "conciseness_mean": 3.12,
+    "answer_words_mean": 147.5,
+    "answer_words_median": 147.0
+  },
+  "adk": {
+    "n": 100,
+    "correct_rate": 36.0,
+    "partial_rate": 41.0,
+    "incorrect_rate": 23.0,
+    "faithful_rate": 81.0,
+    "cites_rate": 75.0,
+    "strict_pass_rate": 35.0,
+    "conciseness_mean": 2.09,
+    "answer_words_mean": 897.9,
+    "answer_words_median": 907.0
+  },
+  "_metadata": {
+    "judge_model": "deepseek-flash",
+    "served_models": [
+      "deepseek-flash"
+    ],
+    "tag": "full",
+    "n_verdicts": 400,
+    "n_errors": 0,
+    "timestamp": "2026-10-19T14:42:04",
+    "rubric": "correct(3) / faithful / cites_expected / conciseness(1-5) / strict_pass",
+    "ground_truth": "reference_answer + relevant_articles (existing, not generated)"
+  }
+}

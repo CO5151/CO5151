@@ -144,13 +144,15 @@ class DrafterAgent(ADKAgent):
                     f"Dựa trên câu hỏi tra cứu:\n'{query}'\n"
                     f"và các căn cứ pháp lý đã được thẩm định còn hiệu lực:\n{ctx}\n"
                     f"{p_info}\n"
-                    "Hãy đưa ra phần KẾT LUẬN & KHUYẾN NGHỊ THỰC THI (ngắn gọn, chính xác số liệu, chỉ rõ doanh nghiệp cần làm gì)."
+                    "Hãy đưa ra phần KẾT LUẬN & TƯ VẤN THỰC THI TOÀN DIỆN (nêu rõ số hiệu Điều/Khoản, "
+                    "liệt kê đầy đủ và chi tiết các điều kiện bắt buộc, mốc thời hạn hành chính, "
+                    "hồ sơ giấy tờ và đối tượng áp dụng theo từng gạch đầu dòng rõ ràng)."
                 )
                 if critique_feedback:
                     prompt += f"\nLƯU Ý PHẢN HỒI TỪ AUDITOR (CẦN SỬA ĐỔI / KHẮC PHỤC):\n{critique_feedback}\n"
                 if _CONCISE:
                     prompt += (
-                        "\nTRẢ LỜI NGẮN GỌN: tối đa 150 từ. Đi thẳng vào câu trả lời, "
+                        "\nQUY TẮC: Đi thẳng vào nội dung trả lời chi tiết và căn cứ pháp lý; "
                         "KHÔNG lặp lại câu hỏi, KHÔNG mục lục, KHÔNG dẫn nhập, "
                         "KHÔNG tuyên bố miễn trừ trách nhiệm."
                     )

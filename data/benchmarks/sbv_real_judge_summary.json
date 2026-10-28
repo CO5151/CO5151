@@ -1,0 +1,27 @@
+{
+  "adk": {
+    "n": 100,
+    "correct_rate": 40.0,
+    "partial_rate": 51.0,
+    "incorrect_rate": 9.0,
+    "faithful_rate": 94.0,
+    "cites_rate": 89.0,
+    "extra_cites_rate": 33.0,
+    "strict_pass_rate": 40.0,
+    "conciseness_mean": 4.34,
+    "answer_words_mean": 102.8,
+    "answer_words_median": 101.5
+  },
+  "_metadata": {
+    "judge_model": "deepseek-flash",
+    "served_models": [
+      "deepseek-flash"
+    ],
+    "tag": "real",
+    "n_verdicts": 100,
+    "n_errors": 0,
+    "timestamp": "2026-10-20T14:58:45",
+    "rubric": "correct(3) / faithful(contradiction-or-fabrication only) / cites_expected / extra_cites / conciseness(1-5) / strict_pass",
+    "ground_truth": "reference_answer + relevant_articles (existing, not generated)"
+  }
+}

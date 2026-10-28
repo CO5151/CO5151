@@ -1,0 +1,31 @@
+{
+  "token_mean": 2670.5,
+  "token_std": 31.8,
+  "lat_mean_ms": 3936.1,
+  "lat_std_ms": 596.4,
+  "doc_hit_rate": 100.0,
+  "k_mean": 3,
+  "p_at_k": 50.0,
+  "r_at_k": 100.0,
+  "hit_at_k": 100.0,
+  "citation_recall": 100.0,
+  "article_hit": 100.0,
+  "token_f1": 34.86,
+  "_metadata": {
+    "method": "measured",
+    "runtime": "Google ADK (google-adk + LiteLLM)",
+    "entrypoint": "src/agents/orchestrator.py::LegalOrchestrator.run",
+    "model": "deepseek/deepseek-chat (alias -> DeepSeek Flash V4.1)",
+    "testset": "data/benchmarks/sbv_testset_tvpl.json",
+    "questions": [
+      1,
+      2
+    ],
+    "n_questions": 2,
+    "enable_live_vbpl": false,
+    "timestamp": "2026-10-20T09:32:18",
+    "script": "scripts/benchmark_adk_10_questions.py",
+    "concise": true,
+    "token_source": "LiteLLM usage.total_tokens (CustomLogger)"
+  }
+}
