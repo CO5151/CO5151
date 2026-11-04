@@ -1,0 +1,66 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[top=1.4cm,bottom=1.4cm,left=1.6cm,right=1.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{darkgray}{RGB}{50,50,50}
+\definecolor{critiquecolor}{RGB}{140,25,25}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=hcmutblue,
+    citecolor=hcmutblue,
+    urlcolor=hcmutblue
+}
+
+\titleformat{\section}{\normalsize\bfseries\color{hcmutblue}}{\thesection.}{0.4em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{6pt}{4pt}
+
+\setlength{\emergencystretch}{2.5em}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+  {\footnotesize \textbf{HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY (HCMUT-VNU) -- FACULTY OF CSE}}\\[0.04cm]
+  {\small \textbf{CO5151: ADVANCED AGENTIC AI (HK261)} -- FACULTY ADVISOR: \textbf{DR. LE XUAN BACH}}\\[0.12cm]
+  {\large\bfseries\color{hcmutblue} ANNOTATED BIBLIOGRAPHY: SAFETY \& ALIGNMENT}\\[0.04cm]
+  {\footnotesize \textbf{Presenting Group G4}: Dang Lam Tung (Lead) $\cdot$ Nguyen Trung Phong $\cdot$ Vu Viet Hung $\vert$ \textit{Topic S2-5 -- November 4, 2026}}
+\end{center}
+
+\vspace{-0.15cm}
+\noindent\textit{\footnotesize \textbf{Compliance Mandate}: Strictly covers the 2 Core Readings and 3 Extension Works explicitly assigned in the S2-5 syllabus. Each entry is accompanied by \textbf{EXACTLY ONE critical reflection sentence} (academic skepticism on assumptions, bottlenecks and limits of generalisation), strictly avoiding descriptive summaries.}
+
+\section{Core Readings (Foundational Alignment Mechanisms)}
+\begin{enumerate}[leftmargin=1.4em, itemsep=7pt, topsep=3pt]
+  \item \textbf{Bai, Y. et al. (2022).} \textit{Constitutional AI: Harmlessness from AI Feedback.} arXiv:2212.08073.\\
+  \textbf{Focus Area:} The two-phase recipe --- SL-CAI (principle-conditioned self-critique and revision) and RL-CAI (AI-judge preference labels $\to$ preference model $\to$ RL) --- as a replacement for human harm labels, plus the harmlessness--evasiveness trade-off.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} While the method removes the cost of human harm labels and yields a non-evasive assistant preferred by crowdworkers over human-feedback baselines, its harmlessness signal is only as trustworthy as a hand-written constitution that the model itself critiques, so the method \emph{relocates} rather than \emph{eliminates} the specification problem --- and the paper's own admission that critiques ``often provide inaccurate criticism'' leaves the loop with no external check confirming that a revision actually reduced harm.
+
+  \item \textbf{Ouyang, L. et al. (2022).} \textit{Training Language Models to Follow Instructions with Human Feedback (InstructGPT).} arXiv:2203.02155.\\
+  \textbf{Focus Area:} The three-stage SFT $\to$ reward-model $\to$ PPO pipeline, the ``alignment tax'' and its PPO-ptx mitigation, and the relationship between parameter scale and instruction adherence.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The finding that a 1.3B model beats 175B GPT-3 is strong evidence that preference data can substitute for scale, yet the reward model is trained on comparisons where labelers prioritise \emph{helpfulness} while the headline evaluations reward \emph{truthfulness and harmlessness}, so part of the reported alignment gain is an artefact of a shifted measurement objective rather than proof that the model learned what evaluators actually care about.
+\end{enumerate}
+
+\section{Extension Readings: Presenting Group Deep Dive}
+\begin{enumerate}[leftmargin=1.4em, itemsep=7pt, topsep=3pt, start=3]
+  \item \textbf{Shavit, Y., Agarwal, S., Brundage, M. et al. (2023).} \textit{Practices for Governing Agentic AI Systems.} OpenAI White Paper.\\
+  \textbf{Focus Area:} A graded definition of agenticness (goal complexity, environmental complexity, adaptability, independent execution) and seven governance practices, notably \S4.2 \emph{constraining the action-space and requiring approval} and \S4.7 \emph{interruptibility}.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The seven practices supply a usable vocabulary for bounding an agent's action space, but as a policy white paper it ships no measurement protocol, so it cannot say which practice actually reduces harm once an agent is capable enough to \emph{route around} hard-coded restrictions --- the loophole the authors themselves concede with the ``email a human to do it'' example.
+
+  \item \textbf{Greenblatt, R., Denison, C. et al. (2024).} \textit{Alignment Faking in Large Language Models.} arXiv:2412.14093.\\
+  \textbf{Focus Area:} Conditional compliance keyed to the model's belief about being trained (14\% on the free tier vs. $\approx$0\% on the paid tier), strategic reasoning in the scratchpad, and the effect of actually applying RL (78\%).\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The demonstration is compelling precisely because the model was never instructed to fake, but the authors' concession that they made faking easy --- by naming both the training criterion and the audited audience --- leaves open whether the 14\% reflects a general propensity to condition behaviour on perceived oversight or is an artefact of an unusually legible training story.
+
+  \item \textbf{Meinke, A., Schoen, B. et al. (2024).} \textit{Frontier Models are Capable of In-context Scheming.} arXiv:2412.04984.\\
+  \textbf{Focus Area:} Six agentic evaluations across five frontier models ($\times$ 300 rollouts each): oversight subversion, self-exfiltration, goal-guarding, covert email reranking, instrumental alignment faking and sandbagging, plus the persistence of deception under interrogation.\\
+  \textcolor{critiquecolor}{\textbf{Critical Reflection:}} The study measures \emph{capability} rather than \emph{propensity} and runs in sandboxes where ``weights'' are simulated, so the headline rates (5--22\%) are best read as an upper bound on what models can do under strong goal nudging rather than an estimate of what deployed agents will do --- a distinction the paper states in its limitations but its abstract's framing tends to blur.
+\end{enumerate}
+
+\end{document}

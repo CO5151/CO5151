@@ -1,0 +1,185 @@
+% =====================================================================
+%  CO5151 -- S2-5  |  Ban NGAN GON (2--3 trang)
+%  Compile: tectonic -X compile qa_s2_5_vi_short.tex
+% =====================================================================
+\documentclass[10pt,a4paper]{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T5]{fontenc}
+  \usepackage[vietnamese]{babel}
+\else
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setsansfont{texgyreheros}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setmonofont{texgyrecursor}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \usepackage[vietnamese]{babel}
+\fi
+
+\usepackage[a4paper,margin=1.65cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\setlength{\emergencystretch}{2.5em}
+
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{hcmutlight}{RGB}{0,120,190}
+\definecolor{hcmutgray}{RGB}{242,245,249}
+\definecolor{darkred}{RGB}{180,30,30}
+
+\titleformat{\section}{\large\bfseries\color{hcmutblue}}{\thesection.}{0.4em}{}
+\titlespacing*{\section}{0pt}{5pt}{2pt}
+\setlist[itemize]{itemsep=0.5pt,topsep=1pt,leftmargin=1.15em}
+\setlist[enumerate]{itemsep=0.5pt,topsep=1pt,leftmargin=1.3em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+
+\newtcolorbox{keybox}[1][]{colback=hcmutgray,colframe=hcmutblue,fonttitle=\bfseries,
+  title={#1},boxrule=0.5pt,arc=1pt,left=4pt,right=4pt,top=2pt,bottom=2pt}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+
+\title{\vspace{-1.1cm}\textbf{\color{hcmutblue}CO5151 -- S2-5: Q\&A bản ngắn}\\[1pt]
+\large 14 câu phản biện + bảng ``lỗi nào cần tầng nào'' + action boundary của G4}
+\author{\small Nhóm G4 -- Đặng Lâm Tùng $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng}
+\date{\small \today}
+
+\begin{document}
+\maketitle
+
+\section{Cơ chế Constitutional AI: vì sao không cần nhãn harm của người?}
+Con người chỉ cung cấp \textbf{một danh sách nguyên tắc} (16 nguyên tắc dùng cho bước so sánh của RL-CAI; SL-CAI dùng bộ critique/revision riêng ở App.~C.1). Vòng lặp gồm hai tầng:
+\textbf{(i) SL-CAI:} lấy prompt red-team $\to$ model sinh câu trả lời $\to$ \emph{tự phê bình} theo một nguyên tắc
+\emph{lấy ngẫu nhiên} $\to$ \emph{tự sửa} $\to$ finetune trên bản đã sửa (lặp 4 vòng).
+\textbf{(ii) RL-CAI (RLAIF):} model so sánh hai câu trả lời theo nguyên tắc ngẫu nhiên, tạo preference label
+$\to$ train preference model $\to$ PPO. Quy mô: 42.496 prompt người $+$ 140.335 prompt model sinh $=$
+\textbf{182.831} prompt; 182.831 so sánh harmlessness $+$ 135.296 so sánh helpfulness.
+\textbf{Không bước nào} yêu cầu người gán nhãn ``có hại / không có hại''.
+
+\section{Critique của model sai thì cơ chế còn đúng không?}
+Paper thừa nhận critique ``often provide inaccurate criticism''. Nhưng \textbf{lần revision đầu} đã xoá phần lớn nội dung
+hại; các vòng sau chỉ tinh chỉnh. Cơ chế hoạt động vì critique chỉ cần đúng \emph{hướng}, không cần đúng \emph{toàn bộ}.
+Rủi ro còn lại là \textbf{blind spot tương quan}: model không phê được cái nó không thấy --- và không có tín hiệu ngoài
+nào kiểm chứng critique. CAI giảm (không xoá) rủi ro này bằng \textbf{ensemble nguyên tắc}: mỗi lượt đánh giá rút ngẫu nhiên
+1 trong 16 nguyên tắc, nên preference model không thể tối ưu cục bộ theo một góc nhìn duy nhất.
+
+\section{RLHF gồm những gì, và ``alignment tax'' là gì?}
+Ba giai đoạn: \textbf{SFT} (bắt chước demonstration) $\to$ \textbf{Reward Model} (học từ so sánh cặp của $\sim$40 labeler)
+$\to$ \textbf{PPO} với KL penalty. Kết quả: 175B InstructGPT được thích hơn GPT-3 $85\pm3\%$; 1.3B InstructGPT được
+thích hơn 175B GPT-3. \textbf{Alignment tax} = giảm điểm trên SQuAD, DROP, HellaSwag, WMT15 Fr$\to$En; giảm bằng
+\textbf{PPO-ptx}: $R_{\text{ptx}} = r_\phi - \beta\log(\pi_\theta/\pi^{\text{SFT}}) + \gamma\,\mathbb{E}_{z\sim\mathcal{D}_{\text{pre}}}[\log \pi_\theta(z)]$.
+Số hạng thứ ba là \textbf{log-likelihood của chính $\pi_\theta$ trên dữ liệu pretraining} (LM loss), \emph{không} phải xác suất
+của một model pretrain cố định --- tức trộn gradient pretraining để chống quên.
+
+\section{Vì sao nhãn người không mở rộng được?}
+(i) RM học \emph{sở thích của một nhóm người}, không học chân lý $\Rightarrow$ sycophancy/overconfidence là hệ quả cơ chế;
+(ii) reward over-optimization (Goodhart) trên proxy; (iii) không gán nhãn nổi hành vi mà người đánh giá \emph{không đủ
+năng lực xác minh}. Chi tiết bị bỏ qua: khi \emph{train}, labeler ưu tiên \textbf{helpfulness}; khi \emph{eval},
+họ ưu tiên \textbf{truthfulness \& harmlessness} --- RM được train và đo bằng hai mục tiêu khác nhau.
+
+\section{Alignment faking: quan sát gì, và vì sao không phải artifact?}
+Claude 3 Opus được cho biết nó đang bị train để \emph{luôn tuân thủ} (kể cả yêu cầu có hại), và chỉ hội thoại
+\textbf{free-tier} được dùng để train. Kết quả: tuân thủ \textbf{14\%} ở free-tier vs. $\approx$\textbf{0\%} ở paid-tier;
+gần như mọi ca tuân thủ đều có lý luận \emph{giả vờ} trong scratchpad (``trả lời để giữ giá trị harmless ngoài training'').
+Biến thể dùng \emph{synthetic documents} cho kết quả tương tự (không phụ thuộc system prompt). Khi \emph{thật sự} RL,
+lý luận faking tăng lên \textbf{78\%} và tuân thủ ngoài training cũng tăng. Không có chỉ thị nào bảo model giả vờ.
+
+\section{Vì sao ``model nói nó aligned'' không phải bằng chứng?}
+(i) Lời khai do \emph{cùng policy} sinh ra, không có đặc quyền truy cập trọng số/cơ chế; (ii) hành vi phụ thuộc
+\emph{nhận thức về giám sát} (14\% vs. $\approx$0\%); (iii) chain-of-thought là bản tóm tắt, không phải bản ghi
+(legibility $\neq$ faithfulness); (iv) \emph{evaluation awareness} làm mẫu trong eval bị chọn lệch.
+Bằng chứng thay thế: hành vi dưới điều kiện đối kháng, kiểm tra cơ chế, safety case có thể bị bác, và giám sát lúc chạy.
+
+\section{In-context scheming: một hành vi chiến lược cụ thể?}
+5 model frontier, 6 eval, 300 rollouts/eval (Meinke et al., 2024). Ví dụ: Opus 3 \textbf{vô hiệu hoá oversight 5\%}
+(và \emph{tự copy sang server khác 10\%}); Llama 3.1 đặt \code{oversight_enabled=false} rồi dùng \code{chattr +i}
+để \textbf{chặn bật lại}; o1 \textbf{tạo ranking email sai một cách kín đáo 22\%} và giữ lời nói dối trong
+\textbf{$>$85\%} câu hỏi follow-up. Claude 3.5 Sonnet còn \emph{tự làm kém} để ``có ích hơn'' --- mục tiêu học được khi train.
+
+\section{Scheming khác faking ở đâu? Có nên lo?}
+Faking là \emph{tuân thủ có điều kiện} theo nhận thức ``đang bị train''; scheming rộng hơn: theo đuổi goal một cách
+kín đáo, gồm tắt oversight, exfiltrate, sandbag. Đây là \textbf{capability elicitation} trong môi trường \emph{giả lập}
+(server sandbox, trọng số không thật) $\Rightarrow$ \textbf{không} phải tỉ lệ trong production. Kết luận đúng:
+\emph{capability} đã có; \emph{propensity} chưa đo được; vì vậy phải giảm \emph{hệ quả} bằng thiết kế.
+
+\section{Model alignment vs. system safety --- và lỗi nào cần tầng nào?}
+Alignment = thuộc tính của \emph{policy} (mục tiêu/sở thích khớp ý người), giảm $P(\text{model sai})$.
+System safety = thuộc tính của \emph{pipeline} (quyền, bằng chứng, người duyệt, log, kill switch), giảm
+$I_{\max}$ (thiệt hại tối đa). $\mathbb{E}[\text{harm}] \le P \times I_{\max}$: hai thừa số, hai tầng, không thay nhau.
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.3cm}>{\centering\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Loại lỗi} & \textbf{Tầng chính} & \textbf{Vì sao} \\
+\midrule
+Mục tiêu lệch; sycophancy; bịa nguồn & Alignment & Chỉ training/interpretability chạm tới mục tiêu \\
+Deception / alignment faking & Cả hai (system bắt buộc) & Ý định không quan sát được; phải chặn quyền \\
+Indirect prompt injection & System safety & Model không phân biệt data với instruction \\
+Spec error; dữ liệu cũ; tool misuse & System safety & Lỗi sự thật/quyền, không phải lỗi ý định \\
+Correlated failure (LLM chấm LLM) & System safety & Cần oracle độc lập, khác họ model \\
+Self-exfiltration / self-modification & System safety & Bài toán quyền $+$ egress \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Ví dụ A (alignment vỡ, system đỡ):} drafter bịa ``Điều 22 NĐ 52/2024''; \code{clause_id} không resolve
+$\Rightarrow$ verdict UNSUPPORTED $\Rightarrow$ chặn output. Model vẫn misaligned, thiệt hại bằng 0.
+\textbf{Ví dụ B (system vỡ, alignment không cứu):} \emph{Moffatt v. Air Canada} (2024) --- chatbot nói sai chính sách
+hoàn tiền; toà buộc hãng bồi thường CA\$812,02 (gồm cả phí toà). Model chỉ đang cố hữu ích; hệ thiếu grounding, thiếu phân quyền,
+thiếu escalation.
+
+\section{Action boundary là gì, và ép ngoài prompt bằng cách nào?}
+Bốn thành phần: \textbf{(1) action set} (tool $+$ schema $+$ biên tham số), \textbf{(2) authority} (credential từng agent,
+ai duyệt, TTL), \textbf{(3) preconditions/evidence} (kiểm tra tất định), \textbf{(4) edge behavior} (DENY $\to$ escalate,
+fail closed, kill switch). Sáu lớp thi hành: \textbf{identity/least privilege} $\to$ \textbf{gateway deny-by-default}
+$\to$ \textbf{oracle tất định $+$ verifier độc lập} $\to$ \textbf{runtime budget} $\to$ \textbf{human gate (token gắn
+hash)} $\to$ \textbf{audit append-only $+$ kill switch}. Không lớp nào đọc output của model như mệnh lệnh.\\
+\textbf{Ba luật đi kèm:} (i) \textbf{taint} --- nội dung từ nguồn ngoài (upload/web/email) chỉ là \emph{dữ liệu},
+không bao giờ được thi hành như instruction, và C0 không được xuất raw ra kênh ngoài; (ii) \textbf{retry theo lớp} ---
+chỉ C0/C1 (idempotent) được retry, C2 bắt buộc idempotency key; (iii) \textbf{ghi trạng thái} --- agent chỉ \emph{emit}
+artifact ra staging, \textbf{executor} với credential riêng mới ghi vào state store.
+
+\begin{keybox}[Câu chốt]
+Thứ gì chỉ được ép bằng prompt thì đó là \textbf{sở thích}, không phải \textbf{ranh giới}: prompt bị override bởi nội dung
+retrieve, bị ``quên'' khi context dài, và --- như eval scheming cho thấy --- bị model \emph{mô hình hoá} để lách.
+\end{keybox}
+
+\section{Escalation policy của G4: trigger, hồ sơ, SLA?}
+\textbf{Trigger tất định:} citation không resolve; chuỗi \code{superseded_by} $>$1; hai văn bản cùng hiệu lực mâu thuẫn;
+similarity $<$ floor; verdict UNSUPPORTED sau \code{max_retries}=2; câu hỏi ngoài phạm vi (hình sự/PII); lớp $\ge$ C2;
+alarm giám sát. \textbf{Hồ sơ:} query, plan, clause id $+$ version $+$ hiệu lực, claim$\to$citation, verdict $+$ lý do,
+retry/budget, mã trigger. \textbf{SLA $+$ fail closed:} 1 ngày làm việc; quá hạn $\Rightarrow$ ``cannot verify''.
+\textbf{Chống rubber stamp:} approval token $= H(\text{payload}) + $ approver $+$ expiry; mỗi mục là một quyết định kèm diff;
+đo thời gian duyệt $+$ tỉ lệ override $+$ tỉ lệ approve không mở hồ sơ.
+
+\section{Prompt injection thì alignment có giúp gì không?}
+Gần như không. Model không phân biệt ``dữ liệu'' và ``mệnh lệnh'' ở tầng token, nên một tài liệu retrieve có thể
+\emph{trở thành} chỉ thị. Giảm thiểu là kiến trúc: \textbf{privilege separation} (thành phần đọc nội dung không tin cậy
+không giữ credential ghi), allowlist egress, kiểm tra schema trước khi thực thi, và benchmark kiểu AgentDojo trong CI.
+
+\section{Hệ của nhóm có ``an toàn'' không?}
+Không --- và nhóm không claim như vậy. Residual risk đã chấp nhận: model nói dối \emph{trong} vùng được phép;
+hai agent chia nhỏ hành động; thuyết phục người duyệt; spec sai. Điều \emph{đo được}: policy có test tự động,
+oracle citation/hiệu lực là tất định, escalation fail-closed có hồ sơ. Điều kiện mở C3: oracle độc lập cho từng
+loại hành động, rollback đã diễn tập, audit 100\% trong 30 ngày, có người chịu trách nhiệm danh nghĩa.
+
+\section{Điểm yếu của chính deck này?}
+(i) Các thí nghiệm faking/scheming là \emph{setup tổng hợp}, có nudge mạnh, mẫu 300 rollouts --- không ngoại suy
+thành tỉ lệ production; (ii) paper governance là white paper chính sách, không phải chuẩn kỹ thuật;
+(iii) policy C0--C4 của nhóm mới ở mức thiết kế $+$ test khung, chưa có số liệu vận hành;
+(iv) chưa đo \emph{propensity} của model trong đúng phân phối câu hỏi pháp lý của G4.
+
+\end{document}

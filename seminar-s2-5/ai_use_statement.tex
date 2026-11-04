@@ -1,0 +1,83 @@
+% ---------------------------------------------------------------------
+%  CO5151 -- S2-5 | AI-USE STATEMENT (bản tiếng Việt)
+%  LƯU Ý NỘI BỘ: nhóm rà lại tên/phiên bản công cụ trong bảng và ngày ký
+%  trước khi nộp. Không giữ dòng ghi chú này trong bản phát hành nếu không cần.
+% ---------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T5]{fontenc}
+  \usepackage[vietnamese,english]{babel}
+\else
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setsansfont{texgyreheros}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setmonofont{texgyrecursor}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \usepackage[vietnamese,english]{babel}
+\fi
+\usepackage[top=2cm,bottom=2cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\setlength{\emergencystretch}{2.5em}
+
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{darkgray}{RGB}{60,60,60}
+
+\hypersetup{colorlinks=true, linkcolor=hcmutblue, urlcolor=hcmutblue}
+
+\begin{document}
+\selectlanguage{vietnamese}
+
+\begin{center}
+  {\small \textbf{ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH -- TRƯỜNG ĐẠI HỌC BÁCH KHOA}}\\[0.05cm]
+  {\small \textbf{KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}}\\[0.1cm]
+  {\large\bfseries\color{hcmutblue} BẢN TUYÊN BỐ SỬ DỤNG CÔNG CỤ TRÍ TUỆ NHÂN TẠO}\\[0.05cm]
+  {\large\bfseries\color{hcmutblue} (AI-USE STATEMENT)}\\[0.2cm]
+  {\normalsize \textbf{Môn học:} CO5151 -- Advanced Agentic AI (HK261)}\\
+  {\normalsize \textbf{Chủ đề Seminar:} S2-5: Safety \& Alignment}\\
+  {\normalsize \textbf{Nhóm thực hiện (G4):} Đặng Lâm Tùng (Trưởng nhóm) $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng}\\
+  {\normalsize \textbf{Giảng viên hướng dẫn:} TS. Lê Xuân Bách}
+\end{center}
+
+\vspace{0.4cm}
+\noindent Nhóm G4 cam kết tuân thủ nghiêm ngặt các quy định về liêm chính học thuật của Trường Đại học Bách khoa -- ĐHQG-HCM và hướng dẫn của môn học CO5151. Dưới đây là bảng kê khai chi tiết, minh bạch việc sử dụng các công cụ trí tuệ nhân tạo (AI Tools) trong quá trình chuẩn bị tài liệu Seminar S2-5.
+
+\vspace{0.3cm}
+\noindent{\small
+\begin{tabular}{@{}p{3.4cm}p{4.0cm}p{7.2cm}@{}}
+\toprule
+\textbf{Công cụ AI} & \textbf{Khâu sử dụng} & \textbf{Mô tả chi tiết tác vụ} \\
+\midrule
+\textbf{Trợ lý AI trong IDE} (GitHub Copilot Chat, VS Code) & Soạn khung \LaTeX{} \& gỡ lỗi bố cục & Sinh khung preamble Beamer (16:10, theme HCMUT), phát hiện và sửa lỗi tràn trang/tràn bảng, chuẩn hóa ký hiệu toán (PPO-ptx, $\mbox{$\mathbb{E}[\text{harm}] \le P \times I_{\max}$}$), soát chính tả tiếng Việt. \\
+\addlinespace
+\textbf{Mô hình ngôn ngữ lớn} (Claude/DeepSeek-class) qua phiên chat & Đối chiếu số liệu với tài liệu gốc & Trích xuất và đối chiếu abstract/bảng số liệu của 5 paper được giao (182.831 prompt CAI; $85\pm3\%$ InstructGPT; 14\%/78\% alignment faking; 5--22\% scheming), rà soát danh mục tham chiếu và đường dẫn arXiv. \\
+\bottomrule
+\end{tabular}}
+
+\vspace{0.3cm}
+\noindent \textbf{\large Các khâu KHÔNG sử dụng AI (thành viên nhóm G4 tự thực hiện):}
+\begin{enumerate}
+  \item \textbf{Chọn luận điểm phản biện cốt lõi:} Việc xác định ``alignment là prior, system safety là bound'', phân biệt \emph{capability} với \emph{propensity}, và quyết định dùng ví dụ \emph{Moffatt v.\ Air Canada} (2024) làm ca thất bại tầng hệ thống đều do nhóm tự chọn sau khi đọc bản gốc.
+  \item \textbf{Thiết kế action boundary cho LegalPilot-VN:} Phân lớp C0--C4, bộ trigger escalation tất định, cơ chế approval token gắn hash và chính sách fail-closed do nhóm tự thiết kế dựa trên kiến trúc Theme 9 của nhóm.
+  \item \textbf{Kiến trúc deck \& phân công:} Trình tự lập luận (cơ chế $\to$ giới hạn $\to$ bằng chứng $\to$ thiết kế), ánh xạ 5 mục bắt buộc sang slide và hai câu defense do nhóm quyết định.
+  \item \textbf{Kiểm chứng sự kiện (fact-checking):} Toàn bộ con số, công thức và trích dẫn được đối chiếu thủ công với PDF/abstract chính thức của 5 tài liệu trước khi đưa vào slide.
+\end{enumerate}
+
+\vspace{0.8cm}
+\begin{flushright}
+  \textit{TP. Hồ Chí Minh, ngày 04 tháng 11 năm 2026}\\[0.2cm]
+  \textbf{Đại diện Nhóm G4 (Trưởng nhóm)}\\[1.5cm]
+  \textbf{Đặng Lâm Tùng}
+\end{flushright}
+
+\end{document}

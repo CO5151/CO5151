@@ -1,0 +1,65 @@
+% ---------------------------------------------------------------------
+%  CO5151 -- S2-5 | AI-USE STATEMENT (English version)
+%  INTERNAL NOTE: re-check tool names/versions in the table and the
+%  signature date before submission.
+% ---------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[top=2cm,bottom=2cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\setlength{\emergencystretch}{2.5em}
+
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{darkgray}{RGB}{60,60,60}
+
+\hypersetup{colorlinks=true, linkcolor=hcmutblue, urlcolor=hcmutblue}
+
+\begin{document}
+
+\begin{center}
+  {\small \textbf{VIETNAM NATIONAL UNIVERSITY HCMC -- HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY}}\\[0.05cm]
+  {\small \textbf{FACULTY OF COMPUTER SCIENCE AND ENGINEERING}}\\[0.1cm]
+  {\large\bfseries\color{hcmutblue} AI-USE STATEMENT}\\[0.12cm]
+  {\normalsize \textbf{Course:} CO5151 -- Advanced Agentic AI (HK261)}\\
+  {\normalsize \textbf{Seminar topic:} S2-5: Safety \& Alignment}\\
+  {\normalsize \textbf{Group (G4):} Dang Lam Tung (Lead) $\cdot$ Nguyen Trung Phong $\cdot$ Vu Viet Hung}\\
+  {\normalsize \textbf{Faculty advisor:} Dr.\ Le Xuan Bach}
+\end{center}
+
+\vspace{0.4cm}
+\noindent Group G4 commits to the academic-integrity regulations of HCMUT-VNU and to the CO5151 course guidelines. The table below discloses, in detail, how AI tools were used while preparing the S2-5 seminar material.
+
+\vspace{0.3cm}
+\noindent{\small
+\begin{tabular}{@{}p{3.4cm}p{4.0cm}p{7.2cm}@{}}
+\toprule
+\textbf{AI tool} & \textbf{Stage of use} & \textbf{Specific task} \\
+\midrule
+\textbf{In-IDE AI assistant} (GitHub Copilot Chat, VS Code) & \LaTeX{} scaffolding and layout debugging & Generated the Beamer preamble skeleton (16:10, HCMUT theme), detected and fixed overfull frames/tables, normalised mathematical notation (PPO-ptx, $\mbox{$\mathbb{E}[\text{harm}] \le P \times I_{\max}$}$), and proof-read Vietnamese orthography. \\
+\addlinespace
+\textbf{Large language model} (Claude/DeepSeek-class) via chat & Cross-checking figures against primary sources & Extracted and compared figures from the abstracts and result tables of the five assigned papers (182{,}831 CAI prompts; $85\pm3\%$ InstructGPT; 14\%/78\% alignment faking; 5--22\% scheming), and reviewed the reference list and arXiv links. \\
+\bottomrule
+\end{tabular}}
+
+\vspace{0.3cm}
+\noindent \textbf{\large Work performed WITHOUT AI (by Group G4 members):}
+\begin{enumerate}
+  \item \textbf{Core critical claims:} the framing ``alignment is a prior, system safety is a bound'', the capability-vs-propensity distinction, and the choice of \emph{Moffatt v.\ Air Canada} (2024) as the system-level failure case were decided by the group after reading the primary sources.
+  \item \textbf{Action-boundary design for LegalPilot-VN:} the C0--C4 classes, the deterministic escalation triggers, the hash-bound approval token and the fail-closed policy were designed by the group on top of Theme 9's own architecture.
+  \item \textbf{Deck architecture and division of labour:} the argument order (mechanism $\to$ limits $\to$ evidence $\to$ design), the mapping of the five mandatory items to slides, and both defence answers were decided by the group.
+  \item \textbf{Fact-checking:} every figure, formula and citation was manually verified against the official abstract/PDF of the five readings before being placed on a slide.
+\end{enumerate}
+
+\vspace{0.8cm}
+\begin{flushright}
+  \textit{Ho Chi Minh City, November 4, 2026}\\[0.2cm]
+  \textbf{On behalf of Group G4 (Lead)}\\[1.5cm]
+  \textbf{Dang Lam Tung}
+\end{flushright}
+
+\end{document}

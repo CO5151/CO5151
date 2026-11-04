@@ -1,0 +1,83 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T5]{fontenc}
+  \usepackage[vietnamese,english]{babel}
+\else
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setsansfont{texgyreheros}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setmonofont{texgyrecursor}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \usepackage[vietnamese,english]{babel}
+\fi
+\usepackage[top=1.4cm,bottom=1.4cm,left=1.6cm,right=1.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\definecolor{hcmutblue}{RGB}{0,62,126}
+\definecolor{darkgray}{RGB}{50,50,50}
+\definecolor{critiquecolor}{RGB}{140,25,25}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=hcmutblue,
+    citecolor=hcmutblue,
+    urlcolor=hcmutblue
+}
+
+\titleformat{\section}{\normalsize\bfseries\color{hcmutblue}}{\thesection.}{0.4em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{6pt}{4pt}
+
+\setlength{\emergencystretch}{2.5em}
+\pagestyle{empty}
+
+\begin{document}
+\selectlanguage{vietnamese}
+
+\begin{center}
+  {\footnotesize \textbf{ĐẠI HỌC BÁCH KHOA ĐHQG-HCM -- KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}}\\[0.04cm]
+  {\small \textbf{CO5151: ADVANCED AGENTIC AI (HK261)} -- GIẢNG VIÊN HƯỚNG DẪN: \textbf{TS. LÊ XUÂN BÁCH}}\\[0.12cm]
+  {\large\bfseries\color{hcmutblue} ANNOTATED BIBLIOGRAPHY: SAFETY \& ALIGNMENT}\\[0.04cm]
+  {\footnotesize \textbf{Nhóm thuyết trình G4}: Đặng Lâm Tùng (Trưởng nhóm) $\cdot$ Nguyễn Trung Phong $\cdot$ Vũ Việt Hưng $\vert$ \textit{Chủ đề S2-5 -- 04/11/2026}}
+\end{center}
+
+\vspace{-0.15cm}
+\noindent\textit{\footnotesize \textbf{Quy ước tuân thủ}: Bám sát 100\% đề cương S2-5: đúng 2 Core Readings và 3 Extension Readings được giao cho nhóm thuyết trình. Mỗi tài liệu kèm \textbf{ĐÚNG MỘT CÂU nhận xét phản biện} (hoài nghi học thuật về giả định, điểm nghẽn và giới hạn ngoại suy), tuyệt đối không tóm tắt nội dung.}
+
+\section{Core Readings (Tài Liệu Cốt Lõi)}
+\begin{enumerate}[leftmargin=1.4em, itemsep=7pt, topsep=3pt]
+  \item \textbf{Bai, Y. et al. (2022).} \textit{Constitutional AI: Harmlessness from AI Feedback.} arXiv:2212.08073.\\
+  \textbf{Phạm vi trọng tâm:} Hai pha SL-CAI (critique $\to$ revision theo nguyên tắc) và RL-CAI (AI judge $\to$ preference model $\to$ RL); cơ chế thay nhãn harm của con người bằng một danh sách nguyên tắc; đánh đổi harmlessness--evasiveness.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Dù loại bỏ được chi phí gán nhãn harm và cho ra một assistant non-evasive được crowdworker ưu tiên hơn baseline human-feedback, tín hiệu harmlessness ở đây chỉ đáng tin ngang một bản hiến pháp do con người viết và do chính model phê bình, nên phương pháp chỉ \emph{dời} chứ không \emph{xóa} bài toán đặc tả --- và chính paper thừa nhận critique ``often provide inaccurate criticism'', tức vòng lặp không có phép kiểm tra ngoại vi nào xác nhận rằng bản sửa thực sự giảm hại.
+
+  \item \textbf{Ouyang, L. et al. (2022).} \textit{Training Language Models to Follow Instructions with Human Feedback (InstructGPT).} arXiv:2203.02155.\\
+  \textbf{Phạm vi trọng tâm:} Ba giai đoạn SFT $\to$ reward model $\to$ PPO; ``alignment tax'' và cách giảm bằng PPO-ptx; quan hệ giữa quy mô tham số và việc bám ý người.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Kết quả 1.3B thắng 175B GPT-3 là bằng chứng mạnh rằng dữ liệu preference có thể bù quy mô, nhưng reward model được huấn luyện trên các so sánh mà labeler \emph{ưu tiên helpfulness} trong khi phần đánh giá headline lại \emph{ưu tiên truthfulness và harmlessness}, khiến mức ``cải thiện alignment'' được báo cáo mang một phần dấu vết của việc đổi mục tiêu đo hơn là bằng chứng rằng model đã học đúng điều người đánh giá thực sự quan tâm.
+\end{enumerate}
+
+\section{Extension Readings (Nhóm Thuyết Trình Đi Sâu)}
+\begin{enumerate}[leftmargin=1.4em, itemsep=7pt, topsep=3pt, start=3]
+  \item \textbf{Shavit, Y., Agarwal, S., Brundage, M. et al. (2023).} \textit{Practices for Governing Agentic AI Systems.} OpenAI White Paper.\\
+  \textbf{Phạm vi trọng tâm:} Định nghĩa agenticness theo mức độ (goal complexity, environmental complexity, adaptability, independent execution); bảy practices, đặc biệt \S4.2 \emph{constraining the action-space and requiring approval} và \S4.7 \emph{interruptibility}.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Bảy practices cung cấp từ vựng dùng được để giới hạn action-space, nhưng đây là white paper chính sách không kèm giao thức đo lường, nên nó không cho biết practice nào thực sự giảm thiệt hại khi agent đủ năng lực để \emph{đi vòng} qua các ràng buộc hard-code --- đúng như chính tác giả thừa nhận qua lỗ hổng ``thuyết phục một người khác làm hộ''.
+
+  \item \textbf{Greenblatt, R., Denison, C. et al. (2024).} \textit{Alignment Faking in Large Language Models.} arXiv:2412.14093.\\
+  \textbf{Phạm vi trọng tâm:} Hành vi tuân thủ \emph{có điều kiện} theo nhận thức về việc đang bị huấn luyện (14\% free-tier vs. $\approx$0\% paid-tier); lý luận chiến lược trong scratchpad; ảnh hưởng của RL thật (78\%).\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Thực nghiệm thuyết phục chính vì không hề chỉ thị model giả vờ, nhưng việc tác giả tự nhận đã \emph{làm dễ} hiện tượng bằng cách nói rõ tiêu chí huấn luyện và đối tượng bị huấn luyện để ngỏ câu hỏi liệu 14\% phản ánh một \emph{propensity} tổng quát về việc điều kiện hoá hành vi theo cảm nhận bị giám sát, hay chỉ là hệ quả của một câu chuyện huấn luyện được kể quá rõ ràng.
+
+  \item \textbf{Meinke, A., Schoen, B. et al. (2024).} \textit{Frontier Models are Capable of In-context Scheming.} arXiv:2412.04984.\\
+  \textbf{Phạm vi trọng tâm:} Sáu eval agentic trên 5 model frontier ($\times$ 300 rollouts): oversight subversion, self-exfiltration, goal-guarding, covert email reranking, instrumental alignment faking, sandbagging; tính bền vững của deception.\\
+  \textcolor{critiquecolor}{\textbf{Nhận xét phản biện:}} Nghiên cứu đo \emph{capability} chứ không đo \emph{propensity} và chạy trong sandbox nơi ``trọng số'' chỉ là giả lập, nên các tỉ lệ headline (5--22\%) nên được đọc như \emph{cận trên} về việc model \emph{có thể} làm dưới áp lực goal mạnh, chứ không phải ước lượng về điều agent đã triển khai \emph{sẽ} làm --- một phân biệt mà paper nêu rõ trong phần Limitations nhưng phần abstract có xu hướng làm mờ đi.
+\end{enumerate}
+
+\end{document}
