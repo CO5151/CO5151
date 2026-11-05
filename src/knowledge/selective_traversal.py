@@ -33,13 +33,14 @@ class TraversalContext:
 
 @dataclass
 class TraversalResult:
-    """Structured result containing active provisions, amendment traces, and pruning metrics."""
+    """Structured result containing active provisions, amendment traces, citations, and pruning metrics."""
 
     seed_doc_id: str
     reference_date: str
     active_articles: list[dict[str, Any]] = field(default_factory=list)
     amendment_chains: list[dict[str, Any]] = field(default_factory=list)
     repealed_provisions: list[dict[str, Any]] = field(default_factory=list)
+    citations: list[dict[str, Any]] = field(default_factory=list)
     traversed_nodes_count: int = 0
     pruned_nodes_count: int = 0
 
@@ -156,12 +157,33 @@ class SelectiveTraversalEngine:
                     logger.debug("Pruning inactive repealing document: %s", node.get("doc_id"))
                     pruned_count += 1
 
-        # 3. Construct active articles and resolve amendments
+        # 2b. Retrieve fine-grained article-level relationships (AMENDS, SUPERSEDES, CITES)
+        art_rel_query = """
+        MATCH (seed:Document {doc_id: $seed_doc_id})-[:CONTAINS]->(art:Article)
+        OPTIONAL MATCH (amender_art:Article)-[r_amend:AMENDS]->(art)
+        OPTIONAL MATCH (amender_doc:Document)-[:CONTAINS]->(amender_art)
+        OPTIONAL MATCH (repealer_art:Article)-[r_rep:SUPERSEDES]->(art)
+        OPTIONAL MATCH (repealer_doc:Document)-[:CONTAINS]->(repealer_art)
+        OPTIONAL MATCH (art)-[r_cite:CITES]->(cited)
+        RETURN
+            art.article_id as article_id,
+            collect(DISTINCT {art: amender_art, doc: amender_doc, props: properties(r_amend)}) as direct_amenders,
+            collect(DISTINCT {art: repealer_art, doc: repealer_doc, props: properties(r_rep)}) as direct_repealers,
+            collect(DISTINCT {node: cited, props: properties(r_cite)}) as direct_citations
+        """
+        art_rel_res = self.client.execute_query(art_rel_query, {"seed_doc_id": seed_doc_id})
+        article_rels_by_id: dict[str, Any] = {}
+        if art_rel_res:
+            for row in art_rel_res:
+                article_rels_by_id[row["article_id"]] = row
+
+        # 3. Construct active articles, resolve amendments, and gather citations
         active_articles: list[dict[str, Any]] = []
         amendment_chains: list[dict[str, Any]] = []
         repealed_provisions: list[dict[str, Any]] = []
+        citations: list[dict[str, Any]] = []
 
-        # Record repeals from SUPERSEDES
+        # Record document-level repeals from SUPERSEDES
         for rep in repealers:
             r_props = rep.get("props", {})
             repealed_provisions.append(
@@ -179,7 +201,39 @@ class SelectiveTraversalEngine:
             art_title = art.get("title")
             art_content = art.get("content")
 
-            # Check if this article was amended by any active amender
+            rel_row = article_rels_by_id.get(art_id, {})
+
+            # 3a. Check direct article-level repealers
+            for rep in rel_row.get("direct_repealers", []):
+                if rep.get("art"):
+                    r_art = rep["art"]
+                    r_doc = rep.get("doc") or {}
+                    r_doc_id = (
+                        r_doc.get("doc_id")
+                        or r_art.get("doc_id")
+                        or r_art.get("article_id", "").split(":")[0]
+                    )
+                    traversed_count += 1
+                    r_eff = r_doc.get("effective_date") or rep.get("props", {}).get(
+                        "effective_date"
+                    )
+                    if self._is_active(
+                        r_eff,
+                        r_doc.get("expiration_date"),
+                        r_doc.get("status", "in_force"),
+                        ctx.reference_date,
+                    ):
+                        repealed_provisions.append(
+                            {
+                                "repealer_doc_id": r_doc_id,
+                                "scope": rep.get("props", {}).get("scope")
+                                or f"Repealed by {r_art.get('article_id')}",
+                                "effective_date": r_eff,
+                            }
+                        )
+                    else:
+                        pruned_count += 1
+
             active_version = {
                 "article_id": art_id,
                 "article_number": art_num,
@@ -191,35 +245,98 @@ class SelectiveTraversalEngine:
                 "amendment_notes": None,
             }
 
-            for amender in amenders:
-                amender_node = amender["node"]
-                amender_id = amender_node.get("doc_id")
-                # Look for matching articles in amender document
-                amender_details = self.client.get_document_by_id(amender_id)
-                if amender_details:
-                    for a_art in amender_details.get("articles", []):
-                        # If amender article mentions modifying this article
-                        if f"Điều {art_num}" in a_art.get(
-                            "content", ""
-                        ) or f"Điều {art_num}" in a_art.get("title", ""):
-                            active_version["is_amended"] = True
-                            active_version["amended_by"] = amender_id
-                            active_version["amendment_notes"] = (
-                                f"Amended by {amender_id} ({a_art.get('title')})"
-                            )
+            # 3b. Check direct article-level amenders
+            direct_amended = False
+            for amend in rel_row.get("direct_amenders", []):
+                if amend.get("art"):
+                    a_art = amend["art"]
+                    a_doc = amend.get("doc") or {}
+                    a_doc_id = (
+                        a_doc.get("doc_id")
+                        or a_art.get("doc_id")
+                        or a_art.get("article_id", "").split(":")[0]
+                    )
+                    traversed_count += 1
+                    a_eff = a_doc.get("effective_date") or amend.get("props", {}).get(
+                        "effective_date"
+                    )
+                    if self._is_active(
+                        a_eff,
+                        a_doc.get("expiration_date"),
+                        a_doc.get("status", "in_force"),
+                        ctx.reference_date,
+                    ):
+                        active_version["is_amended"] = True
+                        active_version["amended_by"] = a_doc_id
+                        active_version["amendment_notes"] = (
+                            f"Amended by {a_doc_id} ({a_art.get('title') or a_art.get('article_id')})"
+                        )
+                        if a_art.get("content"):
                             active_version["content"] = a_art.get("content")
-                            active_version["governing_doc_id"] = amender_id
+                        active_version["governing_doc_id"] = a_doc_id
 
-                            amendment_chains.append(
-                                {
-                                    "original_article_id": art_id,
-                                    "original_doc_id": seed_doc_id,
-                                    "amended_by_doc_id": amender_id,
-                                    "amender_article_id": a_art.get("article_id"),
-                                    "effective_date": amender_node.get("effective_date"),
-                                }
-                            )
-                            break
+                        amendment_chains.append(
+                            {
+                                "original_article_id": art_id,
+                                "original_doc_id": seed_doc_id,
+                                "amended_by_doc_id": a_doc_id,
+                                "amender_article_id": a_art.get("article_id"),
+                                "effective_date": a_eff,
+                            }
+                        )
+                        direct_amended = True
+                        break
+                    else:
+                        pruned_count += 1
+
+            # 3c. Fallback to document-level amenders if no active direct article-level AMENDS
+            if not direct_amended:
+                for amender in amenders:
+                    amender_node = amender["node"]
+                    amender_id = amender_node.get("doc_id")
+                    # Look for matching articles in amender document
+                    amender_details = self.client.get_document_by_id(amender_id)
+                    if amender_details:
+                        for a_art in amender_details.get("articles", []):
+                            # If amender article mentions modifying this article
+                            if f"Điều {art_num}" in a_art.get(
+                                "content", ""
+                            ) or f"Điều {art_num}" in a_art.get("title", ""):
+                                active_version["is_amended"] = True
+                                active_version["amended_by"] = amender_id
+                                active_version["amendment_notes"] = (
+                                    f"Amended by {amender_id} ({a_art.get('title')})"
+                                )
+                                active_version["content"] = a_art.get("content")
+                                active_version["governing_doc_id"] = amender_id
+
+                                amendment_chains.append(
+                                    {
+                                        "original_article_id": art_id,
+                                        "original_doc_id": seed_doc_id,
+                                        "amended_by_doc_id": amender_id,
+                                        "amender_article_id": a_art.get("article_id"),
+                                        "effective_date": amender_node.get("effective_date"),
+                                    }
+                                )
+                                break
+
+            # 3d. Collect direct citations
+            for cite in rel_row.get("direct_citations", []):
+                if cite.get("node"):
+                    node = cite["node"]
+                    traversed_count += 1
+                    target_id = node.get("article_id") or node.get("doc_id")
+                    target_type = "Article" if "article_id" in node else "Document"
+                    citations.append(
+                        {
+                            "source_article_id": art_id,
+                            "target_id": target_id,
+                            "target_type": target_type,
+                            "scope": cite.get("props", {}).get("scope", ""),
+                            "effective_date": cite.get("props", {}).get("effective_date"),
+                        }
+                    )
 
             active_articles.append(active_version)
 
@@ -243,6 +360,7 @@ class SelectiveTraversalEngine:
             active_articles=filtered_active_articles,
             amendment_chains=amendment_chains,
             repealed_provisions=repealed_provisions,
+            citations=citations,
             traversed_nodes_count=traversed_count,
             pruned_nodes_count=pruned_count,
         )
@@ -279,6 +397,14 @@ class SelectiveTraversalEngine:
             for rep in result.repealed_provisions:
                 lines.append(
                     f"- Repealed by **{rep['repealer_doc_id']}**: {rep['scope']} (Effective: {rep['effective_date']})"
+                )
+            lines.append("")
+
+        if result.citations:
+            lines.append("## Statutory Citations")
+            for cite in result.citations:
+                lines.append(
+                    f"- `{cite['source_article_id']}` cites **{cite['target_id']}** ({cite.get('scope') or 'Statutory reference'})"
                 )
             lines.append("")
 

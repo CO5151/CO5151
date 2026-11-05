@@ -15,16 +15,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-import httpx
-
-from src.core.config import settings
 from src.core.exceptions import KnowledgeBaseError
 from src.core.logger import get_logger
 from src.knowledge.neo4j_client import Neo4jClient
@@ -412,95 +408,14 @@ def parse_html_document(
 def llm_fallback_parse_document(
     text: str, default_metadata: dict[str, Any] | None = None
 ) -> ParsedDocument | None:
-    """Uses LLM to parse non-standard, scanned, or complex legal documents when regex fails.
+    """Uses Google ADK LegalParserAgent to parse non-standard, scanned, or complex legal documents when regex fails.
 
-    Calls Gemini or local model with structured prompt. Degrades gracefully if unavailable.
+    Wraps the official Google ADK Agent pipeline with schema validation and fallback handling.
     """
-    api_key = settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        logger.warning("No GEMINI_API_KEY found, skipping LLM fallback parsing")
-        return None
+    from src.agents.parser_agent import LegalParserAgent
 
-    logger.info("Triggering LLM fallback parsing with Gemini...")
-    prompt = f"""You are an expert legal document parser for Vietnamese Law.
-Parse the following legal document into a strict JSON structure.
-Format:
-{{
-  "doc_id": "document number e.g. 152/2020/ND-CP",
-  "title": "document title",
-  "doc_type": "Nghị định | Thông tư | Luật | Quyết định",
-  "issuer": "Chính phủ | Bộ ...",
-  "issue_date": "YYYY-MM-DD",
-  "effective_date": "YYYY-MM-DD",
-  "articles": [
-    {{
-      "article_number": "1",
-      "title": "Tên điều",
-      "content": "Toàn văn điều",
-      "clauses": [
-        {{"clause_number": "1", "content": "Nội dung khoản 1"}}
-      ]
-    }}
-  ]
-}}
-
-Document text:
-{text[:6000]}
-"""
-    try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.llm.cloud_model}:generateContent?key={api_key}"
-        payload = {
-            "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {
-                "temperature": 0.0,
-                "responseMimeType": "application/json",
-            },
-        }
-        with httpx.Client(timeout=30) as client:
-            resp = client.post(url, json=payload)
-            resp.raise_for_status()
-            data = resp.json()
-            raw_json = data["candidates"][0]["content"]["parts"][0]["text"]
-            parsed = json.loads(raw_json)
-
-            articles = []
-            doc_id = normalize_doc_id(parsed.get("doc_id", "UNKNOWN/DOC"))
-            for art in parsed.get("articles", []):
-                art_num = str(art.get("article_number", "1"))
-                art_id = f"{doc_id}:Article_{art_num}"
-                clauses = []
-                for c in art.get("clauses", []):
-                    c_num = str(c.get("clause_number", "1"))
-                    clauses.append(
-                        ParsedClause(
-                            clause_id=f"{art_id}:Clause_{c_num}",
-                            clause_number=c_num,
-                            content=c.get("content", ""),
-                        )
-                    )
-                articles.append(
-                    ParsedArticle(
-                        article_id=art_id,
-                        article_number=art_num,
-                        title=art.get("title", ""),
-                        content=art.get("content", ""),
-                        clauses=clauses,
-                    )
-                )
-
-            return ParsedDocument(
-                doc_id=doc_id,
-                title=parsed.get("title", ""),
-                doc_type=parsed.get("doc_type", "Nghị định"),
-                issuer=parsed.get("issuer", "Chính phủ"),
-                issue_date=parsed.get("issue_date", "2020-01-01"),
-                effective_date=parsed.get("effective_date", "2020-01-01"),
-                status="in_force",
-                articles=articles,
-            )
-    except Exception as e:
-        logger.warning("LLM fallback parsing encountered an error: %s", e)
-        return None
+    agent = LegalParserAgent()
+    return agent.parse(text, default_metadata=default_metadata)
 
 
 def apply_revocation_status(documents: dict[str, Any]) -> int:
@@ -522,6 +437,9 @@ def apply_revocation_status(documents: dict[str, Any]) -> int:
     for doc in documents.values():
         for ref in doc.get("cross_references") or []:
             if ref.get("rel_type") != "SUPERSEDES":
+                continue
+            if ref.get("target_article_id"):
+                # Article-level repeal; does not expire the whole instrument
                 continue
             target_id = str(ref.get("target_doc_id", ""))
             if not target_id:
@@ -546,13 +464,31 @@ def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalC
     """Extracts explicit legal cross-references from the document text.
 
     Detects:
-    - AMENDS: 'Sửa đổi, bổ sung một số điều của Nghị định số...'
-    - SUPERSEDES: 'Bãi bỏ Điều... của Nghị định số...'
+    - Document-level AMENDS: 'Sửa đổi, bổ sung một số điều của Nghị định số...'
+    - Article-level AMENDS: 'Sửa đổi, bổ sung Điều X (khoản Y) của Nghị định số...'
+    - Document-level SUPERSEDES: 'Bãi bỏ toàn bộ Nghị định số...'
+    - Article-level SUPERSEDES: 'Bãi bỏ Điều X (khoản Y) của Nghị định số...'
     - GUIDES: 'Căn cứ Luật số...' / 'Quy định chi tiết...'
+    - Article-level CITES: 'theo quy định tại Điều X Nghị định Y', intra-statute citations, etc.
     """
     refs: list[LegalCrossReference] = []
 
+    def has_ref(
+        rel_type: str,
+        target_doc: str,
+        target_art: str | None = None,
+        src_art: str | None = None,
+    ) -> bool:
+        return any(
+            r.rel_type == rel_type
+            and r.target_doc_id == target_doc
+            and r.target_article_id == target_art
+            and r.source_article_id == src_art
+            for r in refs
+        )
+
     # 1. Detect AMENDS from Title & Body
+    amend_doc_targets: list[str] = []
     amend_pattern = re.compile(
         r"(?:Sửa đổi, bổ sung|SỬA ĐỔI, BỔ SUNG)\s+[^.\n]*?(?:Nghị định|Thông tư|Luật)\s+(?:số\s+)?([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)",
         re.IGNORECASE,
@@ -561,47 +497,105 @@ def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalC
         target_raw = match.group(1)
         target_doc = normalize_doc_id(target_raw)
         if target_doc != doc.doc_id:
+            if target_doc not in amend_doc_targets:
+                amend_doc_targets.append(target_doc)
+            if not has_ref("AMENDS", target_doc):
+                refs.append(
+                    LegalCrossReference(
+                        source_doc_id=doc.doc_id,
+                        target_doc_id=target_doc,
+                        rel_type="AMENDS",
+                        scope="Document level amendment",
+                        effective_date=doc.effective_date,
+                    )
+                )
+
+    # 2. Detect Article-level AMENDS
+    # When this document is an amending instrument (e.g. Decree 70/2023 amending Decree 152/2020),
+    # individual articles/clauses specify which target articles they amend.
+    art_amend_pattern = re.compile(
+        r"Sửa đổi, bổ sung\s+(?:(?:khoản|điểm)\s+[^,\n]+?\s+)?(?:Điều\s+(\d+))",
+        re.IGNORECASE,
+    )
+    for art in doc.articles:
+        art_target_doc = None
+        art_target_match = amend_pattern.search(art.title) or amend_pattern.search(
+            art.content[:200]
+        )
+        if art_target_match:
+            art_target_doc = normalize_doc_id(art_target_match.group(1))
+        elif amend_doc_targets:
+            art_target_doc = amend_doc_targets[0]
+
+        if art_target_doc and art_target_doc != doc.doc_id:
+            for m in art_amend_pattern.finditer(art.content):
+                target_art_num = m.group(1)
+                target_art_id = f"{art_target_doc}:Article_{target_art_num}"
+                if not has_ref("AMENDS", art_target_doc, target_art_id, art.article_id):
+                    refs.append(
+                        LegalCrossReference(
+                            source_doc_id=doc.doc_id,
+                            target_doc_id=art_target_doc,
+                            source_article_id=art.article_id,
+                            target_article_id=target_art_id,
+                            rel_type="AMENDS",
+                            scope=m.group(0).strip(),
+                            effective_date=doc.effective_date,
+                        )
+                    )
+
+    # 3. Detect Repeals (Bãi bỏ) -> SUPERSEDES
+    repeal_pattern = re.compile(
+        r"Bãi bỏ\s+(?:(?:khoản|điểm)\s+([^,\n]+?)\s+)?(?:Điều\s+(\d+))\s+của\s+(?:Nghị định|Thông tư|Luật|Quyết định)?\s*(?:số\s+)?([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)",
+        re.IGNORECASE,
+    )
+    for art in doc.articles:
+        for match in repeal_pattern.finditer(art.content):
+            c_info, a_num, target_raw = match.groups()
+            target_doc = normalize_doc_id(target_raw)
+            target_art = f"{target_doc}:Article_{a_num}" if a_num else None
+            scope_desc = (
+                f"Bãi bỏ khoản {c_info.strip()} Điều {a_num}" if c_info else f"Bãi bỏ Điều {a_num}"
+            )
+            if not has_ref("SUPERSEDES", target_doc, target_art, art.article_id):
+                refs.append(
+                    LegalCrossReference(
+                        source_doc_id=doc.doc_id,
+                        target_doc_id=target_doc,
+                        source_article_id=art.article_id,
+                        target_article_id=target_art,
+                        rel_type="SUPERSEDES",
+                        scope=scope_desc,
+                        effective_date=doc.effective_date,
+                    )
+                )
+
+    # Global text search for repeals not inside parsed articles
+    for match in repeal_pattern.finditer(full_text):
+        c_info, a_num, target_raw = match.groups()
+        target_doc = normalize_doc_id(target_raw)
+        target_art = f"{target_doc}:Article_{a_num}" if a_num else None
+        scope_desc = (
+            f"Bãi bỏ khoản {c_info.strip()} Điều {a_num}" if c_info else f"Bãi bỏ Điều {a_num}"
+        )
+        if not any(
+            r.rel_type == "SUPERSEDES"
+            and r.target_doc_id == target_doc
+            and r.target_article_id == target_art
+            for r in refs
+        ):
             refs.append(
                 LegalCrossReference(
                     source_doc_id=doc.doc_id,
                     target_doc_id=target_doc,
-                    rel_type="AMENDS",
-                    scope="Document level amendment",
+                    target_article_id=target_art,
+                    rel_type="SUPERSEDES",
+                    scope=scope_desc,
                     effective_date=doc.effective_date,
                 )
             )
 
-    # 2. Detect Repeals (Bãi bỏ) -> SUPERSEDES
-    repeal_pattern = re.compile(
-        r"Bãi bỏ\s+(?:khoản\s+(\d+)\s+)?(?:Điều\s+(\d+))\s+của\s+(?:Nghị định|Thông tư|Luật)\s+(?:số\s+)?([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)",
-        re.IGNORECASE,
-    )
-    for match in repeal_pattern.finditer(full_text):
-        c_num, a_num, target_raw = match.groups()
-        target_doc = normalize_doc_id(target_raw)
-        target_art = f"{target_doc}:Article_{a_num}" if a_num else None
-        refs.append(
-            LegalCrossReference(
-                source_doc_id=doc.doc_id,
-                target_doc_id=target_doc,
-                target_article_id=target_art,
-                rel_type="SUPERSEDES",
-                scope=(
-                    f"Repeals Article {a_num} Clause {c_num}"
-                    if c_num
-                    else f"Repeals Article {a_num}"
-                ),
-                effective_date=doc.effective_date,
-            )
-        )
-
-    # 3. Detect whole-document repeals / replacements.
-    #
-    # Regulatory practice often repeals an entire instrument in the preamble, e.g.
-    #   "Bãi bỏ Nghị định số 101/2012/NĐ-CP ngày 22 tháng 11 năm 2012 ..."
-    # which the article-scoped pattern above cannot match because no article number
-    # is present. Missing this edge is what previously left repealed instruments
-    # recorded as "in_force" in the exported graph.
+    # Detect whole-document repeals / replacements
     whole_doc_pattern = re.compile(
         r"(?:Bãi bỏ|Thay thế)\s+(?:toàn bộ\s+)?(?:Nghị định|Thông tư|Luật|Bộ luật)\s+"
         r"(?:số\s+)?([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)",
@@ -611,18 +605,22 @@ def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalC
         target_doc = normalize_doc_id(match.group(1))
         if target_doc == doc.doc_id:
             continue
-        if any(r.rel_type == "SUPERSEDES" and r.target_doc_id == target_doc for r in refs):
-            continue
-        verb = match.group(0).strip().split()[0]
-        refs.append(
-            LegalCrossReference(
-                source_doc_id=doc.doc_id,
-                target_doc_id=target_doc,
-                rel_type="SUPERSEDES",
-                scope=f"Repeals the whole instrument ({verb})",
-                effective_date=doc.effective_date,
+        if not any(
+            r.rel_type == "SUPERSEDES"
+            and r.target_doc_id == target_doc
+            and r.target_article_id is None
+            for r in refs
+        ):
+            verb = match.group(0).strip().split()[0]
+            refs.append(
+                LegalCrossReference(
+                    source_doc_id=doc.doc_id,
+                    target_doc_id=target_doc,
+                    rel_type="SUPERSEDES",
+                    scope=f"Repeals the whole instrument ({verb})",
+                    effective_date=doc.effective_date,
+                )
             )
-        )
 
     # 4. Detect GUIDES / Căn cứ
     guides_pattern = re.compile(
@@ -632,15 +630,99 @@ def extract_cross_references(doc: ParsedDocument, full_text: str) -> list[LegalC
     for match in guides_pattern.finditer(full_text):
         raw_law = match.group(1).strip()
         law_title = re.sub(r"\s+ngày\s+\d+.*", "", raw_law).strip()
-        refs.append(
-            LegalCrossReference(
-                source_doc_id=doc.doc_id,
-                target_doc_id=law_title,
-                rel_type="GUIDES",
-                scope=f"Guides {law_title}",
-                effective_date=doc.effective_date,
+        if not has_ref("GUIDES", law_title):
+            refs.append(
+                LegalCrossReference(
+                    source_doc_id=doc.doc_id,
+                    target_doc_id=law_title,
+                    rel_type="GUIDES",
+                    scope=f"Guides {law_title}",
+                    effective_date=doc.effective_date,
+                )
             )
-        )
+
+    # 5. Detect Article-level CITES (Statutory Citations / Viện dẫn quy định)
+    cite_art_pattern = re.compile(
+        r"(?:theo quy định tại|căn cứ tại|căn cứ theo|quy định tại|áp dụng theo|hướng dẫn tại|đối chiếu với quy định tại|nêu tại)\s+"
+        r"(?:(?:khoản|điểm)\s+[^,\n]+?\s+)?"
+        r"(?:Điều\s+(\d+))\s+"
+        r"(?:của\s+)?(?:Nghị định|Thông tư|Luật|Bộ luật|Quyết định)?\s*"
+        r"(?:số\s+)?([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)",
+        re.IGNORECASE,
+    )
+    intra_cite_pattern = re.compile(
+        r"(?:theo quy định tại|căn cứ tại|căn cứ theo|quy định tại|áp dụng theo|hướng dẫn tại|nêu tại)\s+"
+        r"(?:(?:khoản|điểm)\s+[^,\n]+?\s+)?"
+        r"(?:Điều\s+(\d+))\s+"
+        r"(?:của\s+)?(?:Nghị định này|Thông tư này|Luật này|Bộ luật này|Quyết định này|Văn bản này)",
+        re.IGNORECASE,
+    )
+    cite_doc_pattern = re.compile(
+        r"(?:theo quy định tại|căn cứ vào|hướng dẫn tại|áp dụng quy định của|thực hiện theo)\s+"
+        r"(?:Nghị định|Thông tư|Quyết định|Luật|Bộ luật)\s+"
+        r"(?:số\s+)?([0-9]+/[0-9]{4}/[A-Za-z0-9Đđ/-]+)",
+        re.IGNORECASE,
+    )
+
+    for art in doc.articles:
+        # Cross-statute Article citation
+        for m in cite_art_pattern.finditer(art.content):
+            art_num = m.group(1)
+            target_doc = normalize_doc_id(m.group(2))
+            target_art = f"{target_doc}:Article_{art_num}"
+            if not has_ref("CITES", target_doc, target_art, art.article_id):
+                refs.append(
+                    LegalCrossReference(
+                        source_doc_id=doc.doc_id,
+                        target_doc_id=target_doc,
+                        source_article_id=art.article_id,
+                        target_article_id=target_art,
+                        rel_type="CITES",
+                        scope=m.group(0).strip(),
+                        effective_date=doc.effective_date,
+                    )
+                )
+
+        # Intra-statute Article citation
+        for m in intra_cite_pattern.finditer(art.content):
+            art_num = m.group(1)
+            target_doc = doc.doc_id
+            target_art = f"{target_doc}:Article_{art_num}"
+            if target_art != art.article_id and not has_ref(
+                "CITES", target_doc, target_art, art.article_id
+            ):
+                refs.append(
+                    LegalCrossReference(
+                        source_doc_id=doc.doc_id,
+                        target_doc_id=target_doc,
+                        source_article_id=art.article_id,
+                        target_article_id=target_art,
+                        rel_type="CITES",
+                        scope=m.group(0).strip(),
+                        effective_date=doc.effective_date,
+                    )
+                )
+
+        # Cross-statute Document citation
+        for m in cite_doc_pattern.finditer(art.content):
+            target_doc = normalize_doc_id(m.group(1))
+            if target_doc != doc.doc_id and not any(
+                r.rel_type == "CITES"
+                and r.target_doc_id == target_doc
+                and r.source_article_id == art.article_id
+                for r in refs
+            ):
+                refs.append(
+                    LegalCrossReference(
+                        source_doc_id=doc.doc_id,
+                        target_doc_id=target_doc,
+                        source_article_id=art.article_id,
+                        target_article_id=None,
+                        rel_type="CITES",
+                        scope=m.group(0).strip(),
+                        effective_date=doc.effective_date,
+                    )
+                )
 
     return refs
 
@@ -816,6 +898,8 @@ class LegalIngestionPipeline:
                     {
                         "source_doc_id": ref.source_doc_id,
                         "target_doc_id": ref.target_doc_id,
+                        "source_article_id": ref.source_article_id,
+                        "target_article_id": ref.target_article_id,
                         "rel_type": ref.rel_type,
                         "scope": ref.scope,
                         "effective_date": ref.effective_date,
@@ -869,39 +953,89 @@ class LegalIngestionPipeline:
 
         # Upsert Cross-References
         for ref in cross_refs:
-            if ref.rel_type in ("AMENDS", "SUPERSEDES", "GUIDES"):
-                # Ensure target document node exists in graph before linking
-                self.neo4j_client.execute_query(
-                    "MERGE (d:Document {doc_id: $doc_id})",
-                    {"doc_id": ref.target_doc_id},
-                )
-                self.neo4j_client.create_relationship(
-                    from_label="Document",
-                    from_key="doc_id",
-                    from_val=ref.source_doc_id,
-                    to_label="Document",
-                    to_key="doc_id",
-                    to_val=ref.target_doc_id,
-                    rel_type=ref.rel_type,
-                    properties={
-                        "scope": ref.scope or "",
-                        "effective_date": ref.effective_date or doc.effective_date,
-                    },
-                )
+            if ref.rel_type in ("AMENDS", "SUPERSEDES", "GUIDES", "CITES", "REFERS_TO"):
+                props = {
+                    "scope": ref.scope or "",
+                    "effective_date": ref.effective_date or doc.effective_date,
+                }
+                # Case 1: Article-to-Article relationship
+                if ref.source_article_id and ref.target_article_id:
+                    self.neo4j_client.upsert_relationship(
+                        from_label="Article",
+                        from_key="article_id",
+                        from_val=ref.source_article_id,
+                        to_label="Article",
+                        to_key="article_id",
+                        to_val=ref.target_article_id,
+                        rel_type=ref.rel_type,
+                        properties=props,
+                    )
+                    # Ensure target article is connected to target document if known
+                    if ref.target_doc_id:
+                        self.neo4j_client.execute_query(
+                            """
+                            MERGE (d:Document {doc_id: $doc_id})
+                            MERGE (a:Article {article_id: $art_id})
+                            MERGE (d)-[:CONTAINS]->(a)
+                            """,
+                            {"doc_id": ref.target_doc_id, "art_id": ref.target_article_id},
+                        )
+
+                # Case 2: Article-to-Document citation
+                elif ref.source_article_id and not ref.target_article_id:
+                    self.neo4j_client.upsert_relationship(
+                        from_label="Article",
+                        from_key="article_id",
+                        from_val=ref.source_article_id,
+                        to_label="Document",
+                        to_key="doc_id",
+                        to_val=ref.target_doc_id,
+                        rel_type=ref.rel_type,
+                        properties=props,
+                    )
+
+                # Case 3: Document-to-Document relationship
+                else:
+                    self.neo4j_client.upsert_relationship(
+                        from_label="Document",
+                        from_key="doc_id",
+                        from_val=ref.source_doc_id,
+                        to_label="Document",
+                        to_key="doc_id",
+                        to_val=ref.target_doc_id,
+                        rel_type=ref.rel_type,
+                        properties=props,
+                    )
+
                 # Propagate validity: a repealed instrument must not remain 'in_force'
                 # in the graph, otherwise temporal pruning has nothing to act on.
                 if ref.rel_type == "SUPERSEDES":
-                    self.neo4j_client.execute_query(
-                        "MATCH (d:Document {doc_id: $target}) "
-                        "SET d.status = 'expired', "
-                        "    d.revoked_by = $source, "
-                        "    d.revoked_date = $date",
-                        {
-                            "target": ref.target_doc_id,
-                            "source": ref.source_doc_id,
-                            "date": ref.effective_date or doc.effective_date,
-                        },
-                    )
+                    if ref.target_article_id:
+                        # Article-level repeal
+                        self.neo4j_client.execute_query(
+                            "MATCH (a:Article {article_id: $target_art}) "
+                            "SET a.status = 'expired', "
+                            "    a.revoked_by = $source, "
+                            "    a.revoked_date = $date",
+                            {
+                                "target_art": ref.target_article_id,
+                                "source": ref.source_doc_id,
+                                "date": ref.effective_date or doc.effective_date,
+                            },
+                        )
+                    else:
+                        # Whole-document repeal
+                        self.neo4j_client.execute_query(
+                            "MATCH (d:Document {doc_id: $target}) "
+                            "SET d.status = 'expired', "
+                            "    d.revoked_by = $source, "
+                            "    d.revoked_date = $date",
+                            {
+                                "target": ref.target_doc_id,
+                                "source": ref.source_doc_id,
+                                "date": ref.effective_date or doc.effective_date,
+                            },
+                        )
 
     def _ingest_to_qdrant(self, chunks: list[dict[str, Any]]) -> None:
         """Initializes collection if needed and upserts legal chunks (or exports if offline)."""
