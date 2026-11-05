@@ -21,10 +21,13 @@ docs/
 │   ├── overview.md                    # High-level architecture and component map
 │   ├── data-flow.md                   # Ingestion and query-retrieval data flows
 │   └── storage-models.md              # Neo4j schema, Qdrant vectors, and SQLite tables
-└── development/                       # Engineering and contribution guides
-    ├── getting-started.md             # Local setup, environment, and run.sh commands
-    ├── workflows.md                   # Ingestion CLI, test runs, and daily workflows
-    └── conventions.md                 # Code style, typing, zero em-dash rule, and commits
+├── development/                       # Engineering and contribution guides
+│   ├── getting-started.md             # Local setup, environment, and run.sh commands
+│   ├── workflows.md                   # Ingestion CLI, test runs, and daily workflows
+│   └── conventions.md                 # Code style, typing, zero em-dash rule, and commits
+└── runbooks/                          # Step-by-step operational procedures
+    ├── sbv-corpus-crawl.md            # Crawl vbpl.vn and ingest the SBV corpus
+    └── inspect-ingested-data.md       # Cypher / Qdrant cheatsheet for checking ingested data
 ```
 
 ---
@@ -50,6 +53,11 @@ If you are writing code or running the project locally, check these guides.
 * [Getting Started](development/getting-started.md): 5-minute setup with Docker, Python virtual environment, and `./run.sh`.
 * [Workflows](development/workflows.md): Running batch ingestion, running tests, and launching the Streamlit UI.
 * [Conventions](development/conventions.md): Code standards, Ruff/Mypy expectations, commit rules, and formatting guidelines.
+
+### 4. Runbooks (`runbooks/`)
+If you need to operate the data pipeline, follow these procedures.
+* [SBV Corpus Crawl](runbooks/sbv-corpus-crawl.md): Rebuild the 1,627-document SBV corpus from vbpl.vn and load it into Neo4j and Qdrant.
+* [Inspect Ingested Data](runbooks/inspect-ingested-data.md): Neo4j Browser queries, Qdrant dashboard and curl calls, and the inspector script.
 
 ---
 
