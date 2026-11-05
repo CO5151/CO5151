@@ -1,15 +1,18 @@
 """Unit and integration tests for Vietnamese legal ingestion pipeline."""
 
 import contextlib
+import json
 from pathlib import Path
 
 import pytest
 
 from src.knowledge.ingestion import (
     LegalIngestionPipeline,
+    apply_authoritative_metadata,
     extract_cross_references,
     generate_legal_chunks,
     llm_fallback_parse_document,
+    load_sidecar_metadata,
     normalize_doc_id,
     parse_html_document,
     parse_legal_document,
@@ -92,6 +95,7 @@ def test_generate_legal_chunks():
     assert len(chunk["vector"]) == 16
 
 
+@pytest.mark.live
 def test_pipeline_ingestion_end_to_end():
     """Tests ingesting sample raw documents into Neo4j and Qdrant."""
     neo4j_client = Neo4jClient()
@@ -263,3 +267,191 @@ Quy định về thủ tục cấp phép kinh doanh
     cite_doc = next((r for r in cites if r.target_doc_id == "12/2022/TT-NHNN"), None)
     assert cite_doc is not None
     assert cite_doc.target_article_id is None
+
+
+LEGACY_HTML = """<html><body>
+<p>NGÂN HÀNG NHÀ NƯỚC VIỆT NAM</p>
+<p>Số: 22/QĐ-NH1</p>
+<p>Hà Nội, ngày 21 tháng 02 năm 1994</p>
+<p>QUYẾT ĐỊNH</p>
+<p>Điều 1. Ban hành kèm theo Quyết định này Thể lệ thanh toán không dùng tiền mặt.</p>
+<p>Điều 2. Hiệu lực</p>
+<p>1. Quyết định này có hiệu lực từ ngày 01 tháng 4 năm 1994.</p>
+<p>2. Các quy định tại Điều 1 Quyết định này áp dụng cho các ngân hàng.</p>
+</body></html>
+"""
+
+
+def test_apply_authoritative_metadata_rekeys_legacy_ids():
+    """A year-less legacy number parses as UNKNOWN/DOC; the MoJ record must re-key it."""
+    doc, refs = parse_html_document(LEGACY_HTML)
+    assert doc.doc_id == "UNKNOWN/DOC"
+
+    meta = {
+        "doc_id": "22/QD-NH1",
+        "title": "Quyết định 22/QĐ-NH1 ban hành Thể lệ thanh toán không dùng tiền mặt",
+        "doc_type": "Quyết định",
+        "issuer": "Ngân hàng Nhà nước Việt Nam",
+        "issue_date": "1994-02-21",
+        "effective_date": "1994-04-01",
+        "expiration_date": "2003-01-01",
+        "status": "expired",
+        "eff_status_code": "HHL",
+        "moj_id": "12345",
+    }
+    doc, refs = apply_authoritative_metadata(doc, refs, meta)
+
+    assert doc.doc_id == "22/QD-NH1"
+    assert doc.status == "expired"
+    assert doc.expiration_date == "2003-01-01"
+    assert doc.issuer == "Ngân hàng Nhà nước Việt Nam"
+    assert doc.metadata == {"eff_status_code": "HHL", "moj_id": "12345"}
+    assert all(a.article_id.startswith("22/QD-NH1:Article_") for a in doc.articles)
+    assert all(
+        c.clause_id.startswith("22/QD-NH1:Article_") for a in doc.articles for c in a.clauses
+    )
+    assert not any("UNKNOWN/DOC" in (r.source_doc_id + (r.target_article_id or "")) for r in refs)
+    assert not any(r.target_doc_id == doc.doc_id and not r.target_article_id for r in refs)
+
+
+def test_ingest_file_uses_sidecar_metadata(tmp_path):
+    """``<stem>.meta.json`` next to a raw file overrides the regex-derived metadata."""
+    raw = tmp_path / "22_QD-NH1.html"
+    raw.write_text(LEGACY_HTML, encoding="utf-8")
+    (tmp_path / "22_QD-NH1.meta.json").write_text(
+        json.dumps({"doc_id": "22/QD-NH1", "status": "expired", "moj_id": "12345"}),
+        encoding="utf-8",
+    )
+
+    assert load_sidecar_metadata(raw) == {
+        "doc_id": "22/QD-NH1",
+        "status": "expired",
+        "moj_id": "12345",
+    }
+    pipeline = LegalIngestionPipeline()
+    res = pipeline.ingest_file(raw, sync_qdrant=False, sync_neo4j=False, vector_dim=8)
+    assert res["doc_id"] == "22/QD-NH1"
+    assert res["articles_count"] == 2
+
+
+def test_ingest_directory_continues_after_failure(tmp_path, monkeypatch):
+    """One malformed file is reported with an error instead of aborting the batch."""
+    (tmp_path / "a_bad.html").write_text("<p>x</p>", encoding="utf-8")
+    (tmp_path / "b_good.txt").write_text(SAMPLE_TEXT, encoding="utf-8")
+    pipeline = LegalIngestionPipeline()
+    real_ingest = pipeline.ingest_file
+
+    def flaky_ingest(file_path, **kwargs):
+        if Path(file_path).name == "a_bad.html":
+            raise ValueError("boom")
+        return real_ingest(file_path, vector_dim=8, **kwargs)
+
+    monkeypatch.setattr(pipeline, "ingest_file", flaky_ingest)
+    results = pipeline.ingest_directory(
+        tmp_path, sync_qdrant=False, sync_neo4j=False, enable_llm_fallback=False
+    )
+
+    assert results[0] == {"file": "a_bad.html", "error": "ValueError: boom"}
+    assert results[1]["doc_id"] == "999/2025/ND-CP"
+
+
+ROMAN_TEXT = """NGÂN HÀNG NHÀ NƯỚC
+Số: 01/2005/TT-NHNN
+Hà Nội, ngày 10 tháng 3 năm 2005
+THÔNG TƯ
+Hướng dẫn thi hành Nghị định số 202/2004/NĐ-CP
+I. QUY ĐỊNH CHUNG
+1. Tình tiết giảm nhẹ
+1.1. Người có thẩm quyền xử phạt xem xét tình tiết.
+1.2. Vi phạm nhiều lần trong cùng lĩnh vực.
+2. Thẩm quyền xử phạt
+Chỉ những người có thẩm quyền mới được xử phạt.
+II. THỦ TỤC XỬ PHẠT
+Người có thẩm quyền phải thực hiện đúng thủ tục.
+"""
+
+
+def test_parse_roman_section_circular():
+    """Legacy circulars without Điều are split by Roman sections; 1.1. stays inside 1."""
+    doc = parse_legal_document(ROMAN_TEXT)
+
+    assert [a.article_number for a in doc.articles] == ["I", "II"]
+    first = doc.articles[0]
+    assert first.article_id == "01/2005/TT-NHNN:Article_I"
+    assert [c.clause_number for c in first.clauses] == ["1", "2"]
+    assert "1.2. Vi phạm nhiều lần" in first.clauses[0].content
+    assert doc.articles[1].clauses[0].clause_id == "01/2005/TT-NHNN:Article_II:Clause_1"
+
+
+DECISION_WITH_REGULATION = """NGÂN HÀNG NHÀ NƯỚC VIỆT NAM
+Số: 01/2008/QĐ-NHNN
+Hà Nội, ngày 03 tháng 01 năm 2008
+QUYẾT ĐỊNH
+Ban hành Quy chế cho vay
+Điều 1. Ban hành kèm theo Quyết định này Quy chế cho vay.
+Điều 2. Quyết định này có hiệu lực sau 15 ngày kể từ ngày đăng Công báo.
+QUY CHẾ CHO VAY
+Điều 1. Phạm vi điều chỉnh
+1. Quy chế này quy định việc cho vay.
+2. Đối tượng là tổ chức tín dụng.
+Điều 2. Giải thích từ ngữ
+Trong Quy chế này các từ ngữ được hiểu như sau.
+"""
+
+
+def test_repeated_article_numbers_get_unique_ids():
+    """Decision + attached Regulation restart at Điều 1; ids must not collide."""
+    doc = parse_legal_document(DECISION_WITH_REGULATION)
+
+    ids = [a.article_id for a in doc.articles]
+    assert ids == [
+        "01/2008/QD-NHNN:Article_1",
+        "01/2008/QD-NHNN:Article_2",
+        "01/2008/QD-NHNN:Article_1_2",
+        "01/2008/QD-NHNN:Article_2_2",
+    ]
+    assert doc.articles[2].article_number == "1"
+    assert doc.articles[2].clauses[1].clause_id == "01/2008/QD-NHNN:Article_1_2:Clause_2"
+    all_clause_ids = [c.clause_id for a in doc.articles for c in a.clauses]
+    assert len(all_clause_ids) == len(set(all_clause_ids))
+
+
+def test_parse_slash_sections_and_item_only_circulars():
+    """``I/`` and ``1/`` numbering parse like ``I.``; item-only texts become article 0."""
+    slash = "Số: 01/2001/TT-NHNN\nTHÔNG TƯ\nI/ ĐỐI TƯỢNG ÁP DỤNG\n1/ Doanh nghiệp.\n2/ Ngoại trừ.\nII.\nMỞ TÀI KHOẢN\n3/ Mở tài khoản.\n"
+    doc = parse_legal_document(slash)
+    assert [(a.article_number, a.title) for a in doc.articles] == [
+        ("I", "ĐỐI TƯỢNG ÁP DỤNG"),
+        ("II", "MỞ TÀI KHOẢN"),
+    ]
+    assert [c.clause_number for c in doc.articles[0].clauses] == ["1", "2"]
+
+    items = "Số: 01/2007/TT-NHNN\nTHÔNG TƯ\nCăn cứ Luật.\n1. Mức phí giao dịch.\n2. Hiệu lực thi hành.\n"
+    doc = parse_legal_document(items)
+    assert [a.article_number for a in doc.articles] == ["0"]
+    assert [c.clause_number for c in doc.articles[0].clauses] == ["1", "2"]
+    assert "Căn cứ" not in doc.articles[0].content
+
+
+def test_inbound_relations_become_supersedes_edges():
+    """MoJ "Bị thay thế bởi X" on a document yields X -> doc, not a metadata property."""
+    doc, refs = parse_html_document(LEGACY_HTML)
+    meta = {
+        "doc_id": "22/QD-NH1",
+        "status": "expired",
+        "revoked_by": "01/2014/ND-CP",
+        "revoked_date": "2014-02-20",
+        "inbound_relations": [
+            {"source_doc_id": "01/2014/ND-CP", "rel_type": "SUPERSEDES", "scope": "bị thay thế"},
+            {"source_doc_id": "22/QD-NH1", "rel_type": "SUPERSEDES"},
+        ],
+    }
+    doc, refs = apply_authoritative_metadata(doc, refs, meta)
+
+    assert "inbound_relations" not in doc.metadata
+    assert doc.metadata["revoked_by"] == "01/2014/ND-CP"
+    inbound = [r for r in refs if r.target_doc_id == "22/QD-NH1" and r.rel_type == "SUPERSEDES"]
+    assert len(inbound) == 1  # the self-reference is dropped
+    assert inbound[0].source_doc_id == "01/2014/ND-CP"
+    assert inbound[0].target_article_id is None
+    assert inbound[0].effective_date == "2014-02-20"
