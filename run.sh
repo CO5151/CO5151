@@ -41,6 +41,10 @@ elif [ -d "venv" ]; then
     source venv/bin/activate
 fi
 
+has_embeddings() {
+    python3 -c "import sentence_transformers" &> /dev/null
+}
+
 # Dispatch based on action argument
 case "$ACTION" in
     setup)
@@ -53,6 +57,11 @@ case "$ACTION" in
         ;;
     ingest)
         shift
+        if ! has_embeddings; then
+            # Without the encoder every chunk is stored with a zero vector.
+            echo "[!] Error: sentence-transformers is not installed. Run: make install-embeddings"
+            exit 1
+        fi
         echo "[+] Running document ingestion..."
         if [ $# -eq 0 ]; then
             python3 -m src.knowledge.ingestion --dir "data/raw"
@@ -65,6 +74,10 @@ case "$ACTION" in
         fi
         ;;
     ui)
+        if ! has_embeddings; then
+            echo "[!] Warning: sentence-transformers missing; dense retrieval falls back to the catalog."
+            echo "    Install with: make install-embeddings"
+        fi
         echo "[+] Starting LegalPilot-VN Web UI..."
         streamlit run src/ui/app.py
         ;;
