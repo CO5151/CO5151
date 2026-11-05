@@ -15,20 +15,86 @@ from src.agents.base import ADKAgent
 from src.core.logger import logger
 
 # ---------------------------------------------------------------------------
-# Retrieval backends, in priority order:
-#   1. Neo4j legal knowledge graph (live Cypher)  <- primary
-#   2. Dense cosine search over the exported chunk index
-#   3. Hand-written STATUTE_CATALOG (deterministic offline fallback)
-# The JSON exports are only used when the graph database is unreachable, so a
-# demo never breaks just because the container is down.
+# Retrieval backends:
+#   1. Dense (default): live Qdrant collection, in-force provisions ranked first;
+#      Neo4j lexical Cypher only when Qdrant returns nothing (BENCH_RETRIEVER
+#      pins dense / neo4j / hybrid RRF for benchmarks)
+#   2. Hand-written STATUTE_CATALOG (deterministic offline fallback)
+#   3. Dense search over the exported chunk index
+# The JSON exports are only used when the databases are unreachable, so a
+# demo never breaks just because the containers are down.
 # ---------------------------------------------------------------------------
 _CHUNK_EXPORT = Path("data/processed/qdrant_chunks_export.json")
 _GRAPH_EXPORT = Path("data/processed/neo4j_graph_export.json")
 _EMBEDDER_NAME = "bkai-foundation-models/vietnamese-bi-encoder"
+_RRF_K = 60
 
 _DENSE_INDEX: dict[str, tuple[Any, Any, list[dict[str, Any]]]] = {}
 _GRAPH_STATUS: dict[str, dict[str, Any]] = {}
 _NEO4J_HANDLE: dict[str, Any] = {}
+_QDRANT_HANDLE: dict[str, Any] = {}
+_EMBEDDER: dict[str, Any] = {}
+
+
+def _get_embedder() -> Any | None:
+    """Loads the Vietnamese bi-encoder once per process (None if unavailable)."""
+    if "model" not in _EMBEDDER:
+        try:
+            from sentence_transformers import SentenceTransformer
+
+            _EMBEDDER["model"] = SentenceTransformer(_EMBEDDER_NAME)
+        except Exception as e:  # package missing (install the [embeddings] extra) or no model
+            logger.warning("LawGraphAgent: embedder unavailable: %s", e)
+            _EMBEDDER["model"] = None
+    return _EMBEDDER["model"]
+
+
+def _get_qdrant_manager() -> Any | None:
+    """Returns a QdrantClientManager for a non-empty collection, or None.
+
+    Probed once per process like the Neo4j handle.
+    """
+    if "manager" in _QDRANT_HANDLE:
+        return _QDRANT_HANDLE["manager"]
+    manager = None
+    try:
+        from src.knowledge.qdrant_client import QdrantClientManager
+
+        candidate = QdrantClientManager()
+        if candidate.health_check() and candidate.get_collection_stats().get("points_count"):
+            manager = candidate
+            logger.info("LawGraphAgent: Qdrant collection '%s' ready.", candidate.collection_name)
+    except Exception as e:
+        logger.warning("LawGraphAgent: Qdrant unavailable (%s).", e)
+    _QDRANT_HANDLE["manager"] = manager
+    return manager
+
+
+def _item_key(item: dict[str, Any]) -> str:
+    """Article-level identity; article_id keeps repeated numbers (Article_1_2) apart."""
+    return str(item.get("article_id") or f"{item.get('doc_id')}:{item.get('article')}")
+
+
+def _fuse_ranked(ranked_lists: list[list[dict[str, Any]]], limit: int) -> list[dict[str, Any]]:
+    """Reciprocal Rank Fusion, then a stable in-force-first ordering.
+
+    Expired or not-yet-effective provisions are kept after the active ones so the
+    Claim Auditor can still flag them when nothing better exists.
+    """
+    from src.core.statute_status import is_active_status
+
+    scores: dict[str, float] = {}
+    items: dict[str, dict[str, Any]] = {}
+    for ranked in ranked_lists:
+        for rank, item in enumerate(ranked):
+            key = _item_key(item)
+            scores[key] = scores.get(key, 0.0) + 1.0 / (_RRF_K + rank + 1)
+            items.setdefault(key, item)
+    ordered = sorted(scores, key=lambda k: -scores[k])
+    ordered.sort(
+        key=lambda k: not is_active_status(items[k].get("status"), items[k].get("revoked_by"))
+    )
+    return [{**items[k], "fused_score": round(scores[k], 5)} for k in ordered[:limit]]
 
 
 def _get_neo4j_client() -> Any | None:
@@ -76,14 +142,15 @@ def _load_dense_index() -> tuple[Any, Any, list[dict[str, Any]]]:
         import json
 
         import numpy as np
-        from sentence_transformers import SentenceTransformer
 
         if not _CHUNK_EXPORT.exists():
             raise FileNotFoundError(str(_CHUNK_EXPORT))
+        model = _get_embedder()
+        if model is None:
+            raise RuntimeError("embedder unavailable")
         chunks = json.loads(_CHUNK_EXPORT.read_text(encoding="utf-8"))
         matrix = np.asarray([c["vector"] for c in chunks], dtype="float32")
         matrix /= np.linalg.norm(matrix, axis=1, keepdims=True) + 1e-9
-        model = SentenceTransformer(_EMBEDDER_NAME)
         _DENSE_INDEX["index"] = (model, matrix, chunks)
         logger.info("LawGraphAgent: dense chunk index ready (%d chunks).", len(chunks))
     except Exception as e:
@@ -344,6 +411,7 @@ class LawGraphAgent(ADKAgent):
         WITH d, a, (distinct_matches * 10) + term_freq + (phrase_matches * 25) AS score
         WHERE score > 0
         RETURN d.doc_id AS doc_id,
+               a.article_id AS article_id,
                coalesce(d.title, '') AS title,
                coalesce(d.status, 'unknown') AS status,
                coalesce(d.effective_date, '') AS effective_date,
@@ -367,13 +435,14 @@ class LawGraphAgent(ADKAgent):
         hits: list[dict[str, Any]] = []
         seen: set[str] = set()
         for row in rows:
-            key = f"{row.get('doc_id')}:{row.get('article')}"
+            key = row.get("article_id") or f"{row.get('doc_id')}:{row.get('article')}"
             if key in seen:
                 continue
             seen.add(key)
             hits.append(
                 {
                     "doc_id": row.get("doc_id", "UNKNOWN"),
+                    "article_id": row.get("article_id"),
                     "title": row.get("title", ""),
                     "status": row.get("status", "unknown"),
                     "effective_date": row.get("effective_date", ""),
@@ -390,14 +459,70 @@ class LawGraphAgent(ADKAgent):
         logger.info("LawGraphAgent: Neo4j returned %d clause hits.", len(hits))
         return hits
 
+    def qdrant_retrieve(self, query: str, top_k: int = 6) -> list[dict[str, Any]]:
+        """Embedding search over the live Qdrant collection, one hit per article.
+
+        Clauses of the same article are collapsed onto the best-scoring one, so
+        the collection is over-fetched before de-duplication. Returns [] when
+        Qdrant or the embedder is unavailable so callers can fall back.
+        """
+        manager = _get_qdrant_manager()
+        model = _get_embedder() if manager is not None else None
+        if manager is None or model is None or not query.strip():
+            return []
+        try:
+            vector = [float(x) for x in model.encode(query, normalize_embeddings=True)]
+            rows = manager.search(vector, limit=max(1, top_k) * 4, status_filter=None)
+        except Exception as e:
+            logger.warning("LawGraphAgent: Qdrant search failed: %s", e)
+            return []
+
+        status_map = _load_graph_status()
+        hits: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for row in rows:
+            payload = row.get("payload") or {}
+            doc_id = payload.get("doc_id", "UNKNOWN")
+            article_number = str(payload.get("article_number", "")).strip()
+            article_id = payload.get("article_id") or f"{doc_id}:Article_{article_number}"
+            if article_id in seen:
+                continue
+            seen.add(article_id)
+            truth = status_map.get(doc_id, {})
+            hits.append(
+                {
+                    "doc_id": doc_id,
+                    "article_id": article_id,
+                    "title": payload.get("title") or truth.get("title") or "",
+                    "status": truth.get("status") or payload.get("status", "unknown"),
+                    "effective_date": payload.get("effective_date", ""),
+                    "article": f"Điều {article_number}" if article_number else "",
+                    "article_title": payload.get("title", ""),
+                    "content": payload.get("text", ""),
+                    "supersedes": [],
+                    "revoked_by": truth.get("revoked_by"),
+                    "superseded_by": truth.get("superseded_by"),
+                    "eff_status_code": truth.get("eff_status_code"),
+                    "eff_to": truth.get("eff_to"),
+                    "score": round(float(row.get("score", 0.0)), 4),
+                }
+            )
+            if len(hits) >= top_k:
+                break
+        logger.info("LawGraphAgent: Qdrant returned %d article hits.", len(hits))
+        return hits
+
     def dense_retrieve(self, query: str, top_k: int = 6) -> list[dict[str, Any]]:
-        """Embedding search over the exported chunk index.
+        """Embedding search: live Qdrant first, else the exported chunk index.
 
         Returns clause dicts in the same shape as the static catalog so the
         Claim Auditor and Drafter can consume them unchanged.
         """
         if not query.strip():
             return []
+        live_hits = self.qdrant_retrieve(query, top_k=top_k)
+        if live_hits:
+            return live_hits
         model, matrix, chunks = _load_dense_index()
         if model is None or matrix is None or not chunks:
             return []
@@ -448,13 +573,19 @@ class LawGraphAgent(ADKAgent):
     ) -> list[dict[str, Any]]:
         """Retrieves relevant legal articles based on subgoals + keyword matches."""
         # BENCH_RETRIEVER lets a benchmark pin the retriever across architectures:
-        #   neo4j (default) -> Cypher lexical search over the graph
-        #   dense           -> bi-encoder vector search over the exported chunks
+        #   (unset)  -> live Qdrant dense; Neo4j lexical only if Qdrant gives nothing
+        #   dense    -> bi-encoder vector search only (Qdrant, else export)
+        #   neo4j    -> Cypher lexical search over the graph only
+        #   hybrid   -> both, Reciprocal Rank Fusion
         # Without this the ADK arm uses a different retriever than the LangGraph
         # harness, so any metric gap mixes architecture with retrieval.
+        # On the 1,627-document SBV corpus (scripts/eval_retrieval_hit.py), dense
+        # reached 93% doc Hit@10 in ~30 ms with the 90 leaked testset chunks
+        # excluded; lexical scored 0% (unbounded term frequency favours long
+        # articles) and only lowered hybrid.
         forced = os.getenv("BENCH_RETRIEVER", "").lower()
-        if forced == "dense":
-            use_neo4j = False
+        use_vector = use_dense and forced in ("", "dense", "hybrid")
+        use_lexical = use_neo4j and forced in ("", "neo4j", "hybrid")
         logger.info(f"LawGraphAgent: Retrieving provisions for subgoals: {subgoals}")
         results: list[dict[str, Any]] = []
         seen_keys: set[str] = set()
@@ -464,13 +595,18 @@ class LawGraphAgent(ADKAgent):
         # are paraphrases and lose it.
         retrieval_texts = ([query] if query else []) + list(subgoals)
 
-        # Pass 1 (primary): read clauses + validity straight from the Neo4j graph.
-        if use_neo4j:
-            for item in self.neo4j_retrieve(retrieval_texts, keywords, top_k=dense_top_k):
-                item_key = f"{item['doc_id']}:{item['article']}"
-                if item_key not in seen_keys:
-                    seen_keys.add(item_key)
-                    results.append(item)
+        # Pass 1 (primary): live Qdrant dense and/or Neo4j lexical, in-force first.
+        # Dense is over-fetched 2x so in-force ordering can push repealed earlier
+        # versions (semantically near-identical) out of the top-k.
+        ranked: list[list[dict[str, Any]]] = []
+        if use_vector:
+            dense_text = query or " ".join(subgoals)
+            ranked.append(self.qdrant_retrieve(dense_text, top_k=dense_top_k * 2))
+        if use_lexical and (forced in ("neo4j", "hybrid") or not any(ranked)):
+            ranked.append(self.neo4j_retrieve(retrieval_texts, keywords, top_k=dense_top_k))
+        for item in _fuse_ranked([r for r in ranked if r], dense_top_k):
+            seen_keys.add(_item_key(item))
+            results.append(item)
 
         # Pass 2 (fallback): hand-written catalog, only when the graph gave nothing.
         # Skipped when a benchmark pins the retriever, otherwise the 6-document
@@ -506,7 +642,7 @@ class LawGraphAgent(ADKAgent):
         if use_dense and not results:
             query_text = " ".join(retrieval_texts + keywords).strip() or " ".join(subgoals)
             for item in self.dense_retrieve(query_text, top_k=dense_top_k):
-                item_key = f"{item['doc_id']}:{item['article']}"
+                item_key = _item_key(item)
                 if item_key not in seen_keys:
                     seen_keys.add(item_key)
                     results.append(item)
@@ -515,7 +651,7 @@ class LawGraphAgent(ADKAgent):
         if (self.use_live_db or force_live_db) or not results:
             live_results = self._retrieve_from_live_graph(subgoals, keywords, reference_date)
             for item in live_results:
-                item_key = f"{item['doc_id']}:{item['article']}"
+                item_key = _item_key(item)
                 if item_key not in seen_keys:
                     seen_keys.add(item_key)
                     results.append(item)

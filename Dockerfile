@@ -7,8 +7,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY requirements.txt requirements-embeddings.txt ./
 RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Optional dense-embedding stack (adds torch, ~1-2 GB):
+#   docker build --build-arg INSTALL_EMBEDDINGS=true .
+ARG INSTALL_EMBEDDINGS=false
+RUN if [ "$INSTALL_EMBEDDINGS" = "true" ]; then \
+      pip install --no-cache-dir --user -r requirements-embeddings.txt; \
+    fi
 
 FROM python:3.14-slim AS runner
 

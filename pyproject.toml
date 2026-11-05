@@ -51,10 +51,16 @@ dependencies = [
     "beautifulsoup4>=4.12.3",
     "python-docx>=1.1.2",
     "rich>=13.8.0",
-    "streamlit>=1.38.0"
+    "streamlit>=1.38.0",
+    "truststore>=0.10.0"
 ]
 
 [project.optional-dependencies]
+# Real dense embeddings (Vietnamese bi-encoder) for ingestion and LawGraph dense retrieval.
+# Kept out of the core set so CI does not pull torch; tests use dummy vectors.
+embeddings = [
+    "sentence-transformers>=3"
+]
 dev = [
     "pytest>=8.3.0",
     "pytest-asyncio>=0.24.0",
@@ -120,4 +126,7 @@ minversion = "8.0"
 addopts = "-ra -q --strict-markers"
 testpaths = ["tests"]
 asyncio_mode = "auto"
+markers = [
+    "live: needs running Neo4j/Qdrant (run with LEGALPILOT_LIVE_TESTS=1)",
+]
 pythonpath = ["."]

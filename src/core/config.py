@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.core.exceptions import ConfigurationError
+from src.core.logger import get_logger
 
 
 def load_yaml_config(config_path: str | Path) -> dict[str, Any]:
@@ -122,6 +123,11 @@ class Settings(BaseSettings):
     VBPL_SEARCH_URL: str = "https://vbpl.vn/pages/vbpq-timkiem.aspx?Keyword={keyword}"
     VBPL_TARGET_QUERY: str | None = None
 
+    # Verify TLS against the OS trust store instead of certifi. Needed behind an
+    # HTTPS-inspecting proxy whose root CA lives only in the system keychain.
+    # Opt-in: it makes every HTTPS client in the process trust that proxy.
+    LEGALPILOT_USE_SYSTEM_CERTS: bool = False
+
     # Nested Typed Configs
     llm: LLMConfig = Field(default_factory=LLMConfig)
     agent_orchestration: AgentOrchestrationConfig = Field(default_factory=AgentOrchestrationConfig)
@@ -158,5 +164,31 @@ class Settings(BaseSettings):
                 pass
 
 
+def use_system_certificates(config: Settings) -> bool:
+    """Routes all TLS verification through the OS trust store when opted in.
+
+    Verification stays on; only the CA source changes (certifi -> keychain /
+    Windows store / system OpenSSL). ``truststore.inject_into_ssl`` patches the
+    ``ssl`` module process-wide, so httpx, aiohttp (LiteLLM), requests and
+    huggingface_hub all pick it up.
+
+    Returns:
+        ``True`` if the system trust store is now in use.
+    """
+    if not config.LEGALPILOT_USE_SYSTEM_CERTS:
+        return False
+    try:
+        import truststore
+    except ImportError:
+        get_logger(__name__).warning(
+            "LEGALPILOT_USE_SYSTEM_CERTS is set but 'truststore' is not installed; "
+            "TLS still uses certifi."
+        )
+        return False
+    truststore.inject_into_ssl()
+    return True
+
+
 # Global settings instance
 settings = Settings()
+use_system_certificates(settings)

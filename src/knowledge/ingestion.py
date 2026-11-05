@@ -14,6 +14,7 @@ Supports:
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 import re
 import uuid
@@ -62,6 +63,8 @@ class ParsedDocument:
     expiration_date: str | None = None
     status: str = "in_force"
     articles: list[ParsedArticle] = field(default_factory=list)
+    # Provenance from an authoritative record (moj_id, eff_status_code, source_url...).
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 # Alias for backward compatibility / semantic naming
@@ -169,7 +172,7 @@ def parse_legal_document(
 
     # 7. Extract Articles (Điều)
     article_pattern = re.compile(
-        r"(?:^|\n)(Điều\s+(\d+)\.\s*([^\n]*))\n([\s\S]*?)(?=(?:\nĐiều\s+\d+\.|\Z))",
+        r"(?:^|\n)(Điều\s+(\d+)\.\s*([^\n]*))\n?([\s\S]*?)(?=^Điều\s+\d+\.|\Z)",
         re.MULTILINE,
     )
 
@@ -212,6 +215,9 @@ def parse_legal_document(
             )
         )
 
+    if not parsed_articles:
+        parsed_articles = split_roman_sections(doc_id, text)
+
     return ParsedDocument(
         doc_id=doc_id,
         title=title,
@@ -220,8 +226,91 @@ def parse_legal_document(
         issue_date=issue_date,
         effective_date=effective_date,
         status="in_force",
-        articles=parsed_articles,
+        articles=disambiguate_ids(parsed_articles),
     )
+
+
+_ROMAN_HEADING = re.compile(r"^([IVXL]{1,6})\s*[./]\s*(.*)$")
+_TOP_LEVEL_ITEM = re.compile(r"(?:^|\n)(\d+)[./](?!\d)\s*([\s\S]*?)(?=\n\d+[./](?!\d)|\Z)")
+_FIRST_ITEM = re.compile(r"^1[./](?!\d)\s*\S", re.MULTILINE)
+
+#: Article number used when a document has numbered items but no sections at all.
+WHOLE_TEXT_ARTICLE = "0"
+
+
+def split_roman_sections(doc_id: str, text: str) -> list[ParsedArticle]:
+    """Splits pre-2010 SBV circulars that use Roman sections (I., II/) instead of Điều.
+
+    Each section becomes an article numbered by its numeral; top-level items
+    (``1.``, ``2/``, but not ``1.1.``) become clauses. Short circulars with only
+    numbered items become a single article ``0`` so they still yield chunks.
+    """
+    lines = [raw.strip() for raw in text.split("\n") if raw.strip()]
+    sections: list[tuple[str, str, list[str]]] = []
+    for line in lines:
+        match = _ROMAN_HEADING.match(line)
+        if match:
+            sections.append((match.group(1), match.group(2).strip(), []))
+        elif sections:
+            if not sections[-1][1]:
+                # Heading text wrapped onto the line after the bare numeral.
+                numeral, _, body = sections[-1]
+                sections[-1] = (numeral, line, body)
+            else:
+                sections[-1][2].append(line)
+    if not sections or sections[0][0] != "I":
+        body_text = "\n".join(lines)
+        first = _FIRST_ITEM.search(body_text)
+        if not first:
+            return []
+        sections = [(WHOLE_TEXT_ARTICLE, "", body_text[first.start() :].split("\n"))]
+
+    articles: list[ParsedArticle] = []
+    for numeral, heading, body in sections:
+        article_id = f"{doc_id}:Article_{numeral}"
+        content = "\n".join(body).strip()
+        items = list(_TOP_LEVEL_ITEM.finditer(content))
+        clauses = [
+            ParsedClause(
+                clause_id=f"{article_id}:Clause_{m.group(1)}",
+                clause_number=m.group(1),
+                content=m.group(2).strip(),
+            )
+            for m in items
+        ] or [ParsedClause(clause_id=f"{article_id}:Clause_1", clause_number="1", content=content)]
+        articles.append(
+            ParsedArticle(
+                article_id=article_id,
+                article_number=numeral,
+                title=heading,
+                content=content,
+                clauses=clauses,
+            )
+        )
+    return articles
+
+
+def disambiguate_ids(articles: list[ParsedArticle]) -> list[ParsedArticle]:
+    """Makes repeated Article / Clause numbers unique within one document.
+
+    A Decision that promulgates a Regulation restarts at Điều 1, and nested lists
+    restart clause numbering. Identical ids would be MERGEd into one node in Neo4j
+    and silently overwrite each other, so the k-th repeat gets an ``_k`` suffix.
+    """
+    seen_articles: collections.Counter[str] = collections.Counter()
+    for art in articles:
+        seen_articles[art.article_id] += 1
+        if seen_articles[art.article_id] > 1:
+            old_id = art.article_id
+            art.article_id = f"{old_id}_{seen_articles[old_id]}"
+            for clause in art.clauses:
+                clause.clause_id = _rekey(clause.clause_id, old_id, art.article_id) or ""
+        seen_clauses: collections.Counter[str] = collections.Counter()
+        for clause in art.clauses:
+            seen_clauses[clause.clause_id] += 1
+            if seen_clauses[clause.clause_id] > 1:
+                clause.clause_id = f"{clause.clause_id}_{seen_clauses[clause.clause_id]}"
+    return articles
 
 
 def parse_html_document(
@@ -376,7 +465,7 @@ def parse_html_document(
             issue_date=issue_date,
             effective_date=effective_date,
             status="in_force",
-            articles=parsed_articles,
+            articles=disambiguate_ids(parsed_articles),
         )
 
     # 3. Extract Hyperlinks for Cross-References
@@ -403,6 +492,96 @@ def parse_html_document(
     ]
 
     return parsed_doc, all_refs
+
+
+#: Sidecar keys that map onto ParsedDocument attributes; the rest become provenance.
+_AUTHORITATIVE_FIELDS = (
+    "title",
+    "doc_type",
+    "issuer",
+    "issue_date",
+    "effective_date",
+    "expiration_date",
+    "status",
+)
+
+
+def load_sidecar_metadata(path: Path) -> dict[str, Any] | None:
+    """Returns the ``<stem>.meta.json`` record stored next to a raw document, if any."""
+    sidecar = path.with_name(f"{path.stem}.meta.json")
+    if not sidecar.exists():
+        return None
+    try:
+        data = json.loads(sidecar.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise KnowledgeBaseError(f"Invalid metadata sidecar {sidecar}: {e}") from e
+    return data if isinstance(data, dict) else None
+
+
+def _rekey(value: str | None, old_id: str, new_id: str) -> str | None:
+    if value is None:
+        return None
+    if value == old_id:
+        return new_id
+    if value.startswith(f"{old_id}:"):
+        return new_id + value[len(old_id) :]
+    return value
+
+
+def apply_authoritative_metadata(
+    doc: ParsedDocument,
+    cross_refs: list[LegalCrossReference],
+    meta: dict[str, Any],
+) -> tuple[ParsedDocument, list[LegalCrossReference]]:
+    """Overrides regex-derived metadata with an authoritative record (e.g. MoJ gateway).
+
+    Text heuristics cannot read legacy numbers without a year (``22/QĐ-NH1``) and
+    fall back to ``UNKNOWN/DOC``, which would make Article/Clause ids collide across
+    documents. When the record carries a ``doc_id``, every id derived from the
+    parsed one is re-keyed so the hierarchy stays unique.
+    """
+    old_id, new_id = doc.doc_id, meta.get("doc_id") or doc.doc_id
+    if new_id != old_id:
+        doc.doc_id = new_id
+        for art in doc.articles:
+            art.article_id = _rekey(art.article_id, old_id, new_id) or art.article_id
+            for clause in art.clauses:
+                clause.clause_id = _rekey(clause.clause_id, old_id, new_id) or clause.clause_id
+        for ref in cross_refs:
+            ref.source_doc_id = _rekey(ref.source_doc_id, old_id, new_id) or ref.source_doc_id
+            ref.source_article_id = _rekey(ref.source_article_id, old_id, new_id)
+            ref.target_doc_id = _rekey(ref.target_doc_id, old_id, new_id) or ref.target_doc_id
+            ref.target_article_id = _rekey(ref.target_article_id, old_id, new_id)
+
+    for key in _AUTHORITATIVE_FIELDS:
+        if key == "expiration_date" and key in meta:
+            doc.expiration_date = meta[key]
+        elif meta.get(key):
+            setattr(doc, key, meta[key])
+    doc.metadata = {
+        k: v
+        for k, v in meta.items()
+        if k not in (*_AUTHORITATIVE_FIELDS, "doc_id", "inbound_relations") and v is not None
+    }
+    # A document never refers to itself at document level.
+    cross_refs = [
+        r for r in cross_refs if not (r.target_doc_id == doc.doc_id and not r.target_article_id)
+    ]
+    # Relations recorded on *this* document by the authority (e.g. "Bị thay thế bởi X")
+    # point inwards: X -> doc. The repealing text may sit outside the corpus.
+    for rel in meta.get("inbound_relations") or []:
+        source = rel.get("source_doc_id")
+        if source and source != doc.doc_id:
+            cross_refs.append(
+                LegalCrossReference(
+                    source_doc_id=source,
+                    target_doc_id=doc.doc_id,
+                    rel_type=rel.get("rel_type", "SUPERSEDES"),
+                    scope=rel.get("scope"),
+                    effective_date=meta.get("revoked_date") or meta.get("expiration_date"),
+                )
+            )
+    return doc, cross_refs
 
 
 def llm_fallback_parse_document(
@@ -737,56 +916,60 @@ def generate_legal_chunks(
     '[Document Type Doc_ID - Title] [Article num: Title] [Clause num]: Content'
     """
     chunks: list[dict[str, Any]] = []
+    pairs = [(article, clause) for article in doc.articles for clause in article.clauses]
+    texts = [
+        f"[{doc.doc_type} {doc.doc_id} - {doc.title}] [Điều {article.article_number}: {article.title}]"
+        f" [Khoản {clause.clause_number}]: {clause.content}"
+        for article, clause in pairs
+    ]
 
-    for article in doc.articles:
-        for clause in article.clauses:
-            chunk_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, clause.clause_id))
-            context_header = f"[{doc.doc_type} {doc.doc_id} - {doc.title}] [Điều {article.article_number}: {article.title}]"
-            full_chunk_text = f"{context_header} [Khoản {clause.clause_number}]: {clause.content}"
+    # If a custom test dimension is explicitly provided (not default 768), generate dummy vectors
+    vectors: list[list[float]]
+    if dummy_vector_dim is not None and dummy_vector_dim != 768:
+        vectors = [[0.0] * dummy_vector_dim for _ in texts]
+    elif not texts:
+        vectors = []
+    else:
+        # Compute real dense embeddings with the Vietnamese bi-encoder, one batch per document
+        try:
+            from sentence_transformers import SentenceTransformer
 
-            # If a custom test dimension is explicitly provided (not default 768), generate dummy vector
-            if dummy_vector_dim is not None and dummy_vector_dim != 768:
-                vector = [0.0] * dummy_vector_dim
-            else:
-                # Compute real dense embedding vector using Vietnamese bi-encoder model
-                try:
-                    from sentence_transformers import SentenceTransformer
+            _global_embedder = getattr(generate_legal_chunks, "_embedder", None)
+            if _global_embedder is None:
+                _global_embedder = SentenceTransformer(
+                    "bkai-foundation-models/vietnamese-bi-encoder"
+                )
+                generate_legal_chunks._embedder = _global_embedder  # type: ignore[attr-defined]
+            encoded = _global_embedder.encode(texts, batch_size=32, normalize_embeddings=True)
+            vectors = [[float(x) for x in row] for row in encoded]
+        except Exception as e:
+            logger.warning("Embedding failed for %s, using zero vectors: %s", doc.doc_id, e)
+            vectors = [[0.0] * 768 for _ in texts]
 
-                    _global_embedder = getattr(generate_legal_chunks, "_embedder", None)
-                    if _global_embedder is None:
-                        _global_embedder = SentenceTransformer(
-                            "bkai-foundation-models/vietnamese-bi-encoder"
-                        )
-                        generate_legal_chunks._embedder = _global_embedder  # type: ignore[attr-defined]
-                    vector = [
-                        float(x)
-                        for x in _global_embedder.encode(full_chunk_text, normalize_embeddings=True)
-                    ]
-                except Exception:
-                    vector = [0.0] * 768
-
-            chunks.append(
-                {
-                    "id": chunk_id,
-                    "vector": vector,
+    for (article, clause), full_chunk_text, vector in zip(pairs, texts, vectors, strict=True):
+        chunk_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, clause.clause_id))
+        chunks.append(
+            {
+                "id": chunk_id,
+                "vector": vector,
+                "text": full_chunk_text,
+                "payload": {
+                    "doc_id": doc.doc_id,
+                    "article_id": article.article_id,
+                    "clause_id": clause.clause_id,
+                    "article_number": article.article_number,
+                    "clause_number": clause.clause_number,
+                    "doc_type": doc.doc_type,
+                    "issuer": doc.issuer,
+                    "title": doc.title,
+                    "status": doc.status,
+                    "effective_date": doc.effective_date,
+                    "expiration_date": doc.expiration_date,
                     "text": full_chunk_text,
-                    "payload": {
-                        "doc_id": doc.doc_id,
-                        "article_id": article.article_id,
-                        "clause_id": clause.clause_id,
-                        "article_number": article.article_number,
-                        "clause_number": clause.clause_number,
-                        "doc_type": doc.doc_type,
-                        "issuer": doc.issuer,
-                        "title": doc.title,
-                        "status": doc.status,
-                        "effective_date": doc.effective_date,
-                        "expiration_date": doc.expiration_date,
-                        "text": full_chunk_text,
-                        "raw_clause": clause.content,
-                    },
-                }
-            )
+                    "raw_clause": clause.content,
+                },
+            }
+        )
 
     return chunks
 
@@ -818,12 +1001,13 @@ class LegalIngestionPipeline:
 
         logger.info("Starting ingestion of: %s", path.name)
         text = path.read_text(encoding="utf-8")
+        sidecar = load_sidecar_metadata(path)
 
         # 1. Parse document hierarchy (HTML DOM vs Regex vs LLM)
         if path.suffix.lower() in (".html", ".htm"):
-            parsed_doc, cross_refs = parse_html_document(text)
+            parsed_doc, cross_refs = parse_html_document(text, default_metadata=sidecar)
         else:
-            parsed_doc = parse_legal_document(text)
+            parsed_doc = parse_legal_document(text, default_metadata=sidecar)
             cross_refs = extract_cross_references(parsed_doc, text)
 
         # 2. Trigger LLM fallback if regex/HTML produced 0 articles
@@ -833,6 +1017,9 @@ class LegalIngestionPipeline:
             if llm_doc and llm_doc.articles:
                 parsed_doc = llm_doc
                 cross_refs = extract_cross_references(parsed_doc, text)
+
+        if sidecar:
+            parsed_doc, cross_refs = apply_authoritative_metadata(parsed_doc, cross_refs, sidecar)
 
         logger.info(
             "Parsed %s: %d articles found, %d cross-references",
@@ -882,6 +1069,7 @@ class LegalIngestionPipeline:
                 "issue_date": doc.issue_date,
                 "effective_date": doc.effective_date,
                 "status": doc.status,
+                **doc.metadata,
                 "articles": [
                     {
                         "article": f"Điều {art.article_number}",
@@ -932,7 +1120,13 @@ class LegalIngestionPipeline:
             effective_date=doc.effective_date,
             expiration_date=doc.expiration_date,
             status=doc.status,
+            source_url=doc.metadata.get("source_url"),
         )
+        if doc.metadata:
+            self.neo4j_client.execute_query(
+                "MATCH (d:Document {doc_id: $doc_id}) SET d += $props",
+                {"doc_id": doc.doc_id, "props": doc.metadata},
+            )
 
         # Upsert Articles and Clauses
         for art in doc.articles:
@@ -1024,9 +1218,11 @@ class LegalIngestionPipeline:
                             },
                         )
                     else:
-                        # Whole-document repeal
+                        # Whole-document repeal. Inferred from text, so it never
+                        # overrides a status that came from an authoritative record.
                         self.neo4j_client.execute_query(
                             "MATCH (d:Document {doc_id: $target}) "
+                            "WHERE d.status_source IS NULL "
                             "SET d.status = 'expired', "
                             "    d.revoked_by = $source, "
                             "    d.revoked_date = $date",
@@ -1079,18 +1275,27 @@ class LegalIngestionPipeline:
         sync_neo4j: bool = True,
         enable_llm_fallback: bool = True,
     ) -> list[dict[str, Any]]:
-        """Ingests all .txt and .html legal documents found in directory."""
+        """Ingests all .txt and .html legal documents found in directory.
+
+        A failing file is logged and reported with an ``error`` key instead of
+        aborting the batch, so one malformed document cannot stop a corpus load.
+        """
         dir_path = Path(raw_dir)
-        results = []
+        results: list[dict[str, Any]] = []
         files = sorted(list(dir_path.glob("*.txt")) + list(dir_path.glob("*.html")))
-        for file_path in files:
-            res = self.ingest_file(
-                file_path=file_path,
-                sync_qdrant=sync_qdrant,
-                sync_neo4j=sync_neo4j,
-                enable_llm_fallback=enable_llm_fallback,
-            )
+        for i, file_path in enumerate(files, 1):
+            try:
+                res = self.ingest_file(
+                    file_path=file_path,
+                    sync_qdrant=sync_qdrant,
+                    sync_neo4j=sync_neo4j,
+                    enable_llm_fallback=enable_llm_fallback,
+                )
+            except Exception as e:
+                logger.error("Ingestion failed for %s: %s", file_path.name, e)
+                res = {"file": file_path.name, "error": f"{type(e).__name__}: {e}"}
             results.append(res)
+            logger.info("Ingested %d/%d files", i, len(files))
         return results
 
 
@@ -1148,4 +1353,7 @@ if __name__ == "__main__":
             sync_neo4j=not args.no_neo4j,
             enable_llm_fallback=not args.no_llm,
         )
-        print(f"Successfully ingested {len(results)} documents from {args.dir}")
+        failed = [r for r in results if "error" in r]
+        print(f"Successfully ingested {len(results) - len(failed)} documents from {args.dir}")
+        for r in failed:
+            print(f"  FAILED {r['file']}: {r['error']}")

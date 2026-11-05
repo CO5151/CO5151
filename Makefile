@@ -1,9 +1,10 @@
-.PHONY: help install install-dev lint format typecheck test test-cov docker-up docker-down clean run-app
+.PHONY: help install install-dev install-embeddings lint format typecheck test test-cov docker-up docker-down clean run-app
 
 help:
 	@echo "LegalPilot-VN - Available Makefile Commands:"
 	@echo "  make install       Install runtime dependencies"
 	@echo "  make install-dev   Install runtime and development dependencies"
+	@echo "  make install-embeddings  Install sentence-transformers (needed to ingest / dense search)"
 	@echo "  make lint          Run ruff linter"
 	@echo "  make format        Run ruff code formatter"
 	@echo "  make typecheck     Run mypy type checker"
@@ -20,6 +21,9 @@ install:
 install-dev:
 	pip install -r requirements-dev.txt
 	pre-commit install
+
+install-embeddings:
+	pip install -r requirements-embeddings.txt
 
 lint:
 	ruff check .
