@@ -32,6 +32,7 @@ def qdrant_manager():
         qm.client.delete_collection("test_knowledge_suite")
 
 
+@pytest.mark.live
 def test_neo4j_upsert_and_retrieve(neo4j_client: Neo4jClient):
     """Tests document, article, and clause insertion and relationship creation."""
     doc_id = "TEST/152/2020/ND-CP"
@@ -86,6 +87,7 @@ def test_neo4j_upsert_and_retrieve(neo4j_client: Neo4jClient):
     )
 
 
+@pytest.mark.live
 def test_neo4j_amendment_relationship(neo4j_client: Neo4jClient):
     """Tests AMENDS relationship creation and querying."""
     doc_original = "TEST/ORIGINAL/2020"
@@ -134,6 +136,7 @@ def test_neo4j_amendment_relationship(neo4j_client: Neo4jClient):
     )
 
 
+@pytest.mark.live
 def test_neo4j_invalid_relationship_type(neo4j_client: Neo4jClient):
     """Tests that invalid relationship types are rejected with KnowledgeBaseError."""
     with pytest.raises(KnowledgeBaseError, match="Invalid relationship type"):
@@ -148,6 +151,7 @@ def test_neo4j_invalid_relationship_type(neo4j_client: Neo4jClient):
         )
 
 
+@pytest.mark.live
 def test_qdrant_vector_lifecycle(qdrant_manager: QdrantClientManager):
     """Tests chunk upsert, search with filtering, and deletion."""
     test_chunks = [

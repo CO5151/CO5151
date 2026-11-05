@@ -27,6 +27,7 @@ def setup_legal_graph():
     neo4j_client.close()
 
 
+@pytest.mark.live
 def test_temporal_pruning_future_amendment(setup_legal_graph: Neo4jClient):
     """Tests that amendments effective after the reference date are pruned."""
     engine = SelectiveTraversalEngine(neo4j_client=setup_legal_graph)
@@ -44,6 +45,7 @@ def test_temporal_pruning_future_amendment(setup_legal_graph: Neo4jClient):
     assert res.noise_reduction_ratio > 0.0
 
 
+@pytest.mark.live
 def test_temporal_amendment_resolution(setup_legal_graph: Neo4jClient):
     """Tests that active amendments override original statutory articles."""
     engine = SelectiveTraversalEngine(neo4j_client=setup_legal_graph)
@@ -61,6 +63,7 @@ def test_temporal_amendment_resolution(setup_legal_graph: Neo4jClient):
     assert any(art["amended_by"] == "70/2023/ND-CP" for art in amended_articles)
 
 
+@pytest.mark.live
 def test_markdown_synthesis(setup_legal_graph: Neo4jClient):
     """Tests that synthesized context contains headers, amendment notes, and articles."""
     engine = SelectiveTraversalEngine(neo4j_client=setup_legal_graph)
@@ -74,6 +77,7 @@ def test_markdown_synthesis(setup_legal_graph: Neo4jClient):
     assert "Governing Articles" in md
 
 
+@pytest.mark.live
 def test_missing_seed_document_raises(setup_legal_graph: Neo4jClient):
     """Tests that non-existent seed documents raise KnowledgeBaseError."""
     engine = SelectiveTraversalEngine(neo4j_client=setup_legal_graph)
@@ -95,6 +99,7 @@ def test_noise_reduction_ratio_edge_cases():
     assert res_pruned.noise_reduction_ratio == 0.4  # 2 / (3 + 2) = 0.4
 
 
+@pytest.mark.live
 def test_selective_traversal_article_level_amendment_chains(setup_legal_graph: Neo4jClient):
     """Tests that selective traversal resolves fine-grained article-level AMENDS relationships."""
     engine = SelectiveTraversalEngine(neo4j_client=setup_legal_graph)
