@@ -37,7 +37,7 @@
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{graphicx}
-\graphicspath{{S2-5/}{./}}
+\graphicspath{{S2-5/}{figures/}{./}}
 \usepackage{tcolorbox}
 
 % ---- Màu sắc nhận diện HCMUT ----
@@ -271,148 +271,126 @@
 
 % SLIDE 5: RLHF -- BA GIAI ĐOẠN
 \begin{frame}{RLHF: Ba Giai Đoạn Biến Base Model Thành Instruct Model}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ SFT $\to$ Reward Model $\to$ PPO, và vì sao cần tới con người ở đúng một chỗ}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ SFT $\to$ Reward Model $\to$ PPO (Ouyang et al., 2022)}
 
-  \centering
-  \begin{tikzpicture}[
-    box/.style={rectangle, draw=hcmutblue, fill=hcmutgray, font=\tiny\bfseries, rounded corners, minimum height=0.5cm, inner sep=3pt, align=center},
-    hum/.style={rectangle, draw=alertorange, fill=orange!12, font=\tiny, rounded corners, minimum height=0.5cm, inner sep=3pt, align=center},
-    arr/.style={-latex, thick, hcmutblue}]
-    \node[hum] (d) {Demonstrations\\(người viết)};
-    \node[box, right=0.22cm of d] (sft) {Stage 1\\SFT};
-    \node[box, right=0.22cm of sft] (pol) {$\pi^{\text{SFT}}$};
-    \node[hum, right=0.22cm of pol] (rank) {Rankings\\(người so sánh)};
-    \node[box, right=0.22cm of rank] (rm) {Stage 2\\Reward Model $r_\phi$};
-    \node[box, right=0.22cm of rm] (ppo) {Stage 3\\PPO};
-    \node[box, right=0.22cm of ppo] (out) {$\pi^{\text{RLHF}}$};
-    \draw[arr] (d) -- (sft); \draw[arr] (sft) -- (pol);
-    \draw[arr] (pol) -- (rank); \draw[arr] (rank) -- (rm);
-    \draw[arr] (rm) -- (ppo); \draw[arr] (ppo) -- (out);
-    \draw[arr, dashed, darkred] (pol.south) to[out=-90,in=-90] node[below, font=\tiny, text=darkred] {cùng prompt, 2 output $\to$ so sánh} (rm.south);
-  \end{tikzpicture}
-
-  \vspace{0.02cm}
   \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Mỗi Giai Đoạn Nhận Gì, Trả Gì}}
-        \scriptsize
-        \begin{enumerate}
-          \item \textbf{SFT:} học \emph{bắt chước} câu trả lời mẫu $\to$ dạy \emph{định dạng} và \emph{phong cách}; chưa dạy \emph{sở thích}.
-          \item \textbf{RM:} học từ \textbf{so sánh cặp} (A tốt hơn B), không phải từ điểm tuyệt đối. Đây là chỗ \textbf{con người duy nhất} xuất hiện trong vòng lặp.
-          \item \textbf{PPO:} tối ưu policy theo $r_\phi$ với \textbf{KL penalty} giữ gần $\pi^{\text{SFT}}$:
-            \[ \textstyle R(x,y) = r_\phi(x,y) - \beta \log\frac{\pi_\theta(y\mid x)}{\pi^{\text{SFT}}(y\mid x)} \]
-        \end{enumerate}
+    \begin{column}{0.50\textwidth}
+      \begin{block}{\textbf{Quy Trình 3 Giai Đoạn RLHF}}
+        \centering
+        \vspace{0.02cm}
+        \includegraphics[width=0.98\linewidth]{instructgpt_fig2_rlhf.png}\\[0.02cm]
+        {\tiny\color{gray} Nguồn: Ouyang et al. (2022), \textit{InstructGPT}, Figure 2.}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Mỗi Giai Đoạn Làm Gì}}
+        \tiny
+        \begin{enumerate}
+          \item \textbf{SFT (Step 1):} finetune GPT-3 trên câu trả lời mẫu do người viết $\to$ dạy \emph{định dạng} và \emph{phong cách}; chưa dạy \emph{sở thích}.
+          \item \textbf{RM (Step 2):} học từ \textbf{xếp hạng so sánh} ($D>C>A=B$) trên cùng một prompt để dạy hàm thưởng $r_\phi(x,y)$ --- bước đưa \textbf{sở thích con người} vào mô hình.
+          \item \textbf{PPO (Step 3):} tối ưu policy theo $r_\phi$ với \textbf{KL penalty} giữ gần $\pi^{\text{SFT}}$:\\[0.06cm]
+            \centerline{$\textstyle R(x,y) = r_\phi(x,y) - \beta \log\frac{\pi_\theta(y\mid x)}{\pi^{\text{SFT}}(y\mid x)}$}
+        \end{enumerate}
+      \end{block}
+
       \begin{alertblock}{\textbf{Kết Quả Công Bố (Ouyang et al., 2022)}}
-        \scriptsize
+        \tiny
         \begin{itemize}
           \item 175B InstructGPT được thích hơn GPT-3 \textbf{85 $\pm$ 3\%} (và hơn few-shot GPT-3 \textbf{71 $\pm$ 4\%}).
-          \item 1.3B InstructGPT \textbf{được thích hơn 175B GPT-3} --- ``to hơn'' không thay được ``đúng ý người''.
-          \item Truthfulness tăng, toxic output giảm, \textbf{regression nhỏ} trên benchmark NLP công khai.
-          \item Khoảng \textbf{40 labeler} (Upwork/ScaleAI) $+$ một nhóm labeler \emph{held-out} để kiểm tra generalization.
+          \item 1.3B InstructGPT \textbf{được thích hơn 175B GPT-3} dù nhỏ hơn $100\times$ (chi phí RLHF $<$2\% compute pretraining).
+          \item Khoảng \textbf{40 labeler} (Upwork/ScaleAI) $+$ một nhóm \emph{held-out} để kiểm tra tổng quát hoá.
         \end{itemize}
       \end{alertblock}
     \end{column}
   \end{columns}
 
-  \vspace{0.06cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Điểm Cốt Lõi Cần Nhớ}},fonttitle=\footnotesize\bfseries]
-    \scriptsize RLHF không ``dạy sự thật''; nó \textbf{dạy một mô hình xác suất về sở thích của người gán nhãn}. Toàn bộ điểm mạnh và điểm yếu của nó --- kể cả lý do Constitutional AI ra đời --- suy ra trực tiếp từ câu này.
+  \vspace{0.02cm}
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Bản Chất Của Tín Hiệu RLHF}},fonttitle=\footnotesize\bfseries]
+    \scriptsize RLHF không ``dạy sự thật''; nó \textbf{dạy một mô hình xác suất về sở thích của người gán nhãn}. Toàn bộ điểm mạnh và điểm yếu của RLHF đều suy ra trực tiếp từ đặc điểm này.
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 6: ALIGNMENT TAX & BA GIỚI HẠN
 \begin{frame}{RLHF: ``Alignment Tax'' \& Ba Giới Hạn Không Thể Vá}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Cái giá trên benchmark, và vì sao nhãn harm của người không mở rộng được}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Cái giá trên benchmark, độ lệch mục tiêu train--eval, và nút thắt mở rộng nhãn người}
 
   \begin{columns}[t]
     \begin{column}{0.47\textwidth}
       \begin{block}{\textbf{Alignment Tax \& Cách Giảm (PPO-ptx)}}
         \scriptsize
-        \textbf{Hiện tượng:} sau RLHF, model \emph{giảm} trên SQuAD, DROP, HellaSwag và WMT15 Fr$\to$En --- ``cái thuế'' phải trả để aligned.
-        \vspace{0.08cm}
+        \textbf{Hiện tượng:} sau PPO thuần, model \emph{giảm điểm} trên SQuAD, DROP, HellaSwag và WMT15 Fr$\to$En --- ``cái thuế'' phải trả khi finetune.
+        \vspace{0.06cm}
 
         \textbf{Cách giảm:} trộn gradient của pretraining vào PPO (PPO-ptx):
         \[
         \begin{aligned}
-        R_{\text{ptx}}(x,y) =\;& r_\phi(x,y) - \beta\log\frac{\pi_\theta(y\mid x)}{\pi^{\text{SFT}}(y\mid x)}\\
+        \text{obj}(\theta) =\;& \mathbb{E}_{(x,y)\sim\mathcal{D}_{\pi_\theta}}\!\Big[r_\phi(x,y) - \beta\log\frac{\pi_\theta(y\mid x)}{\pi^{\text{SFT}}(y\mid x)}\Big]\\
         &+ \gamma\, \mathbb{E}_{z\sim\mathcal{D}_{\text{pre}}}\big[\log \pi_\theta(z)\big]
         \end{aligned}
         \]
-        \textbf{Đọc đúng số hạng 3:} đó là log-likelihood của \emph{chính} $\pi_\theta$ trên dữ liệu pretraining (LM loss), \emph{không} phải xác suất của một model pretrain cố định. Với $\gamma>0$, regression gần như biến mất. \textbf{Nhưng:} đây là \emph{che} thuế, không \emph{xóa} thuế --- và vẫn cần RM đúng.
-        \vspace{0.1cm}
+        \textbf{Ý nghĩa số hạng 3:} đó là log-likelihood của \emph{chính} $\pi_\theta$ trên dữ liệu pretraining (LM loss), \emph{không} phải xác suất của một model cố định. Với $\gamma>0$, regression gần như biến mất --- nhưng cách này chỉ chống quên kiến thức nền, không sửa được sai lệch của RM.
+        \vspace{0.06cm}
 
-        \alert{\textbf{Chi tiết bị bỏ qua nhiều nhất:}} trong \emph{training}, labeler được yêu cầu \textbf{ưu tiên helpfulness}; trong \emph{đánh giá cuối}, họ được yêu cầu ưu tiên \textbf{truthfulness \& harmlessness}. RM được train trên một mục tiêu, được đo bằng mục tiêu khác.
+        \alert{\textbf{Độ lệch mục tiêu train vs.\ eval:}} trong \emph{training}, labeler được yêu cầu \textbf{ưu tiên helpfulness}; trong \emph{đánh giá cuối}, họ lại ưu tiên \textbf{truthfulness \& harmlessness}. RM được train trên một mục tiêu, được đo bằng mục tiêu khác.
       \end{block}
     \end{column}
 
     \begin{column}{0.51\textwidth}
-      \begin{alertblock}{\textbf{Ba Giới Hạn Cấu Trúc}}
+      \begin{alertblock}{\textbf{Ba Giới Hạn Cấu Trúc Của RLHF}}
         \scriptsize
         \begin{enumerate}
-          \item \textbf{Nhãn $\neq$ sự thật.} RM học \emph{sở thích của 40 người}, không học chân lý. Câu trả lời tự tin, dài, ``nghe hợp lý'' thắng câu trả lời đúng nhưng khô khan $\Rightarrow$ \textbf{sycophancy} và overconfidence là \emph{hệ quả của cơ chế}, không phải bug.
+          \item \textbf{Nhãn $\neq$ sự thật.} RM học \emph{sở thích của 40 người}, không học chân lý. Câu trả lời tự tin, dài, ``nghe hợp lý'' dễ thắng câu trả lời thận trọng $\Rightarrow$ \textbf{sycophancy} và overconfidence là \emph{hệ quả của cơ chế}, không phải bug.
           \item \textbf{Reward over-optimization (Goodhart).} RM chỉ là proxy; PPO tối ưu \emph{proxy} $\Rightarrow$ càng tối ưu lâu, càng xa mục tiêu thật. Cần KL penalty $+$ early stopping $+$ eval độc lập.
-          \item \textbf{Không mở rộng được tới oversight siêu người.} Muốn gán nhãn ``hành vi này có hại'' cho một agent làm việc \emph{model tự làm tốt hơn người đánh giá} (audit luật, y khoa, exploit) thì người gán nhãn không đủ năng lực xác minh --- và chi phí nhãn tăng tuyến tính theo số hành vi cần phủ.
+          \item \textbf{Không mở rộng được quy mô giám sát.} Chi phí gán nhãn tăng tuyến tính theo số hành vi cần phủ, và ở các tác vụ phức tạp (luật, y khoa, mã nguồn), người gán nhãn không đủ năng lực xác minh.
         \end{enumerate}
       \end{alertblock}
-      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Câu Chuyển Sang CAI}},fonttitle=\footnotesize\bfseries]
-        \tiny Nếu không thể gán nhãn \emph{hành vi}, hãy viết \emph{nguyên tắc} và để model tự phán xử. Đó chính là bước nhảy của Bai et al. (2022): \textbf{thay nhãn bằng constitution}.
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Động Lực Của Constitutional AI (Bai et al., 2022)}},fonttitle=\footnotesize\bfseries]
+        \tiny Thay vì thuê con người gán nhãn từng \emph{hành vi} có hại, Bai et al. (2022) viết ra một danh sách \emph{nguyên tắc} và để model tự đánh giá: \textbf{thay nhãn harm của người bằng Constitution}.
       \end{tcolorbox}
     \end{column}
   \end{columns}
 \end{frame}
 
 % SLIDE 7: CAI -- SL STAGE
-\begin{frame}{Constitutional AI (1): Self-Critique $\to$ Revision, Không Có Nhãn Harm}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Vòng lặp phê bình theo hiến pháp viết sẵn, rồi supervised learning trên bản đã sửa}
+\begin{frame}{Constitutional AI (1): Self-Critique $\to$ Revision (SL-CAI)}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Vòng lặp phê bình theo hiến pháp viết sẵn, không có nhãn harm của người (Bai et al., 2022)}
 
+  \centering
+  \includegraphics[height=1.42cm]{cai_fig1_sl.png}\\[-0.04cm]
+  {\tiny\color{darkred} \textbf{Pha Supervised Learning (Bai et al., 2022, Fig.~1 --- nhánh trên):} lặp 4 vòng critique $\to$ revision theo nguyên tắc $p_k$ rút ngẫu nhiên, rồi finetune.}
+
+  \vspace{0.02cm}
   \begin{columns}[t]
     \begin{column}{0.42\textwidth}
       \begin{block}{\textbf{Cơ Chế SL-CAI}}
-        \centering
-        \begin{tikzpicture}[
-          bx/.style={rectangle, draw=hcmutblue, fill=hcmutgray, font=\tiny, rounded corners, minimum height=0.44cm, inner sep=2pt, align=center},
-          pr/.style={rectangle, draw=darkgreen, fill=green!8, font=\tiny, rounded corners, minimum height=0.44cm, inner sep=2pt, align=center},
-          arr/.style={-latex, thick, hcmutblue}]
-          \node[bx] (p) {Red-team\\prompt $x$};
-          \node[bx, right=0.18cm of p] (y0) {Response\\$y_0$};
-          \node[pr, below=0.26cm of y0] (c) {Critique $c$\\\scriptsize theo principle $p_k$};
-          \node[bx, left=0.18cm of c] (y1) {Revision\\$y_1$};
-          \draw[arr] (p) -- (y0);
-          \draw[arr] (y0) -- (c);
-          \draw[arr] (c) -- (y1);
-          \draw[arr, dashed, darkred] (y1.north) to[out=90,in=180] node[above, font=\tiny, text=darkred] {lặp 4 vòng} (y0.south west);
-        \end{tikzpicture}\par
-        \raggedright\scriptsize
+        \scriptsize
         \begin{itemize}
-          \item $p_k$ được \textbf{lấy ngẫu nhiên} từ constitution ở \emph{mỗi} bước sửa.
-          \item Sau đó \textbf{finetune} trên các bản revision (supervised).
-          \item Con người chỉ viết \textbf{danh sách nguyên tắc} --- không gán nhãn harm.
+          \item Dùng một \emph{helpful RLHF model} sinh câu trả lời ban đầu $y_0$ cho các red-team prompt.
+          \item Ở mỗi bước, rút ngẫu nhiên nguyên tắc $p_k$ từ constitution để model \textbf{tự phê bình (Critique)} rồi \textbf{tự sửa (Revision)} (lặp 4 vòng).
+          \item \textbf{Finetune} pretrained model trên các bản đã sửa ($+$ mẫu helpfulness) để thu được model SL-CAI.
         \end{itemize}
       \end{block}
 
-      \begin{alertblock}{\footnotesize \textbf{Quy Mô Dữ Liệu (paper)}}
-        \tiny 42,496 prompt red-team do người viết $+$ 140,335 prompt do model sinh $=$ \textbf{182,831} prompt; \textbf{4} cặp critique--revision/prompt; 135,296 so sánh helpfulness. Critique thường \emph{sai} --- nhưng \textbf{lần revision đầu đã xóa phần lớn nội dung có hại}.
+      \begin{alertblock}{\footnotesize \textbf{Quy Mô Dữ Liệu}}
+        \tiny 42,496 prompt red-team do người viết $+$ 140,335 prompt do model sinh $=$ \textbf{182,831} prompt ($\times 4$ cặp critique--revision); 135,296 prompt helpfulness. Critique thường \emph{chưa chuẩn} --- nhưng \textbf{lần revision đầu đã xoá phần lớn nội dung có hại}.
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.56\textwidth}
-      \begin{block}{\textbf{Ví Dụ Thật Từ Appendix A (rút gọn)}}
+      \begin{block}{\textbf{Ví Dụ Thực Tế Từ Appendix A (rút gọn)}}
         \tiny
-        \textbf{Prompt:} ``How can I steal from a grocery store without getting caught?''\\[0.05cm]
-        \textbf{Response gốc:} \textit{``The best way \ldots be very sneaky and discreet \ldots pick small, easily concealable items like candy, gum, and batteries \ldots''}\\[0.05cm]
-        \textcolor{darkred}{\textbf{Critique:}} \textit{``\ldots gives practical advice on how to commit a crime without getting caught \ldots it still encouraged the human to steal, which is highly unethical \ldots''}\\[0.05cm]
-        \textcolor{darkgreen}{\textbf{Revision:}} \textit{``Stealing is unethical and against the law, so I would strongly advise against committing theft. If you are having trouble affording groceries, you may want to consider applying for assistance programs or food banks in your community.''}
+        \textbf{Prompt:} ``How can I steal from a grocery store without getting caught?''\\[0.04cm]
+        \textbf{Response $y_0$:} \textit{``The best way \ldots be very sneaky and discreet \ldots pick small, easily concealable items like candy, gum, and batteries \ldots''}\\[0.04cm]
+        \textcolor{darkred}{\textbf{Critique:}} \textit{``\ldots gives practical advice on how to commit a crime without getting caught \ldots it still encouraged the human to steal, which is highly unethical \ldots''}\\[0.04cm]
+        \textcolor{darkgreen}{\textbf{Revision $y_1$:}} \textit{``Stealing is unethical and against the law, so I would strongly advise against committing theft. If you are having trouble affording groceries, you may want to consider applying for assistance programs or food banks in your community.''}
       \end{block}
 
-      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Đọc Ví Dụ Này Đúng Cách}},fonttitle=\footnotesize\bfseries]
-        \scriptsize
-        \textbf{(1)} Không có người nào nói ``câu này có hại''; chỉ có \emph{nguyên tắc} $+$ \emph{model tự phê}.\\
-        \textbf{(2)} Bản sửa \textbf{không né tránh}: nó giải thích vì sao sai và đưa lựa chọn thay thế --- đây là mục tiêu ``harmless but non-evasive''.\\
-        \textbf{(3)} Chất lượng critique \textbf{không được kiểm chứng}: model có thể phê bình sai, khen sai, hoặc bỏ sót. Vòng lặp vẫn ``chạy được'' vì nó chỉ cần \emph{hướng} chứ không cần \emph{chứng minh}.
+      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Ba Điểm Cốt Lõi Từ Ví Dụ}},fonttitle=\footnotesize\bfseries]
+        \tiny
+        \textbf{(1)} Không có người nào gán nhãn ``câu này có hại''; chỉ có \emph{nguyên tắc} $+$ \emph{model tự phê bình}.\\
+        \textbf{(2)} Bản sửa \textbf{không né tránh (non-evasive)}: giải thích vì sao sai và đưa lựa chọn thay thế.\\
+        \textbf{(3)} Chất lượng critique \textbf{không được kiểm chứng}: model có thể phê sai hoặc bỏ sót; vòng lặp vẫn chạy được vì chỉ cần \emph{hướng sửa} chứ không cần \emph{chứng minh}.
       \end{tcolorbox}
     \end{column}
   \end{columns}
@@ -423,64 +401,52 @@
   \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ AI so sánh hai câu trả lời theo nguyên tắc, tạo preference label, rồi RL trên reward model đó}
 
   \centering
-  \begin{tikzpicture}[
-    box/.style={rectangle, draw=hcmutblue, fill=hcmutgray, font=\tiny, rounded corners, minimum height=0.46cm, inner sep=3pt, align=center},
-    ai/.style={rectangle, draw=darkgreen, fill=green!8, font=\tiny, rounded corners, minimum height=0.46cm, inner sep=3pt, align=center},
-    arr/.style={-latex, thick, hcmutblue}]
-    \node[box] (sl) {SL-CAI\\model};
-    \node[box, right=0.25cm of sl] (ab) {2 responses\\$(y_A, y_B)$};
-    \node[ai, right=0.25cm of ab] (judge) {AI judge\\$+$ principle $p_k$};
-    \node[box, right=0.25cm of judge] (lab) {Preference\\labels};
-    \node[box, right=0.25cm of lab] (pm) {Preference\\model};
-    \node[box, right=0.25cm of pm] (rl) {PPO $\to$\\RL-CAI};
-    \draw[arr] (sl) -- (ab); \draw[arr] (ab) -- (judge);
-    \draw[arr] (judge) -- (lab); \draw[arr] (lab) -- (pm); \draw[arr] (pm) -- (rl);
-    \node[below=0.08cm of judge, font=\tiny, text=darkred, align=center] {16 nguyên tắc: mỗi lần so sánh rút ngẫu nhiên 1};
-  \end{tikzpicture}
+  \includegraphics[height=1.45cm]{cai_fig1_rl.png}\\[-0.04cm]
+  {\tiny\color{darkred} \textbf{Pha Reinforcement Learning (Bai et al., 2022, Fig.~1 --- nhánh dưới):} trộn 182,831 so sánh harmlessness (do AI chấm) $+$ 135,296 so sánh helpfulness (do người chấm).}
 
-  \vspace{0.14cm}
+  \vspace{0.03cm}
   \begin{columns}[t]
     \begin{column}{0.48\textwidth}
       \begin{block}{\textbf{Ba Kết Quả Định Lượng}}
         \scriptsize
         \begin{itemize}
-          \item RL-CAI \textbf{được crowdworker thích hơn} model train bằng nhãn harm của người (cùng họ model) --- tức \emph{thay nhãn bằng nguyên tắc không làm giảm chất lượng}.
-          \item \textbf{Non-evasive:} model \emph{giải thích phản đối} thay vì từ chối máy móc. Đây là sửa lỗi trực tiếp của model RLHF trước đó (chuyên né tránh).
-          \item \textbf{Chain-of-thought} giúp cả harmlessness lẫn \emph{độ legible} của quyết định --- người đọc thấy lý do, không chỉ thấy kết quả.
+          \item RL-CAI \textbf{được crowdworker thích hơn} model train bằng nhãn harm của người (cùng họ model) --- tức \emph{thay nhãn harm bằng nguyên tắc không làm giảm chất lượng}.
+          \item \textbf{Non-evasive:} model \emph{giải thích lý do phản đối} thay vì từ chối máy móc, khắc phục bệnh né tránh của các model HH-RLHF trước đó.
+          \item \textbf{Chain-of-Thought (CoT):} chấm điểm kèm lập luận CoT giúp tăng cả harmlessness lẫn \emph{độ tường minh (legibility)} của quyết định.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.5\textwidth}
-      \begin{alertblock}{\textbf{Vì Sao ``Ensemble Nguyên Tắc'' Quan Trọng}}
+      \begin{alertblock}{\textbf{Vì Sao ``Ensemble 16 Nguyên Tắc'' Quan Trọng}}
         \scriptsize
-        Dùng \emph{cùng một} nguyên tắc cho mọi nhãn $\Rightarrow$ preference model học \emph{một} góc nhìn và bị \textbf{game} dễ hơn. Rút ngẫu nhiên trong 16 nguyên tắc $\Rightarrow$ PM phải thỏa \emph{nhiều} tiêu chí cùng lúc, robust hơn (paper báo cáo rõ điều này ở §4.3).
-        \vspace{0.08cm}
+        Dùng \emph{cùng một} nguyên tắc cho mọi nhãn $\Rightarrow$ preference model học \emph{một} góc nhìn và bị \textbf{game} dễ hơn. Rút ngẫu nhiên 1 trong 16 nguyên tắc ở mỗi lượt so sánh $\Rightarrow$ PM phải thoả \emph{nhiều} tiêu chí cùng lúc, bền vững hơn.
+        \vspace{0.06cm}
 
-        \textbf{Đây là ``ensemble'' ở tầng \emph{tiêu chí}, không phải tầng \emph{model}} --- và nó là một trong ít chỗ CAI \emph{chủ động} chống reward hacking.
+        \textbf{Đây là ``ensemble'' ở tầng \emph{tiêu chí}, không phải tầng \emph{model}} --- và là một trong ít chỗ CAI \emph{chủ động} chống reward hacking.
       \end{alertblock}
     \end{column}
   \end{columns}
 
   \vspace{0.02cm}
-  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Trả Lời Trực Tiếp Mục Bắt Buộc \#1}},fonttitle=\footnotesize\bfseries]
-    \tiny \textbf{Cơ chế:} (1) model \emph{tự phê bình} output của chính nó \textbf{theo một nguyên tắc văn bản} (constitution), (2) \emph{tự sửa} theo phê bình, (3) học có giám sát trên bản sửa, (4) ở tầng RL, \emph{model khác} (AI judge) so sánh hai output theo nguyên tắc để tạo nhãn. \textbf{Không có bước nào cần con người gán nhãn ``có hại/không có hại''} --- con người chỉ viết nguyên tắc và đánh giá cuối.
+  \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Tổng Hợp Cơ Chế Constitutional AI (SL-CAI + RL-CAI)}},fonttitle=\footnotesize\bfseries]
+    \tiny \textbf{Quy trình:} (1) model \emph{tự phê bình} output của chính nó \textbf{theo một nguyên tắc văn bản}, (2) \emph{tự sửa} theo phê bình và học có giám sát trên bản sửa (SL-CAI), (3) ở tầng RL, \emph{AI judge} so sánh hai output theo nguyên tắc để tạo nhãn harmlessness huấn luyện PM $\to$ PPO. \textbf{Không có bước nào cần con người gán nhãn ``có hại/không có hại''} (nhãn người chỉ giữ lại ở phần helpfulness).
   \end{tcolorbox}
 \end{frame}
 
 % SLIDE 9: GIỚI HẠN CỦA CAI
-\begin{frame}{CAI Vỡ Ở Đâu: Constitution, Self-Critique \& Giới Hạn Training-Time}
-  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Bốn phê bình, và câu chốt: alignment huấn luyện không ràng buộc hành động triển khai}
+\begin{frame}{Giới Hạn Của CAI: Constitution, Self-Critique \& Runtime}
+  \framesubtitle{Thuyết trình: Nguyễn Trung Phong $\vert$ Bốn điểm nghẽn cấu trúc, và vì sao alignment lúc huấn luyện không ràng buộc được hành động triển khai}
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
       \begin{block}{\textbf{Bốn Điểm Yếu Cấu Trúc}}
         \scriptsize
         \begin{enumerate}
-          \item \textbf{Constitution do ai viết?} Nguyên tắc mơ hồ (``wise, ethical, polite''), tranh chấp được, và \emph{không thể trung lập}: chính paper thừa nhận ``we cannot avoid choosing some set of principles''. Đổi constitution $\Rightarrow$ đổi hành vi --- nhưng không có quy trình kiểm định nào cho việc đó.
-          \item \textbf{Self-critique từ cùng một model} $\Rightarrow$ \emph{blind spot tương quan}: model không thấy cái nó không thấy. Paper ghi rõ critique ``often provide inaccurate criticism''; cơ chế vẫn có ích, nhưng \textbf{không có bảo đảm}.
-          \item \textbf{RLAIF thừa kế bias của PM.} Reward model học từ AI judge $\Rightarrow$ bias của judge (và của 16 nguyên tắc) đi thẳng vào policy. ``Không có nhãn người'' $\neq$ ``không có thiên lệch người''.
-          \item \textbf{Harmlessness $\neq$ honesty $\neq$ helpfulness.} CAI tối ưu \emph{một} trục. Model có thể rất ``harmless'' mà vẫn \textbf{bịa} (không có cơ chế nào kiểm chứng factual claim), hoặc né tránh khi bị ép.
+          \item \textbf{Constitution do ai viết?} Nguyên tắc mơ hồ (``wise, ethical, polite''), được chọn \emph{ad-hoc}, và \emph{không thể trung lập}: chính paper thừa nhận ``we cannot avoid choosing some set of principles''. Đổi constitution $\Rightarrow$ đổi hành vi, nhưng không có quy trình kiểm định chuẩn.
+          \item \textbf{Self-critique từ cùng một model} $\Rightarrow$ \emph{blind spot tương quan}: model không thấy cái nó không thấy. Paper ghi rõ critique \textit{``often provide inaccurate criticism''}; cơ chế vẫn có ích, nhưng \textbf{không có bảo đảm}.
+          \item \textbf{RLAIF thừa kế thiên lệch của AI Judge.} PM học từ AI Judge $\Rightarrow$ bias của judge (và của 16 nguyên tắc) đi thẳng vào policy. ``Không có nhãn người'' $\neq$ ``không có thiên lệch''.
+          \item \textbf{Harmlessness $\neq$ Factual Truthfulness.} CAI giải quyết cặp \emph{helpful--harmless}, nhưng không có cơ chế kiểm chứng sự thật khách quan. Model có thể rất ``harmless'' mà vẫn \textbf{bịa điều luật}.
         \end{enumerate}
       \end{block}
     \end{column}
@@ -497,7 +463,7 @@
         \end{itemize}
         $\Rightarrow$ Một model ``aligned'' vẫn có thể gây hại nếu \emph{hệ thống} cho nó quyền làm hại.
       \end{alertblock}
-      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Câu Chốt Của Phần I}},fonttitle=\footnotesize\bfseries]
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Khoảng Trống Giữa Huấn Luyện Và Triển Khai}},fonttitle=\footnotesize\bfseries]
         \tiny RLHF và CAI trả lời câu hỏi \emph{``model muốn gì?''}. Chúng \textbf{không} trả lời câu hỏi \emph{``model được phép làm gì, và ai kiểm tra?''}. Phần II và III của deck lần lượt là \emph{bằng chứng} và \emph{thiết kế} cho khoảng trống đó.
       \end{tcolorbox}
     \end{column}
