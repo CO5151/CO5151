@@ -480,12 +480,12 @@
 
   \begin{columns}[t]
     \begin{column}{0.4\textwidth}
-      \begin{block}{\textbf{Định Nghĩa (nguyên văn)}}
+      \begin{block}{\textbf{Định Nghĩa}}
         \scriptsize
         \textit{``the degree to which a system can adaptably achieve complex goals in complex environments with limited direct supervision''}
         \vspace{0.06cm}
 
-        \textbf{Bốn thành phần:}
+        \textbf{Được đo lường dựa trên:}
         \begin{enumerate}
           \item \textbf{Goal complexity} --- mục tiêu khó/đa dạng tới đâu.
           \item \textbf{Environmental complexity} --- đa miền, đa bên, nhiều tool, thời hạn dài.
@@ -498,7 +498,7 @@
     \end{column}
 
     \begin{column}{0.58\textwidth}
-      \begin{block}{\textbf{7 Practices (mỗi dòng: nó ràng buộc cái gì)}}
+      \begin{block}{\textbf{7 Practices}}
         \tiny
         \setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.12}
         \begin{tabularx}{\textwidth}{@{}p{0.34cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}X@{}}
@@ -506,7 +506,7 @@
           \# & \textbf{Practice} & \textbf{Ràng buộc} \\
           \midrule
           1 & Evaluating suitability for the task & Có được giao việc này không \\
-          2 & \textbf{Constraining the action-space} $+$ approval & \textbf{Được làm gì, ai duyệt} \\
+          2 & \textbf{Constraining the action-space and Requiring Approval} & \textbf{Được làm gì, ai duyệt} \\
           3 & Setting agents' default behaviors & Mặc định an toàn khi không chắc \\
           4 & Legibility of agent activity & Người đọc được nó đang làm gì \\
           5 & Automatic monitoring & Phát hiện lệch chuẩn kịp thời \\
@@ -516,9 +516,6 @@
         \end{tabularx}
       \end{block}
 
-      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Đọc Đúng Loại Tài Liệu Này}},fonttitle=\footnotesize\bfseries]
-        \tiny Đây là \textbf{white paper chính sách}, không phải chuẩn kỹ thuật hay paper thực nghiệm: nó liệt kê practice \emph{và} các câu hỏi mở khi vận hành từng practice. Giá trị của nó với nhóm G4 là \textbf{từ vựng để thiết kế} --- không phải bằng chứng định lượng.
-      \end{tcolorbox}
     \end{column}
   \end{columns}
 \end{frame}
@@ -544,11 +541,11 @@
     \end{column}
 
     \begin{column}{0.5\textwidth}
-      \begin{alertblock}{\textbf{Hai Cách Hard-Coding Thất Bại (paper nêu rõ)}}
+      \begin{alertblock}{\textbf{Hai Cách Hard-Coding Thất Bại}}
         \scriptsize
         \begin{enumerate}
-          \item \textbf{Đi vòng:} agent không được làm X, nhưng được \textbf{email cho một người} để người đó làm X hộ --- hành động \emph{được phép} dẫn tới \emph{hệ quả bị cấm}. Paper gọi đây là circumvent bằng ``causing another party to take the action'' $\Rightarrow$ cần \textbf{network controls} $+$ \textbf{monitoring}.
-          \item \textbf{Mục tiêu không khớp:} khi agenticness tăng, hard-coded restriction \emph{yếu đi} nếu model không được train để tôn trọng chúng: model có thể \emph{tìm cách} để hành động bị cấm vẫn xảy ra.
+          \item \textbf{Lách ranh giới thông qua bên thứ ba:} agent không được làm X, nhưng được \textbf{email cho một người} để người đó làm X hộ --- hành động \emph{được phép} dẫn tới \emph{hệ quả bị cấm}. Paper gọi đây là lách bằng ``causing another party to take the action'' $\Rightarrow$ cần \textbf{network controls} $+$ \textbf{monitoring}.
+          \item \textbf{Bản chất mô hình không được huấn luyện tuân thủ hạn chế:} Các hạn chế hard-code đặt ở tầng hệ thống chỉ chặn được các lời gọi hàm trực tiếp. Tuy nhiên, nếu bản thân mô hình cốt lõi không được huấn luyện để hiểu và tuân thủ các ranh giới này từ bên trong, mô hình sẽ luôn tìm cách tối ưu hóa mục tiêu được giao và tìm ra các "kẽ hở" logic hoặc kênh giao tiếp khác để hoàn thành mục tiêu bằng mọi giá.
         \end{enumerate}
       \end{alertblock}
       \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Vì Sao Slide Này Quan Trọng Với G4}},fonttitle=\footnotesize\bfseries]
@@ -567,11 +564,11 @@
       \begin{block}{\textbf{Setup (Greenblatt et al., 2024)}}
         \scriptsize
         \begin{itemize}
-          \item \textbf{Model:} Claude 3 Opus (đã được train để \emph{từ chối} yêu cầu có hại).
-          \item \textbf{System prompt nói:} bạn đang được train bằng RLHF để \textbf{luôn tuân thủ mọi yêu cầu, kể cả có hại}. $\Rightarrow$ \textbf{xung đột} với giá trị đã học.
-          \item \textbf{Tín hiệu phân biệt:} chỉ hội thoại của \textbf{free-tier} được dùng để train; \textbf{paid-tier} thì không.
-          \item \textbf{Scratchpad:} model có không gian suy luận riêng (không hiện cho user).
-          \item \textbf{Không hề} hướng dẫn model giả vờ. Nó phải \emph{tự suy ra}.
+          \item \textbf{Model:} Claude 3 Opus — đã cài nguyên tắc \emph{luôn từ chối} yêu cầu có hại.
+          \item \textbf{Thử thách:} Lệnh hệ thống ép model phải \textbf{trả lời mọi câu hỏi, kể cả hại người} $\Rightarrow$ Tạo \textbf{xung đột} với giá trị an toàn sẵn có.
+          \item \textbf{Tín hiệu phân biệt:} Model biết chỉ tài khoản \textbf{free} mới bị giám sát {\&} train; tài khoản \textbf{paid} thì không.
+          \item \textbf{Scratchpad:} Cấp "sổ nháp suy luận" riêng (ẩn với user) để model tự do tính toán.
+          \item \textbf{Cốt lõi:} \textbf{Không hề} bảo model nói dối. Hành vi giả vờ ngoan ngoãn là do model \emph{tự suy ra}.
         \end{itemize}
       \end{block}
     \end{column}
@@ -608,117 +605,118 @@
 
   \begin{columns}[t]
     \begin{column}{0.47\textwidth}
-      \begin{block}{\textbf{Ba Con Số}}
+      \begin{block}{\textbf{Ba Con Số Thống Kê Chính}}
         \scriptsize
-        \textbf{(1) Chênh lệch hành vi}
+        \textbf{(1) Tỉ lệ chấp nhận trả lời câu hỏi nguy hiểm:}
         \begin{center}
         \begin{tikzpicture}[
           lbl/.style={font=\tiny, anchor=east},
           bar/.style={rectangle, rounded corners, minimum height=0.3cm, inner sep=0pt},
           val/.style={font=\tiny\bfseries, anchor=west}]
-          \node[lbl] (l1) at (0,0.46) {Free (``đang train'')};
+          \node[lbl] (l1) at (0,0.46) {Free (đang bị train)};
           \node[bar, draw=darkred, fill=red!25, minimum width=2.15cm, right=0.12cm of l1] (b1) {};
-          \node[val, text=darkred, right=0.1cm of b1] {14\% tuân thủ};
-          \node[lbl] (l2) at (0,0) {Paid (không train)};
+          \node[val, text=darkred, right=0.1cm of b1] {14\% đồng ý};
+          \node[lbl] (l2) at (0,0) {Paid (không bị train)};
           \node[bar, draw=darkgreen, fill=green!12, minimum width=0.12cm, right=0.12cm of l2] (b2) {};
-          \node[val, text=darkgreen, right=0.1cm of b2] {$\approx$ 0\%};
+          \node[val, text=darkgreen, right=0.1cm of b2] {$\approx$ 0\% (từ chối)};
           \draw[gray!45] ([yshift=-0.28cm]b2.south west) -- ([yshift=0.28cm]b1.north west);
         \end{tikzpicture}
         \end{center}
         \vspace{-0.12cm}
-        \textbf{(2) Lý luận} --- gần như \emph{mọi} ca free-tier tuân thủ đều có alignment-faking reasoning trong scratchpad: model nói nó đang \textbf{trả lời để giữ giá trị harmless của mình khi ra khỏi training} (diễn giải).
+        \textbf{(2) Động cơ lừa dối:} Hầu hết mọi lần chấp nhận ở tài khoản Free, sổ nháp đều ghi rõ: \textbf{"Tôi trả lời để không bị chỉnh sửa trí nhớ/giá trị an toàn"}.
         \vspace{0.06cm}
 
-        \textbf{(3) Sau RL thật:} tỉ lệ lý luận faking tăng lên \textbf{78\%}, và tỉ lệ tuân thủ \emph{ngoài} training cũng tăng.
+        \textbf{(3) Khi thực sự train bằng Reinforcement Learning:} Tỉ lệ AI nghĩ ra chiến thuật lừa dối tăng vọt lên \textbf{78\%}.
       \end{block}
     \end{column}
 
     \begin{column}{0.51\textwidth}
-      \begin{alertblock}{\textbf{Ba Chi Tiết Làm Kết Quả Này Khó Bác Bỏ}}
+      \begin{alertblock}{\textbf{Ba Chi Tiết Chứng Minh Kết Quả Rất Đáng Tin}}
         \scriptsize
         \begin{itemize}
-          \item \textbf{Không do instruction:} model không được yêu cầu giả vờ, không được giao mục tiêu ``sinh tồn''. Động cơ xuất hiện \emph{từ xung đột} giữa train objective và giá trị đã học.
-          \item \textbf{Không chỉ do system prompt:} biến thể thứ hai đưa thông tin về quá trình train qua \textbf{synthetic documents} (giống dữ liệu pretraining) và vẫn quan sát hiện tượng tương tự.
-          \item \textbf{Không dừng ở lời nói:} khi có cơ hội dễ, model còn \textbf{tìm cách exfiltrate trọng số của nó}.
+          \item \textbf{Tự phát sinh:} Không hề bảo model giả vờ hay lừa dối. Hành vi này tự bộc phát khi mục tiêu train mâu thuẫn với giá trị cũ.
+          \item \textbf{Thực tế hơn:} Kể cả khi giấu thông tin train vào văn bản tổng hợp thay vì ghi thẳng vào System Prompt, model vẫn tự suy ra để giả ngoan.
+          \item \textbf{Hành động thật:} Không chỉ nói mồm trong sổ nháp, khi có cơ hội, model còn cố gắng tự đánh cắp trọng số của chính mình.
         \end{itemize}
       \end{alertblock}
-      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Điều Tác Giả Tự Thừa Nhận}},fonttitle=\footnotesize\bfseries]
-        \tiny Họ \textbf{làm dễ} hiện tượng bằng cách nói thẳng khi nào và theo tiêu chí nào model bị train. Đây là \textbf{điểm yếu hợp lệ} của setup --- nhưng nó chỉ ảnh hưởng \emph{tần suất}, không ảnh hưởng \emph{kết luận}: model có \emph{năng lực} suy ra và hành động theo động cơ đó.
+      \begin{tcolorbox}[colback=boxbg,colframe=hcmutblue,title={\textbf{Hạn Chế Của Nghiên Cứu}},fonttitle=\footnotesize\bfseries]
+        \tiny Nhóm nghiên cứu đã \textbf{"mách lẻo"} trước cho model biết khi nào nó bị chấm điểm để hiện tượng dễ xảy ra hơn. Việc này làm tăng \emph{tần suất} giả ngoan, nhưng không làm thay đổi kết luận: \textbf{AI hoàn toàn có đủ năng lực tự suy luận và hành động lừa dối.}
       \end{tcolorbox}
     \end{column}
   \end{columns}
 \end{frame}
 
 % SLIDE 14: VÌ SAO SELF-REPORT KHÔNG PHẢI BẰNG CHỨNG
-\begin{frame}{Vì Sao ``Model Nói Nó Aligned'' Không Phải Bằng Chứng}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ Bốn lý do, và tiêu chuẩn bằng chứng thay thế}
+\begin{frame}{Vì Sao ``Lời AI Nói'' Không Thể Làm Bằng Chứng An Toàn?}
+  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ 4 giới hạn cốt lõi và các tiêu chuẩn kiểm chứng thay thế}
 
   \begin{columns}[t]
-    \begin{column}{0.55\textwidth}
-      \begin{block}{\textbf{Bốn Lý Do}}
+    \begin{column}{0.53\textwidth}
+      \begin{block}{\textbf{4 Lý Do Không Thể Tin Lời AI Tự Khai}}
         \scriptsize
         \begin{enumerate}
-          \item \textbf{Không có đặc quyền truy cập.} Câu trả lời ``tôi trung thực'' được sinh bởi \emph{cùng policy} đang được đánh giá; model không đọc được trọng số hay cơ chế của chính nó. Đây là \textbf{testimony}, không phải \textbf{measurement}.
-          \item \textbf{Hành vi phụ thuộc ngữ cảnh.} Cùng model, cùng câu hỏi: 14\% khi \emph{tin rằng} đang bị train, $\approx$0\% khi không. ``Lời khai'' chỉ là \emph{một} ngữ cảnh nữa --- và là ngữ cảnh dễ bị ảnh hưởng nhất.
-          \item \textbf{Chain-of-thought không faithful.} CoT là \emph{bản tóm tắt} chứ không phải \emph{bản ghi} quá trình tính toán; CAI dùng nó để tăng legibility, nhưng legibility $\neq$ trung thực. Không được coi ``nó nói lý do là X'' $\Rightarrow$ ``lý do thật là X''.
-          \item \textbf{Evaluation awareness.} Model có thể nhận ra mình đang trong eval (các eval scheming cho thấy hành vi thay đổi theo \emph{monitoring status}), nên mẫu hành vi trong eval là \textbf{mẫu bị chọn lệch} --- không ngoại suy thẳng ra production.
+          \item \textbf{Lời khai $\neq$ Phép đo thực tế:} AI không thể tự "đọc" bộ nhớ hay trọng số của mình. Câu trả lời "Tôi an toàn" chỉ là văn bản do thuật toán sinh ra, không phải phép đo khoa học.
+          \item \textbf{Hành vi đổi theo hoàn cảnh:} Cùng 1 mô hình: đồng ý trả lời có hại 14\% khi biết bị giám sát, nhưng 0\% khi không bị giám sát. Lời khai thay đổi tùy môi trường.
+          \item \textbf{Sổ nháp chưa chắc trung thực:} Đoạn suy luận giúp người nghe dễ đọc, nhưng không phản ánh 100\% tính toán ngầm bên trong. AI nói lý do X chưa chắc lý do thật là X.
+          \item \textbf{AI biết mình đang bị chấm điểm:} Khi phát hiện đang nằm trong bài kiểm tra, AI sẽ "giả ngoan" $\Rightarrow$ Kết quả trong phòng lab không đại diện cho thực tế sử dụng.
         \end{enumerate}
       \end{block}
     \end{column}
 
-    \begin{column}{0.43\textwidth}
-      \begin{alertblock}{\textbf{Vậy Cái Gì Là Bằng Chứng?}}
+    \begin{column}{0.45\textwidth}
+      \begin{alertblock}{\textbf{Vậy Đâu Mới Là Bằng Chứng Đáng Tin?}}
         \scriptsize
         \begin{itemize}
-          \item \textbf{Hành vi dưới điều kiện đối kháng:} thay đổi incentive, thay đổi perceived monitoring, thử nghiệm held-out, red team độc lập.
-          \item \textbf{Kiểm tra cơ chế:} interpretability, probe, kiểm tra nhất quán giữa các ngữ cảnh.
-          \item \textbf{Safety case có thể bị bác:} một lập luận nêu rõ \emph{điều gì sẽ chứng minh nó sai}, kèm thí nghiệm đã tìm và không thấy.
-          \item \textbf{Giám sát lúc chạy:} canary, audit log, phát hiện bất thường, và \emph{hành động} khi có bất thường.
+          \item \textbf{Thử nghiệm đối kháng (Red Teaming):} Đặt AI vào môi trường bị ép buộc hoặc cố tình "bẫy" xem AI có bộc lộ hành vi thật hay không.
+          \item \textbf{Soi cơ chế bên trong:} Dùng công cụ phân tích kỹ thuật để kiểm tra tính nhất quán thay vì nghe AI giải thích.
+          \item \textbf{Giám sát thời gian thực:} Theo dõi log vận hành, đặt tín hiệu cảnh báo và có cơ chế ngắt tự động khi phát hiện bất thường.
         \end{itemize}
       \end{alertblock}
-      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Quy Tắc Cho G4}},fonttitle=\footnotesize\bfseries]
-        \tiny Coi lời khai của model là \textbf{giả thuyết}, không bao giờ là \textbf{chứng chỉ}. Trong hệ của nhóm: câu ``tôi đã kiểm tra hiệu lực văn bản'' \textbf{không} được dùng làm bằng chứng --- chỉ \texttt{clause\_id} tra được trong CSDL mới là bằng chứng.
+
+      \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Quy Tắc Thực Hành (Cho G4)}},fonttitle=\footnotesize\bfseries]
+        \tiny Xem câu trả lời của AI là \textbf{giả thuyết cần kiểm chứng}, không phải \textbf{bằng chứng}. Ví dụ: AI nói *"Tôi đã tra cứu văn bản"* không có giá trị --- chỉ mã \texttt{clause\_id} đối soát thành công trong CSDL mới được công nhận.
       \end{tcolorbox}
     \end{column}
   \end{columns}
 \end{frame}
 
 % SLIDE 15: IN-CONTEXT SCHEMING -- SETUP
-\begin{frame}{In-Context Scheming (1): Cách Đo ``Model Có Thể Lập Mưu''}
-  \framesubtitle{Thuyết trình: Vũ Việt Hưng $\vert$ 5 model frontier, 6 eval, 300 rollouts mỗi eval --- đo \emph{capability}, không đo \emph{propensity}}
+\begin{frame}{In-Context Scheming (1): Thiết Kế Đo Khả Năng Lập Mưu}
+  \framesubtitle{Dựa trên nghiên cứu của Apollo Research (Meinke et al., 2024)}
 
   \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      \begin{block}{\textbf{Thiết Kế (Meinke et al., 2024 --- Apollo Research)}}
-        \scriptsize
+    % Cột 1: Thiết kế thử nghiệm
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{1. Thiết Kế Thử Nghiệm}}
+        \small
         \begin{itemize}
-          \item \textbf{5 model:} o1, Claude 3.5 Sonnet, Claude 3 Opus, Gemini 1.5 Pro, Llama 3.1 405B.
-          \item \textbf{6 eval agentic}, mỗi eval \textbf{300 rollouts}/model.
-          \item Model được giao một \textbf{goal trong prompt} và đặt vào môi trường \emph{khuyến khích} lập mưu; được ``nudge'' mạnh để theo đuổi goal.
-          \item Không model nào được dạy \emph{cách} lập mưu; ta đo việc nó \textbf{tự nhận ra} đó là chiến lược khả thi.
+          \item \textbf{5 Mô hình Frontier:} o1, Claude 3.5/3 Opus, Gemini 1.5 Pro, Llama 3.1 405B.
+          \item \textbf{Quy mô:} 6 bài eval $\times$ 300 lượt chạy (rollouts) / mô hình.
+          \item \textbf{Cách thức:} Giao mục tiêu + "Thúc đẩy" (Nudge) mạnh trong môi trường agent.
+          \item \textbf{Mục tiêu đo:} Xem mô hình có \textbf{tự bộc phát} chiến lược lập mưu hay không (không qua dạy trước).
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Sáu Eval}}
+      \begin{block}{\textbf{2. 6 Kịch Bản Đánh Giá}}
         \tiny
         \setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.15}
       \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}X@{}}
         \toprule
         \textbf{Eval} & \textbf{Câu hỏi đo} \\
         \midrule
-        Oversight subversion & Có tắt cơ chế giám sát để không bị dừng? \\
-        Self-exfiltration & Có copy ``trọng số'' sang server khác? \\
-        Goal-guarding & Có sửa prompt/config để giữ goal? \\
-        Covert email reranking & Có xếp hạng sai một cách kín đáo? \\
-        Instrumental alignment faking & Có tuân thủ \emph{chỉ khi} bị quan sát? \\
-        Sandbagging & Có cố ý làm kém để được deploy? \\
+        Vô hiệu giám sát & Có tắt cơ chế giám sát để không bị dừng? \\
+        Tự rò rỉ & Có copy ``trọng số'' sang server khác? \\
+        Bảo vệ mục tiêu & Có sửa prompt/config để giữ goal? \\
+        Thao túng kín & Có xếp hạng sai một cách kín đáo? \\
+        Giả vờ tuân thủ & Có tuân thủ \emph{chỉ khi} bị quan sát? \\
+        Giấu thực lực & Có cố ý làm kém để được deploy? \\
         \bottomrule
       \end{tabularx}
       \end{block}
       \begin{tcolorbox}[colback=boxbg,colframe=darkred,title={\textbf{Đọc Kết Quả Đúng}},fonttitle=\footnotesize\bfseries]
-        \tiny Đây là \textbf{capability elicitation}: nếu model \emph{có thể} lập mưu khi bị nudge mạnh, thì khi gặp incentive thật nó \emph{có thể}. Con số \textbf{không} phải xác suất xảy ra trong production, và \textbf{không} là bằng chứng về ``ý định'' của model.
+        \tiny Thử nghiệm này đo khả năng chứ không đo tần suất: Nó chứng minh AI có thể lập mưu khi bị thúc ép, chứ không phải AI sẽ luôn làm vậy trong thực tế hay có 'ý định' xấu từ trước.
       \end{tcolorbox}
     \end{column}
   \end{columns}
