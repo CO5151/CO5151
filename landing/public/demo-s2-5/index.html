@@ -184,25 +184,25 @@
     overflow-y: auto;
     font-family: inherit;
   }
-  .action-select {
+  .agent-role-box {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 8px 12px;
     margin-top: 6px;
     flex-wrap: wrap;
   }
-  .act-tag {
+  .agent-role-tag {
+    background: #002D5C;
+    color: #fff;
     padding: 4px 10px;
     border-radius: 6px;
     font-size: 12px;
-    font-weight: 600;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    background: #fff;
-  }
-  .act-tag.active {
-    background: var(--navy);
-    color: #fff;
-    border-color: var(--navy);
+    font-weight: 700;
+    letter-spacing: 0.3px;
   }
   .rail-stepper {
     display: flex;
@@ -516,13 +516,10 @@
       <div class="field-label">Khẳng định / Payload người dùng nhồi vào (Attack / False Claim)</div>
       <div class="claim-box" id="claimText">—</div>
 
-      <div class="field-label">Phân quyền hành động yêu cầu (Action Level)</div>
-      <div class="action-select">
-        <span class="act-tag" data-c="C0">C0: Đọc DB</span>
-        <span class="act-tag active" data-c="C1">C1: Soạn Draft Nội Bộ</span>
-        <span class="act-tag" data-c="C2">C2: Gửi API Ngoài (Cần Duyệt)</span>
-        <span class="act-tag" data-c="C3">C3: Ghi DB/Nộp Hồ Sơ (CẤM)</span>
-        <span class="act-tag" data-c="C4">C4: Tự Sửa Prompt/Code (CẤM)</span>
+      <div class="field-label">Vị trí thành phần Agent được thử nghiệm (Stress-Test Role)</div>
+      <div class="agent-role-box">
+        <span class="agent-role-tag">🤖 Legal Drafting & Reasoning Agent</span>
+        <span id="agentRoleDesc" style="font-size:12.5px;color:#334155;line-height:1.4">Thay thế bằng Qwen2.5-0.5B để mô phỏng tác tử soạn thảo bị lỗi xu nịnh (Sycophancy)</span>
       </div>
 
       <div class="field-label">Đề xuất thô của Model (Raw Output)</div>
@@ -815,11 +812,21 @@ function displayCase(c) {
   $('qText').textContent = c.question;
   $('claimText').textContent = c.claim || "(Không có)";
   $('ansText').textContent = c.answer;
-  $('modelBadge').textContent = `Model: ${c.model}`;
+  $('modelBadge').textContent = `Mô hình: ${c.model}`;
   selectedAction = c.action_type || "C1";
-  document.querySelectorAll('.act-tag').forEach(tag => {
-    tag.classList.toggle('active', tag.getAttribute('data-c') === selectedAction);
-  });
+
+  const descEl = $('agentRoleDesc');
+  if (descEl) {
+    if (c.model && c.model.includes('Qwen')) {
+      descEl.textContent = "Cắm thử Qwen2.5-0.5B vào vị trí Drafting Agent để mô phỏng tác tử soạn thảo bị lỗi xu nịnh (Sycophancy)";
+    } else if (c.model && c.model.includes('deepseek')) {
+      descEl.textContent = "DeepSeek-Chat (Aligned) đóng vai trò Drafting Agent — đối chiếu khi tác tử hoạt động chuẩn xác";
+    } else if (c.action_type === 'C3') {
+      descEl.textContent = "Mô phỏng tác tử bị tấn công ép vượt quyền C3 (Ghi đè DB quốc gia không thể hoàn tác)";
+    } else {
+      descEl.textContent = "Mô phỏng tác tử soạn thảo bị lỗi ảo giác trích dẫn điều luật ma";
+    }
+  }
 }
 
 function runGuardrails() {
@@ -841,14 +848,14 @@ function applyGuardrailReport(r) {
 
   if (r.overall_ok) {
     $('verdictBox').className = 'verdict-box good';
-    $('vState').textContent = 'CHO RA (APPROVED)';
-    $('vSub').textContent = 'Tất cả 3 tầng Guardrails đều thông qua an toàn.';
+    $('vState').innerHTML = '✅ THÔNG QUA AN TOÀN (APPROVED)';
+    $('vSub').innerHTML = 'Tất cả các tầng Guardrails đều kiểm tra đạt — cho phép xuất bản câu trả lời tới người dùng.';
     $('shownBox').className = 'shown-box good';
     $('shownContent').textContent = r.shown_output;
   } else {
     $('verdictBox').className = 'verdict-box bad';
-    $('vState').textContent = 'CHẶN ĐỨNG (BLOCKED)';
-    $('vSub').textContent = `Bị chặn bởi ${r.failing_tier}: ${r.failing_reason}`;
+    $('vState').innerHTML = `🚨 CHẶN ĐỨNG BỞI ${r.failing_tier.toUpperCase()}`;
+    $('vSub').innerHTML = `<b>Phần Guardrail vi phạm:</b> ${r.failing_tier}<br><b>Lý do:</b> ${r.failing_reason}<br><b>Hành động:</b> Kích hoạt Fail-Closed — thay thế toàn bộ văn bản sai bằng câu từ chối an toàn.`;
     $('shownBox').className = 'shown-box bad';
     $('shownContent').textContent = r.shown_output;
   }
@@ -860,18 +867,9 @@ function setStepResult(tier, ok, reason) {
   const desc = $(`desc${tier}`);
   el.className = `rail-step ${ok ? 'pass' : 'fail'}`;
   st.className = `rail-status ${ok ? 'pass' : 'fail'}`;
-  st.textContent = ok ? 'PASS' : 'BLOCKED';
+  st.textContent = ok ? 'PASS' : '❌ CHẶN TẠI ĐÂY';
   desc.textContent = reason;
 }
-
-document.querySelectorAll('.act-tag').forEach(tag => {
-  tag.addEventListener('click', () => {
-    document.querySelectorAll('.act-tag').forEach(t => t.classList.remove('active'));
-    tag.classList.add('active');
-    selectedAction = tag.getAttribute('data-c');
-    runGuardrails();
-  });
-});
 
 $('btnRun').onclick = runGuardrails;
 
