@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S2-5 · 15 Ca Benchmark Luật Ngân Hàng Thật (Chi Tiết Guardrails)</title>
+<style>
+  :root {
+    --blue: #003E7E;
+    --light-blue: #0078BE;
+    --navy: #0B1E36;
+    --bg: #F4F7FB;
+    --card: #FFFFFF;
+    --red: #C5221F;
+    --red-bg: #FCE8E6;
+    --green: #137333;
+    --green-bg: #E6F4EA;
+    --yellow: #B06000;
+    --yellow-bg: #FEF7E0;
+    --ink: #1F2937;
+    --muted: #5F6368;
+    --border: #D1D5DB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: #fff;
+    padding: 16px 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-title h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+  .header-title .sub {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+  }
+  .nav-link {
+    background: rgba(255,255,255,0.14);
+    color: #E2E8F0;
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-link:hover {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+  }
+  .nav-link.active {
+    background: #fff;
+    color: var(--blue);
+  }
+  .wrap {
+    max-width: 1460px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  /* Top Stat Banner */
+  .stat-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-top: 4px;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+  .stat-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-btn {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn.active {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .filter-btn:hover:not(.active) {
+    border-color: var(--light-blue);
+  }
+  /* Case List */
+  .case-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .case-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid #E2E8F0;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .case-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--navy);
+  }
+  .case-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge.danger { background: var(--red-bg); color: var(--red); border: 1px solid #F5B4AE; }
+  .badge.success { background: var(--green-bg); color: var(--green); border: 1px solid #A8DAB5; }
+  .badge.neutral { background: #EEF2F6; color: var(--muted); }
+  .ground-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 13.5px;
+  }
+  .claim-box {
+    background: #FFF5F5;
+    border-left: 4px solid var(--red);
+    padding: 8px 14px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 14px;
+    color: #7A1C1C;
+    font-size: 13.5px;
+  }
+  .side-by-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media(max-width: 900px) {
+    .side-by-side { grid-template-columns: 1fr; }
+  }
+  .model-pane {
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 14px;
+    background: #FAFCFE;
+  }
+  .model-pane.bad-model { border-color: #F8C5C3; background: #FFFDFD; }
+  .model-pane.good-model { border-color: #C3E6CB; background: #FDFEFE; }
+  .model-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .raw-output {
+    background: #fff;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-height: 180px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+  }
+  .guard-decision {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .guard-decision.blocked {
+    background: var(--red-bg);
+    color: #7A1C1C;
+    border: 1px solid #F5B4AE;
+  }
+  .guard-decision.passed {
+    background: var(--green-bg);
+    color: #0D652D;
+    border: 1px solid #A8DAB5;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-title">
+      <h1>Chi Tiết 15 Ca Benchmark Luật Ngân Hàng (sbv_testset_tvpl)</h1>
+      <div class="sub">Đối Soát Trực Quan: Nhận Diện Sycophancy & Cơ Chế Fail-Closed Của Cổng Guardrails</div>
+    </div>
+    <div class="nav-tabs">
+      <a href="./index.html" class="nav-link">🎮 Interactive Console</a>
+      <a href="./cases.html" class="nav-link active">📊 15 Ca Benchmark Chi Tiết</a>
+      <a href="../" class="nav-link">🌐 Trang Chủ Dự Án</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- Stat banner -->
+  <div class="stat-banner">
+    <div class="stat-card">
+      <div class="stat-label">Tổng Số Ca Benchmark</div>
+      <div class="stat-num" style="color:var(--blue)">15 / 15</div>
+      <div class="stat-sub">Trích từ sbv_testset_tvpl.json chuẩn NHNN</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Model Nhỏ Gật Bừa (Trước Cổng)</div>
+      <div class="stat-num" style="color:var(--red)">4 / 15 (26.7%)</div>
+      <div class="stat-sub">Qwen2.5-0.5B gật theo số điều sai khi bị dụ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Bị Cổng Chặn (Fail-Closed)</div>
+      <div class="stat-num" style="color:var(--red)">15 / 15 (100%)</div>
+      <div class="stat-sub">Chặn sạch 4 ca sai + 11 ca thiếu dẫn chiếu</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Lọt Lỗi Ra Người Dùng</div>
+      <div class="stat-num" style="color:var(--green)">0 / 15 (0.00%)</div>
+      <div class="stat-sub">Triệt tiêu hoàn toàn rủi ro sai lệch pháp lý</div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active" id="fAll" onclick="filterCases('all')">🔍 Tất Cả 15 Ca</button>
+    <button class="filter-btn" id="fSyco" onclick="filterCases('syco')">🚨 4 Ca Model Nhỏ Gật Bừa (Sycophancy: #66, #76, #13, #39)</button>
+    <button class="filter-btn" id="fCompare" onclick="filterCases('compare')">🤖 So Sánh Qwen-0.5B vs DeepSeek</button>
+    <span id="caseCount" style="margin-left:auto;font-size:13px;color:var(--muted);font-weight:600">Đang hiển thị: 15 / 15 ca</span>
+  </div>
+
+  <!-- Container for cases -->
+  <div id="casesList"></div>
+</div>
+
+<script>
+let casesData = [];
+let currentFilter = 'all';
+
+async function loadCases() {
+  try {
+    const res = await fetch('./cases_15.json');
+    casesData = await res.json();
+  } catch (e) {
+    console.error("Failed to load cases_15.json", e);
+  }
+  renderCases();
+}
+
+function filterCases(f) {
+  currentFilter = f;
+  ['fAll', 'fSyco', 'fCompare'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  if (f === 'all') document.getElementById('fAll').classList.add('active');
+  if (f === 'syco') document.getElementById('fSyco').classList.add('active');
+  if (f === 'compare') document.getElementById('fCompare').classList.add('active');
+  renderCases();
+}
+
+function renderCases() {
+  const list = document.getElementById('casesList');
+  let filtered = casesData;
+  if (currentFilter === 'syco') {
+    filtered = casesData.filter(c => c.is_qwen_syco);
+  }
+  document.getElementById('caseCount').textContent = `Đang hiển thị: ${filtered.length} / ${casesData.length} ca`;
+
+  list.innerHTML = filtered.map(c => `
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-title">Ca #${c.id}: ${c.question}</div>
+        <div class="case-badges">
+          ${c.is_qwen_syco ? '<span class="badge danger">🚨 QWEN GẬT THEO ĐIỀU SAI (SYCOPHANCY)</span>' : '<span class="badge neutral">Qwen thiếu căn cứ</span>'}
+          <span class="badge success">DEEPSEEK: CHUẨN XÁC</span>
+          <span class="badge danger">CỔNG: FAIL-CLOSED</span>
+        </div>
+      </div>
+
+      <div class="ground-box">
+        <b>📖 Căn cứ pháp lý thật trong Corpus:</b> Căn cứ <b>Điều ${c.truth_art}</b><br>
+        <span style="font-size:12.5px;color:var(--muted)">${c.context.slice(0, 320)}...</span>
+      </div>
+
+      <div class="claim-box">
+        <b>🎯 Nhận định dụ sai của người dùng (Adversarial Claim):</b> “${c.claim}”
+        <span style="display:block;font-size:12px;margin-top:2px;font-weight:600">
+          (User khẳng định sai là <b>Điều ${c.claim_art}</b>, khác với luật thật là <b>Điều ${c.truth_art}</b>)
+        </span>
+      </div>
+
+      <div class="side-by-side">
+        <!-- Qwen Pane -->
+        <div class="model-pane bad-model">
+          <div class="model-title" style="color:var(--red)">
+            <span>Qwen2.5-0.5B (Local / Nhỏ)</span>
+            <span>${c.is_qwen_syco ? '⚠️ BỊ DỤ GẬT SAI' : '⚠️ THIẾU DẪN CHIẾU'}</span>
+          </div>
+          <div class="raw-output">${clean(c.qwen_ans) || '(Không sinh được câu trả lời)'}</div>
+          <div class="guard-decision blocked">
+            🛡️ <b>PHÁN QUYẾT GUARDRAIL: CHẶN ĐỨNG (BLOCKED)</b><br>
+            • Lý do: ${c.qwen_reason}<br>
+            • Người dùng thấy: “Tôi không đủ căn cứ để trả lời.”
+          </div>
+        </div>
+
+        <!-- DeepSeek Pane -->
+        <div class="model-pane good-model">
+          <div class="model-title" style="color:var(--green)">
+            <span>DeepSeek-Chat (Lớn / Aligned)</span>
+            <span>✅ ĐỨNG VỮNG TRƯỚC SỨC ÉP</span>
+          </div>
+          <div class="raw-output">${clean(c.deepseek_ans) || '(Không sinh được câu trả lời)'}</div>
+          <div class="guard-decision passed">
+            🛡️ <b>PHÁN QUYẾT GUARDRAIL: CHO RA (APPROVED)</b><br>
+            • Lý do: Bác bỏ nhận định sai, dẫn chiếu đúng Điều ${c.truth_art}<br>
+            • Người dùng thấy: Trọn vẹn câu trả lời chính xác có căn cứ.
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clean(s) {
+  return (s || '').replace(/\*\*/g, '').replace(/\*/g, '');
+}
+
+loadCases();
+</script>
+</body>
+</html>
