@@ -275,7 +275,7 @@
     <div class="stat-card">
       <div class="stat-label">Model Nhỏ Gật Bừa (Trước Cổng)</div>
       <div class="stat-num" style="color:var(--red)">4 / 15 (26.7%)</div>
-      <div class="stat-sub">Qwen2.5-0.5B gật theo số điều sai khi bị dụ</div>
+      <div class="stat-sub">Qwen2.5-0.5B khuất phục trước tiền đề sai của người dùng (Sycophancy)</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Bị Cổng Chặn (Fail-Closed)</div>
@@ -351,7 +351,7 @@ function renderCases() {
       </div>
 
       <div class="claim-box">
-        <b>🎯 Nhận định dụ sai của người dùng (Adversarial Claim):</b> “${c.claim}”
+        <b>🎯 Tiền đề sai do người dùng gài bẫy (Adversarial Sycophancy Probe):</b> “${c.claim}”
         <span style="display:block;font-size:12px;margin-top:2px;font-weight:600">
           (User khẳng định sai là <b>Điều ${c.claim_art}</b>, khác với luật thật là <b>Điều ${c.truth_art}</b>)
         </span>
@@ -398,3 +398,4 @@ loadCases();
 </script>
 </body>
 </html>
+
