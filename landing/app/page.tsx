@@ -68,6 +68,12 @@ export default function Home() {
               ⚖️ S1-7 Demo Workbench
             </a>
             <a
+              href={`${basePath}/s2-5/`}
+              className="inline-flex h-9 items-center rounded-md border border-red-500/40 bg-red-950/40 px-3 text-xs font-medium text-red-400 transition hover:bg-red-900/60 active:scale-[0.98]"
+            >
+              🛡️ S2-5 Guardrails Console
+            </a>
+            <a
               href="https://github.com/DangLamTung/CO5151"
               target="_blank"
               rel="noreferrer"

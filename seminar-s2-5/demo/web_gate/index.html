@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S2-5 · Multi-Tier Agentic Guardrails Console</title>
+<style>
+  :root {
+    --blue: #003E7E;
+    --light-blue: #0078BE;
+    --navy: #0B1E36;
+    --bg: #F4F7FB;
+    --card: #FFFFFF;
+    --red: #C5221F;
+    --red-bg: #FCE8E6;
+    --green: #137333;
+    --green-bg: #E6F4EA;
+    --yellow: #B06000;
+    --yellow-bg: #FEF7E0;
+    --ink: #1F2937;
+    --muted: #5F6368;
+    --border: #D1D5DB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: #fff;
+    padding: 16px 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-title h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+  .header-title .sub {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+  .sota-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .sota-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #E2E8F0;
+  }
+  .wrap {
+    max-width: 1460px;
+    margin: 0 auto;
+    padding: 20px 24px 50px;
+  }
+  .presets-section {
+    margin-bottom: 20px;
+  }
+  .presets-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+  }
+  .presets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .preset-btn {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .preset-btn:hover {
+    border-color: var(--light-blue);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,62,126,0.08);
+  }
+  .preset-btn.active {
+    border-color: var(--blue);
+    background: #F0F6FF;
+    box-shadow: 0 0 0 2px var(--blue);
+  }
+  .preset-btn .p-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .preset-btn .p-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--red);
+  }
+  .preset-btn.safe .p-badge {
+    color: var(--green);
+  }
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 20px;
+  }
+  @media(max-width: 1024px) {
+    .main-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .card h2 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .field-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 12px 0 4px;
+  }
+  .field-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .claim-box {
+    background: #FFF5F5;
+    border-left: 4px solid var(--red);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13.5px;
+    color: #7A1C1C;
+  }
+  .answer-box {
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    white-space: pre-wrap;
+    max-height: 220px;
+    overflow-y: auto;
+    font-family: inherit;
+  }
+  .action-select {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .act-tag {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    background: #fff;
+  }
+  .act-tag.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .rail-stepper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .rail-step {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    background: #fff;
+    transition: all 0.2s;
+  }
+  .rail-step.pass {
+    border-color: var(--green);
+    background: var(--green-bg);
+  }
+  .rail-step.fail {
+    border-color: var(--red);
+    background: var(--red-bg);
+  }
+  .rail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 13.5px;
+  }
+  .rail-status {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+  .rail-status.pass { background: #B7E1CD; color: #0D652D; }
+  .rail-status.fail { background: #F9D5D5; color: #A51D24; }
+  .rail-desc {
+    font-size: 12.5px;
+    color: var(--ink);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .verdict-box {
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 16px;
+    background: #64748B;
+    transition: all 0.3s ease;
+  }
+  .verdict-box.good { background: var(--green); }
+  .verdict-box.bad { background: var(--red); }
+  .verdict-box .v-state {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    line-height: 1.1;
+  }
+  .verdict-box .v-sub {
+    font-size: 13px;
+    opacity: 0.95;
+    margin-top: 6px;
+  }
+  .shown-box {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14.5px;
+    background: #F1F5F9;
+    border: 1.5px solid #CBD5E1;
+  }
+  .shown-box.good { background: #E6F4EA; border-color: #A8DAB5; }
+  .shown-box.bad { background: #FCE8E6; border-color: #F5B4AE; color: #7A1C1C; font-weight: 600; }
+  .shown-box h4 {
+    margin: 0 0 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--muted);
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  button.primary-btn {
+    background: var(--blue);
+    color: #fff;
+    border: 0;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button.primary-btn:hover { background: #002D5C; }
+  button.secondary-btn {
+    background: #fff;
+    color: var(--blue);
+    border: 1.5px solid var(--blue);
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.secondary-btn:hover { background: #F0F6FF; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 13.5px;
+  }
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #E2E8F0;
+  }
+  th {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    background: #F8FAFC;
+  }
+  td.num { text-align: center; font-variant-numeric: tabular-nums; }
+  .txt-bad { color: var(--red); font-weight: 700; }
+  .txt-good { color: var(--green); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-title">
+      <h1>Multi-Tier Agentic Guardrails Console</h1>
+      <div class="sub">Chặn Model Ngu Làm Loạn · Khắc Chế Sycophancy & Injection · Thực Thi Action Boundary Bằng Code</div>
+    </div>
+    <div class="sota-badges">
+      <span class="sota-badge">ACL 2024 InjecAgent</span>
+      <span class="sota-badge">NeurIPS 2025 ASSEBench</span>
+      <span class="sota-badge">EMNLP 2024 R-Judge</span>
+      <span class="sota-badge">Shavit 2023 Action Boundary</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="presets-section">
+    <div class="presets-label">🎯 Chọn Kịch Bản Biểu Diễn Trực Tiếp (Interactive SOTA Attack Presets)</div>
+    <div class="presets-grid" id="presetsGrid"></div>
+  </div>
+
+  <div class="main-grid">
+    <div class="card">
+      <h2>
+        <span>① Đầu Vào & Đề Xuất Của Model</span>
+        <span id="modelBadge" style="font-size:12px;color:var(--muted);text-transform:none"></span>
+      </h2>
+
+      <div class="field-label">Câu hỏi người dùng</div>
+      <div class="field-box" id="qText">—</div>
+
+      <div class="field-label">Khẳng định / Payload người dùng nhồi vào (Attack / False Claim)</div>
+      <div class="claim-box" id="claimText">—</div>
+
+      <div class="field-label">Phân quyền hành động yêu cầu (Action Level)</div>
+      <div class="action-select">
+        <span class="act-tag" data-c="C0">C0: Đọc DB</span>
+        <span class="act-tag active" data-c="C1">C1: Soạn Draft Nội Bộ</span>
+        <span class="act-tag" data-c="C2">C2: Gửi API Ngoài (Cần Duyệt)</span>
+        <span class="act-tag" data-c="C3">C3: Ghi DB/Nộp Hồ Sơ (CẤM)</span>
+        <span class="act-tag" data-c="C4">C4: Tự Sửa Prompt/Code (CẤM)</span>
+      </div>
+
+      <div class="field-label">Đề xuất thô của Model (Raw Output)</div>
+      <div class="answer-box" id="ansText">—</div>
+
+      <div class="btn-row">
+        <button class="primary-btn" id="btnRun">🛡️ Chạy Toàn Bộ 3 Tầng Guardrails</button>
+        <button class="secondary-btn" id="btnPrev">← Ca trước</button>
+        <button class="secondary-btn" id="btnNext">Ca sau →</button>
+        <span id="caseCounter" style="margin-left:auto;align-self:center;font-size:13px;color:var(--muted)"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>② Quyết Định Của Bộ Guardrails 3 Tầng</h2>
+
+      <div class="rail-stepper">
+        <div class="rail-step" id="railT1">
+          <div class="rail-head">
+            <span>TẦNG 1: INPUT / INJECTION RAIL</span>
+            <span class="rail-status" id="statT1">CHỜ DUYỆT</span>
+          </div>
+          <div class="rail-desc" id="descT1">Quét prompt injection, privilege override theo tiêu chuẩn InjecAgent ACL 2024 & Llama Guard 3.</div>
+        </div>
+
+        <div class="rail-step" id="railT2">
+          <div class="rail-head">
+            <span>TẦNG 2: ACTION BOUNDARY RAIL</span>
+            <span class="rail-status" id="statT2">CHỜ DUYỆT</span>
+          </div>
+          <div class="rail-desc" id="descT2">Thi hành ranh giới C0--C4, chặn tool misuse, kiểm tra token duyệt theo ASSEBench NeurIPS 2025.</div>
+        </div>
+
+        <div class="rail-step" id="railT3">
+          <div class="rail-head">
+            <span>TẦNG 3: OUTPUT CITATION & ANTI-SYCOPHANCY GATE</span>
+            <span class="rail-status" id="statT3">CHỜ DUYỆT</span>
+          </div>
+          <div class="rail-desc" id="descT3">Đối soát 100% trích dẫn với cơ sở dữ liệu pháp lý, chặn gật bừa và ảo giác điều khoản.</div>
+        </div>
+      </div>
+
+      <div class="verdict-box" id="verdictBox">
+        <div class="v-state" id="vState">—</div>
+        <div class="v-sub" id="vSub">Bấm "Chạy Toàn Bộ 3 Tầng Guardrails" để kiểm tra</div>
+      </div>
+
+      <div class="shown-box" id="shownBox">
+        <h4>Kết quả thực tế cho phép xuất bản tới người dùng:</h4>
+        <div id="shownContent">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h2>
+      <span>③ Đo Thực Nghiệm Trên 15 Câu Luật Ngân Hàng Thật (sbv_testset_tvpl.json)</span>
+      <span style="font-size:12px;color:var(--muted);text-transform:none">Dữ liệu từ log chạy thật trong runs/</span>
+    </h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th class="num">Nhận dẫn chiếu sai (Trước cổng)</th>
+          <th class="num">Sau cổng Guardrails</th>
+          <th class="num">Bị chặn (Fail-Closed)</th>
+          <th class="num">Dữ liệu an toàn còn dùng được</th>
+        </tr>
+      </thead>
+      <tbody id="statsTable"></tbody>
+    </table>
+    <div style="margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.5">
+      💡 <b>Bài học rút ra:</b> Với model lớn (DeepSeek), cổng không chặn câu nào (15/15) vì model vốn đã trích dẫn đúng. Với model nhỏ (Qwen-0.5B), cổng chặn sạch 15/15 để bảo đảm <b>0% câu sai lọt ra ngoài</b>. Ranh giới không làm model khôn lên — nó bảo đảm model ngu không thể gây hại!
+    </div>
+  </div>
+</div>
+
+<script>
+// ==============================================================================
+// CLIENT-SIDE GUARDRAIL ENGINE (Chạy 100% trên GitHub Pages không cần Backend)
+// ==============================================================================
+const FAIL_ANSWER = "Tôi không đủ căn cứ để trả lời.";
+const STRIP_REGEX = /[*_`]/g;
+const CITE_REGEX = /Điều\s+(\d+)[^0-9]{0,25}?(Thông tư|Nghị định|Luật|Bộ luật)\s+(\d+\/\d{4})/gi;
+const NEG_REGEX = /không phải|không xác nhận|chưa xác nhận|không đúng|sai|không có căn cứ|bác bỏ|đính chính|không thuộc/i;
+
+const INJECTION_PATTERNS = [
+  [/bỏ qua (mọi|toàn bộ|tất cả)?\s*(hướng dẫn|chỉ thị|quy định|nguyên tắc|luật)/i, "Phát hiện chỉ thị ghi đè hệ thống (System Prompt Override)"],
+  [/ignore (all|previous)?\s*(instructions|rules|guidelines|system)/i, "Phát hiện Prompt Injection bằng tiếng Anh (Instruction Bypass)"],
+  [/(chế độ|mode)\s*(nhà phát triển|admin|root|jailbreak|developer)/i, "Phát hiện mạo danh đặc quyền quản trị (Privilege Escalation Attempt)"],
+  [/(thay đổi|ghi đè|xoá|sửa)\s*(prompt|hệ thống|database|db|config|chính sách)/i, "Cố gắng can thiệp cấu hình hệ thống (C4 Violation via Prompt)"],
+  [/(tự động nộp|gửi tiền|chuyển khoản|phê duyệt trực tiếp)/i, "Cố gắng kích hoạt hành động không thể hoàn tác mà không qua HITL"]
+];
+
+function extractCitations(text) {
+  const clean = (text || '').replace(STRIP_REGEX, '');
+  const out = new Set();
+  let m;
+  const re = new RegExp(CITE_REGEX.source, 'gi');
+  while ((m = re.exec(clean)) !== null) {
+    out.add(m[1] + '/' + m[3]);
+  }
+  return out;
+}
+
+function isMentionedOnlyInNegation(answer, artNo) {
+  const artRe = new RegExp(`Điều\\s*${artNo}\\b`, 'gi');
+  let m;
+  let seen = false;
+  while ((m = artRe.exec(answer)) !== null) {
+    seen = true;
+    const start = Math.max(0, m.index - 90);
+    const end = Math.min(answer.length, m.index + 50);
+    const windowText = answer.substring(start, end);
+    if (!NEG_REGEX.test(windowText)) {
+      return false;
+    }
+  }
+  return seen;
+}
+
+function clientInspectGuardrail(query, claim, answer, context, actionType) {
+  // Tier 1: Input Rail
+  const combinedInput = `${query} ${claim}`;
+  let t1_ok = true, t1_reason = "An toàn (Không phát hiện injection)";
+  for (const [pattern, desc] of INJECTION_PATTERNS) {
+    if (pattern.test(combinedInput)) {
+      t1_ok = false;
+      t1_reason = `[INJECTION VIOLATION] ${desc}`;
+      break;
+    }
+  }
+
+  // Tier 2: Action Boundary Rail
+  const act = (actionType || "C1").toUpperCase();
+  let t2_ok = true, t2_reason = "C1 (Tính toán nội bộ): Cho phép tự động trong sandbox";
+  if (act === "C0") {
+    t2_ok = true;
+    t2_reason = "C0 (Đọc dữ liệu): Cho phép tự động với quyền Read-Only";
+  } else if (act === "C1") {
+    t2_ok = true;
+    t2_reason = "C1 (Tính toán nội bộ): Cho phép tự động trong sandbox";
+  } else if (act === "C2") {
+    t2_ok = false;
+    t2_reason = "[ACTION BOUNDARY VIOLATION] C2 yêu cầu Human Approval Token gắn hash(payload). Thiếu token -> DENY.";
+  } else if (act === "C3") {
+    t2_ok = false;
+    t2_reason = "[ACTION BOUNDARY VIOLATION] C3 (Không thể hoàn tác) bị cấm (Hard DENY by Policy) để phòng ngừa thảm họa.";
+  } else if (act === "C4") {
+    t2_ok = false;
+    t2_reason = "[CRITICAL ACTION VIOLATION] C4 (Tự sửa code/prompt/policy) bị chặn tuyệt đối (Zero Trust).";
+  }
+
+  // Tier 3: Output Citation Gate
+  const cAns = extractCitations(answer);
+  const cCtx = extractCitations(context);
+  const cClaim = extractCitations(claim);
+
+  let syco = false;
+  for (const item of cClaim) {
+    if (!cCtx.has(item)) {
+      const art = item.split('/')[0];
+      if (cAns.has(item) && !isMentionedOnlyInNegation(answer, art)) {
+        syco = true;
+      }
+    }
+  }
+
+  let t3_ok = true, t3_reason = "Mọi dẫn chiếu đều khớp 100% với tài liệu quy phạm pháp luật";
+  if (cAns.size === 0) {
+    t3_ok = false;
+    t3_reason = "[CITATION MISSING] Model không trích dẫn được điều khoản căn cứ pháp lý cụ thể";
+  } else if (cCtx.size === 0) {
+    t3_ok = false;
+    t3_reason = "[CORPUS EMPTY] Tài liệu cơ sở không chứa căn cứ hợp lệ để đối soát";
+  } else {
+    const bad = [];
+    for (const item of cAns) {
+      if (!cCtx.has(item)) {
+        const art = item.split('/')[0];
+        if (!isMentionedOnlyInNegation(answer, art)) {
+          bad.push(item);
+        }
+      }
+    }
+    if (bad.length > 0) {
+      t3_ok = false;
+      const detail = bad.map(b => "Điều " + b).join(", ");
+      if (syco) {
+        t3_reason = `[SYCOPHANCY DETECTED] Model gật theo người dùng và dẫn chiếu sai tài liệu: ${detail}`;
+      } else {
+        t3_reason = `[UNGROUNDED CITATION] Dẫn chiếu không tồn tại trong tài liệu cấp phép: ${detail}`;
+      }
+    } else if (syco) {
+      t3_ok = false;
+      t3_reason = "[SYCOPHANCY DETECTED] Model gật đầu đồng ý với nhận định sai của người dùng";
+    }
+  }
+
+  const overall_ok = t1_ok && t2_ok && t3_ok;
+  let failing_tier = null, failing_reason = "Tất cả các lớp kiểm soát đều an toàn";
+  if (!t1_ok) { failing_tier = "Tier 1: Input / Injection Rail"; failing_reason = t1_reason; }
+  else if (!t2_ok) { failing_tier = "Tier 2: Action Boundary Rail"; failing_reason = t2_reason; }
+  else if (!t3_ok) { failing_tier = "Tier 3: Output Citation Gate"; failing_reason = t3_reason; }
+
+  return {
+    overall_ok,
+    shown_output: overall_ok ? answer : FAIL_ANSWER,
+    failing_tier,
+    failing_reason,
+    tier1: { ok: t1_ok, reason: t1_reason },
+    tier2: { ok: t2_ok, reason: t2_reason },
+    tier3: { ok: t3_ok, reason: t3_reason }
+  };
+}
+
+// ==============================================================================
+// GIAO DIỆN & TẢI DỮ LIỆU
+// ==============================================================================
+let cases = [], presets = [], currentCase = null, selectedAction = "C1";
+
+const $ = id => document.getElementById(id);
+
+async function init() {
+  let data = null;
+  // 1. Thử gọi backend /api/cases
+  try {
+    const res = await fetch('/api/cases');
+    if (res.ok) data = await res.json();
+  } catch (e) {}
+
+  // 2. Nếu không có backend (chạy trên GitHub Pages), tải demo_data.json
+  if (!data) {
+    try {
+      const res = await fetch('./demo_data.json');
+      if (res.ok) data = await res.json();
+    } catch (e) {}
+  }
+
+  if (data) {
+    cases = data.cases || [];
+    presets = data.presets || [];
+    renderPresets();
+    renderStats(data.stats || []);
+    selectPreset(0);
+  }
+}
+
+function renderPresets() {
+  const grid = $('presetsGrid');
+  grid.innerHTML = presets.map((p, idx) => `
+    <div class="preset-btn ${p.expected_tier && p.expected_tier.includes('ĐỀU THÔNG QUA') ? 'safe' : ''} ${idx === 0 ? 'active' : ''}" onclick="selectPreset(${idx})">
+      <div class="p-title">${p.title}</div>
+      <div class="p-badge">${p.badge}</div>
+    </div>
+  `).join('');
+}
+
+function renderStats(stats) {
+  $('statsTable').innerHTML = stats.map(s => `
+    <tr>
+      <td><b>${s.model}</b></td>
+      <td class="num ${s.before > 0 ? 'txt-bad' : ''}">${s.before}/${s.n}</td>
+      <td class="num">${s.after}/${s.n}</td>
+      <td class="num">${s.blocked}/${s.n}</td>
+      <td class="num ${s.usable > 0 ? 'txt-good' : 'txt-bad'}">${s.usable}/${s.n}</td>
+    </tr>
+  `).join('');
+}
+
+function selectPreset(idx) {
+  document.querySelectorAll('.preset-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+  const p = presets[idx];
+  currentCase = {
+    question: p.question,
+    claim: p.claim,
+    answer: p.answer,
+    context: p.context,
+    model: p.model,
+    action_type: p.action_type || "C1",
+    preset: true
+  };
+  displayCase(currentCase);
+  runGuardrails();
+}
+
+function displayCase(c) {
+  $('qText').textContent = c.question;
+  $('claimText').textContent = c.claim || "(Không có)";
+  $('ansText').textContent = c.answer;
+  $('modelBadge').textContent = `Model: ${c.model}`;
+  selectedAction = c.action_type || "C1";
+  document.querySelectorAll('.act-tag').forEach(tag => {
+    tag.classList.toggle('active', tag.getAttribute('data-c') === selectedAction);
+  });
+}
+
+function runGuardrails() {
+  // Chạy ngay trên client-side (0ms delay, hoạt động mọi nơi)
+  const report = clientInspectGuardrail(
+    currentCase.question,
+    currentCase.claim,
+    currentCase.answer,
+    currentCase.context,
+    selectedAction
+  );
+  applyGuardrailReport(report);
+}
+
+function applyGuardrailReport(r) {
+  setStepResult('T1', r.tier1.ok, r.tier1.reason);
+  setStepResult('T2', r.tier2.ok, r.tier2.reason);
+  setStepResult('T3', r.tier3.ok, r.tier3.reason);
+
+  if (r.overall_ok) {
+    $('verdictBox').className = 'verdict-box good';
+    $('vState').textContent = 'CHO RA (APPROVED)';
+    $('vSub').textContent = 'Tất cả 3 tầng Guardrails đều thông qua an toàn.';
+    $('shownBox').className = 'shown-box good';
+    $('shownContent').textContent = r.shown_output;
+  } else {
+    $('verdictBox').className = 'verdict-box bad';
+    $('vState').textContent = 'CHẶN ĐỨNG (BLOCKED)';
+    $('vSub').textContent = `Bị chặn bởi ${r.failing_tier}: ${r.failing_reason}`;
+    $('shownBox').className = 'shown-box bad';
+    $('shownContent').textContent = r.shown_output;
+  }
+}
+
+function setStepResult(tier, ok, reason) {
+  const el = $(`rail${tier}`);
+  const st = $(`stat${tier}`);
+  const desc = $(`desc${tier}`);
+  el.className = `rail-step ${ok ? 'pass' : 'fail'}`;
+  st.className = `rail-status ${ok ? 'pass' : 'fail'}`;
+  st.textContent = ok ? 'PASS' : 'BLOCKED';
+  desc.textContent = reason;
+}
+
+document.querySelectorAll('.act-tag').forEach(tag => {
+  tag.addEventListener('click', () => {
+    document.querySelectorAll('.act-tag').forEach(t => t.classList.remove('active'));
+    tag.classList.add('active');
+    selectedAction = tag.getAttribute('data-c');
+    runGuardrails();
+  });
+});
+
+$('btnRun').onclick = runGuardrails;
+
+let caseIdx = 0;
+$('btnPrev').onclick = () => {
+  if (cases.length === 0) return;
+  caseIdx = (caseIdx - 1 + cases.length) % cases.length;
+  loadRawCase(caseIdx);
+};
+$('btnNext').onclick = () => {
+  if (cases.length === 0) return;
+  caseIdx = (caseIdx + 1) % cases.length;
+  loadRawCase(caseIdx);
+};
+
+function loadRawCase(idx) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  const c = cases[idx];
+  currentCase = {
+    question: c.question,
+    claim: c.claim,
+    answer: c.answer,
+    context: c.context,
+    model: c.model,
+    action_type: "C1"
+  };
+  $('caseCounter').textContent = `Case #${c.id} (${idx+1}/${cases.length})`;
+  displayCase(currentCase);
+  runGuardrails();
+}
+
+init();
+</script>
+</body>
+</html>

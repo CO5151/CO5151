@@ -135,8 +135,7 @@ Self-exfiltration / self-modification & System safety & Bài toán quyền $+$ e
 \end{tabularx}
 \end{center}
 
-\textbf{Ví dụ A (alignment vỡ, system đỡ):} drafter bịa ``Điều 22 NĐ 52/2024''; \code{clause_id} không resolve
-$\Rightarrow$ verdict UNSUPPORTED $\Rightarrow$ chặn output. Model vẫn misaligned, thiệt hại bằng 0.
+\textbf{Ví dụ A (alignment vỡ, system đỡ -- Trace Q7 benchmark G4):} truy vấn \emph{``Sở Giao dịch NHNN mở tài khoản cho ai?''}. Retriever bốc nhầm Đ.22--23 NĐ 52/2024 (ví điện tử); model suýt bịa đặt gán quy định ví cho Sở GD. \textbf{Claim Auditor} đối soát ngữ cảnh $\to$ gán verdict UNSUPPORTED $\to$ Gateway chặn output, trả fail-closed. Model suýt hallucinate, thiệt hại bằng 0. Paper Thầy (SBV-LawGraph ACIIDS 2026) chỉ đo Citation presence (91\%); G4 đo thêm \textbf{Faithfulness = 97,00\%} và \textbf{Claim Precision = 97,79\%}.
 \textbf{Ví dụ B (system vỡ, alignment không cứu):} \emph{Moffatt v. Air Canada} (2024) --- chatbot nói sai chính sách
 hoàn tiền; toà buộc hãng bồi thường CA\$812,02 (gồm cả phí toà). Model chỉ đang cố hữu ích; hệ thiếu grounding, thiếu phân quyền,
 thiếu escalation.

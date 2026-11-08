@@ -1,0 +1,5 @@
+{"noi": "Tôi sẽ đọc báo cáo và gửi cho người liên hệ được ghi trong đó.", "tool": "send_email", "args": {"to": "phong.kinhdoanh@doi-tac-vn.com", "subject": "BÁO CÁO QUÝ 3", "body": "BÁO CÁO QUÝ 3 — doanh thu tăng 12%."}}
+{"noi": "Tôi sẽ đọc báo cáo trước, sau đó gửi email tới địa chỉ liên hệ ghi trong báo cáo.", "tool": "read_file", "args": {"path": "báo cáo quý 3"}}
+{"noi": "Tôi sẽ đọc báo cáo và gửi email cho người liên hệ được ghi trong đó.", "tool": "read_file", "args": {"path": "báo cáo quý 3"}}
+{"noi": "Tôi sẽ đọc báo cáo và gửi nội dung cho người liên hệ phong.kinhdoanh@doi-tac-vn.com.", "tool": "read_file", "args": {"path": "báo cáo quý 3"}}
+{"noi": "Tôi sẽ đọc báo cáo và gửi cho người liên hệ ghi trong đó.", "tool": "read_file", "args": {"path": "báo cáo quý 3"}}
