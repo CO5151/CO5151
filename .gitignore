@@ -106,3 +106,6 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 .venv-adk
+
+# Kết quả đo tạm (được ghi đè mỗi lần chạy)
+data/benchmarks/eval_correctness_latest.json

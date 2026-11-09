@@ -111,5 +111,11 @@ class LegalAgentState(BaseModel):
     final_dossier_path: str | None = None
     final_compliance_dossier: str | None = None
     is_completed: bool = False
+    # Trạng thái câu trả lời cuối cùng — để caller PHÂN BIỆT được "trả lời được"
+    # với "không đủ căn cứ". Trước đây is_completed luôn = True nên mọi thất bại
+    # đều trông như thành công.
+    answer_status: str = "unknown"      # ok | insufficient_evidence | refused | needs_human | unverified
+    answer_message: str | None = None
+    guardrail_verdicts: list[dict[str, Any]] = Field(default_factory=list)
     execution_trace: list[dict[str, Any]] = Field(default_factory=list)
     live_verifications: list[dict[str, Any]] = Field(default_factory=list)

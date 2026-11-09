@@ -85,18 +85,38 @@ def invoke_adk_agent(
         parts=[types.Part.from_text(text=prompt)],
     )
 
-    collected_text: list[str] = []
-    try:
+    def _collect() -> str:
+        chunks: list[str] = []
         for event in runner.run(user_id=user_id, session_id=sid, new_message=msg):
             if hasattr(event, "content") and event.content and event.content.parts:
                 for part in event.content.parts:
                     if hasattr(part, "text") and part.text:
-                        collected_text.append(part.text)
+                        chunks.append(part.text)
+        return "".join(chunks)
+
+    # Timeout cứng: trước đây một request bị treo làm đứng cả pipeline (đã gặp:
+    # test suite treo 40 phút rồi tự khỏi). Thread có thể còn chạy nhưng caller
+    # không bị chặn nữa.
+    import os as _os
+    from concurrent.futures import ThreadPoolExecutor
+    from concurrent.futures import TimeoutError as _FutTimeout
+
+    timeout_s = float(_os.getenv("LEGALPILOT_LLM_TIMEOUT", "120"))
+    try:
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            try:
+                return pool.submit(_collect).result(timeout=timeout_s)
+            except _FutTimeout:
+                logger.error(
+                    "LLM call cho '%s' quá %.0fs — bỏ qua để không treo pipeline.",
+                    agent.name, timeout_s,
+                )
+                raise TimeoutError(f"LLM timeout sau {timeout_s}s")
+    except TimeoutError:
+        raise
     except Exception as e:
         logger.error(f"Google ADK Runner invocation failed for agent '{agent.name}': {e}")
         raise e
-
-    return "".join(collected_text)
 
 
 @dataclass

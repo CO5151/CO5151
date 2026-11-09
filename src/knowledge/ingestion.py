@@ -25,6 +25,7 @@ from typing import Any
 import httpx
 
 from src.core.config import settings
+from src.core.doc_ids import canonical_doc_id
 from src.core.exceptions import KnowledgeBaseError
 from src.core.logger import get_logger
 from src.knowledge.neo4j_client import Neo4jClient
@@ -86,21 +87,12 @@ class LegalCrossReference:
 
 
 def normalize_doc_id(doc_id_raw: str) -> str:
-    """Normalizes raw document numbers into standard uppercase identifier.
+    """Chuẩn hoá số hiệu văn bản — uỷ quyền cho src.core.doc_ids.
 
-    Example: '152/2020/NĐ-CP' -> '152/2020/ND-CP'
+    Giữ hàm này vì nhiều module đang import nó; logic thật nằm ở một chỗ duy nhất
+    để graph không bao giờ có hai node cho cùng một văn bản.
     """
-    cleaned = doc_id_raw.strip().replace(" ", "")
-    # Normalize Vietnamese accented characters in official document symbols
-    replacements = {
-        "Đ": "D",
-        "đ": "d",
-        "\u2013": "-",
-        "\u2014": "-",
-    }
-    for k, v in replacements.items():
-        cleaned = cleaned.replace(k, v)
-    return cleaned.upper()
+    return canonical_doc_id(doc_id_raw)
 
 
 def parse_legal_document(
@@ -759,6 +751,48 @@ class LegalIngestionPipeline:
             len(cross_refs),
         )
 
+        # 2b. Cổng kiểm định (tầng 5 của PLAN_AUTO_INGEST).
+        # Mặc định chỉ ghi log; bật LEGALPILOT_STRICT_INGEST=1 để CHẶN thật —
+        # dùng trong CI và cho pipeline nạp tự động.
+        report = None
+        try:
+            import os as _os
+
+            from src.knowledge.validate import validate_document as _validate
+
+            report = _validate(
+                {
+                    "doc_id": parsed_doc.doc_id,
+                    "title": parsed_doc.title,
+                    "articles": [
+                        {
+                            "article_number": a.article_number,
+                            "title": a.title,
+                            "content": a.content,
+                        }
+                        for a in parsed_doc.articles
+                    ],
+                    "cross_refs": [
+                        {"target_doc_id": r.target_doc_id} for r in cross_refs
+                    ],
+                    "effective_date": getattr(parsed_doc, "effective_date", "") or "",
+                },
+                known_doc_ids=set(),
+                raw_text=text,
+                allow_replace=True,          # ingest_file vốn là upsert có chủ đích
+            )
+            for issue in report.issues:
+                logger.warning("Validate %s [%s] %s", parsed_doc.doc_id, issue.code, issue.message)
+            if not report.passed and _os.getenv("LEGALPILOT_STRICT_INGEST", "") in ("1", "true"):
+                raise KnowledgeBaseError(
+                    "Văn bản không qua cổng kiểm định: "
+                    + "; ".join(i.message for i in report.issues if i.severity == "error")
+                )
+        except KnowledgeBaseError:
+            raise
+        except Exception as e:  # noqa: BLE001
+            logger.warning("Cổng kiểm định bỏ qua do lỗi nội bộ: %s", e)
+
         # 3. Ingest into Neo4j
         if sync_neo4j:
             self._ingest_to_neo4j(parsed_doc, cross_refs)
@@ -774,6 +808,7 @@ class LegalIngestionPipeline:
             "articles_count": len(parsed_doc.articles),
             "chunks_count": len(chunks),
             "cross_refs_count": len(cross_refs),
+            "validation": report.to_dict() if report is not None else None,
         }
 
     def _ingest_to_neo4j(self, doc: ParsedDocument, cross_refs: list[LegalCrossReference]) -> None:

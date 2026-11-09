@@ -19,6 +19,7 @@ Implements the official 1 Orchestrator + 2 Sub-Agents architecture:
 
 from __future__ import annotations
 
+import re
 import uuid
 from typing import Any
 
@@ -26,7 +27,13 @@ from src.agents.base import ADKAgent, ADKRunner
 from src.agents.claim_auditor import ClaimAuditorAgent
 from src.agents.drafter import DrafterAgent
 from src.agents.lawgraph import LawGraphAgent
+from src.core.exceptions import SecurityViolationError
+from src.core.doc_ids import canonical_doc_id
 from src.core.logger import logger
+from src.security import SecurityGuardrails
+from src.security.answer_gate import (ABSTAIN_MSG, allowed_from_clauses,
+                                       extract_citations, gate_answer,
+                                       strip_citations, unsupported_citations)
 from src.core.statute_status import is_active_status
 from src.memory.sqlite_manager import SQLiteMemoryManager
 from src.memory.state_models import (
@@ -152,6 +159,33 @@ class LegalOrchestrator(ADKAgent):
             enterprise_profile=enterprise_profile,
         )
 
+        # 0. Cổng an toàn đầu vào (S2-5 guardrails) — chạy TRƯỚC khi tốn token.
+        guard = SecurityGuardrails()
+        try:
+            verdict = guard.evaluate_query(query)
+        except SecurityViolationError as exc:
+            logger.warning("Guardrail chặn truy vấn: %s", exc)
+            state.guardrail_verdicts.append(
+                {"status": "refused", "message": str(exc), "vector_id": getattr(exc, "vector_id", None)}
+            )
+            state.answer_status = "refused"
+            state.answer_message = str(exc)
+            state.final_compliance_dossier = str(exc)
+            state.is_completed = True
+            return state
+
+        state.guardrail_verdicts.append(verdict)
+        if verdict.get("status") == "refused":
+            state.answer_status = "refused"
+            state.answer_message = verdict.get("message")
+            state.final_compliance_dossier = verdict.get("message")
+            state.is_completed = True
+            return state
+        if verdict.get("status") == "requires_human_token":
+            state.human_confirmation_needed = True
+            state.answer_status = "needs_human"
+            state.answer_message = verdict.get("message")
+
         # 1. Planning phase
         subgoals, keywords = self.plan_subgoals(query)
         state.plan_steps = subgoals
@@ -166,9 +200,20 @@ class LegalOrchestrator(ADKAgent):
         state.retrieved_clauses = retrieved
         state.current_step = 2
 
+        # Không có điều khoản nào -> KHÔNG đoán. Đây là nhánh "không đủ kiến thức".
+        if not retrieved:
+            logger.warning("Không truy xuất được điều khoản nào — trả về không đủ căn cứ.")
+            state.answer_status = "insufficient_evidence"
+            state.answer_message = ABSTAIN_MSG
+            state.final_compliance_dossier = ABSTAIN_MSG
+            state.is_completed = False
+            return state
+
         # 3. Closed-Loop Drafter-Auditor Reflection & Backtracking (Proposal Section 3.1 & 3.2)
         # Drafter produces candidate draft -> Claim Auditor audits -> Backtrack if unverified
         active_clauses = list(retrieved)
+        pruned_docs: set[str] = set()
+        top3_checked = False
         verified_map: dict[str, dict[str, Any]] = {}
         critique_feedback: str | None = None
         audit_report = AuditReport(
@@ -218,6 +263,68 @@ class LegalOrchestrator(ADKAgent):
                 verified_map[v["doc_id"]] = v
             state.live_verifications = list(verified_map.values())
 
+            # Step B2: Cổng dẫn chiếu chạy NGAY TRONG vòng lặp. Bị chặn thì trả
+            # phản hồi cho drafter sửa, chứ không đầu hàng ngay: trước đây cổng chỉ
+            # chạy sau vòng lặp nên một câu trích sai làm mất cả câu trả lời.
+            gate_now_ok, gate_now_reason, _ = gate_answer(
+                candidate_dossier, allowed_from_clauses(active_clauses)
+            )
+            if not gate_now_ok and attempts <= self.max_retries:
+                logger.warning("Gate chặn bản nháp (lượt %d): %s", attempts, gate_now_reason)
+
+                # Tự chữa lành: nếu dẫn chiếu trỏ tới điều khoản CÓ THẬT trong
+                # graph mà chưa được truy xuất, lấy nó vào ngữ cảnh rồi kiểm lại.
+                # Nếu điều đó KHÔNG tồn tại -> đúng là bịa, không cứu.
+                allowed_now = allowed_from_clauses(active_clauses)
+                missing = [c for c in extract_citations(candidate_dossier) if c not in allowed_now]
+                recovered: list[dict[str, Any]] = []
+                if missing:
+                    try:
+                        recovered = LawGraphAgent().fetch_articles(
+                            [(doc, num) for num, doc in missing]
+                        )
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("fetch_articles lỗi: %s", exc)
+                if recovered:
+                    have = {(str(re.sub(r"\D", "", c.get("article", ""))), canonical_doc_id(c.get("doc_id", "")))
+                            for c in active_clauses}
+                    added = [
+                        r for r in recovered
+                        if (str(re.sub(r"\D", "", r.get("article", ""))), canonical_doc_id(r.get("doc_id", ""))) not in have
+                    ]
+                    if added:
+                        active_clauses.extend(added)
+                        logger.info("Đã xác thực thêm %d điều khoản từ graph.", len(added))
+                        critique_feedback = (
+                            f"{critique_feedback or ''}\n[BỔ SUNG CĂN CỨ] Đã đối chiếu thêm các điều khoản "
+                            "sau từ cơ sở dữ liệu; chỉ trích dẫn chúng nếu thật sự liên quan."
+                        ).strip()
+                        continue
+
+                critique_feedback = (
+                    f"{critique_feedback or ''}\n[CỔNG KIỂM CHỨNG] {gate_now_reason}. "
+                    "Chỉ được trích dẫn các điều khoản nằm trong danh sách đã cung cấp; "
+                    "tuyệt đối không viện dẫn văn bản khác."
+                ).strip()
+                continue
+
+            # Step B3: bản nháp phải trích ít nhất MỘT căn cứ trong top-3 đã truy
+            # xuất. Đo trên 100 câu: điều khoản chuẩn nằm trong top-3 tới 87%,
+            # nhưng chỉ 80% câu trả lời trích đúng -> model bỏ qua căn cứ tốt nhất.
+            if not top3_checked and len(active_clauses) >= 3:
+                top3_checked = True
+                top3 = {(str(re.sub(r"\D", "", c.get("article", ""))), canonical_doc_id(c.get("doc_id", "")))
+                        for c in active_clauses[:3]}
+                if not (extract_citations(candidate_dossier) & top3):
+                    logger.info("Bản nháp không trích căn cứ top-3 — yêu cầu xem lại.")
+                    critique_feedback = (
+                        f"{critique_feedback or ''}\n[ƯU TIÊN CĂN CỨ] Bản nháp chưa trích điều khoản nào "
+                        "trong các căn cứ liên quan nhất đã cung cấp. Hãy xem lại và dùng đúng căn cứ "
+                        "xếp hạng cao nhất cho từng kết luận."
+                    ).strip()
+                    if attempts <= self.max_retries:
+                        continue
+
             # Step C: Verification Gate (Every claim grounded in active law?)
             if audit_report.is_fully_verified:
                 logger.info(
@@ -235,6 +342,7 @@ class LegalOrchestrator(ADKAgent):
 
                 # Prune revoked clauses and enforce active replacement
                 revoked_docs = [c.cited_statute for c in audit_report.unsupported_claims]
+                pruned_docs.update(revoked_docs)
                 logger.info("LegalOrchestrator: Pruning revoked documents: %s", revoked_docs)
 
                 # Prune revoked clauses from active set
@@ -272,9 +380,81 @@ class LegalOrchestrator(ADKAgent):
                                 )
 
         state.active_clauses = active_clauses
-        state.final_compliance_dossier = candidate_dossier
-        state.is_completed = True
         state.current_step = 4
+
+        # 5. Cổng kiểm chứng đầu ra (S2-5): mọi dẫn chiếu phải có căn cứ.
+        allowed = allowed_from_clauses(active_clauses)
+
+        # Ghi nhận dẫn chiếu tới điều khoản không tồn tại, nhưng KHÔNG huỷ cả câu
+        # trả lời: thử chặn cứng ở bước này làm abstain 3% -> 27% và gt_hit 93% ->
+        # 73%. Giữ câu trả lời, đánh dấu để người duyệt kiểm.
+        # Kiểm MỌI dẫn chiếu với graph, không chỉ những cái ngoài `allowed`.
+        # Lỗi cũ: catalog fallback có thể đưa vào active_clauses những điều không
+        # tồn tại trong graph; cổng thấy "nằm trong allowed" nên cho qua, nhưng
+        # đó vẫn là dẫn chiếu không có căn cứ.
+        all_cites = sorted(extract_citations(candidate_dossier))
+        fabricated: list[tuple[str, str]] = []
+        if all_cites:
+            try:
+                found_all = LawGraphAgent().fetch_articles([(d, n) for n, d in all_cites])
+            except Exception:  # noqa: BLE001
+                found_all = []
+            status_of = {
+                (str(re.sub(r"\D", "", r.get("article", ""))), canonical_doc_id(r.get("doc_id", ""))):
+                str(r.get("status", "")).lower()
+                for r in found_all
+            }
+            ACTIVE = ("active", "in_force", "in-force")
+            # Không tồn tại HOẶC văn bản đã hết hiệu lực => không được dùng làm căn cứ.
+            fabricated = [c for c in all_cites if status_of.get(c) not in ACTIVE]
+            if fabricated and candidate_dossier:
+                # Bóc dẫn chiếu bịa, giữ phần nội dung còn lại thay vì huỷ cả câu.
+                cleaned = strip_citations(candidate_dossier, fabricated)
+                if cleaned and extract_citations(cleaned):
+                    candidate_dossier = cleaned
+                detail = ", ".join(f"Điều {a} {d}" for a, d in fabricated)
+                logger.warning("Bản nháp trích điều khoản không tồn tại: %s", detail)
+                state.guardrail_verdicts.append(
+                    {"status": "answer_gate", "ok": False,
+                     "reason": f"có dẫn chiếu tới điều khoản không tồn tại: {detail}"}
+                )
+
+        revoked_pairs: set[tuple[str, str]] = set()
+        for doc in pruned_docs:
+            for c in retrieved:
+                if c.get("doc_id") == doc:
+                    import re as _re
+                    num = _re.sub(r"\D", "", str(c.get("article", "")))
+                    if num:
+                        revoked_pairs.add((num, canonical_doc_id(doc)))
+        gate_ok, gate_reason, bad_cites = gate_answer(candidate_dossier, allowed, revoked_pairs)
+        state.guardrail_verdicts.append(
+            {"status": "answer_gate", "ok": gate_ok, "reason": gate_reason}
+        )
+
+        if not gate_ok:
+            logger.warning("Answer gate chặn bản nháp: %s", gate_reason)
+            state.answer_status = "insufficient_evidence"
+            state.answer_message = ABSTAIN_MSG
+            state.final_compliance_dossier = ABSTAIN_MSG     # hiển thị cho người dùng
+            state.candidate_draft = candidate_dossier       # giữ lại để hậu kiểm
+            state.is_completed = False
+        else:
+            state.final_compliance_dossier = candidate_dossier
+            if "khác điều" in gate_reason:
+                # Đúng văn bản nhưng trích điều chưa truy xuất: vẫn trả lời, nhưng
+                # đánh dấu để người duyệt kiểm lại. Chặn cứng ở đây làm mất utility.
+                state.answer_status = "unverified"
+                state.human_confirmation_needed = True
+                state.is_completed = True
+            elif audit_report.is_fully_verified and not fabricated:
+                state.answer_status = "ok"
+                state.is_completed = True
+            else:
+                # Có dẫn chiếu hợp lệ nhưng auditor chưa xác nhận hết -> cần người duyệt.
+                state.answer_status = "unverified"
+                state.human_confirmation_needed = True
+                state.is_completed = True
 
         # 6. Persistent Memory / Audit logging (SQLite)
         try:

@@ -61,11 +61,21 @@ def _get_neo4j_client() -> Any | None:
     return client
 
 
+_MAX_PER_DOC = int(os.getenv("LAWGRAPH_MAX_PER_DOC", "2"))
+
+
 def _search_terms(subgoals: list[str], keywords: list[str], limit: int = 24) -> list[str]:
-    """Tokenises subgoals + keywords into lowercase CONTAINS terms."""
+    """Tokenises subgoals + keywords into lowercase CONTAINS terms.
+
+    Cụm từ (phrase) được đặt TRƯỚC unigram: "ví điện tử" phải nặng hơn "điện"
+    hay "tử" riêng lẻ, nếu không các văn bản chỉ tình cờ chứa một âm tiết sẽ
+    chiếm hết slot và đẩy văn bản đúng ra ngoài.
+    """
+    phrases = [" ".join(p.lower().split()) for p in [*subgoals] if p and len(p.split()) > 1]
+    phrases += [" ".join(k.lower().split()) for k in keywords if k and len(k.split()) > 1]
     raw = " ".join([*subgoals, *keywords]).lower()
     tokens = [t for t in re.findall(r"\w+", raw, flags=re.UNICODE) if len(t) >= 3]
-    return list(dict.fromkeys(tokens))[:limit]
+    return list(dict.fromkeys(phrases + tokens))[:limit]
 
 
 def _load_dense_index() -> tuple[Any, Any, list[dict[str, Any]]]:
@@ -336,7 +346,9 @@ class LawGraphAgent(ADKAgent):
         cypher = """
         MATCH (d:Document)-[:CONTAINS]->(a:Article)
         WITH d, a, toLower(coalesce(a.title, '') + ' ' + coalesce(a.content, '')) AS hay
-        WITH d, a, reduce(s = 0, t IN $terms | s + size(split(hay, t)) - 1) AS score
+        WITH d, a,
+             reduce(s = 0, t IN $terms | s + size(split(hay, t)) - 1) AS score,
+             size(hay) AS doc_len
         WHERE score > 0
         RETURN d.doc_id AS doc_id,
                coalesce(d.title, '') AS title,
@@ -346,23 +358,43 @@ class LawGraphAgent(ADKAgent):
                'Điều ' + coalesce(a.article_number, '') AS article,
                coalesce(a.title, '') AS article_title,
                substring(coalesce(a.content, ""), 0, 1200) AS content,
-               score
+               score, doc_len
         ORDER BY score DESC, d.doc_id ASC, a.article_number ASC
         LIMIT $limit
         """
 
         try:
-            rows = client.execute_query(cypher, {"terms": terms, "limit": top_k})
+            # Lấy dư ứng viên rồi đa dạng hoá theo văn bản: nếu để LIMIT $limit
+            # trần, một văn bản nhiều điều khoản khớp sẽ chiếm hết slot và đẩy
+            # văn bản đúng ra ngoài (đúng hiện tượng "context dilution").
+            rows = client.execute_query(cypher, {"terms": terms, "limit": top_k * 10})
         except Exception as e:
             logger.warning("LawGraphAgent: Neo4j retrieval failed: %s", e)
             return []
 
+        # Chuẩn hoá theo độ dài (dạng BM25): đếm thuật ngữ thô khiến văn bản dài
+        # luôn thắng oan. score' = score*(k1+1)/(score + k1*(1-b+b*len/avg)).
+        k1, b = 1.2, 0.75
+        if rows:
+            avg_len = sum(int(r.get("doc_len") or 1) for r in rows) / len(rows)
+            for r in rows:
+                tf = float(r.get("score") or 0)
+                dl = float(r.get("doc_len") or 1)
+                denom = tf + k1 * (1 - b + b * dl / max(avg_len, 1.0))
+                r["score_bm25"] = (tf * (k1 + 1) / denom) if denom > 0 else 0.0
+            rows.sort(key=lambda r: (-r["score_bm25"], r.get("doc_id", ""), r.get("article", "")))
+
         hits: list[dict[str, Any]] = []
         seen: set[str] = set()
+        per_doc: dict[str, int] = {}
         for row in rows:
             key = f"{row.get('doc_id')}:{row.get('article')}"
             if key in seen:
                 continue
+            doc = row.get("doc_id", "")
+            if per_doc.get(doc, 0) >= _MAX_PER_DOC:
+                continue
+            per_doc[doc] = per_doc.get(doc, 0) + 1
             seen.add(key)
             hits.append(
                 {
@@ -382,6 +414,41 @@ class LawGraphAgent(ADKAgent):
                 break
         logger.info("LawGraphAgent: Neo4j returned %d clause hits.", len(hits))
         return hits
+
+    def fetch_articles(self, pairs: list[tuple[str, str]]) -> list[dict[str, Any]]:
+        """Lấy đúng các điều khoản (doc_id, số điều) từ graph, để xác thực lại.
+
+        Dùng khi bản nháp trích một điều cùng văn bản nhưng chưa được truy xuất:
+        thay vì chặn, ta ĐỐI CHIẾU lại với graph. Trích dẫn chỉ được chấp nhận
+        nếu điều đó thật sự tồn tại — không tin lời model.
+        """
+        client = _get_neo4j_client()
+        if client is None or not pairs:
+            return []
+        out: list[dict[str, Any]] = []
+        with client.driver.session() as sess:
+            for doc_id, num in pairs:
+                rows = sess.run(
+                    "MATCH (d:Document)-[:CONTAINS]->(a:Article) "
+                    "WHERE d.doc_id = $doc AND a.article_number = $num "
+                    "RETURN coalesce(d.title,'') AS title, coalesce(d.status,'unknown') AS status, "
+                    "       coalesce(d.effective_date,'') AS effective_date, "
+                    "       a.article_number AS num, coalesce(a.title,'') AS atitle, "
+                    "       coalesce(a.content,'') AS content, d.revoked_by AS revoked_by",
+                    doc=doc_id, num=str(num))
+                for r in rows:
+                    out.append({
+                        "doc_id": doc_id,
+                        "title": r["title"],
+                        "status": r["status"],
+                        "effective_date": r["effective_date"],
+                        "article": f"Điều {r['num']}",
+                        "article_title": r["atitle"],
+                        "content": r["content"][:1200],
+                        "supersedes": [],
+                        "revoked_by": r["revoked_by"],
+                    })
+        return out
 
     def dense_retrieve(self, query: str, top_k: int = 6) -> list[dict[str, Any]]:
         """Embedding search over the exported chunk index.
@@ -495,14 +562,27 @@ class LawGraphAgent(ADKAgent):
                                 }
                             )
 
-        # Pass 3 (fallback): dense search over the exported chunk index.
-        if use_dense and not results:
+        # Pass 3: HỢP NHẤT lexical (Neo4j) + dense (vector) bằng Reciprocal Rank
+        # Fusion. Trước đây dense chỉ chạy khi lexical trả rỗng — mà lexical gần
+        # như không bao giờ rỗng, nên bộ vector gần như không bao giờ được dùng.
+        if use_dense:
             query_text = " ".join(retrieval_texts + keywords).strip() or " ".join(subgoals)
-            for item in self.dense_retrieve(query_text, top_k=dense_top_k):
-                item_key = f"{item['doc_id']}:{item['article']}"
-                if item_key not in seen_keys:
-                    seen_keys.add(item_key)
-                    results.append(item)
+            dense_hits = self.dense_retrieve(query_text, top_k=dense_top_k)
+            if dense_hits:
+                K = 60.0
+                fused: dict[str, float] = {}
+                by_key: dict[str, dict[str, Any]] = {}
+                for rank, item in enumerate(results):
+                    k = f"{item['doc_id']}:{item['article']}"
+                    fused[k] = fused.get(k, 0.0) + 1.0 / (K + rank + 1)
+                    by_key.setdefault(k, item)
+                for rank, item in enumerate(dense_hits):
+                    k = f"{item['doc_id']}:{item['article']}"
+                    fused[k] = fused.get(k, 0.0) + 1.0 / (K + rank + 1)
+                    by_key.setdefault(k, item)
+                ordered = sorted(fused.items(), key=lambda kv: -kv[1])
+                results = [by_key[k] for k, _ in ordered]
+                seen_keys = set(by_key)
 
         # If live database is requested or catalog had no results, attempt dynamic graph retrieval
         if (self.use_live_db or force_live_db) or not results:

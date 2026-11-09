@@ -120,9 +120,15 @@ class TestOrchestratorKeepsInForceProvisions(unittest.TestCase):
         implementing guidance that supplies the filing forms.
         """
         orchestrator = LegalOrchestrator()
-        subgoals, keywords = orchestrator.plan_subgoals(
-            "doanh nghiệp fintech xin cấp phép ví điện tử"
-        )
+        # Subgoals cố định: gọi planner (LLM) ở đây làm test lúc xanh lúc đỏ vì
+        # mỗi lần sinh một bộ subgoal khác nhau -> tập truy xuất khác nhau.
+        # Test này kiểm tra "văn bản còn hiệu lực có bị prune oan không",
+        # không kiểm tra chất lượng planner.
+        subgoals = [
+            "Xác định điều kiện cấp phép ví điện tử",
+            "Xác định hồ sơ cấp phép trung gian thanh toán",
+        ]
+        keywords = ["ví điện tử", "cấp phép", "trung gian thanh toán"]
         provisions = LawGraphAgent().retrieve_provisions(subgoals=subgoals, keywords=keywords)
         report = orchestrator.auditor_agent.audit_provisions(provisions)
 

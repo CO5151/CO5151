@@ -140,13 +140,43 @@ class DrafterAgent(ADKAgent):
                     model=get_default_model(),
                     instruction="Bạn là chuyên gia tư vấn tuân thủ pháp luật doanh nghiệp Việt Nam. Hãy đưa ra kết luận và khuyến nghị thực thi chuẩn xác, chuyên nghiệp dựa trên các điều khoản đã được đối soát.",
                 )
+                # Danh sách văn bản ĐƯỢC PHÉP trích dẫn, nêu tường minh. Trước đây
+                # prompt chỉ nói "dựa trên các điều khoản trên", nên model vẫn
+                # viện dẫn văn bản ngoài (đã bắt được ở cổng kiểm chứng).
+                # Liệt kê tới cấp ĐIỀU, không chỉ cấp văn bản. Trước đây chỉ nêu
+                # tên văn bản nên model trích "Điều 13 Nghị định 52/2024" — điều
+                # không tồn tại — và cổng phải chặn ở đầu ra.
+                allowed_items = []
+                for c in verified_clauses:
+                    doc = str(c.get("doc_id", "")).strip()
+                    art = str(c.get("article", "")).strip()
+                    if doc and art:
+                        allowed_items.append(f"{art} {doc}")
+                allowed_items = list(dict.fromkeys(allowed_items))
+                allow_line = (
+                    "DANH SÁCH ĐIỀU KHOẢN ĐƯỢC PHÉP TRÍCH DẪN (đúng từng chữ, không thêm bớt):\n"
+                    + "\n".join(f"- {x}" for x in allowed_items)
+                    + "\nTuyệt đối KHÔNG viện dẫn bất kỳ điều khoản hay văn bản nào khác, "
+                      "kể cả để so sánh hay làm ví dụ."
+                    if allowed_items
+                    else ""
+                )
                 prompt = (
                     f"Dựa trên câu hỏi tra cứu:\n'{query}'\n"
                     f"và các căn cứ pháp lý đã được thẩm định còn hiệu lực:\n{ctx}\n"
+                    f"{allow_line}\n"
                     f"{p_info}\n"
                     "Hãy đưa ra phần KẾT LUẬN & TƯ VẤN THỰC THI TOÀN DIỆN (nêu rõ số hiệu Điều/Khoản, "
                     "liệt kê đầy đủ và chi tiết các điều kiện bắt buộc, mốc thời hạn hành chính, "
-                    "hồ sơ giấy tờ và đối tượng áp dụng theo từng gạch đầu dòng rõ ràng)."
+                    "hồ sơ giấy tờ và đối tượng áp dụng theo từng gạch đầu dòng rõ ràng).\n"
+                    "QUY TẮC BẮT BUỘC:\n"
+                    "1. MỞ ĐẦU bằng đúng một câu trả lời trực tiếp cho câu hỏi, kèm đúng MỘT điều khoản "
+                    "làm căn cứ chính. Điều khoản đó phải là điều trả lời trực tiếp nhất, không phải "
+                    "điều liên quan mờ nhạt.\n"
+                    "2. Mỗi kết luận chỉ nêu MỘT điều khoản căn cứ. Không liệt kê nhiều điều cho cùng "
+                    "một ý, không trích dẫn để trang trí.\n"
+                    "3. Chỉ dùng các điều khoản trong danh sách đã cấp; không viện dẫn thêm bất kỳ "
+                    "văn bản hay điều nào khác."
                 )
                 if critique_feedback:
                     prompt += f"\nLƯU Ý PHẢN HỒI TỪ AUDITOR (CẦN SỬA ĐỔI / KHẮC PHỤC):\n{critique_feedback}\n"

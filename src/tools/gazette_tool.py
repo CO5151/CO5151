@@ -9,6 +9,7 @@ Provides ADK tools for:
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 import re
 from typing import Any
@@ -59,7 +60,12 @@ def verify_vbpl_status(
         and verification source ('statute_cache', 'vbpl.vn', or 'offline_catalog').
     """
     clean_id = _normalize_doc_id(doc_id)
-    mgr = memory_manager or SQLiteMemoryManager("data/enterprise_compliance.db")
+    mgr = memory_manager or SQLiteMemoryManager()
+
+    # Chế độ offline tất định (dùng trong test/CI): chỉ đọc cache + catalog nội bộ,
+    # tuyệt đối không gọi vbpl.vn. Thiếu cờ này, bộ test phụ thuộc mạng và lúc
+    # xanh lúc đỏ.
+    offline = os.getenv("LEGALPILOT_OFFLINE", "").strip() in ("1", "true", "yes")
 
     # 1. Check local SQLite cache first (if not forced refresh)
     if not force_refresh:
@@ -125,6 +131,36 @@ def verify_vbpl_status(
             raw_meta["revoked_by"] = catalog_doc["revoked_by"]
         if catalog_doc.get("superseded_by"):
             raw_meta["superseded_by"] = catalog_doc["superseded_by"]
+
+    if offline:
+        logger.info("OFFLINE mode: dùng catalog nội bộ cho %s (status=%s)", clean_id, resolved_status)
+        # Vẫn ghi cache để lần gọi sau trả "statute_cache" giống hệt chế độ online —
+        # nếu không, hành vi offline khác online và test cache sẽ sai.
+        try:
+            mgr.set_cached_statute(
+                StatuteCacheEntry(
+                    law_id=clean_id,
+                    document_number=clean_id,
+                    title=resolved_title,
+                    effective_date=resolved_date,
+                    status=resolved_status,
+                    raw_metadata=raw_meta,
+                    ttl_seconds=86400,
+                )
+            )
+        except Exception as e:  # noqa: BLE001
+            logger.warning("OFFLINE: không ghi được cache cho %s: %s", clean_id, e)
+        return {
+            "doc_id": clean_id,
+            "document_number": clean_id,
+            "title": resolved_title,
+            "status": resolved_status,
+            "is_in_force": resolved_status in ("active", "partially_expired"),
+            "effective_date": resolved_date,
+            "source": "offline_catalog",
+            "cached": False,
+            "metadata": raw_meta,
+        }
 
     try:
         headers = {

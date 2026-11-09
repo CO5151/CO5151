@@ -26,7 +26,9 @@ class TestLegalAgents(unittest.TestCase):
     def setUp(self) -> None:
         self.test_db_path = "data/test_agents_memory.db"
         self.memory = SQLiteMemoryManager(self.test_db_path)
-        self.orchestrator = LegalOrchestrator(memory_manager=self.memory, max_retries=2)
+        # max_retries=1: giữ nguyên việc test vòng backtrack nhưng chặn thời gian chạy
+        # phình ra (mỗi lượt retry là một lần gọi LLM, cộng thêm lượt top-3).
+        self.orchestrator = LegalOrchestrator(memory_manager=self.memory, max_retries=1)
         self.lawgraph = LawGraphAgent()
         self.auditor = ClaimAuditorAgent(memory_manager=self.memory)
         self.drafter = DrafterAgent()

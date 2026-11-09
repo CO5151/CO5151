@@ -31,6 +31,7 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(WORKSPACE))
 
+from src.core.doc_ids import canonical_doc_id
 from src.knowledge.neo4j_client import Neo4jClient  # noqa: E402
 
 CHUNK_EXPORT = WORKSPACE / "data/processed/qdrant_chunks_export.json"
@@ -70,7 +71,7 @@ def main() -> None:
     docs: dict[str, dict] = {}
     for chunk in chunks:
         payload = chunk.get("payload", {})
-        doc_id = payload.get("doc_id")
+        doc_id = canonical_doc_id(payload.get("doc_id"))
         if not doc_id:
             continue
         docs.setdefault(
