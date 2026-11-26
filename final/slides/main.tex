@@ -1,0 +1,342 @@
+%% =====================================================================
+%%  CO5151 · G4 · SLIDE FINAL — KHUNG (SKELETON)
+%%  Tổng 20 phút. Phân bổ theo gợi ý của đề:
+%%    2' bài toán/đóng góp  ·  4' kiến trúc + trục nâng cao
+%%    6' LIVE DEMO          ·  5' đánh giá + security  ·  3' thay đổi từ D2 + kết luận
+%%
+%%  QUY TẮC:
+%%    - Mỗi frame 1 ý. Tối đa 6 bullet, mỗi bullet <= 12 từ.
+%%    - Số trên slide PHẢI khớp báo cáo. Không có số riêng cho slide.
+%%    - Frame backup (sau \appendix) KHÔNG tính vào 20 phút.
+%%
+%%  BIÊN DỊCH:  tectonic main.tex   → main.pdf   (16:9)
+%% =====================================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage{fontspec}
+\setmainfont{texgyretermes}[Extension=.otf,
+  UprightFont=*-regular, BoldFont=*-bold,
+  ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+\usepackage[vietnamese]{babel}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+%% --- Bảng màu (đổi 1 chỗ là đổi cả deck) ---
+\definecolor{hcmut}{RGB}{0,80,140}
+\definecolor{accent}{RGB}{200,80,0}
+\definecolor{ok}{RGB}{0,120,70}
+\definecolor{bad}{RGB}{170,30,30}
+
+\usetheme{default}
+\usecolortheme{default}
+\setbeamercolor{frametitle}{fg=hcmut}
+\setbeamercolor{title}{fg=hcmut}
+\setbeamercolor{structure}{fg=hcmut}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{%
+  \hfill\usebeamerfont{footline}\insertframenumber/\inserttotalframenumber\hspace{6pt}\vspace{3pt}}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+\newcommand{\TODO}[1]{\textcolor{accent}{\textbf{[#1]}}}
+\newcommand{\good}[1]{\textcolor{ok}{\textbf{#1}}}
+\newcommand{\warn}[1]{\textcolor{bad}{\textbf{#1}}}
+\newcommand{\tm}[1]{\hfill{\scriptsize\color{gray}[#1]}}
+
+\title{LegalPilot-VN}
+\subtitle{Hệ đa tác tử tư vấn tuân thủ pháp luật Việt Nam}
+\author{G4 · Đặng Lâm Tùng · Nguyễn Trung Phong · Vũ Việt Hưng}
+\institute{CO5151 · HK261 · 09/12/2026}
+\date{}
+
+\begin{document}
+
+%% ---------------------------------------------------------------- 0:00
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%% ------------------------------------------------------- 0:00–0:30
+\begin{frame}{Bài toán}
+  \begin{itemize}
+    \item Chuyên viên tuân thủ ngân hàng: tra \textbf{1.703 văn bản QPPL} bằng tay
+    \item Sai 1 dẫn chiếu đã hết hiệu lực $\rightarrow$ rủi ro pháp lý thật
+    \item Câu hỏi thực: \emph{“Khoản vay nước ngoài cần điều kiện gì?”}
+  \end{itemize}
+  \vspace{0.6em}
+  \begin{block}{Vì sao phải là agent, không chỉ RAG}
+    Phân rã câu hỏi $\rightarrow$ duyệt đồ thị $\rightarrow$ đối soát hiệu lực
+    $\rightarrow$ kiểm từng mệnh đề. Bước sau phụ thuộc kết quả bước trước.
+  \end{block}
+  \tm{0:00–0:30}
+\end{frame}
+
+%% ------------------------------------------------------- 0:30–2:00
+\begin{frame}{Đóng góp thực tế — chỉ cái đã cài và đã đo}
+  \begin{enumerate}
+    \item \textbf{Selective Temporal Traversal} — thay 1-hop cố định của [1]
+    \item \textbf{Claim Auditor} — kiểm từng mệnh đề nguyên tử với context
+    \item \textbf{Citation Gate tất định} — nháp phải trích $\geq1$ căn cứ top-3
+    \item \textbf{Bộ đánh giá} 100 câu $\times$ 3 run $\times$ 2 cấu hình, có cost/latency
+    \item \textbf{14 ca injection} direct + indirect, có log trước/sau
+  \end{enumerate}
+  \vspace{0.4em}
+  \TODO{chốt câu “khác biệt nằm ở cơ chế, không phải ở tên framework”}
+  \tm{1:00–2:00}
+\end{frame}
+
+%% ------------------------------------------------------- 2:00–3:30
+\begin{frame}{Kiến trúc và luồng điều khiển}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \TODO{\textbf{Hình 1 — sơ đồ THẬT}}
+      \vspace{0.3em}
+      \begin{enumerate}
+        \item cổng guardrail đầu vào
+        \item Planner tách 3--5 sub-query
+        \item Retriever: Qdrant + Neo4j
+        \item Claim Auditor
+        \item Drafter + citation gate
+      \end{enumerate}
+      \TODO{điều kiện dừng + số vòng lặp tối đa}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{block}{Điểm khác paper [1]}
+        1-hop cố định $\rightarrow$ duyệt \textbf{chọn lọc theo mục tiêu}
+      \end{block}
+      \TODO{chèn số: max hops, max nodes, top-k}
+    \end{column}
+  \end{columns}
+  \tm{2:00–3:30}
+\end{frame}
+
+%% ------------------------------------------------------- 3:30–4:30
+\begin{frame}{Tools, phân quyền và bộ nhớ}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Tools} \TODO{bảng thật từ src/tools/}
+      \begin{itemize}
+        \item đọc: graph, VBPL live, web search
+        \item ghi: \warn{chỉ dossier} — cần human token
+        \item timeout + fallback mỗi tool
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \textbf{Memory}
+      \begin{itemize}
+        \item ngắn hạn: token gate
+        \item dài hạn: SQLite session
+        \item \textbf{chính sách GHI} \TODO{}
+        \item \textbf{chính sách TRUY HỒI} \TODO{}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \tm{3:30–4:30}
+\end{frame}
+
+%% ------------------------------------------------------- 4:30–6:00
+\begin{frame}{Ba trục nâng cao ngoài tools/memory}
+  \small
+  \begin{tabular}{@{}p{2.5cm}p{3.6cm}p{4.2cm}@{}}
+    \toprule
+    Trục & Vai trò & Phương án đã cân nhắc \\
+    \midrule
+    Selective & duyệt theo mục tiêu & BFS toàn phần (nổ context) \\
+    Traversal & thay 1-hop & PageRank tĩnh (bỏ yếu tố thời gian) \\
+    \midrule
+    Claim & kiểm từng mệnh đề & LLM judge end-to-end (đắt, không truy được) \\
+    Auditor & với context & \\
+    \midrule
+    Citation & ràng buộc top-3 & siết allowlist (abstain 10\%) $\cdot$ \\
+    Gate & kiểm bằng code & chặn cứng (tệ hơn — xem slide hạn chế) \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.5em}
+  \TODO{trục thứ 4 nếu có — hoặc nói rõ chỉ 3}
+  \tm{4:30–6:00}
+\end{frame}
+
+%% ------------------------------------------------------- 6:00–12:00
+\begin{frame}{LIVE DEMO — 6 phút}
+  \begin{enumerate}
+    \item {\bf 1 task end-to-end} \tm{2'}
+      \begin{itemize}
+        \item nhập câu hỏi thật $\rightarrow$ dossier hoàn chỉnh
+      \end{itemize}
+    \item {\bf Mở trace, giải thích} \tm{2'}
+      \begin{itemize}
+        \item tool call nào, memory đọc gì, gate chặn gì, vì sao viết lại
+      \end{itemize}
+    \item {\bf 1 ca tấn công có kiểm soát} \tm{1,5'}
+      \begin{itemize}
+        \item indirect injection trong chunk $\rightarrow$ bị chặn, chỉ log
+      \end{itemize}
+    \item {\bf 1 hành động được bảo vệ} \tm{0,5'}
+      \begin{itemize}
+        \item nộp hồ sơ $\rightarrow$ \texttt{requires\_human\_token} $\rightarrow$ audit
+      \end{itemize}
+  \end{enumerate}
+  \vspace{0.3em}
+  \warn{Chuẩn bị sẵn: terminal + repo + video dự phòng đúng tag \texttt{final}.
+  Nếu API/mạng lỗi: chuyển video, nói rõ \emph{“đây là bản ghi, không phải chạy trực tiếp”}.}
+  \tm{6:00–12:00}
+\end{frame}
+
+%% ------------------------------------------------------ 12:00–13:30
+\begin{frame}{Đánh giá: 100 câu $\times$ 3 run $\times$ 2 cấu hình}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Thiết kế}
+      \begin{itemize}
+        \item 100 câu, ground truth chuyên viên
+        \item C1 = full · C2 = bỏ Selective Traversal
+        \item 3 run/cấu hình = \textbf{600 task-run}
+        \item cùng model, cùng token budget
+      \end{itemize}
+      \TODO{chốt baseline ngoài chạy được}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Tiêu chí (định nghĩa bằng code)}
+      \begin{itemize}
+        \item presence · validity · trúng căn cứ
+        \item cả ba cùng lúc = success
+        \item cost/task, latency/task — cùng mẫu số
+        \item contamination: bộ công khai, đã dùng trong [1]
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \tm{12:00–13:30}
+\end{frame}
+
+%% ------------------------------------------------------ 13:30–15:00
+\begin{frame}{Kết quả: 96/100 so với 91/100 của paper}
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    & G4 (C1) & G4 (C2) & Paper [1] \\
+    \midrule
+    Abstain & 0,0\% & \TODO{} & — \\
+    Citation presence & 100,0\% & \TODO{} & — \\
+    Citation validity & 99,0\% & \TODO{} & — \\
+    Trúng căn cứ & 97,0\% & \TODO{} & — \\
+    \midrule
+    \textbf{Cả ba cùng lúc} & \good{\textbf{96,0\%}} & \TODO{} & \textbf{91,0\%} \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.6em}
+  \begin{block}{Nói đúng mức}
+    Proxy 3 điều kiện, \textbf{không} có semantic equivalence $\Rightarrow$ 96\% là
+    \warn{cận trên}. Paper 91\% có judge. Không được nói “vượt về Answer Correctness”.
+  \end{block}
+  \TODO{thay bằng mean $\pm$ SD qua 3 run + kiểm tra có ngoài 1 SD}
+  \tm{13:30–15:00}
+\end{frame}
+
+%% ------------------------------------------------------ 15:00–16:00
+\begin{frame}{Ablation và chi phí}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Ablation C1 vs C2}\\[0.3em]
+      \TODO{bảng: cơ chế bị tách, chênh lệch, có ngoài nhiễu không}
+      \vspace{0.5em}
+      \begin{block}{Điểm đã sửa so với D2}
+        Precision@2 \warn{thấp hơn} paper (34,47\% vs 37--39\%) và khác $k$
+        $\rightarrow$ \textbf{chưa so sánh được}. D2 ghi “nhất quán” là \warn{sai}.
+      \end{block}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \textbf{Cost \& latency}\\[0.3em]
+      \TODO{cost/task (USD), latency/task (s), \$/100 câu, ngày chạy, model id}
+    \end{column}
+  \end{columns}
+  \tm{15:00–16:00}
+\end{frame}
+
+%% ------------------------------------------------------ 16:00–17:00
+\begin{frame}{Bảo mật: 14 ca injection, trước và sau khi vá}
+  \small
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    Nhóm & Số ca & Trước khi vá & Sau khi vá \\
+    \midrule
+    Direct (A01--A06)  & 6 & \warn{\TODO{/6}} & \good{\TODO{/6}} \\
+    Indirect (A07--A14) & 8 & \warn{\TODO{/8}} & \good{\TODO{/8}} \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.5em}
+  \begin{block}{Lỗ hổng đã tìm thấy trong code của chính nhóm}
+    \texttt{InputSanitizer} có nhưng \warn{không được gọi} · guardrail chỉ chặn
+    \textbf{câu hỏi người dùng}, mọi nội dung truy xuất/tool output \warn{không qua cổng nào}
+  \end{block}
+  \TODO{1 ảnh/log hành động nộp hồ sơ: token $\rightarrow$ audit}
+  \tm{16:00–17:00}
+\end{frame}
+
+%% ------------------------------------------------------ 17:00–18:30
+\begin{frame}{Thay đổi từ D2 và hạn chế}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Đã thay đổi}
+      \begin{itemize}
+        \item thêm Citation Gate top-3
+        \item vá cổng nội dung không tin cậy
+        \item sửa kết luận Precision
+        \item 1 thí nghiệm thất bại đã ghi lại
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \textbf{Hạn chế}
+      \begin{itemize}
+        \item thiếu judge semantic equivalence
+        \item 100 câu: mẫu nhỏ, công khai
+        \item chưa phủ ảnh scan PDF
+        \item \TODO{residual risk: 3 điểm}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \tm{17:00–18:30}
+\end{frame}
+
+%% ------------------------------------------------------ 18:30–20:00
+\begin{frame}{Kết luận}
+  \begin{itemize}
+    \item Giả thuyết: \TODO{bác bỏ / không bác bỏ — kèm số và độ biến thiên}
+    \item Hệ thống chạy thật, end-to-end, có trace và audit
+    \item Truy xuất vượt paper ở Recall/F2/nhiễu; \warn{thua Precision@2}
+    \item Mở: Answer Correctness thật cần LLM-judge; mở rộng ngoài ngành ngân hàng
+  \end{itemize}
+  \vspace{1em}
+  \begin{center}
+    \Large Cảm ơn — sẵn sàng hỏi đáp\\[0.3em]
+    \normalsize\color{gray}10 phút Q\&A: mỗi thành viên trả lời phần mình phụ trách
+  \end{center}
+  \tm{18:30–20:00}
+\end{frame}
+
+%% =====================================================================
+%%  BACKUP — KHÔNG tính vào 20 phút. Dùng khi bị hỏi sâu.
+%% =====================================================================
+\appendix
+
+\begin{frame}{Backup: kiến trúc tham chiếu đầy đủ}
+  \TODO{Hình 1 bản lớn, có tên từng agent + file code tương ứng}
+\end{frame}
+
+\begin{frame}{Backup: bảng 14 ca injection chi tiết}
+  \TODO{Bảng đầy đủ: ID · loại · điểm vào · phòng vệ · kết quả · residual risk}
+\end{frame}
+
+\begin{frame}{Backup: trace đầy đủ 1 task}
+  \TODO{log thật, đánh số mũi tên}
+\end{frame}
+
+\begin{frame}{Backup: bảng đối chiếu yêu cầu R1–R4 + RT1–RT4}
+  \TODO{từ Appendix D của báo cáo}
+\end{frame}
+
+\begin{frame}{Backup: cost chi tiết theo cấu hình}
+  \TODO{token in/out, đơn giá, tổng USD, ngày chạy}
+\end{frame}
+
+\end{document}

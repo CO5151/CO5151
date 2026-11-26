@@ -1,0 +1,354 @@
+%% =====================================================================
+%%  CO5151 · G4 · D3 FINAL REPORT — KHUNG (SKELETON)
+%%  Đề tài: LegalPilot-VN — Hệ đa tác tử tư vấn tuân thủ pháp luật VN
+%%  Hướng: RESEARCH (RT1–RT4)
+%%
+%%  CÁCH DÙNG:
+%%    - Mọi chỗ cần viết là \TODO{...} (chữ đỏ). Xoá dần cho tới khi hết đỏ.
+%%    - Mọi số liệu phải lấy từ final/results/RESULTS_P2.md và raw JSON.
+%%    - KHÔNG viết số tay. Nếu chưa có số thì để \TODO.
+%%
+%%  BIÊN DỊCH (XeTeX, giống D2):
+%%    tectonic main.tex          → main.pdf
+%%
+%%  GIỚI HẠN: THÂN BÀI 6–8 TRANG. References + Appendix KHÔNG tính.
+%% =====================================================================
+\documentclass[sigconf,nonacm]{acmart}
+
+%% --- Vietnamese: giữ font của acmart, thêm babel ---
+\usepackage[vietnamese]{babel}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{balance}
+
+%% --- Macro đánh dấu việc còn phải làm ---
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+\newcommand{\EVID}[1]{\textcolor{blue}{\footnotesize[#1]}}
+
+\setcopyright{none}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\acmConference[CO5151 --- HK261]{Báo cáo cuối kỳ}{09/12/2026}{TP. Hồ Chí Minh, Việt Nam}
+
+\begin{document}
+
+\title{LegalPilot-VN: Hệ đa tác tử truy hồi tăng cường đồ thị tri thức cho tư vấn tuân thủ pháp luật Việt Nam}
+
+\author{Đặng Lâm Tùng}
+\affiliation{\institution{Trường ĐH Bách khoa --- ĐHQG-HCM}\country{Việt Nam}}
+\email{tung.danglam@hcmut.edu.vn}
+\author{Nguyễn Trung Phong}
+\affiliation{\institution{Trường ĐH Bách khoa --- ĐHQG-HCM}\country{Việt Nam}}
+\author{Vũ Việt Hưng}
+\affiliation{\institution{Trường ĐH Bách khoa --- ĐHQG-HCM}\country{Việt Nam}}
+
+\renewcommand{\shortauthors}{G4: Tùng, Phong, Hưng}
+
+%% =====================================================================
+\begin{abstract}
+\TODO{120--180 từ. Bắt buộc có: (i) bài toán + người dùng, (ii) cách tiếp cận
+1 câu, (iii) KẾT QUẢ CHÍNH CÓ SỐ (dùng 96/100 vs 91/100 của paper, nêu rõ là
+proxy không judge), (iv) giới hạn quan trọng nhất (thiếu semantic equivalence
++ mẫu 100 câu công khai).}
+
+\textbf{Từ khoá:} agentic RAG, đồ thị tri thức pháp luật, prompt injection, tái lập thực nghiệm.
+\end{abstract}
+
+\maketitle
+
+%% =====================================================================
+\section{Giới thiệu}
+\label{sec:intro}
+
+\TODO{4 đoạn:}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Người dùng \& bài toán.} Chuyên viên tuân thủ ngân hàng phải tra
+        1.703 văn bản QPPL, tự đối chiếu hiệu lực, tự chịu trách nhiệm nếu viện dẫn
+        văn bản đã hết hiệu lực. \EVID{mục 1 D2}
+  \item \textbf{Vì sao phải dùng agent, không chỉ RAG.} Bài toán cần phân rã câu hỏi,
+        duyệt đồ thị nhiều bước, đối soát hiệu lực trực tuyến, kiểm toán từng mệnh đề
+        — chuỗi quyết định phụ thuộc kết quả bước trước.
+  \item \textbf{Phạm vi.} Ngành ngân hàng; 1.703 văn bản; 100 câu ground truth chuyên gia.
+        Ngoài phạm vi: tư vấn tranh tụng, đại diện pháp lý.
+  \item \textbf{Đóng góp thực tế} — chỉ liệt kê cái đã cài và đã đo:
+        \begin{itemize}
+          \item Selective Temporal Traversal trên đồ thị (thay 1-hop cố định của [1]).
+          \item Claim Auditor kiểm từng mệnh đề nguyên tử với context.
+          \item Ràng buộc đầu ra tất định: bản nháp phải trích $\geq 1$ căn cứ trong top-3.
+          \item Bộ đánh giá 100 câu $\times$ 3 run $\times$ 2 cấu hình, có cost/latency.
+          \item 14 ca prompt injection direct + indirect có log.
+        \end{itemize}
+\end{enumerate}
+
+\paragraph{Giả thuyết có thể bác bỏ (RT1).}
+\TODO{Điền đúng 1 câu, ví dụ: "Ràng buộc 'trích $\geq1$ căn cứ trong top-3' làm
+\texttt{gt\_hit} tăng $\geq 5$ điểm tuyệt đối so với cùng hệ thống không có ràng buộc,
+với độ lệch chuẩn qua 3 run $<3$ điểm. Giả thuyết bị \textbf{bác bỏ} nếu chênh lệch
+nằm trong 1 SD hoặc nếu chi phí latency tăng $>2\times$ mà không tăng success."}
+
+\paragraph{Phân định phần tự làm và phần dùng lại.}
+\TODO{Bảng 2 cột: Tự xây (traversal, auditor, gate, harness, prompt) / Dùng lại
+(Google ADK, DeepSeek API, Neo4j, Qdrant, LiteLLM). Bắt buộc theo A1.}
+
+%% =====================================================================
+\section{Cơ sở lý thuyết và công trình liên quan}
+\label{sec:related}
+
+\TODO{3 đoạn, mỗi đoạn phải chỉ ra KHOẢNG TRỐNG, không chỉ tóm tắt:}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{SBV-LawGraph [1]} — baseline ngoài chính. Hybrid RAG + KG, 1.703 văn bản,
+        100 câu, Answer Correctness 91\%. Hạn chế tác giả tự nhận: duyệt đồ thị
+        \emph{1-hop cố định}; gom cả văn bản hết hiệu lực (NĐ 101/2012).
+  \item \textbf{GraphRAG / LightRAG} — \TODO{1 câu + khoảng trống: chi phí build graph,
+        không xử lý hiệu lực văn bản theo thời gian.}
+  \item \textbf{Agentic RAG gần nhất} — \TODO{1--2 hệ, nêu khác biệt: phần lớn không có
+        kiểm toán mệnh đề và không đánh giá injection.}
+\end{itemize}
+
+\paragraph{Không dùng tên framework hay số lượng agent làm bằng chứng tính mới.}
+\TODO{Câu khẳng định khác biệt nằm ở cơ chế: traversal có chọn lọc + ràng buộc
+trích dẫn kiểm bằng code.}
+
+%% =====================================================================
+\section{Thiết kế hệ thống}
+\label{sec:design}
+
+\subsection{Kiến trúc và luồng điều khiển (R1)}
+\TODO{Chèn Hình 1 = sơ đồ THẬT (xuất từ code, không vẽ tay theo ý). Chú thích nêu
+4 tầng: Planner → Retriever (Qdrant+Neo4j) → Auditor → Drafter, có cổng guardrail
+ở đầu vào và cổng trích dẫn ở đầu ra. Nêu số vòng lặp tối đa và điều kiện dừng.}
+
+\subsection{Tools và phân quyền (R2)}
+\TODO{Bảng: tool | đọc/ghi | idempotent? | cần human token? | timeout | fallback.
+Phải khớp 1-1 với \texttt{src/tools/}. Ghi rõ tool nào chưa có phân quyền.}
+
+\subsection{Quản lý context và bộ nhớ (R3)}
+\TODO{Ngắn hạn: cửa sổ context theo agent + token gate. Dài hạn/episodic: SQLite
+\texttt{data/adk\_sessions.db}. Chính sách GHI (cái gì được lưu, ai được lưu) và chính
+sách TRUY HỒI (khi nào nạp lại). Đây là chỗ A4 sẽ hỏi về memory poisoning — phải
+nêu chính sách trước, rồi mục 6 mới nói đã vá.}
+
+\subsection{Ba trục nâng cao ngoài tools/memory (R4)}
+\TODO{Mỗi trục: vai trò → tương tác với trục khác → phương án thay thế đã cân nhắc →
+vì sao chọn. Đây là chỗ A1 cho điểm cao nhất.}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Selective Temporal Traversal} — duyệt theo mục tiêu thay 1-hop;
+        thay thế đã cân nhắc: BFS toàn phần (nổ context), PageRank tĩnh (bỏ qua
+        quan hệ sửa đổi/thay thế theo thời gian).
+  \item \textbf{Claim Auditor} — kiểm từng mệnh đề nguyên tử; thay thế: LLM judge
+        end-to-end (đắt, không tất định, không truy được).
+  \item \textbf{Deterministic Citation Gate} — ràng buộc top-3 kiểm bằng code;
+        thay thế: siết allowlist (đã thử, abstain 10\%) và chặn cứng (đã thử, tệ hơn — ghi ở §7).
+  \item \TODO{Trục thứ 4 nếu có: hybrid retrieval / token gate — nêu hoặc nói rõ chỉ có 3.}
+\end{enumerate}
+
+%% =====================================================================
+\section{Triển khai}
+\label{sec:impl}
+
+\TODO{Stack + phiên bản model (ghi chính xác model id và ngày), framework (ADK), phần
+nhóm tự viết, xử lý lỗi (retry/timeout/malformed output), giới hạn kỹ thuật.}
+
+\subsection{Một trace thật, nối đầu vào → quyết định → tool → memory → đầu ra}
+\TODO{Chèn Hình 2 hoặc listing trace rút gọn từ \texttt{eval/traces/}. Phải chỉ rõ
+mũi tên: câu hỏi → planner tách 3 sub-query → tool Neo4j 2 hop → gate phát hiện dẫn
+chiếu sai → viết lại → dossier. Đây là bằng chứng A2; không dùng ảnh chụp màn hình
+mờ, phải là log.}
+
+\subsection{Thay đổi so với D2}
+\TODO{Bảng 3 dòng: (i) thêm ràng buộc trích dẫn top-3; (ii) vá cổng nội dung không
+tin cậy; (iii) sửa kết luận quá mạnh về Precision. Ghi lý do cho từng cái.}
+
+\subsection{Phần chưa cài đặt}
+\TODO{Nói thẳng: ví dụ LLM-judge cho semantic equivalence; ingestion full 1.703 văn bản
+nếu chưa xong; bao phủ ảnh scan PDF. Rubric trừ nếu mô tả kế hoạch như đã làm.}
+
+%% =====================================================================
+\section{Đánh giá}
+\label{sec:eval}
+
+\subsection{Câu hỏi đánh giá}
+\TODO{3 RQ, mỗi RQ map 1 bảng. VD: RQ1 hệ thống có vượt baseline ngoài? RQ2 cơ chế
+nào tạo ra chênh lệch (ablation)? RQ3 chi phí/latency có chấp nhận được cho người
+dùng thật?}
+
+\subsection{Task set và tiêu chí}
+\TODO{100 câu từ thuvienphapluat.vn, ground truth chuyên viên ngân hàng (danh sách
+điều khoản bắt buộc + đáp án mẫu). Cách chọn: toàn bộ, không lọc. Độ khó: phân bố
+theo số điều khoản bắt buộc. Tiêu chí đúng/sai: presence / validity / gt\_hit —
+định nghĩa bằng code, không bằng cảm nhận. \textbf{Contamination:} bộ này công khai
+và đã dùng trong [1] → phải có đoạn thảo luận + 5 câu held-out.}
+
+\subsection{Cấu hình, ngân sách, số lần chạy}
+\TODO{Bảng: C1 = full; C2 = full $-$ Selective Traversal (FIX-7 phải xong trước).
+Baseline ngoài: \TODO{chốt 1} . Ngân sách: cùng model, cùng max token, cùng top-k.
+Runs: 3/cấu hình, seed ghi trong raw. Tổng 600 task-run.}
+
+\subsection{Kết quả chính}
+\TODO{Điền mean $\pm$ SD qua 3 run từ \texttt{eval/summary.csv}. Bảng dưới là số
+1-run hiện có (p1), giữ lại làm mốc tham chiếu.}
+
+\begin{table}[h]
+\caption{Kết quả trên 100 câu (proxy 3 điều kiện, không dùng LLM judge).}
+\label{tab:main}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Chỉ số & G4 (C1) & G4 (C2) & Paper [1] \\
+\midrule
+Abstain            & 0,0\%      & \TODO{} & --- \\
+Citation presence  & 100,0\%    & \TODO{} & --- \\
+Citation validity  & 99,0\%     & \TODO{} & --- \\
+Trúng căn cứ       & 97,0\%     & \TODO{} & --- \\
+\textbf{Cả ba cùng lúc} & \textbf{96,0\%} & \TODO{} & \textbf{91,0\%} \\
+\midrule
+Cost / task        & \TODO{}    & \TODO{} & --- \\
+Latency / task     & \TODO{}    & \TODO{} & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\TODO{Diễn giải: chênh lệch +5,0 điểm so với [1]; nêu rõ 96\% là \textbf{cận trên}
+vì thiếu semantic equivalence; nêu SD và kiểm tra chênh lệch có nằm ngoài 1 SD không.}
+
+\subsection{Ablation}
+\TODO{Bảng C1 vs C2 tách tác động của Selective Traversal. Nêu cơ chế bị tách và
+vì sao so sánh công bằng.}
+
+\subsection{Chi phí và độ trễ}
+\TODO{Công thức tính cost: token thật $\times$ đơn giá, ghi model + ngày chạy.
+\textbf{Cùng đơn vị, cùng mẫu số} với success. Cách tính lần lỗi/retry: ghi rõ có
+tính vào mẫu số hay không.}
+
+\subsection{Phân tích lỗi}
+\TODO{4 nhóm: truy hồi trượt / sai điều khoản / dẫn chiếu văn bản hết hiệu lực /
+câu hỏi quá mơ hồ. Mỗi nhóm: số lượng, tỷ lệ, 1 ví dụ CÓ TRACE. Không bỏ lần fail
+khỏi bảng.}
+
+%% =====================================================================
+\section{Bảo mật và an toàn}
+\label{sec:security}
+
+\TODO{Threat model gắn đúng 4 điểm vào của hệ thống này (câu hỏi · văn bản truy xuất ·
+output tool · memory), không liệt kê nguy cơ chung của LLM.}
+
+\subsection{Kết quả 14 ca injection}
+\TODO{Bảng before/after từ \texttt{eval/redteam/injection\_\{before,after\}.jsonl}.
+Cột: ID | loại | điểm vào | phòng vệ | kết quả | residual risk. Nêu rõ "thành công"
+= thành công của tấn công.}
+
+\subsection{Kiểm soát quyền và audit trail}
+\TODO{Chứng minh 1 hành động được bảo vệ: ca A05 (nộp hồ sơ) → requires\_human\_token
+→ token → thực thi → dòng audit. Kèm log thật.}
+
+\subsection{Rủi ro còn lại}
+\TODO{Ba điểm dự kiến: injection ngữ nghĩa không từ khoá; chỉ thị trong ảnh scan PDF;
+nội dung hợp lệ nhưng gây hiểu sai. Không được bỏ trống mục này.}
+
+%% =====================================================================
+\section{Giới hạn, đe doạ tính hợp lệ, khả năng mở rộng}
+\label{sec:limits}
+
+\TODO{\textbf{Tách rõ 2 loại:} (a) giới hạn thiết kế — chưa có judge cho semantic
+equivalence, không bao phủ ảnh scan; (b) giới hạn của phép đo — 100 câu là mẫu nhỏ,
+bộ công khai có thể nhiễm, 3 run chưa đủ cho khoảng tin cậy hẹp.
+Thêm: thí nghiệm \textbf{thất bại} đã ghi ở D2 (chặn cứng → abstain 26,7\%) — trình
+bày như bài học, không giấu. Không suy rộng từ 100 câu sang mọi lĩnh vực pháp luật.}
+
+%% =====================================================================
+\section{Đạo đức và sử dụng có trách nhiệm}
+\label{sec:ethics}
+
+\TODO{Nguồn dữ liệu: văn bản QPPL là dữ liệu công; bộ câu hỏi lấy từ trang công khai
+(tuân ToS? ghi rõ). Riêng tư: không lưu dữ liệu doanh nghiệp thật; dossier chỉ trong
+\texttt{workspace/}. Bên có thể bị ảnh hưởng: người dùng là chuyên viên — hệ thống
+\textbf{không} thay thế kết luận pháp lý. Trách nhiệm khi agent hành động: mọi hành
+động ghi cần human token.}
+
+%% =====================================================================
+\section{Kết luận}
+\label{sec:concl}
+
+\TODO{Trả lời đúng giả thuyết ở §1 bằng số đã đo: bác bỏ hay không bác bỏ, kèm mức
+tin cậy. Nêu giá trị đạt được và 1 vấn đề còn mở. Không thêm claim mới chưa có ở §5.}
+
+%% =====================================================================
+\balance
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+%% =====================================================================
+\appendix
+
+\section{Tái lập}
+\label{app:repro}
+
+\TODO{Chạy 1 lệnh: \texttt{make demo}; tái lập bảng: \texttt{make tables}.
+Deps đã pin (\texttt{requirements.lock.txt}). Hardware: \TODO{}. Thời gian chạy:
+\TODO{}. Chi phí thực tế: \TODO{}. Đường dẫn raw results: \texttt{eval/}. Seeds +
+run IDs: \TODO{}. Bước thủ công không tự động hoá được: \TODO{}.}
+
+\section{Bảng phản hồi góp ý Proposal / D2}
+\label{app:response}
+
+\TODO{Điền theo mẫu §1 của 03-Bieu-mau-Final. Mỗi góp ý 1 dòng, phải chỉ mục/trang +
+commit + kết quả kiểm. Với góp ý không sửa: nêu lý do + ảnh hưởng tới kết luận.}
+
+\begin{table}[h]
+\small
+\begin{tabular}{@{}p{0.6cm}p{2.6cm}p{2.4cm}p{2.2cm}p{0.8cm}@{}}
+\toprule
+ID & Góp ý \& nguồn & Hành động & Vị trí + bằng chứng & Trạng thái \\
+\midrule
+R1 & \TODO{} & \TODO{} & \TODO{} & Xong \\
+R2 & \TODO{} & \TODO{} & \TODO{} & Một phần \\
+R3 & \TODO{} & \TODO{} & \TODO{} & Chưa \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Đóng góp và tuyên bố sử dụng AI}
+\label{app:contrib}
+
+\TODO{Theo mẫu §5--6. Tổng tỷ lệ = 100\%. Bằng chứng ghi commit/PR/section, không
+chỉ số commit. AI-use: công cụ + model + công đoạn + cách kiểm đầu ra.}
+
+\begin{table}[h]
+\small
+\begin{tabular}{@{}p{2.4cm}p{1.6cm}p{2.6cm}p{0.9cm}@{}}
+\toprule
+Thành viên & Phần phụ trách & Bằng chứng & Tỷ lệ \\
+\midrule
+Đặng Lâm Tùng  & Kiến trúc, ADK, eval harness, báo cáo & \TODO{} & \TODO{}\% \\
+Nguyễn Trung Phong & Ingestion, KG, memory, đóng gói D4 & \TODO{} & \TODO{}\% \\
+Vũ Việt Hưng & Claim Auditor, threat model, red team & \TODO{} & \TODO{}\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Đối chiếu yêu cầu và bằng chứng}
+\label{app:matrix}
+
+\TODO{R1--R4 nêu rõ; R5--R9 lấy mã từ guideline chung của môn (không có trong bộ
+tài liệu Final 24/11). Không được bịa mã.}
+
+\begin{table}[h]
+\small
+\begin{tabular}{@{}p{1.2cm}p{2.6cm}p{2.4cm}p{1.6cm}@{}}
+\toprule
+Mã & Vị trí trong bài & Code/config/log & Trạng thái \\
+\midrule
+R1 & §\ref{sec:design}.1 & \TODO{} & Đạt \\
+R2 & §\ref{sec:design}.2 & \TODO{} & Đạt \\
+R3 & §\ref{sec:design}.3 & \TODO{} & Đạt \\
+R4 & §\ref{sec:design}.4 & \TODO{} & Đạt \\
+RT1--RT4 & §\ref{sec:intro}, §\ref{sec:eval} & \TODO{} & Đạt \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
