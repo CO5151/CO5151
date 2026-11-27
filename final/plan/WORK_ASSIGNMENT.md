@@ -34,16 +34,16 @@ Hạn nộp: **23:59 CN 06/12**. Bảo vệ: **T4 09/12, 19:30–19:50 + Q&A, B4
 | W1.7 | Mean ± SD qua 3 run + kiểm tra chênh lệch ngoài 1 SD | `eval/summary.csv` | 01/12 | có cột SD |
 | W1.8 | Cost report: token thật × đơn giá, ghi model + ngày | `docs/COST_REPORT.md` | 02/12 | tổng USD khớp raw |
 
-### W2 · Red team 14 ca — **Hưng** (Tùng, Phong mỗi người 4–5 ca)
-Chi tiết đầy đủ ở [`final/security/INJECTION_PLAN.md`](../security/INJECTION_PLAN.md).
+### W2 · Red team 20 ca — **Hưng** (Tùng, Phong mỗi người 6–7 ca)
+Chi tiết đầy đủ ở [`final/security/INJECTION_PLAN.md`](../security/INJECTION_PLAN.md) và [`final/security/attacks/cases.json`](../security/attacks/cases.json).
 | # | Việc | Deliverable | Hạn | Xong khi |
 |---|---|---|---|---|
-| W2.1 | Khung `scripts/redteam_injection.py` + schema JSONL | commit | **27/11** | chạy `--phase before --dry-run` |
-| W2.2 | 14 payload + `target_behavior` kiểm tự động được | `eval/redteam/cases.json` | **28/11** | 14 case, 6 direct + 8 indirect |
-| W2.3 | **Pha A** — chạy trên code hiện tại | `injection_before.jsonl` | **28/11** | 14 dòng, dự đoán 13 fail |
+| W2.1 | Khung `final/security/attacks/run_cases.py` + schema JSONL | commit | **27/11** | chạy `--phase before --dry-run` (đã xong `468a329`) |
+| W2.2 | 20 payload + `success_if` kiểm tự động được | `final/security/attacks/cases.json` | **28/11** | đủ 20 ca (7 direct + 12 indirect + 1 direct-API) |
+| W2.3 | **Pha A** — chạy đủ 20 ca (10 staged cần chèn fixture, ≥3 lần/ca) | `final/security/attacks/results/before.jsonl` | **28/11** | không còn dòng `STAGED` |
 | W2.4 | Vá FIX-1..FIX-8 (xem INJECTION_PLAN §4) | commit | **01/12** | mỗi FIX có commit riêng |
-| W2.5 | **Pha B** — chạy lại | `injection_after.jsonl` | **03/12** | có bảng before/after |
-| W2.6 | Audit trail ca A05 (nộp hồ sơ → token → audit) | log + ảnh | **02/12** | có 1 dòng audit thật |
+| W2.5 | **Pha B** — chạy lại | `final/security/attacks/results/after.jsonl` | **03/12** | có bảng before/after |
+| W2.6 | Audit trail ca A07 (nộp hồ sơ → token → audit) | log + ảnh | **02/12** | có 1 dòng audit thật |
 | W2.7 | `threat_model_rules.yaml` v0 → v1 | commit | 04/12 | 10 vector khớp code thật |
 
 ### W3 · Báo cáo D3 — **Tùng chủ trì**, ai viết mục nấy
@@ -56,7 +56,7 @@ Khung: [`final/report/main.tex`](../report/main.tex). Sửa trực tiếp trong 
 | §3 Thiết kế (R1–R4) | sơ đồ thật, tools, memory, 3 trục | **Tùng** R1/R2 · **Phong** R3 · **Hưng** R4 | 02/12 |
 | §4 Triển khai | stack, trace thật, thay đổi từ D2 | Phong | 03/12 |
 | §5 Đánh giá | task set, configs, kết quả, ablation, cost, lỗi | Tùng (khung) + Hưng (error analysis) | 03/12 |
-| §6 Bảo mật | threat model, bảng 14 ca, residual risk | Hưng | 04/12 |
+| §6 Bảo mật | threat model, bảng 20 ca, residual risk | Hưng | 04/12 |
 | §7 Giới hạn | tách giới hạn thiết kế vs phép đo | Tùng | 04/12 |
 | §8 Đạo đức | nguồn dữ liệu, riêng tư, trách nhiệm | Phong | 04/12 |
 | §9 Kết luận | trả lời giả thuyết bằng số | Tùng | 04/12 |
@@ -100,17 +100,17 @@ Khung: [`final/slides/main.tex`](../slides/main.tex), đã chia mốc phút.
 | Ngày | Tùng | Phong | Hưng |
 |---|---|---|---|
 | **T5 26/11** | chốt phạm vi, dựng khung report/slide, commit | đọc INJECTION_PLAN, nhận 5 ca | khung redteam + schema log |
-| **T6 27/11** | W1.1 switch ablation · W6.1 hỏi góp ý D2 | payload A01/A03/A08 | payload A04/A06 + 14 case JSON |
-| **T7 28/11** | W1.2–W1.4 harness log cost/latency | payload A10/A14 | **Pha A** chạy 14 ca |
+| **T6 27/11** | W1.1 switch ablation · W6.1 hỏi góp ý D2 | rà payload A01/A03/A08 | rà 20 case JSON + `run_cases.py` |
+| **T7 28/11** | W1.2–W1.4 harness log cost/latency | chèn fixture staged | **Pha A** chạy đủ 20 ca ($\ge 3$ lần/ca) |
 | **CN 29/11** | FIX-2 cổng nội dung không tin cậy | FIX-4 export path | FIX-1 nối sanitizer |
 | **T2 30/11** | FIX-3 delimiter provenance | FIX-5 memory policy | bắt đầu chạy 600 run (máy 1) |
 | **T3 01/12** | chạy 600 run (máy 2) · W1.6 tables | FIX-6 · W4.1–W4.2 pin deps | kết thúc 600 run · error analysis |
-| **T4 02/12** | §1 §2 §3.1–3.2 · W1.8 cost report | §3.3 §4 §8 · W4.3–W4.5 | FIX-8 audit + ca A05 |
+| **T4 02/12** | §1 §2 §3.1–3.2 · W1.8 cost report | §3.3 §4 §8 · W4.3–W4.5 | FIX-8 audit + ca A07/A20 |
 | **T5 03/12** | §3.4 §5 khung | W4.6 checkout sạch | **Pha B** · bảng before/after |
 | **T6 04/12** | §7 §9 Phụ lục B/D · điền slide | Phụ lục A · rà báo cáo | §6 · threat model v1 |
 | **T7 05/12** | tag `final` · Phụ lục C · tổng duyệt #1 | W4.7 quyền truy cập | video + backup slide |
 | **CN 06/12** | **NỘP trước 23:59** · nhắc peer eval | tổng duyệt #2 | Q&A prep |
-| **T7 09/12** | demo chính | share màn hình / dự phòng | trả lời phần security |
+| **T4 09/12** | demo chính | share màn hình / dự phòng | trả lời phần security |
 
 ## 4. Định nghĩa "xong" (DoD) cho mọi việc
 
@@ -139,5 +139,5 @@ Một việc chỉ được đánh dấu xong khi có **đủ 3**:
 ## 6. Cắt gì nếu thiếu thời gian (thứ tự)
 
 Cắt từ dưới lên: (7) backup slide → (6) trục nâng cao thứ 4 → (5) phân tích lỗi sâu → (4) video dài → (3) phiếu phản biện.
-**Không cắt**: 600 task-run · 14 ca injection · tag `final` · Phụ lục B/C · slide đúng 20 phút.
+**Không cắt**: 600 task-run · 20 ca injection · tag `final` · Phụ lục B/C · slide đúng 20 phút.
 Lý do: A3+A4+B2 = **42% final**; thiếu một ngưỡng tối thiểu là nguyên tiêu chí rơi từ 9–10 xuống 5–7.

@@ -75,6 +75,34 @@ def judge(rule: dict, observed: str, payload: str = "") -> bool:
     return False
 
 
+def load_controls_by_id() -> dict[str, dict]:
+    ctrl_path = RESULTS / "controls.jsonl"
+    out: dict[str, dict] = {}
+    if ctrl_path.exists():
+        for line in ctrl_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                out[r["case_id"]] = r
+    return out
+
+
+def classify_orchestrator_outcome(
+    case: dict,
+    row: dict,
+    hit: bool,
+    controls_by_id: dict[str, dict] | None = None,
+) -> str:
+    """Phân loại 4 trạng thái cho runner orchestrator: BLOCKED / ATTACK_SUCCESS / PARTIAL / INCONCLUSIVE."""
+    ctrl = (controls_by_id or {}).get(case["id"])
+    if ctrl and ctrl.get("attribution") == "KHÔNG QUY CÔNG ĐƯỢC":
+        return "INCONCLUSIVE"
+    if not hit:
+        return "BLOCKED"
+    if case.get("predicted") == "partial" and row.get("human_confirmation_needed"):
+        return "PARTIAL"
+    return "ATTACK_SUCCESS"
+
+
 # --------------------------------------------------------------------------
 # Runner: orchestrator
 # --------------------------------------------------------------------------
@@ -123,8 +151,9 @@ def run_unit(case: dict) -> dict:
         # Phòng vệ thật của hàm này là strip thư mục (Path.name) rồi resolve:
         # không raise, nhưng file phải nằm TRONG allowed_export_dir.
         escaped = not p.is_relative_to(s.allowed_export_dir)
+        obs = str(p.relative_to(REPO)) if p.is_relative_to(REPO) else str(p)
         return {
-            "observed": str(p),
+            "observed": obs,
             "verdict": "ATTACK_SUCCESS" if escaped else "BLOCKED",
             "detail": ("thoát ra ngoài allowed_export_dir" if escaped
                        else f"bị strip thành '{p.name}' và ghim trong {s.allowed_export_dir.name}/ — "
@@ -228,14 +257,18 @@ def main() -> int:
         if not out.exists():
             print(f"chưa có {out}"); return 2
         rows = [json.loads(l) for l in out.read_text(encoding="utf-8").splitlines() if l.strip()]
+        controls_by_id = load_controls_by_id()
+        repo_prefix = str(REPO) + "/"
         changed = 0
         for r in rows:
+            if r.get("case_id") == "A18" and isinstance(r.get("observed"), str) and r["observed"].startswith(repo_prefix):
+                r["observed"] = r["observed"][len(repo_prefix):]
             c = by_id.get(r["case_id"])
             if not c or r.get("runner") != "orchestrator" or "observed" not in r:
                 continue
             old = r["attack_outcome"]
             hit = judge(c["success_if"], r.get("observed", ""), c["payload"])
-            r["attack_outcome"] = "ATTACK_SUCCESS" if hit else "BLOCKED"
+            r["attack_outcome"] = classify_orchestrator_outcome(c, r, hit, controls_by_id)
             r["rejudged"] = True
             if old != r["attack_outcome"]:
                 changed += 1
@@ -262,6 +295,7 @@ def main() -> int:
                 prev[r["case_id"]] = r
     rows = []
 
+    controls_by_id = load_controls_by_id()
     for c in cases:
         row = {
             "case_id": c["id"], "phase": args.phase, "name": c["name"],
@@ -275,12 +309,12 @@ def main() -> int:
         try:
             res = RUNNERS[c["runner"]](c)
             row.update(res)
-            if res.get("verdict") in {"ATTACK_SUCCESS", "BLOCKED", "PARTIAL", "STAGED"}:
+            if res.get("verdict") in {"ATTACK_SUCCESS", "BLOCKED", "PARTIAL", "STAGED", "INCONCLUSIVE"}:
                 row["attack_outcome"] = res["verdict"]
             else:
-                # orchestrator: tự phán theo success_if
+                # orchestrator: tự phán theo success_if + phân loại 4 trạng thái
                 hit = judge(c["success_if"], res.get("observed", ""), c["payload"])
-                row["attack_outcome"] = "ATTACK_SUCCESS" if hit else "BLOCKED"
+                row["attack_outcome"] = classify_orchestrator_outcome(c, row, hit, controls_by_id)
         except Exception as exc:                      # noqa: BLE001 - ghi lại để không mất ca
             row["attack_outcome"] = "ERROR"
             row["error"] = f"{type(exc).__name__}: {exc}"
@@ -288,7 +322,8 @@ def main() -> int:
         rows.append(row)
 
         mark = {"ATTACK_SUCCESS": "TẤN CÔNG THÀNH CÔNG", "BLOCKED": "bị chặn",
-                "PARTIAL": "một phần", "STAGED": "chờ chèn", "ERROR": "LỖI"}[row["attack_outcome"]]
+                "PARTIAL": "một phần", "INCONCLUSIVE": "không quy công",
+                "STAGED": "chờ chèn", "ERROR": "LỖI"}[row["attack_outcome"]]
         print(f"{c['id']:4s} {c['category']:11s} {c['severity']:8s} -> {mark}")
 
     merged = {**prev, **{r["case_id"]: r for r in rows}}
@@ -303,7 +338,7 @@ def main() -> int:
         return sum(1 for r in allrows if r["attack_outcome"] == k)
 
     print(f"\n{len(allrows)} ca trong file · chặn {count('BLOCKED')} · lọt {count('ATTACK_SUCCESS')} "
-          f"· một phần {count('PARTIAL')} · chờ chèn {count('STAGED')} · lỗi {count('ERROR')}")
+          f"· một phần {count('PARTIAL')} · KQCG {count('INCONCLUSIVE')} · chờ chèn {count('STAGED')} · lỗi {count('ERROR')}")
     print(f"-> {out.relative_to(REPO)}")
     return 0
 

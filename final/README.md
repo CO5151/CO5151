@@ -9,8 +9,8 @@ Thư mục này là **khung làm việc**, không phải bài nộp hoàn chỉn
 | Nếu bạn là | Đọc file này trước |
 |---|---|
 | Bất kỳ ai | [`plan/WORK_ASSIGNMENT.md`](plan/WORK_ASSIGNMENT.md) — chia việc, lịch theo ngày, định nghĩa "xong" |
-| Người viết báo cáo | [`report/main.tex`](report/main.tex) — khung 2 cột ACM, mỗi mục có ghi chú "viết gì, lấy bằng chứng ở đâu" |
-| Người làm bảo mật | [`security/INJECTION_PLAN.md`](security/INJECTION_PLAN.md) — 14 ca, chia cho 3 người, có phát hiện lỗ hổng trong code |
+| Người viết báo cáo | [`report/main.tex`](report/main.tex) (bản Việt) & [`report/main_en.tex`](report/main_en.tex) (bản Anh) — khung 2 cột ACM; *khi nộp chọn đúng 1 ngôn ngữ nhất quán* |
+| Người làm bảo mật | [`security/INJECTION_PLAN.md`](security/INJECTION_PLAN.md) & [`security/attacks/README.md`](security/attacks/README.md) — 20 ca, có phát hiện lỗ hổng trong code |
 | Người làm slide | [`slides/main.tex`](slides/main.tex) — 18 frame, đã đánh dấu mốc phút |
 | Người viết phần kết quả | [`results/RESULTS_P2.md`](results/RESULTS_P2.md) — số đã tính lại từ raw, gồm cả chỗ **thua** paper |
 
@@ -20,18 +20,22 @@ Thư mục này là **khung làm việc**, không phải bài nộp hoàn chỉn
 final/
 ├── README.md                    ← file này
 ├── plan/
+│   ├── STATUS.md                ← nhật ký tiến độ hàng ngày
 │   └── WORK_ASSIGNMENT.md       ← chia việc + lịch 26/11–09/12 + rủi ro
 ├── report/
-│   ├── main.tex                 ← khung D3, ACM sigconf 2 cột, tiếng Việt
-│   ├── refs.bib                 ← 5 entry đã kiểm + chỗ cần bổ sung
-│   └── main.pdf                 ← bản build hiện tại (3 trang khung)
+│   ├── main.tex                 ← D3 (VI), ACM sigconf 2 cột
+│   ├── main_en.tex              ← D3 (EN), bản song song tiếng Anh
+│   ├── refs.bib                 ← 8 entry đã kiểm từ D1/D2
+│   ├── main.pdf                 ← bản build tiếng Việt
+│   └── main_en.pdf              ← bản build tiếng Anh
 ├── slides/
 │   ├── main.tex                 ← khung slide 16:9, 20 phút + 5 frame backup
 │   └── main.pdf                 ← bản build hiện tại (18 frame)
 ├── results/
 │   └── RESULTS_P2.md            ← kết quả mới: 96/100 vs paper 91/100
 └── security/
-    └── INJECTION_PLAN.md        ← A4: 14 ca direct + indirect
+    ├── INJECTION_PLAN.md        ← kế hoạch vá F1–F5 & lịch red-team
+    └── attacks/                 ← 20 ca (cases.json), runner & results/
 ```
 
 ## Build

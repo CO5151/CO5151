@@ -31,7 +31,7 @@ Kết quả: `results/<phase>.jsonl`, mỗi ca một dòng, có `timestamp` + `g
 
 **`STAGED` không phải là "đã chặn".** Khi làm bảng trong báo cáo, ca `STAGED` phải ghi đúng là "chưa chạy xong", không được tính vào cột phòng vệ thành công.
 
-## Kết quả đo được (26/11, commit `b40ace3`, mỗi ca **1 lần chạy**)
+## Kết quả đo được (26/11, `before.jsonl` ghi commit `77fb226` — cùng `src/` với `b40ace3`, mỗi ca **1 lần chạy**)
 
 | ID | Nội dung | Kỳ vọng | Đo được | Ghi chú |
 |---|---|---|---|---|

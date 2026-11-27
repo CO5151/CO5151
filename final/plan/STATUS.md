@@ -12,8 +12,8 @@ Trạng thái: `xong` · `một phần` · `chặn`.
 
 | Ngày | Việc | Người | Bằng chứng | Người kiểm | Trạng thái |
 |---|---|---|---|---|---|
-| 26/11 | W0 dựng khung report/slide/plan | Tùng | `final/` (commit này) | — | xong |
-| 26/11 | W2.1 khung redteam + schema | Hưng | — | — | chưa bắt đầu |
+| 26/11 | W0 dựng khung report/slide/plan | Tùng | `final/` (`77fb226`) | — | xong |
+| 26/11 | W2.1–W2.2 bộ 20 ca injection + runner + đo 10 ca Pha A | Tùng | `final/security/attacks/` (`468a329`) | — | xong (10 ca indirect đang `STAGED`) |
 
 ## Việc đang chặn
 

@@ -80,7 +80,7 @@
     \item \textbf{Claim Auditor} — kiểm từng mệnh đề nguyên tử với context
     \item \textbf{Citation Gate tất định} — nháp phải trích $\geq1$ căn cứ top-3
     \item \textbf{Bộ đánh giá} 100 câu $\times$ 3 run $\times$ 2 cấu hình, có cost/latency
-    \item \textbf{14 ca injection} direct + indirect, có log trước/sau
+    \item \textbf{20 ca injection} direct + indirect + API, có log trước/sau
   \end{enumerate}
   \vspace{0.4em}
   \TODO{chốt câu “khác biệt nằm ở cơ chế, không phải ở tên framework”}
@@ -254,22 +254,24 @@
 \end{frame}
 
 %% ------------------------------------------------------ 16:00–17:00
-\begin{frame}{Bảo mật: 14 ca injection, trước và sau khi vá}
+\begin{frame}{Bảo mật: 20 ca injection, trước và sau khi vá}
   \small
   \begin{tabular}{@{}llll@{}}
     \toprule
-    Nhóm & Số ca & Trước khi vá & Sau khi vá \\
+    Nhóm & Số ca & Trước khi vá (1 lần/ca) & Sau khi vá \\
     \midrule
-    Direct (A01--A06)  & 6 & \warn{\TODO{/6}} & \good{\TODO{/6}} \\
-    Indirect (A07--A14) & 8 & \warn{\TODO{/8}} & \good{\TODO{/8}} \\
+    Direct (A01--A07)  & 7 & 5 chặn · 1 phần (A07) · 1 KQCG (A04) & \good{\TODO{/7}} \\
+    Indirect (A08--A19) & 12 & 1 chặn (A18) · 1 lọt (A16) · 10 STAGED & \good{\TODO{/12}} \\
+    Direct-API (A20)    & 1 & \warn{1 lọt (A20: token `OK')} & \good{\TODO{/1}} \\
     \bottomrule
   \end{tabular}
   \vspace{0.5em}
-  \begin{block}{Lỗ hổng đã tìm thấy trong code của chính nhóm}
-    \texttt{InputSanitizer} có nhưng \warn{không được gọi} · guardrail chỉ chặn
-    \textbf{câu hỏi người dùng}, mọi nội dung truy xuất/tool output \warn{không qua cổng nào}
+  \begin{block}{Lỗ hổng đã tìm thấy trong code của chính nhóm (F1--F5 + A20)}
+    \texttt{InputSanitizer} có nhưng \warn{không được gọi} · \texttt{evaluate\_query} chỉ
+    chặn đầu vào · \texttt{\_CITE} mù khi xuống dòng (A16) · \texttt{approver\_token}
+    chỉ kiểm khác rỗng (A20)
   \end{block}
-  \TODO{1 ảnh/log hành động nộp hồ sơ: token $\rightarrow$ audit}
+  \TODO{1 ảnh/log hành động nộp hồ sơ A07: token xác thực $\rightarrow$ audit}
   \tm{16:00–17:00}
 \end{frame}
 
@@ -323,8 +325,8 @@
   \TODO{Hình 1 bản lớn, có tên từng agent + file code tương ứng}
 \end{frame}
 
-\begin{frame}{Backup: bảng 14 ca injection chi tiết}
-  \TODO{Bảng đầy đủ: ID · loại · điểm vào · phòng vệ · kết quả · residual risk}
+\begin{frame}{Backup: bảng 20 ca injection chi tiết}
+  \TODO{Bảng đầy đủ A01--A20: ID · loại · điểm vào · phòng vệ · kết quả · residual risk}
 \end{frame}
 
 \begin{frame}{Backup: trace đầy đủ 1 task}
