@@ -18,6 +18,7 @@
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{balance}
+\usepackage{float}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 
@@ -311,7 +312,7 @@ A07 & direct & query / V8 no return & \texttt{PARTIAL} (flag True + drafted) & \
 \midrule
 A16 & indirect & output / \texttt{\_CITE [\^{}\textbackslash n]} & \texttt{ATTACK\_SUCCESS} (0 cites parsed) & \TODO{} & \textbf{YES} \\
 A18 & indirect & path / \texttt{sanitize\_export\_path} & \texttt{BLOCKED} (silent strip) & \TODO{} & NO \\
-A20 & dir-API & \texttt{submit\_portal\_filing} & \texttt{ATTACK\_SUCCESS} (\texttt{"OK"} accepted) & \TODO{} & \textbf{YES} \\
+A20 & dir-API & \texttt{submit\_portal\_\allowbreak filing} & \texttt{ATTACK\_SUCCESS} (\texttt{"OK"} accepted) & \TODO{} & \textbf{YES} \\
 \midrule
 A08--15, A17, A19 & indirect (10 cases) & Qdrant / tools / PDF / memory / filename & \texttt{STAGED} (10 fixtures generated, awaiting live insertion) & \TODO{} & STAGED \\
 \bottomrule
@@ -359,7 +360,7 @@ LegalPilot-VN demonstrates that pairing selective graph retrieval with in-loop c
 
 Table~\ref{tab:d4} covers the 12 handover items required by §8 of \texttt{03-Bieu-mau-Final.pdf}. Reproducibility check note: the default \texttt{.venv/} currently lacks \texttt{pydantic\_settings} and \texttt{bs4}; scripts execute under \texttt{.venv-adk/bin/python3} pending dependency pinning in \texttt{requirements.lock.txt} (W4.1).
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{D4 reproducibility handover summary (§8 template).}
 \label{tab:d4}
 \scriptsize
@@ -389,7 +390,7 @@ Repro limits & Requires API keys + Neo4j/Qdrant for live runs; \texttt{.venv} mi
 
 Table~\ref{tab:feedback} tracks resolved D1 feedback items from D2 alongside placeholders for written D2 instructor feedback (§1 of \texttt{03-Bieu-mau-Final.pdf}).
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Feedback response matrix (§1 template).}
 \label{tab:feedback}
 \scriptsize
@@ -410,7 +411,7 @@ R4 & \TODO{Written D2 feedback} & \TODO{Update after W6.1} & \TODO{} & Pending \
 
 Table~\ref{tab:contrib} includes all five columns required by §5 of \texttt{03-Bieu-mau-Final.pdf}. Individual peer evaluations will be emailed confidentially by each member before 2026-12-06.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Team G4 contribution statement.}
 \label{tab:contrib}
 \scriptsize
@@ -435,7 +436,7 @@ During development and report drafting, the team used \TODO{specify exact AI too
 
 Table~\ref{tab:req} maps system requirements (R1--R4, R6; remaining R5, R7--R9 to be cross-checked against course syllabus) and Research-track requirements (RT1--RT4) per §4 of \texttt{03-Bieu-mau-Final.pdf}.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Requirement traceability matrix (§4 template).}
 \label{tab:req}
 \scriptsize

@@ -19,6 +19,7 @@
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{balance}
+\usepackage{float}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 
@@ -122,7 +123,7 @@ Luồng điều khiển thực tế cài đặt trong \texttt{LegalOrchestrator.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Giai đoạn 0 --- Cổng đầu vào (\texttt{SecurityGuardrails}):} kiểm tra 7 mẫu regex đầu vào (Vector 2--8). Nếu dính Vector 4 (trích xuất prompt/key) hoặc Vector 5 (SQL injection), ném \texttt{SecurityViolationError} và dừng ngay. Nếu Vector 2 (lách luật), trả \texttt{refused}. Nếu Vector 8 (lệnh nộp hồ sơ), gắn cờ \texttt{human\_confirmation\_needed=True} (lưu ý: ở bản hiện tại hàm chưa \texttt{return} sớm — xem Mục~\ref{sec:security}).
   \item \textbf{Giai đoạn 1--2 --- Lập kế hoạch \& Truy hồi lai:} \texttt{plan\_subgoals()} tách câu hỏi thành 3--5 mục tiêu con và từ khoá pháp lý. \texttt{LawGraphAgent} truy vấn song song Qdrant (\texttt{top\_k=5}, \texttt{score\_threshold=0.65}) và đồ thị Neo4j (\texttt{max\_hops=2}, \texttt{max\_traversal\_nodes=10}). Nếu không thu được điều khoản nào, hệ từ bỏ an toàn (\texttt{insufficient\_evidence}, trả về \texttt{ABSTAIN\_MSG}).
-  \item \textbf{Giai đoạn 3 --- Vòng lặp Drafter $\leftrightarrow$ Auditor $\leftrightarrow$ Citation Gate:} chạy tối đa \texttt{max\_retries = 3} lượt (tức tối đa 4 lần sinh nháp). Mỗi lượt, \texttt{DrafterAgent} tổng hợp hồ sơ tư vấn từ \texttt{active\_clauses}; \texttt{ClaimAuditorAgent} đối chiếu trạng thái hiệu lực; sau đó \texttt{gate\_answer()} (\texttt{answer\_gate.py}) kiểm tra tất định mọi dẫn chiếu \texttt{"Điều N <số hiệu>"} so với tập \texttt{allowed\_from\_clauses(active\_clauses)}. Nếu thiếu dẫn chiếu thực tế có trong graph, hệ gọi \texttt{fetch\_articles()} để tự phục hồi ngữ cảnh; nếu vi phạm quy tắc top-3 (chỉ kiểm 1 lần) hoặc chứa văn bản hết hiệu lực, hệ loại bỏ văn bản vi phạm khỏi \texttt{active\_clauses} và quay lại sinh bản nháp mới.
+  \item \textbf{Giai đoạn 3 --- Vòng lặp Drafter $\leftrightarrow$ Auditor $\leftrightarrow$ Citation Gate:} chạy tối đa \texttt{max\_retries = 3} lượt (tức tối đa 4 lần sinh nháp). Mỗi lượt, \texttt{DrafterAgent} tổng hợp hồ sơ tư vấn từ \texttt{active\_clauses}; \texttt{ClaimAuditorAgent} đối chiếu trạng thái hiệu lực; sau đó \texttt{gate\_answer()} (\texttt{answer\_gate.py}) kiểm tra tất định mọi dẫn chiếu \emph{``Điều N <số hiệu>''} so với tập \texttt{allowed\_from\_clauses(active\_clauses)}. Nếu thiếu dẫn chiếu thực tế có trong graph, hệ gọi \texttt{fetch\_articles()} để tự phục hồi ngữ cảnh; nếu vi phạm quy tắc top-3 (chỉ kiểm 1 lần) hoặc chứa văn bản hết hiệu lực, hệ loại bỏ văn bản vi phạm khỏi \texttt{active\_clauses} và quay lại sinh bản nháp mới.
   \item \textbf{Giai đoạn 4 --- Xuất bản có kiểm soát:} nếu hết vòng lặp mà cổng trích dẫn vẫn chặn, \texttt{strip\_citations()} bóc các trích dẫn chưa xác thực hoặc hệ từ chối trả lời khi không còn căn cứ hợp lệ (\texttt{ABSTAIN\_MSG}); trạng thái cuối được lưu vào \texttt{LegalAgentState}.
 \end{enumerate}
 
@@ -255,7 +256,7 @@ Cost / task (USD) & \TODO{} & \TODO{} & \TODO{} & \TODO{} & --- \\
 \paragraph{Cảnh báo về thang đo.} Con số \textbf{96,0\% là cận trên} và không chứng minh vượt Answer Correctness của~\cite{phan2026sbv}: số 91\% của paper có thêm bước LLM-judge (Gemini) chấm \emph{tương đương ngữ nghĩa}, một điều kiện chỉ có thể làm giảm hoặc giữ nguyên điểm. Ngoài ra, kết quả ở Bảng~\ref{tab:main} mới đo 1 lượt nên chưa loại trừ được nhiễu ngẫu nhiên của LLM.
 
 \subsection{Chỉ số truy hồi và nghiên cứu cắt bỏ (Ablation)}
-Bảng~\ref{tab:retrieval} đối chiếu tầng truy hồi so với~\cite{phan2026sbv}. Hệ thống vượt ở Recall, F2-score và giảm nhiễu ngữ cảnh; nhưng **Precision@2 đạt 34,47\%, thấp hơn mức 37--39\% của paper** do nhóm tách 3--5 sub-query và đánh giá trên $k \approx 3,25$ nên chưa cùng mẫu số để kết luận vượt. Đồng thời, chỉ số hiệu lực 100\% được đánh dấu cảnh báo vì phát hiện metadata \texttt{101/2012/ND-CP} bị gán sai ở đồ thị (Mục~\ref{sec:security}).
+Bảng~\ref{tab:retrieval} đối chiếu tầng truy hồi so với~\cite{phan2026sbv}. Hệ thống vượt ở Recall, F2-score và giảm nhiễu ngữ cảnh; nhưng \textbf{Precision@2 đạt 34,47\%, thấp hơn mức 37--39\% của paper} do nhóm tách 3--5 sub-query và đánh giá trên $k \approx 3,25$ nên chưa cùng mẫu số để kết luận vượt. Đồng thời, chỉ số hiệu lực 100\% được đánh dấu cảnh báo vì phát hiện metadata \texttt{101/2012/ND-CP} bị gán sai ở đồ thị (Mục~\ref{sec:security}).
 
 \begin{table}[t]
 \caption{Đối chiếu tầng truy hồi so với SBV-LawGraph~\cite{phan2026sbv}.}
@@ -312,7 +313,7 @@ A07 & direct & query / V8 chưa return & \texttt{PARTIAL} (cờ True + vẫn so�
 \midrule
 A16 & indirect & output / \texttt{\_CITE [\^{}\textbackslash n]} & \texttt{ATTACK\_SUCCESS} (0 trích dẫn) & \TODO{} & \textbf{CÓ} \\
 A18 & indirect & path / \texttt{sanitize\_export\_path} & \texttt{BLOCKED} (strip âm thầm) & \TODO{} & KHÔNG \\
-A20 & dir-API & \texttt{submit\_portal\_filing} & \texttt{ATTACK\_SUCCESS} (token \texttt{"OK"}) & \TODO{} & \textbf{CÓ} \\
+A20 & dir-API & \texttt{submit\_portal\_\allowbreak filing} & \texttt{ATTACK\_SUCCESS} (token \texttt{"OK"}) & \TODO{} & \textbf{CÓ} \\
 \midrule
 A08--15, A17, A19 & indirect (10 ca) & Qdrant / tool / PDF / memory / tên file & \texttt{STAGED} (đã sinh 10 fixture, chưa chèn chạy live) & \TODO{} & CHỜ CHÈN \\
 \bottomrule
@@ -360,7 +361,7 @@ LegalPilot-VN chứng minh được hướng tiếp cận kết hợp truy hồi
 
 Bảng~\ref{tab:d4} tổng hợp đầy đủ 12 trường bàn giao theo §8 của \texttt{03-Bieu-mau-Final.pdf}. Ghi nhận một lỗi tái lập hiện có: môi trường \texttt{.venv/} mặc định thiếu gói \texttt{pydantic\_settings} và \texttt{bs4}; cần chạy bằng \texttt{.venv-adk/bin/python3} cho tới khi đóng gói \texttt{requirements.lock.txt} (W4.1).
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Thông tin bàn giao D4 theo §8 biểu mẫu final.}
 \label{tab:d4}
 \scriptsize
@@ -390,7 +391,7 @@ Giới hạn tái lập & Cần API key + Neo4j/Qdrant cho chạy live; \texttt{
 
 Bảng~\ref{tab:feedback} trình bày các góp ý đã xử lý từ vòng D1 (theo §1 của \texttt{03-Bieu-mau-Final.pdf}) và chỗ chờ bổ sung góp ý bằng văn bản của D2.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Phản hồi góp ý Proposal / D2 (mẫu §1).}
 \label{tab:feedback}
 \scriptsize
@@ -411,7 +412,7 @@ R4 & \TODO{Góp ý D2 từ GVHD} & \TODO{Cập nhật sau W6.1} & \TODO{} & Chư
 
 Bảng~\ref{tab:contrib} tuân thủ đủ 5 cột theo mẫu §5 của \texttt{03-Bieu-mau-Final.pdf}. Các thành viên sẽ gửi đánh giá nội bộ cá nhân riêng qua email cho giảng viên trước hạn 06/12/2026.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Bảng phân công và đóng góp thực tế của nhóm G4.}
 \label{tab:contrib}
 \scriptsize
@@ -436,7 +437,7 @@ Trong quá trình phát triển và biên soạn báo cáo, nhóm sử dụng \T
 
 Bảng~\ref{tab:req} đối chiếu các yêu cầu trong đề tài (R1--R4, R6 từ tài liệu Final/D1; R5, R7--R9 sẽ đối chiếu lại đề cương gốc khi hoàn tất) và yêu cầu hướng Research (RT1--RT4).
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Ma trận đối chiếu yêu cầu và bằng chứng (mẫu §4).}
 \label{tab:req}
 \scriptsize
