@@ -6,6 +6,8 @@ Nguồn raw:
 - `data/benchmarks/eval_correctness_100.json` (cấu hình **v1**)
 - `data/benchmarks/eval_correctness_100_v2.json` (cấu hình **v2**)
 - `data/benchmarks/eval_correctness_100_p1.json` (cấu hình **p1**)
+- `docs/RETRIEVAL_RESULTS.md` & `scripts/make_results_workbook.py` (commit `b40ace3`, đo retrieval trên đủ 100 câu với `dense_top_k=6`, Neo4j bật, Hybrid RRF + BM25 + `cap=2/văn bản`)
+- `eval/raw/retrieval_100.json` (tạo bởi `scripts/eval_retrieval.py` ngày 27/11/2026 trên `src/agents/lawgraph.py` sau khi sửa khử trùng cấp Điều + Okapi BM25+IDF fallback, đủ 100 câu)
 - Testset: `data/benchmarks/sbv_testset_tvpl.json` (100 câu, ground truth chuyên gia)
 
 ---
@@ -53,21 +55,29 @@ Bước nhảy 91% → 96% không đến từ đổi model hay tăng token, mà 
 
 ---
 
-## 3. Truy xuất: vượt ở đâu, **thua ở đâu**
+## 3. Truy xuất: đo lại đúng `k = 2` và nâng cấp (27/11/2026)
 
-| Chỉ số truy xuất | Paper [1] | G4 | Kết luận |
-|---|---:|---:|---|
-| Recall@k | 76,0% (@10) | **97,0%** | **Vượt +21,0 điểm** |
-| F2-score | 0,60–0,61 | **0,684** | **Vượt** |
-| Độ nhiễu ngữ cảnh (context dilution) | > 60,0% | **< 15,0%** | **Giảm > 45 điểm** |
-| Xử lý văn bản hết hiệu lực | 0,0% (gom cả NĐ 101/2012 cũ) | **100,0%** | **Vượt** (paper tự nhận là hạn chế) |
-| Precision@2 | 37,0–39,0% | **34,47%** | ⚠️ **THẤP HƠN 2,5–4,5 điểm** |
+Tiến trình cải thiện tầng truy hồi qua ba mốc trên bộ 100 câu `sbv_testset_tvpl.json`:
+1. **D2 (25/10/2026):** đo ở `k ≈ 3,25`, đạt `34,47%` — từng diễn đạt sai là "HOÀN TOÀN NHẤT QUÁN" với paper.
+2. **Mốc `b40ace3` (09/11/2026):** thêm Hybrid RRF + BM25 + `cap=2/văn bản`, đo lại đúng `k = 2` (`dense_top_k=6`, Neo4j bật) đạt **`P@2 = 41,0%`**, `F2@2 = 0,638`, `R@6 = 89,2%`.
+3. **Mốc `27/11/2026` (`scripts/eval_retrieval.py` → `eval/raw/retrieval_100.json`):** sửa lỗi trùng chunk cùng Điều trong `dense_retrieve()`, bổ sung Okapi BM25+IDF (unigram + bigram) làm nhánh lexical fallback trong `LawGraphAgent`, chặn `STATUTE_CATALOG` đè RRF, và truyền `raw_query` sạch cho bi-encoder. Kết quả chạy kiểm chứng đủ 100 câu (cấu hình mặc định `hybrid_rrf`, `top_k = 6`, Neo4j đang tắt nên nhánh lexical dùng chỉ mục BM25+IDF cục bộ):
 
-**Phải nói rõ cột cuối.** Báo cáo D2 đã ghi "HOÀN TOÀN NHẤT QUÁN" cho Precision — cách diễn đạt đó **che mất việc nhóm thấp hơn paper**. Nguyên nhân kỹ thuật có thật: nhóm đo ở `k ≈ 3,25` và planner tách 3–5 sub-query nên kéo thêm điều khoản lân cận; paper đo @2. Hai phép đo **không cùng mẫu số**, nên kết luận trung thực là:
+| Chỉ số truy xuất | Paper [1] (1.703 VB) | G4 — `b40ace3` (09/11) | **G4 — `hybrid_rrf` (27/11, raw JSON)** | Kết luận |
+|---|---:|---:|---:|---|
+| Precision@2 | 37,0–39,0% | 41,0% (`0,410`) | **48,0% (`0,4800`)** | **Vượt +9 đến +11 điểm** (cùng `k = 2`) |
+| F2@2 | 0,60–0,61 | 0,638 | **0,737 (`0,7366`)** | **Vượt** (cùng `k = 2`) |
+| Recall | 76,0% (`@10`) | 89,2% (`@6`) | **96,0% (`@6`)** (`R@2=86,8%`) | **Vượt +20,0 điểm** ngay ở `k = 6` |
+| Hit@2 | — | 77,0% | **89,0%** (`Hit@6 = 96,0%`) | 89/100 câu lọt top-2 |
+| Độ nhiễu ngữ cảnh (`1 − P@2`) | > 60,0% | ~59,0% | **52,0%** | **Giảm > 8 điểm** (cùng định nghĩa) |
+| Xử lý văn bản hết hiệu lực | 0,0% (gom NĐ 101/2012) | 100,0%\* | **100,0%\*** | **Vượt\*** (*phụ thuộc metadata đồ thị) |
 
-> Recall, F2, nhiễu và xử lý hiệu lực vượt paper; Precision@2 **thấp hơn** và **chưa so sánh được** vì khác `k`. Cần đo lại Precision@2 đúng nghĩa trước khi kết luận.
+*(Ghi chú ablation từ cùng raw `eval/raw/retrieval_100.json`: `dense_only` đạt `P@2 = 49,0% / R@6 = 96,0% / F2@2 = 0,7485`; `bm25_only` đạt `P@2 = 48,5% / R@6 = 90,5% / F2@2 = 0,7450`; `hybrid_rrf` đạt `P@2 = 48,0% / R@6 = 96,0% / F2@2 = 0,7366`.)*
 
-Việc này là **sửa một kết luận quá mạnh** — rubric P4/A5 tính là tiến bộ có giá trị, không phải điểm trừ.
+**Bốn điểm trung thực bắt buộc phải giữ trong D3:**
+1. **Chênh lệch quy mô kho dữ liệu (rất quan trọng):** SBV-LawGraph [1] truy xuất trên **1.703 văn bản**, còn chỉ mục vector/BM25 cục bộ hiện tại của G4 mới chứa **29 văn bản NHNN cốt lõi** (91 điều duy nhất / 103 chunk trong `qdrant_chunks_export.json`; đồ thị có ~34 văn bản gồm metadata) nhưng đã bao phủ 100% điều khoản ground truth của 100 câu test. Do đó, con số `P@2 = 48,0%` **chỉ đại diện trong phạm vi tập con 29 văn bản đã lập chỉ mục**, chưa tương đương truy xuất toàn kho 1.703 văn bản.
+2. **Trần lý thuyết trên bộ 100 câu là `54,5%`:** có 91/100 câu chỉ có đúng 1 điều khoản ground truth (trung bình 1,13 điều/câu), nên `P@2 = 48,0%` đạt ~88% trần toán học của bộ test.
+3. **Không trộn cấu hình:** mọi con số trên đo ở `dense_top_k = 6` (`b40ace3` đo lúc Neo4j bật; `27/11` đo với Neo4j tắt nên đi qua fallback `lexical_retrieve_export`). Đợt W1.5 sẽ chạy lại cả khi Neo4j bật để đối chứng.
+4. **Cảnh báo metadata:** `data/processed/neo4j_graph_export.json` vẫn còn bản ghi `101/2012/ND-CP` gán nhầm `status: "in_force"`, nên chỉ số lọc hết hiệu lực 100% vẫn mang tính phụ thuộc dữ liệu đồ thị cục bộ.
 
 ---
 

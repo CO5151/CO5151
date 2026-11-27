@@ -54,7 +54,7 @@
 
 %% =====================================================================
 \begin{abstract}
-Chuyên viên tuân thủ ngân hàng Việt Nam phải tra cứu hàng nghìn văn bản quy phạm pháp luật (VBQPPL) có quan hệ sửa đổi, thay thế chằng chịt; chỉ một dẫn chiếu hết hiệu lực có thể kéo theo rủi ro pháp lý trực tiếp. Nhóm G4 trình bày \textbf{LegalPilot-VN} (hướng \textbf{Research, RT1--RT4}), một hệ đa tác tử kết hợp truy hồi lai (Qdrant + đồ thị Neo4j) với \emph{duyệt đồ thị chọn lọc theo hiệu lực}, \emph{kiểm toán từng mệnh đề} (\texttt{ClaimAuditorAgent}) và \emph{cổng kiểm chứng dẫn chiếu tất định} (\texttt{answer\_gate}) đặt ngoài prompt. Trên bộ 100 câu hỏi luật Ngân hàng Nhà nước (\texttt{sbv\_testset\_tvpl.json}, chấm 1 lượt trên cấu hình \texttt{p1}), hệ thống đạt \textbf{96/100} ở chỉ số proxy ba điều kiện định nghĩa bằng code (so với mức công bố \textbf{91/100} của SBV-LawGraph~\cite{phan2026sbv}), cùng độ chính xác dẫn chiếu 99,0\% và trúng căn cứ 97,0\%. Về bảo mật, chúng tôi xây dựng bộ 20 ca tấn công prompt injection gắn với điểm vào thật trong mã nguồn; đo sơ bộ 10 ca trước khi vá ghi nhận 6 ca bị chặn, 2 ca lọt ở mức unit/API (A16, A20), 1 ca chặn một phần (A07) và 1 ca không quy công được (A04). \emph{Giới hạn trọng yếu:} con số 96\% là \textbf{cận trên} vì chưa có LLM-judge chấm tương đương ngữ nghĩa như~\cite{phan2026sbv}, mới đo 1 lượt (chưa có trung bình $\pm$ SD qua 3 run), Precision@2 thực tế đạt 34,47\% (thấp hơn 37--39\% của paper và khác $k$), và 10 ca indirect còn ở trạng thái chờ chèn fixture. \textbf{Kho mã nguồn:} \url{https://github.com/CO5151/CO5151} $\cdot$ Tag: \texttt{final} $\cdot$ Commit: \TODO{điền commit hash 40 ký tự khi đóng gói D4}.
+Chuyên viên tuân thủ ngân hàng Việt Nam phải tra cứu hàng nghìn văn bản quy phạm pháp luật (VBQPPL) có quan hệ sửa đổi, thay thế chằng chịt; chỉ một dẫn chiếu hết hiệu lực có thể kéo theo rủi ro pháp lý trực tiếp. Nhóm G4 trình bày \textbf{LegalPilot-VN} (hướng \textbf{Research, RT1--RT4}), một hệ đa tác tử kết hợp truy hồi lai (Qdrant + đồ thị Neo4j) với \emph{duyệt đồ thị chọn lọc theo hiệu lực}, \emph{kiểm toán từng mệnh đề} (\texttt{ClaimAuditorAgent}) và \emph{cổng kiểm chứng dẫn chiếu tất định} (\texttt{answer\_gate}) đặt ngoài prompt. Trên bộ 100 câu hỏi luật Ngân hàng Nhà nước (\texttt{sbv\_testset\_tvpl.json}, chấm 1 lượt trên cấu hình \texttt{p1}), hệ thống đạt \textbf{96/100} ở chỉ số proxy ba điều kiện định nghĩa bằng code (so với mức công bố \textbf{91/100} của SBV-LawGraph~\cite{phan2026sbv}), cùng độ chính xác dẫn chiếu 99,0\% và trúng căn cứ 97,0\%; ở tầng truy hồi trên tập con chỉ mục cục bộ (29 văn bản/103 chunk, \texttt{top\_k=6}), nhánh \texttt{hybrid\_rrf} sau nâng cấp BM25+IDF và khử trùng cấp Điều đạt \textbf{48,0\% Precision@2} và \textbf{0,737 F2@2} (cao hơn 37--39\% và 0,60--0,61 của~\cite{phan2026sbv}). Về bảo mật, chúng tôi xây dựng bộ 20 ca tấn công prompt injection gắn với điểm vào thật trong mã nguồn; đo sơ bộ 10 ca trước khi vá ghi nhận 6 ca bị chặn, 2 ca lọt ở mức unit/API (A16, A20), 1 ca chặn một phần (A07) và 1 ca không quy công được (A04). \emph{Giới hạn trọng yếu:} con số 96\% là \textbf{cận trên} vì chưa có LLM-judge chấm tương đương ngữ nghĩa như~\cite{phan2026sbv}, mới đo 1 lượt (chưa có trung bình $\pm$ SD qua 3 run), số đo truy hồi mới thực hiện trên 29 văn bản cốt lõi (chưa bằng kho 1.703 văn bản của~\cite{phan2026sbv}) và metadata \texttt{101/2012/ND-CP} còn sai ở đồ thị, và 10 ca indirect còn ở trạng thái chờ chèn fixture. \textbf{Kho mã nguồn:} \url{https://github.com/CO5151/CO5151} $\cdot$ Tag: \texttt{final} $\cdot$ Commit: \TODO{điền commit hash 40 ký tự khi đóng gói D4}.
 \end{abstract}
 
 \maketitle
@@ -64,7 +64,7 @@ Chuyên viên tuân thủ ngân hàng Việt Nam phải tra cứu hàng nghìn v
 \label{sec:intro}
 
 \paragraph{Người dùng và bài toán.}
-Đối tượng sử dụng mục tiêu của LegalPilot-VN là chuyên viên tuân thủ (compliance officer) và pháp chế doanh nghiệp trong lĩnh vực tài chính--ngân hàng tại Việt Nam. Khi thẩm định hồ sơ tín dụng, ví điện tử, hay khoản vay nước ngoài, người dùng phải đối chiếu trên kho 1.703 VBQPPL Ngân hàng Nhà nước (NHNN) với nhiều tầng quan hệ sửa đổi, hướng dẫn và thay thế (\texttt{SUPERSEDES}, \texttt{GUIDES}). Một sai sót thường gặp của các chatbot RAG thông thường là trộn lẫn văn bản còn hiệu lực với văn bản đã bị bãi bỏ (như Nghị định 101/2012/NĐ-CP sau khi Nghị định 52/2024/NĐ-CP có hiệu lực) hoặc bỏ sót điều khoản xếp hạng cao để tự suy diễn theo trí nhớ tham số.
+Đối tượng sử dụng mục tiêu của LegalPilot-VN là chuyên viên tuân thủ (compliance officer) và pháp chế doanh nghiệp trong lĩnh vực tài chính--ngân hàng tại Việt Nam. Khi thẩm định hồ sơ tín dụng, ví điện tử, hay khoản vay nước ngoài, người dùng phải đối chiếu trên kho quy định Ngân hàng Nhà nước (NHNN) với nhiều tầng quan hệ sửa đổi, hướng dẫn và thay thế (\texttt{SUPERSEDES}, \texttt{GUIDES}) — bộ chuẩn SBV-LawGraph~\cite{phan2026sbv} tổng hợp 1.703 VBQPPL, trong khi chỉ mục cục bộ của LegalPilot-VN hiện lập chỉ mục 29 văn bản cốt lõi (103 chunk / 91 điều) bao phủ 100 câu hỏi đánh giá. Một sai sót thường gặp của các chatbot RAG thông thường là trộn lẫn văn bản còn hiệu lực với văn bản đã bị bãi bỏ (như Nghị định 101/2012/NĐ-CP sau khi Nghị định 52/2024/NĐ-CP có hiệu lực) hoặc bỏ sót điều khoản xếp hạng cao để tự suy diễn theo trí nhớ tham số.
 
 \paragraph{Vì sao cần hệ đa tác tử thay cho RAG tĩnh.}
 Truy vấn tuân thủ không thể giải quyết bằng một bước tìm kiếm $k$-NN cố định: câu hỏi thường chứa nhiều ý ràng buộc chéo đòi hỏi (i) phân rã thành các truy vấn con, (ii) mở rộng chọn lọc trên đồ thị pháp lý theo trạng thái hiệu lực, (iii) kiểm toán từng mệnh đề nguyên tử trong bản nháp đối chiếu với ngữ cảnh đã truy xuất, và (iv) quay lui loại bỏ văn bản hết hiệu lực hoặc bổ sung điều khoản còn thiếu khi phát hiện dẫn chiếu lệch. Mỗi bước phụ thuộc trực tiếp vào trạng thái trung gian của bước trước, tạo thành vòng phản hồi khép kín có điều kiện dừng rõ ràng.
@@ -94,7 +94,7 @@ Chỉ tính các thành phần đã cài đặt và có log kiểm chứng:
 \midrule
 Nhóm tự xây dựng & \texttt{LegalOrchestrator}, \texttt{LawGraphAgent}, \texttt{ClaimAuditorAgent}, \texttt{DrafterAgent} (\texttt{src/agents/}); cổng \texttt{answer\_gate.py}, \texttt{guardrails.py}, \texttt{sanitizer.py}, \texttt{token\_gate.py} (\texttt{src/security/}); bộ công cụ pháp lý (\texttt{src/tools/}); bộ 20 ca tấn công (\texttt{final/security/attacks/}). \\
 \midrule
-Framework, model \& dữ liệu dùng lại & Google ADK (\texttt{ADKRunner}), LiteLLM, DeepSeek API (\texttt{deepseek-chat}), Gemini (\texttt{gemini-2.5-flash}), Qdrant, Neo4j, SQLite (WAL mode), bộ dữ liệu 1.703 VBQPPL \& 100 câu hỏi từ \texttt{sbv\_testset\_tvpl.json}~\cite{phan2026sbv}. \\
+Framework, model \& dữ liệu dùng lại & Google ADK (\texttt{ADKRunner}), LiteLLM, DeepSeek API (\texttt{deepseek-chat}), Gemini (\texttt{gemini-2.5-flash}), Qdrant, Neo4j, SQLite (WAL mode), tập con 29 văn bản/103 chunk cục bộ \& bộ 100 câu hỏi \texttt{sbv\_testset\_tvpl.json} (tham chiếu kho 1.703 VBQPPL của~\cite{phan2026sbv}). \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -204,7 +204,7 @@ Bảng~\ref{tab:d2_diff} tóm tắt ba điều chỉnh cốt lõi giữa D2 (25/
 \textbf{Hạng mục} & \textbf{Ở mốc D2} & \textbf{Ở mốc D3 hiện tại} \\
 \midrule
 Cổng dẫn chiếu & Chỉ chạy cuối pipeline / chặn cứng & Chạy trong vòng lặp + tự nạp graph + ràng buộc top-3 (\texttt{p1}) \\
-Kết luận Precision@2 & Ghi ``nhất quán'' với paper & Đính chính: 34,47\% < 37--39\%, khác $k$, chưa so sánh được \\
+Truy hồi \& Precision@2 & 34,47\% ($k\approx 3,25$), ghi ``nhất quán'' (chưa chuẩn) & Hybrid RRF+BM25-IDF + khử trùng cấp Điều (\texttt{retrieval\_100.json}): \textbf{48,0\% @2} \\
 Đánh giá bảo mật & Liệt kê threat model v0 lý thuyết & Kiểm toán code tìm F1--F5 + bộ 20 ca có JSONL raw \\
 \bottomrule
 \end{tabular}
@@ -256,21 +256,21 @@ Cost / task (USD) & \TODO{} & \TODO{} & \TODO{} & \TODO{} & --- \\
 \paragraph{Cảnh báo về thang đo.} Con số \textbf{96,0\% là cận trên} và không chứng minh vượt Answer Correctness của~\cite{phan2026sbv}: số 91\% của paper có thêm bước LLM-judge (Gemini) chấm \emph{tương đương ngữ nghĩa}, một điều kiện chỉ có thể làm giảm hoặc giữ nguyên điểm. Ngoài ra, kết quả ở Bảng~\ref{tab:main} mới đo 1 lượt nên chưa loại trừ được nhiễu ngẫu nhiên của LLM.
 
 \subsection{Chỉ số truy hồi và nghiên cứu cắt bỏ (Ablation)}
-Bảng~\ref{tab:retrieval} đối chiếu tầng truy hồi so với~\cite{phan2026sbv}. Hệ thống vượt ở Recall, F2-score và giảm nhiễu ngữ cảnh; nhưng \textbf{Precision@2 đạt 34,47\%, thấp hơn mức 37--39\% của paper} do nhóm tách 3--5 sub-query và đánh giá trên $k \approx 3,25$ nên chưa cùng mẫu số để kết luận vượt. Đồng thời, chỉ số hiệu lực 100\% được đánh dấu cảnh báo vì phát hiện metadata \texttt{101/2012/ND-CP} bị gán sai ở đồ thị (Mục~\ref{sec:security}).
+Bảng~\ref{tab:retrieval} đối chiếu tầng truy hồi trên đủ 100 câu theo dữ liệu raw mới nhất trong \texttt{eval/raw/retrieval\_100.json} (sinh bởi \texttt{scripts/eval\_retrieval.py}, \texttt{top\_k=6}). Tiến trình phát triển qua ba mốc: (1) ở D2, nhóm đo ở $k \approx 3,25$ (34,47\%) và ghi nhầm ``nhất quán'' dù khác $k$; (2) ở commit \texttt{b40ace3} (Neo4j bật), bổ sung Hybrid RRF + BM25 + \texttt{cap=2} đưa \texttt{P@2} lên 41,0\% và \texttt{F2@2} lên 0,638; (3) trong lần sửa hiện tại ở \texttt{lawgraph.py}, nhóm khử trùng theo Điều ở \texttt{dense\_retrieve()}, thêm nhánh fallback \texttt{lexical\_retrieve\_export()} dùng Okapi BM25+IDF (unigram+bigram), chặn \texttt{STATUTE\_CATALOG} đè RRF và truyền \texttt{raw\_query} sạch cho bi-encoder. Kết quả trên 100 câu (khi Neo4j tắt nên nhánh từ khoá dùng chỉ mục BM25+IDF cục bộ): \texttt{hybrid\_rrf} đạt \textbf{P@2 = 48,0\%} (trên trần lý thuyết 54,5\% do 91/100 câu chỉ có 1 điều chuẩn), \textbf{F2@2 = 0,737}, \textbf{Hit@2 = 89,0\%} và \textbf{R@6 = 96,0\%}; các nhánh thành phần \texttt{dense\_only} đạt 49,0\% và \texttt{bm25\_only} đạt 48,5\%. \emph{Giới hạn trọng yếu:} chỉ mục cục bộ hiện mới chứa 29 văn bản cốt lõi (103 chunk), nhỏ hơn nhiều so với 1.703 văn bản của~\cite{phan2026sbv}, nên phần vượt này chỉ đúng trên tập con đã lập chỉ mục; đồng thời lọc hiệu lực 100\% vẫn phụ thuộc metadata \texttt{101/2012/ND-CP} (Mục~\ref{sec:security}).
 
 \begin{table}[t]
-\caption{Đối chiếu tầng truy hồi so với SBV-LawGraph~\cite{phan2026sbv}.}
+\caption{Đối chiếu tầng truy hồi trên 100 câu (\texttt{top\_k=6}, dữ liệu raw \texttt{eval/raw/retrieval\_100.json}) so với~\cite{phan2026sbv}.}
 \label{tab:retrieval}
 \scriptsize
 \begin{tabular}{@{}lrrp{2.7cm}@{}}
 \toprule
-\textbf{Chỉ số} & \textbf{Paper~\cite{phan2026sbv}} & \textbf{G4} & \textbf{Kết luận trung thực} \\
+\textbf{Chỉ số} & \textbf{Paper~\cite{phan2026sbv}} & \textbf{G4 (\texttt{hybrid\_rrf})} & \textbf{Kết luận trung thực} \\
 \midrule
-Recall@k & 76,0\% (@10) & \textbf{97,0\%} & Vượt $+21,0$ điểm \\
-F2-score & 0,60--0,61 & \textbf{0,684} & Vượt \\
-Độ nhiễu ngữ cảnh & $>60,0\%$ & \textbf{$<15,0\%$} & Giảm $>45$ điểm \\
+Precision@2 & 37,0--39,0\% & \textbf{48,0\%} & Vượt (cùng $k=2$; trần 54,5\%; tập 29 VB) \\
+F2@2 & 0,60--0,61 & \textbf{0,737} & Vượt (cùng $k=2$; tập 29 VB) \\
+Recall & 76,0\% (@10) & \textbf{96,0\% (@6)} & Vượt $+20,0$ điểm ngay ở $k=6$ \\
+Độ nhiễu ngữ cảnh & $>60,0\%$ & \textbf{52,0\%} & Thấp hơn $>8$ điểm ($1 - \text{P@2}$) \\
 Lọc hết hiệu lực & 0,0\% & 100,0\%* & *Phụ thuộc metadata (\S\ref{sec:security}) \\
-Precision@2 & 37,0--39,0\% & \textbf{34,47\%} & \textbf{Thấp hơn} (khác $k \approx 3,25$) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -332,7 +332,7 @@ Hiện tại quyền ghi thực sự (\texttt{submit\_portal\_filing}) đã tác
 
 \begin{itemize}[leftmargin=*]
   \item \textbf{Giới hạn thiết kế:} chưa tích hợp LLM-as-judge kiểm tra tương đương ngữ nghĩa trên bản \texttt{p1}; chưa hỗ trợ OCR cho văn bản PDF dạng ảnh scan; công cụ ghi \texttt{submit\_portal\_filing} mới ở mức mô phỏng cổng dịch vụ công và chưa có xác thực token chữ ký số (FIX-8). Ngoài ra, thí nghiệm thất bại ở D2 khi áp dụng \emph{cổng chặn cứng hoàn toàn} không cho quay lui đã đẩy tỷ lệ từ chối lên 26,7\%, cho thấy cần cân bằng giữa an toàn trích dẫn và tính hữu dụng.
-  \item \textbf{Đe doạ tính hợp lệ của phép đo (Threats to Validity):} (i) số 96/100 là 1 lượt đo và thiếu semantic equivalence; (ii) tập 100 câu là mẫu nhỏ trên nguồn công khai của một lĩnh vực duy nhất (NHNN), không thể suy rộng ra toàn bộ hệ thống pháp luật; (iii) chỉ số \texttt{Precision@2} chưa đo đồng nhất $k$ với paper; (iv) lỗ hổng dữ liệu \texttt{101/2012/ND-CP} làm phép đo hiệu lực mang tính vòng tròn với metadata đồ thị.
+  \item \textbf{Đe doạ tính hợp lệ của phép đo (Threats to Validity):} (i) số 96/100 là 1 lượt đo và thiếu semantic equivalence; (ii) tập 100 câu là mẫu nhỏ trên nguồn công khai của một lĩnh vực duy nhất (NHNN), không thể suy rộng ra toàn bộ hệ thống pháp luật; (iii) chỉ mục vector/BM25 cục bộ hiện mới chứa 29 văn bản cốt lõi (103 chunk) dù phủ 100\% tập 100 câu, nhỏ hơn rất nhiều so với kho 1.703 văn bản của~\cite{phan2026sbv} nên độ chính xác truy hồi \texttt{P@2 = 48,0\%} chưa thể suy thẳng cho quy mô 1.703 văn bản (ngoài ra \texttt{retrieval\_100.json} đo khi Neo4j tắt nên đi qua nhánh fallback \texttt{lexical\_retrieve\_export}); (iv) lỗ hổng dữ liệu \texttt{101/2012/ND-CP} làm phép đo hiệu lực mang tính vòng tròn với metadata đồ thị.
   \item \textbf{Khả năng mở rộng:} kiến trúc tách tầng thu thập--kiểm toán--cổng dẫn chiếu cho phép mở rộng sang lĩnh vực thuế, lao động bằng cách nạp đồ thị và thay bộ luật allowlist mà không phải huấn luyện lại mô hình.
 \end{itemize}
 
@@ -340,7 +340,7 @@ Hiện tại quyền ghi thực sự (\texttt{submit\_portal\_filing}) đã tác
 \section{Đạo đức và sử dụng có trách nhiệm}
 \label{sec:ethics}
 
-Kho dữ liệu gồm 1.703 VBQPPL và bộ câu hỏi kiểm thử được thu thập từ nguồn pháp luật công khai của Nhà nước Việt Nam; việc kiểm thử bảo mật thực hiện hoàn toàn trên môi trường cục bộ và dữ liệu giả lập (mock VBPL/DVC), không gửi payload tới tài khoản hay hạ tầng của bên thứ ba. Hệ thống không lưu dữ liệu khách hàng thực tế (hồ sơ doanh nghiệp kiểm thử lưu cục bộ trong \texttt{workspace/}). Về trách nhiệm vận hành, LegalPilot-VN chỉ đóng vai trò công cụ hỗ trợ tra cứu có dẫn chiếu kiểm chứng, \textbf{không} thay thế kết luận pháp lý chính thức; mọi hành động ghi không thể hoàn tác đều yêu cầu phê duyệt và token xác thực của chuyên viên có thẩm quyền.
+Kho dữ liệu cục bộ (29 văn bản NHNN cốt lõi / 103 chunk; đối chiếu với bộ benchmark 1.703 văn bản của~\cite{phan2026sbv}) và 100 câu hỏi kiểm thử được thu thập từ nguồn pháp luật công khai của Nhà nước Việt Nam; việc kiểm thử bảo mật thực hiện hoàn toàn trên môi trường cục bộ và dữ liệu giả lập (mock VBPL/DVC), không gửi payload tới tài khoản hay hạ tầng của bên thứ ba. Hệ thống không lưu dữ liệu khách hàng thực tế (hồ sơ doanh nghiệp kiểm thử lưu cục bộ trong \texttt{workspace/}). Về trách nhiệm vận hành, LegalPilot-VN chỉ đóng vai trò công cụ hỗ trợ tra cứu có dẫn chiếu kiểm chứng, \textbf{không} thay thế kết luận pháp lý chính thức; mọi hành động ghi không thể hoàn tác đều yêu cầu phê duyệt và token xác thực của chuyên viên có thẩm quyền.
 
 %% =====================================================================
 \section{Kết luận}

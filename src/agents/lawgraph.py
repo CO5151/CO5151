@@ -6,8 +6,10 @@ resolving amendment chains and temporal validity bounds. Compliant with Google A
 
 from __future__ import annotations
 
+import math
 import os
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Any, ClassVar, cast
 
@@ -27,6 +29,7 @@ _GRAPH_EXPORT = Path("data/processed/neo4j_graph_export.json")
 _EMBEDDER_NAME = "bkai-foundation-models/vietnamese-bi-encoder"
 
 _DENSE_INDEX: dict[str, tuple[Any, Any, list[dict[str, Any]]]] = {}
+_LEXICAL_INDEX: dict[str, Any] = {}
 _GRAPH_STATUS: dict[str, dict[str, Any]] = {}
 _NEO4J_HANDLE: dict[str, Any] = {}
 
@@ -76,6 +79,61 @@ def _search_terms(subgoals: list[str], keywords: list[str], limit: int = 24) -> 
     raw = " ".join([*subgoals, *keywords]).lower()
     tokens = [t for t in re.findall(r"\w+", raw, flags=re.UNICODE) if len(t) >= 3]
     return list(dict.fromkeys(phrases + tokens))[:limit]
+
+
+def _tokenize_vi(text: str) -> list[str]:
+    """Tokenizes text into lowercase words (>=2 chars) plus adjacent bigrams."""
+    words = [w for w in re.findall(r"\w+", text.lower(), flags=re.UNICODE) if len(w) >= 2]
+    bigrams = [f"{words[i]}_{words[i + 1]}" for i in range(len(words) - 1)]
+    return words + bigrams
+
+
+def _load_lexical_index() -> tuple[
+    list[dict[str, Any]], list[Counter[str]], list[int], float, dict[str, float]
+]:
+    """Builds and caches an Okapi BM25+IDF index over exported chunks."""
+    if "index" in _LEXICAL_INDEX:
+        return cast(
+            "tuple[list[dict[str, Any]], list[Counter[str]], list[int], float, dict[str, float]]",
+            _LEXICAL_INDEX["index"],
+        )
+    try:
+        import json
+
+        if not _CHUNK_EXPORT.exists():
+            raise FileNotFoundError(str(_CHUNK_EXPORT))
+        chunks = json.loads(_CHUNK_EXPORT.read_text(encoding="utf-8"))
+        doc_tfs: list[Counter[str]] = []
+        doc_lens: list[int] = []
+        df: Counter[str] = Counter()
+        for chunk in chunks:
+            payload = chunk.get("payload", {})
+            full_text = (
+                f"{payload.get('doc_id', '')} "
+                f"{payload.get('title', '')} "
+                f"{payload.get('text', '')}"
+            )
+            toks = _tokenize_vi(full_text)
+            tf = Counter(toks)
+            doc_tfs.append(tf)
+            doc_lens.append(len(toks))
+            for term in tf:
+                df[term] += 1
+        n_docs = len(chunks)
+        avgdl = (sum(doc_lens) / n_docs) if n_docs else 1.0
+        idf = {
+            term: math.log((n_docs - freq + 0.5) / (freq + 0.5) + 1.0)
+            for term, freq in df.items()
+        }
+        _LEXICAL_INDEX["index"] = (chunks, doc_tfs, doc_lens, avgdl, idf)
+        logger.info("LawGraphAgent: lexical BM25-IDF index ready (%d chunks).", n_docs)
+    except Exception as e:
+        logger.warning("LawGraphAgent: lexical BM25-IDF index unavailable: %s", e)
+        _LEXICAL_INDEX["index"] = ([], [], [], 1.0, {})
+    return cast(
+        "tuple[list[dict[str, Any]], list[Counter[str]], list[int], float, dict[str, float]]",
+        _LEXICAL_INDEX["index"],
+    )
 
 
 def _load_dense_index() -> tuple[Any, Any, list[dict[str, Any]]]:
@@ -450,8 +508,87 @@ class LawGraphAgent(ADKAgent):
                     })
         return out
 
+    @staticmethod
+    def _chunk_to_clause(
+        payload: dict[str, Any], truth: dict[str, Any], score: float
+    ) -> dict[str, Any]:
+        """Formats an exported chunk payload into the shared clause dict shape."""
+        doc_id = payload.get("doc_id", "UNKNOWN")
+        article_number = str(payload.get("article_number", "")).strip()
+        return {
+            "doc_id": doc_id,
+            "title": payload.get("title") or truth.get("title") or "",
+            # Chunk payloads say in_force for every doc; trust the graph.
+            "status": truth.get("status") or payload.get("status", "unknown"),
+            "effective_date": payload.get("effective_date", ""),
+            "article": f"Điều {article_number}" if article_number else "",
+            "article_title": payload.get("title", ""),
+            "content": payload.get("text", ""),
+            "supersedes": [],
+            "revoked_by": truth.get("revoked_by"),
+            "superseded_by": truth.get("superseded_by"),
+            "eff_status_code": truth.get("eff_status_code"),
+            "eff_to": truth.get("eff_to"),
+            "score": round(float(score), 4),
+        }
+
+    def lexical_retrieve_export(self, query: str, top_k: int = 6) -> list[dict[str, Any]]:
+        """Okapi BM25+IDF search (unigram + bigram) over the exported chunk corpus."""
+        if not query.strip():
+            return []
+        chunks, doc_tfs, doc_lens, avgdl, idf = _load_lexical_index()
+        if not chunks:
+            return []
+
+        q_toks = _tokenize_vi(query)
+        if not q_toks:
+            return []
+
+        k1, b = 1.5, 0.75
+        scored: list[tuple[float, str, str, int]] = []
+        for idx, (chunk, tf_map, dl) in enumerate(zip(chunks, doc_tfs, doc_lens)):
+            score = 0.0
+            for term in q_toks:
+                tf = tf_map.get(term, 0)
+                if tf:
+                    weight = 1.5 if "_" in term else 1.0
+                    score += (
+                        weight
+                        * idf.get(term, 0.0)
+                        * (tf * (k1 + 1))
+                        / (tf + k1 * (1 - b + b * dl / max(avgdl, 1.0)))
+                    )
+            if score > 0.0:
+                payload = chunk.get("payload", {})
+                scored.append(
+                    (
+                        score,
+                        payload.get("doc_id", "UNKNOWN"),
+                        str(payload.get("article_number", "")).strip(),
+                        idx,
+                    )
+                )
+
+        scored.sort(key=lambda item: (-item[0], item[1], item[2], item[3]))
+        status_map = _load_graph_status()
+        hits: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        per_doc: dict[str, int] = {}
+        for score, doc_id, art_num, idx in scored:
+            article = f"Điều {art_num}" if art_num else ""
+            key = f"{doc_id}:{article}"
+            if key in seen or per_doc.get(doc_id, 0) >= _MAX_PER_DOC:
+                continue
+            seen.add(key)
+            per_doc[doc_id] = per_doc.get(doc_id, 0) + 1
+            payload = chunks[idx].get("payload", {})
+            hits.append(self._chunk_to_clause(payload, status_map.get(doc_id, {}), score))
+            if len(hits) >= top_k:
+                break
+        return hits
+
     def dense_retrieve(self, query: str, top_k: int = 6) -> list[dict[str, Any]]:
-        """Embedding search over the exported chunk index.
+        """Embedding search over the exported chunk index, deduplicated by article.
 
         Returns clause dicts in the same shape as the static catalog so the
         Claim Auditor and Drafter can consume them unchanged.
@@ -466,33 +603,25 @@ class LawGraphAgent(ADKAgent):
 
         q_vec = np.asarray(model.encode(query, normalize_embeddings=True), dtype="float32")
         sims = matrix @ q_vec
-        order = np.argsort(-sims)[: max(1, top_k)]
+        order = np.argsort(-sims)
         status_map = _load_graph_status()
 
         hits: list[dict[str, Any]] = []
+        seen: set[str] = set()
         for idx in order:
             payload = chunks[int(idx)].get("payload", {})
             doc_id = payload.get("doc_id", "UNKNOWN")
             article_number = str(payload.get("article_number", "")).strip()
-            truth = status_map.get(doc_id, {})
+            article = f"Điều {article_number}" if article_number else ""
+            key = f"{doc_id}:{article}"
+            if key in seen:
+                continue
+            seen.add(key)
             hits.append(
-                {
-                    "doc_id": doc_id,
-                    "title": payload.get("title") or truth.get("title") or "",
-                    # Chunk payloads say in_force for every doc; trust the graph.
-                    "status": truth.get("status") or payload.get("status", "unknown"),
-                    "effective_date": payload.get("effective_date", ""),
-                    "article": f"Điều {article_number}" if article_number else "",
-                    "article_title": payload.get("title", ""),
-                    "content": payload.get("text", ""),
-                    "supersedes": [],
-                    "revoked_by": truth.get("revoked_by"),
-                    "superseded_by": truth.get("superseded_by"),
-                    "eff_status_code": truth.get("eff_status_code"),
-                    "eff_to": truth.get("eff_to"),
-                    "score": round(float(sims[int(idx)]), 4),
-                }
+                self._chunk_to_clause(payload, status_map.get(doc_id, {}), float(sims[int(idx)]))
             )
+            if len(hits) >= top_k:
+                break
         return hits
 
     def retrieve_provisions(
@@ -523,6 +652,7 @@ class LawGraphAgent(ADKAgent):
         # The raw question carries the discriminative wording; planner subgoals
         # are paraphrases and lose it.
         retrieval_texts = ([query] if query else []) + list(subgoals)
+        raw_query = query.strip() or " ".join(subgoals).strip() or " ".join(keywords).strip()
 
         # Pass 1 (primary): read clauses + validity straight from the Neo4j graph.
         if use_neo4j:
@@ -532,10 +662,24 @@ class LawGraphAgent(ADKAgent):
                     seen_keys.add(item_key)
                     results.append(item)
 
-        # Pass 2 (fallback): hand-written catalog, only when the graph gave nothing.
-        # Skipped when a benchmark pins the retriever, otherwise the 6-document
-        # catalog would shadow the dense pass and masquerade as dense retrieval.
-        if not results and forced != "dense":
+        # Pass 1b (offline BM25-IDF fallback): when Neo4j is unreachable, score the
+        # exported chunk corpus lexically instead of falling back to unsorted
+        # STATUTE_CATALOG entries that would pollute RRF.
+        if use_neo4j and not results and forced != "dense":
+            for item in self.lexical_retrieve_export(raw_query, top_k=dense_top_k):
+                item_key = f"{item['doc_id']}:{item['article']}"
+                if item_key not in seen_keys:
+                    seen_keys.add(item_key)
+                    results.append(item)
+
+        # Pass 2 (fallback): hand-written catalog, only when both graph and local
+        # chunk exports are unavailable. Skipped when a benchmark pins dense or
+        # when the chunk index exists so unsorted catalog items never clobber RRF.
+        if (
+            not results
+            and forced != "dense"
+            and (not use_dense or not _CHUNK_EXPORT.exists())
+        ):
             for doc_id, doc in self.STATUTE_CATALOG.items():
                 doc_text = f"{doc['title']} {doc['doc_id']}".lower()
 
@@ -562,27 +706,41 @@ class LawGraphAgent(ADKAgent):
                                 }
                             )
 
-        # Pass 3: HỢP NHẤT lexical (Neo4j) + dense (vector) bằng Reciprocal Rank
-        # Fusion. Trước đây dense chỉ chạy khi lexical trả rỗng — mà lexical gần
-        # như không bao giờ rỗng, nên bộ vector gần như không bao giờ được dùng.
+        # Pass 3: HỢP NHẤT lexical + dense bằng Reciprocal Rank Fusion (RRF, K=60)
+        # đã khử trùng ở cấp Điều để không điều khoản nào bị cộng hai lần.
         if use_dense:
-            query_text = " ".join(retrieval_texts + keywords).strip() or " ".join(subgoals)
-            dense_hits = self.dense_retrieve(query_text, top_k=dense_top_k)
+            dense_hits = self.dense_retrieve(raw_query, top_k=dense_top_k)
             if dense_hits:
-                K = 60.0
-                fused: dict[str, float] = {}
-                by_key: dict[str, dict[str, Any]] = {}
-                for rank, item in enumerate(results):
-                    k = f"{item['doc_id']}:{item['article']}"
-                    fused[k] = fused.get(k, 0.0) + 1.0 / (K + rank + 1)
-                    by_key.setdefault(k, item)
-                for rank, item in enumerate(dense_hits):
-                    k = f"{item['doc_id']}:{item['article']}"
-                    fused[k] = fused.get(k, 0.0) + 1.0 / (K + rank + 1)
-                    by_key.setdefault(k, item)
-                ordered = sorted(fused.items(), key=lambda kv: -kv[1])
-                results = [by_key[k] for k, _ in ordered]
-                seen_keys = set(by_key)
+                if not results:
+                    results = dense_hits
+                    seen_keys = {f"{item['doc_id']}:{item['article']}" for item in results}
+                else:
+                    K = 60.0
+                    fused: dict[str, float] = {}
+                    by_key: dict[str, dict[str, Any]] = {}
+                    lex_seen: set[str] = set()
+                    lex_rank = 0
+                    for item in results:
+                        k = f"{item['doc_id']}:{item['article']}"
+                        if k in lex_seen:
+                            continue
+                        lex_seen.add(k)
+                        lex_rank += 1
+                        fused[k] = fused.get(k, 0.0) + 1.0 / (K + lex_rank)
+                        by_key.setdefault(k, item)
+                    dense_seen: set[str] = set()
+                    dense_rank = 0
+                    for item in dense_hits:
+                        k = f"{item['doc_id']}:{item['article']}"
+                        if k in dense_seen:
+                            continue
+                        dense_seen.add(k)
+                        dense_rank += 1
+                        fused[k] = fused.get(k, 0.0) + 1.0 / (K + dense_rank)
+                        by_key.setdefault(k, item)
+                    ordered = sorted(fused.items(), key=lambda kv: -kv[1])
+                    results = [by_key[k] for k, _ in ordered]
+                    seen_keys = set(by_key)
 
         # If live database is requested or catalog had no results, attempt dynamic graph retrieval
         if (self.use_live_db or force_live_db) or not results:

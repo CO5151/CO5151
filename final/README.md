@@ -11,8 +11,8 @@ Thư mục này là **khung làm việc**, không phải bài nộp hoàn chỉn
 | Bất kỳ ai | [`plan/WORK_ASSIGNMENT.md`](plan/WORK_ASSIGNMENT.md) — chia việc, lịch theo ngày, định nghĩa "xong" |
 | Người viết báo cáo | [`report/main.tex`](report/main.tex) (bản Việt) & [`report/main_en.tex`](report/main_en.tex) (bản Anh) — khung 2 cột ACM; *khi nộp chọn đúng 1 ngôn ngữ nhất quán* |
 | Người làm bảo mật | [`security/INJECTION_PLAN.md`](security/INJECTION_PLAN.md) & [`security/attacks/README.md`](security/attacks/README.md) — 20 ca, có phát hiện lỗ hổng trong code |
-| Người làm slide | [`slides/main.tex`](slides/main.tex) — 18 frame, đã đánh dấu mốc phút |
-| Người viết phần kết quả | [`results/RESULTS_P2.md`](results/RESULTS_P2.md) — số đã tính lại từ raw, gồm cả chỗ **thua** paper |
+| Người làm slide | [`slides/main.tex`](slides/main.tex) — 19 frame, đã đánh dấu mốc phút |
+| Người viết phần kết quả | [`results/RESULTS_P2.md`](results/RESULTS_P2.md) — số đã đối chiếu từ raw + `docs/RETRIEVAL_RESULTS.md` (gồm cả cận trên và lỗi dữ liệu) |
 
 ## Nội dung
 
@@ -29,8 +29,8 @@ final/
 │   ├── main.pdf                 ← bản build tiếng Việt
 │   └── main_en.pdf              ← bản build tiếng Anh
 ├── slides/
-│   ├── main.tex                 ← khung slide 16:9, 20 phút + 5 frame backup
-│   └── main.pdf                 ← bản build hiện tại (18 frame)
+│   ├── main.tex                 ← khung slide 16:9, 20 phút + 6 frame backup
+│   └── main.pdf                 ← bản build hiện tại (19 frame)
 ├── results/
 │   └── RESULTS_P2.md            ← kết quả mới: 96/100 vs paper 91/100
 └── security/
@@ -56,7 +56,7 @@ TECTONIC_CACHE_DIR=/tmp/tectonic-cache tectonic main.tex
 
 1. **96/100** — kết quả cấu hình p1 trên 100 câu, proxy 3 điều kiện, **không** dùng LLM judge. Paper [1] công bố **91/100**.
 2. **96% là cận trên**, không phải bằng chứng vượt: paper có thêm điều kiện *semantic equivalence*, nhóm chưa đo.
-3. **Precision@2 của nhóm thấp hơn paper** (34,47% vs 37–39%) và khác `k` → **chưa so sánh được**. Báo cáo D2 đã ghi "nhất quán" cho chỉ số này; D3 phải sửa lại.
+3. **Precision@2 hiện đạt 48,0% (và `F2@2 = 0,737`, `Recall@6 = 96,0%`, `Hit@2 = 89,0%`, nhiễu `52,0%`)** trên đủ 100 câu ở chế độ `hybrid_rrf` (`eval/raw/retrieval_100.json`, đo bằng `scripts/eval_retrieval.py` ngày 27/11 sau khi sửa lỗi khử trùng cấp Điều + Okapi BM25+IDF trong `LawGraphAgent`, tăng từ `34,47% @ k≈3,25` ở D2 → `41,0% @ 2` ở `b40ace3` → `48,0% @ 2`). **Bắt buộc ghi rõ giới hạn:** kết quả này đo trên **tập con chỉ mục cục bộ 29 văn bản / 103 chunk** (dù phủ 100% câu hỏi benchmark), chưa phải toàn kho 1.703 văn bản của paper [1], và vẫn còn lỗi metadata `101/2012/ND-CP`.
 
 Rubric A3/A5 phạt nặng việc kết luận vượt xa dữ liệu. Ghi đúng cận trên + nói rõ phần chưa kiểm chứng là **điểm cộng**.
 

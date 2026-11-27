@@ -240,9 +240,10 @@
       \textbf{Ablation C1 vs C2}\\[0.3em]
       \TODO{bảng: cơ chế bị tách, chênh lệch, có ngoài nhiễu không}
       \vspace{0.5em}
-      \begin{block}{Điểm đã sửa so với D2}
-        Precision@2 \warn{thấp hơn} paper (34,47\% vs 37--39\%) và khác $k$
-        $\rightarrow$ \textbf{chưa so sánh được}. D2 ghi “nhất quán” là \warn{sai}.
+      \begin{block}{Đính chính D2 \& sửa lỗi truy hồi ($k=2$)}
+        D2 ghi 34,47\% ($k\approx 3,25$) là “nhất quán” (\warn{sai}).
+        Sau RRF khử trùng + Okapi BM25-IDF (\texttt{retrieval\_100.json}, 29 VB cục bộ):
+        \good{\textbf{P@2 = 48,0\%}} (vs 37--39\%) · \good{\textbf{F2@2 = 0,737}} · \good{\textbf{R@6 = 96,0\%}}.
       \end{block}
     \end{column}
     \begin{column}{0.46\textwidth}
@@ -283,7 +284,7 @@
       \begin{itemize}
         \item thêm Citation Gate top-3
         \item vá cổng nội dung không tin cậy
-        \item sửa kết luận Precision
+        \item sửa RRF + BM25-IDF (P@2: 34,5\% $\to$ 48,0\% @2)
         \item 1 thí nghiệm thất bại đã ghi lại
       \end{itemize}
     \end{column}
@@ -291,7 +292,7 @@
       \textbf{Hạn chế}
       \begin{itemize}
         \item thiếu judge semantic equivalence
-        \item 100 câu: mẫu nhỏ, công khai
+        \item 100 câu công khai; index cục bộ 29 VB vs 1.703 của paper
         \item chưa phủ ảnh scan PDF
         \item \TODO{residual risk: 3 điểm}
       \end{itemize}
@@ -305,7 +306,7 @@
   \begin{itemize}
     \item Giả thuyết: \TODO{bác bỏ / không bác bỏ — kèm số và độ biến thiên}
     \item Hệ thống chạy thật, end-to-end, có trace và audit
-    \item Truy xuất vượt paper ở Recall/F2/nhiễu; \warn{thua Precision@2}
+    \item Truy xuất vượt paper cùng $k=2$ (trên tập 29 VB): P@2 48,0\% · F2 0,737 · R@6 96,0\% · nhiễu 52\%
     \item Mở: Answer Correctness thật cần LLM-judge; mở rộng ngoài ngành ngân hàng
   \end{itemize}
   \vspace{1em}

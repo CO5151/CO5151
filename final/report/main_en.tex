@@ -53,7 +53,7 @@
 
 %% =====================================================================
 \begin{abstract}
-Vietnamese banking compliance officers must cross-check thousands of legal documents connected by complex amendment and supersession chains, where citing a single repealed decree creates direct legal liability. Group G4 presents \textbf{LegalPilot-VN} (\textbf{Research Track, RT1--RT4}), a multi-agent system combining hybrid retrieval (Qdrant + Neo4j knowledge graph) with \emph{selective temporal graph traversal}, \emph{atomic claim auditing} (\texttt{ClaimAuditorAgent}), and a \emph{deterministic citation gate} (\texttt{answer\_gate}) enforced outside prompts. On the 100-question State Bank of Vietnam benchmark (\texttt{sbv\_testset\_tvpl.json}, single run of configuration \texttt{p1}), the system achieves \textbf{96/100} on a code-defined three-condition proxy metric (compared against \textbf{91/100} reported by SBV-LawGraph~\cite{phan2026sbv}), alongside 99.0\% citation validity and 97.0\% ground-truth hit rate. For security evaluation, we construct a 20-case prompt-injection suite anchored to real code entry points; a pre-fix baseline over 10 executed cases yields 6 blocked, 2 bypasses at unit/API level (A16, A20), 1 partial enforcement (A07), and 1 inconclusive attribution (A04). \emph{Key limitations:} 96\% is an \textbf{upper bound} because semantic-equivalence judging as in~\cite{phan2026sbv} is absent, results reflect a single run without 3-run SD, measured Precision@2 is 34.47\% (below 37--39\% and evaluated at different $k$), and 10 indirect cases remain staged. \textbf{Repository:} \url{https://github.com/CO5151/CO5151} $\cdot$ Tag: \texttt{final} $\cdot$ Commit: \TODO{insert 40-char commit hash at D4 freeze}.
+Vietnamese banking compliance officers must cross-check thousands of legal documents connected by complex amendment and supersession chains, where citing a single repealed decree creates direct legal liability. Group G4 presents \textbf{LegalPilot-VN} (\textbf{Research Track, RT1--RT4}), a multi-agent system combining hybrid retrieval (Qdrant + Neo4j knowledge graph) with \emph{selective temporal graph traversal}, \emph{atomic claim auditing} (\texttt{ClaimAuditorAgent}), and a \emph{deterministic citation gate} (\texttt{answer\_gate}) enforced outside prompts. On the 100-question State Bank of Vietnam benchmark (\texttt{sbv\_testset\_tvpl.json}, single run of configuration \texttt{p1}), the system achieves \textbf{96/100} on a code-defined three-condition proxy metric (compared against \textbf{91/100} reported by SBV-LawGraph~\cite{phan2026sbv}), alongside 99.0\% citation validity and 97.0\% ground-truth hit rate; at the retrieval layer over the locally indexed core subset (29 documents / 103 chunks, \texttt{top\_k=6}), upgraded deduplicated hybrid RRF+BM25-IDF achieves \textbf{48.0\% Precision@2} and \textbf{0.737 F2@2} at matched $k=2$ (exceeding 37--39\% and 0.60--0.61 in~\cite{phan2026sbv}). For security evaluation, we construct a 20-case prompt-injection suite anchored to real code entry points; a pre-fix baseline over 10 executed cases yields 6 blocked, 2 bypasses at unit/API level (A16, A20), 1 partial enforcement (A07), and 1 inconclusive attribution (A04). \emph{Key limitations:} 96\% is an \textbf{upper bound} because semantic-equivalence judging as in~\cite{phan2026sbv} is absent, results reflect a single run without 3-run SD, retrieval metrics reflect the 29-document local index rather than the full 1,703-document corpus of~\cite{phan2026sbv} alongside mislabeled \texttt{101/2012/ND-CP} graph metadata, and 10 indirect cases remain staged. \textbf{Repository:} \url{https://github.com/CO5151/CO5151} $\cdot$ Tag: \texttt{final} $\cdot$ Commit: \TODO{insert 40-char commit hash at D4 freeze}.
 \end{abstract}
 
 \maketitle
@@ -63,13 +63,13 @@ Vietnamese banking compliance officers must cross-check thousands of legal docum
 \label{sec:intro}
 
 \paragraph{Target Users and Problem.}
-LegalPilot-VN targets banking compliance officers and corporate legal specialists operating under Vietnam's regulatory framework. When auditing dossiers for credit underwriting, e-wallets, or cross-border loans, practitioners must navigate 1,703 State Bank of Vietnam (SBV) legal documents linked by \texttt{SUPERSEDES} and \texttt{GUIDES} relations. Conventional RAG chatbots frequently mix active statutes with repealed decrees (e.g., Decree 101/2012/ND-CP after Decree 52/2024/ND-CP took effect) or ignore top-ranked provisions in favor of parametric memory.
+LegalPilot-VN targets banking compliance officers and corporate legal specialists operating under Vietnam's regulatory framework. When auditing dossiers for credit underwriting, e-wallets, or cross-border loans, practitioners must cross-check State Bank of Vietnam (SBV) legal documents linked by \texttt{SUPERSEDES} and \texttt{GUIDES} relations—SBV-LawGraph~\cite{phan2026sbv} surveys 1,703 documents, while our local indexed corpus holds 29 core regulations (103 chunks / 91 articles) covering all 100 benchmark queries. Conventional RAG chatbots frequently mix active statutes with repealed decrees (e.g., Decree 101/2012/ND-CP after Decree 52/2024/ND-CP took effect) or ignore top-ranked provisions in favor of parametric memory.
 
 \paragraph{Why a Multi-Agent Architecture over Static RAG.}
 Legal compliance queries cannot be solved reliably by a single fixed $k$-NN lookup. Complex queries require (i) decomposing the question into legal subgoals, (ii) selectively traversing the statutory graph by temporal validity, (iii) auditing each atomic claim in a candidate draft against retrieved clauses, and (iv) backtracking to prune repealed statutes or fetch missing provisions when citation checks fail. Each stage depends on intermediate verification outcomes, motivating a bounded reflection loop.
 
 \paragraph{Scope and Out-of-Scope.}
-The system covers compliance information retrieval and dossier drafting over the 1,703-document SBV corpus, evaluated on 100 expert-annotated questions. It explicitly excludes tax/regulatory evasion advice, courtroom litigation representation, and unapproved autonomous filing to external government portals.
+The system covers compliance information retrieval and dossier drafting over the locally indexed SBV core corpus (29 core statutes / 103 clauses), evaluated on 100 expert-annotated questions. It explicitly excludes tax/regulatory evasion advice, courtroom litigation representation, and unapproved autonomous filing to external government portals.
 
 \paragraph{Practical Contributions.}
 Reporting strictly implemented and measured artifacts:
@@ -93,7 +93,7 @@ Reporting strictly implemented and measured artifacts:
 \midrule
 Self-built by G4 & \texttt{LegalOrchestrator}, \texttt{LawGraphAgent}, \texttt{ClaimAuditorAgent}, \texttt{DrafterAgent} (\texttt{src/agents/}); \texttt{answer\_gate.py}, \texttt{guardrails.py}, \texttt{sanitizer.py}, \texttt{token\_gate.py} (\texttt{src/security/}); legal tools (\texttt{src/tools/}); 20-case attack suite (\texttt{final/security/attacks/}). \\
 \midrule
-Reused frameworks, models \& data & Google ADK (\texttt{ADKRunner}), LiteLLM, DeepSeek API (\texttt{deepseek-chat}), Gemini (\texttt{gemini-2.5-flash}), Qdrant, Neo4j, SQLite (WAL mode), 1,703 SBV corpus \& 100-question \texttt{sbv\_testset\_tvpl.json} benchmark~\cite{phan2026sbv}. \\
+Reused frameworks, models \& data & Google ADK (\texttt{ADKRunner}), LiteLLM, DeepSeek API (\texttt{deepseek-chat}), Gemini (\texttt{gemini-2.5-flash}), Qdrant, Neo4j, SQLite (WAL mode), 29-document/103-chunk local SBV subset \& 100-question \texttt{sbv\_testset\_tvpl.json} benchmark (1,703-doc reference corpus in~\cite{phan2026sbv}). \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -203,7 +203,7 @@ Table~\ref{tab:d2_diff} summarizes three substantive revisions made since D2 (20
 \textbf{Area} & \textbf{D2 Interim State} & \textbf{Current D3 State} \\
 \midrule
 Citation gate & Post-loop / hard blocking & In-loop + graph recovery + top-3 constraint (\texttt{p1}) \\
-Precision@2 claim & Stated as ``consistent'' with~\cite{phan2026sbv} & Corrected: 34.47\% < 37--39\%, mismatched $k$, non-comparable \\
+Retrieval \& Precision@2 & 34.47\% ($k\approx 3.25$), stated as ``consistent'' (flawed) & Deduplicated RRF+BM25-IDF (\texttt{retrieval\_100.json}): \textbf{48.0\% @2} \\
 Security eval & Theoretical Threat Model v0 & Audited \texttt{src/} (F1--F5) + 20-case JSONL benchmark \\
 \bottomrule
 \end{tabular}
@@ -255,21 +255,21 @@ Cost / task (USD) & \TODO{} & \TODO{} & \TODO{} & \TODO{} & --- \\
 \paragraph{Important Scale Caveat.} The \textbf{96.0\% figure is an upper bound}, not proof of surpassing Answer Correctness in~\cite{phan2026sbv}: the paper's 91\% includes a Gemini-based \emph{semantic equivalence} check, which can only lower or maintain scores. Moreover, 1-run measurements do not yet separate improvements from run-to-run variance.
 
 \subsection{Retrieval Metrics and Causal Ablation}
-Table~\ref{tab:retrieval} compares retrieval against~\cite{phan2026sbv}. While Recall@k, F2-score, and context dilution improve substantially, \textbf{Precision@2 is 34.47\%, lower than the paper's 37--39\%} and measured at $k \approx 3.25$ due to multi-subgoal expansion—making D2's ``consistent'' phrasing inaccurate. Furthermore, 100\% repealed-statute filtering depends on graph metadata correctness, which fails on Decree \texttt{101/2012/ND-CP}.
+Table~\ref{tab:retrieval} compares full 100-question retrieval metrics recorded in \texttt{eval/raw/retrieval\_100.json} (generated by \texttt{scripts/eval\_retrieval.py}, \texttt{top\_k=6}) against~\cite{phan2026sbv}. Progression spans three stages: (1) interim D2 measured 34.47\% at $k \approx 3.25$ and mislabeled it ``consistent''; (2) commit \texttt{b40ace3} (Neo4j active) introduced Hybrid RRF+BM25+\texttt{cap=2}, reaching 41.0\% \texttt{P@2} and 0.638 \texttt{F2@2}; and (3) the current \texttt{lawgraph.py} fix deduplicates \texttt{dense\_retrieve()} by article, adds an Okapi BM25-IDF (unigram+bigram) local fallback, prevents unsorted \texttt{STATUTE\_CATALOG} overrides, and passes the clean query to the bi-encoder. Across 100 questions (Neo4j stopped, exercising local BM25-IDF fallback), \texttt{hybrid\_rrf} reaches \textbf{48.0\% P@2} (out of a 54.5\% theoretical ceiling), \textbf{0.737 F2@2}, \textbf{89.0\% Hit@2}, and \textbf{96.0\% R@6}; single arms reach 49.0\% (\texttt{dense\_only}) and 48.5\% (\texttt{bm25\_only}). \emph{Key scope caveat:} our local index holds 29 core documents (103 chunks) vs.\ 1,703 documents in~\cite{phan2026sbv}, so gains apply strictly within this indexed subset; repealed filtering still suffers from the \texttt{101/2012/ND-CP} metadata error (Section~\ref{sec:security}).
 
 \begin{table}[t]
-\caption{Retrieval comparison against SBV-LawGraph~\cite{phan2026sbv}.}
+\caption{Retrieval comparison (100 questions, \texttt{top\_k=6}, raw in \texttt{eval/raw/retrieval\_100.json}) against SBV-LawGraph~\cite{phan2026sbv}.}
 \label{tab:retrieval}
 \scriptsize
 \begin{tabular}{@{}lrrp{2.7cm}@{}}
 \toprule
-\textbf{Metric} & \textbf{Paper~\cite{phan2026sbv}} & \textbf{G4} & \textbf{Honest Assessment} \\
+\textbf{Metric} & \textbf{Paper~\cite{phan2026sbv}} & \textbf{G4 (\texttt{hybrid\_rrf})} & \textbf{Honest Assessment} \\
 \midrule
-Recall@k & 76.0\% (@10) & \textbf{97.0\%} & $+21.0$ pts higher \\
-F2-score & 0.60--0.61 & \textbf{0.684} & Higher \\
-Context dilution & $>60.0\%$ & \textbf{$<15.0\%$} & Reduced $>45$ pts \\
+Precision@2 & 37.0--39.0\% & \textbf{48.0\%} & Higher ($k=2$; ceiling 54.5\%; 29-doc subset) \\
+F2@2 & 0.60--0.61 & \textbf{0.737} & Higher ($k=2$; 29-doc subset) \\
+Recall & 76.0\% (@10) & \textbf{96.0\% (@6)} & $+20.0$ pts higher already at $k=6$ \\
+Context noise & $>60.0\%$ & \textbf{52.0\%} & $>8$ pts lower ($1 - \text{P@2}$) \\
 Repealed filtering & 0.0\% & 100.0\%* & *Metadata-dependent (\S\ref{sec:security}) \\
-Precision@2 & 37.0--39.0\% & \textbf{34.47\%} & \textbf{Lower} (measured at $k \approx 3.25$) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -331,7 +331,7 @@ While \texttt{submit\_portal\_filing} computes a SHA-256 transaction hash, it la
 
 \begin{itemize}[leftmargin=*]
   \item \textbf{Design Limitations:} no semantic-equivalence judge on \texttt{p1}; no scanned-PDF table/image OCR; simulated portal filing lacking real digital-signature token checks. Furthermore, our failed D2 experiment—enforcing hard single-pass citation blocking without backtracking—caused a 26.7\% abstention rate, underscoring the precision--utility trade-off.
-  \item \textbf{Threats to Measurement Validity:} (i) 96/100 is a single-run upper bound lacking semantic equivalence; (ii) 100 banking questions from a public site represent a small, domain-specific sample with contamination exposure; (iii) Precision@2 cannot be directly compared across different $k$; and (iv) the \texttt{101/2012/ND-CP} metadata error makes our 100\% validity metric circular relative to the local graph.
+  \item \textbf{Threats to Measurement Validity:} (i) 96/100 is a single-run upper bound lacking semantic equivalence; (ii) 100 banking questions from a public site represent a small, domain-specific sample with contamination exposure; (iii) the local retrieval index currently holds 29 core documents (103 chunks) covering all 100 benchmark queries, substantially smaller than the 1,703-document corpus in~\cite{phan2026sbv}, so our 48.0\% \texttt{P@2} cannot be extrapolated to 1,703 documents (furthermore, \texttt{retrieval\_100.json} ran with Neo4j stopped, exercising the local \texttt{lexical\_retrieve\_export} fallback); and (iv) the \texttt{101/2012/ND-CP} metadata error makes our 100\% validity metric circular relative to the local graph.
   \item \textbf{Extensibility:} separating graph retrieval, claim auditing, and code-level citation gating allows adaptation to labor or tax law by swapping the corpus and allowlist without model retraining.
 \end{itemize}
 
@@ -339,7 +339,7 @@ While \texttt{submit\_portal\_filing} computes a SHA-256 transaction hash, it la
 \section{Ethics and Responsible Use}
 \label{sec:ethics}
 
-The 1,703 legal statutes and evaluation questions come from public Vietnamese government/legal repositories; security testing runs strictly against local test instances and mocked tool outputs without targeting third-party services. No real enterprise PII is stored; intermediate dossiers remain isolated inside \texttt{workspace/}. LegalPilot-VN is an advisory decision-support aid rather than authoritative legal counsel, and irreversible actions require explicit human confirmation and verifiable token authentication.
+The indexed local subset (29 core SBV regulations / 103 chunks, aligned with the 1,703-document benchmark~\cite{phan2026sbv}) and 100 evaluation questions come from public Vietnamese government/legal repositories; security testing runs strictly against local test instances and mocked tool outputs without targeting third-party services. No real enterprise PII is stored; intermediate dossiers remain isolated inside \texttt{workspace/}. LegalPilot-VN is an advisory decision-support aid rather than authoritative legal counsel, and irreversible actions require explicit human confirmation and verifiable token authentication.
 
 %% =====================================================================
 \section{Conclusion}

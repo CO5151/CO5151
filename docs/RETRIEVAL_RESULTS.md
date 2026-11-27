@@ -93,3 +93,22 @@ EOF
 3. Dùng đúng `k` theo tác vụ: câu hỏi đơn giản trả 2 điều, câu hỏi quy trình trả 5.
 4. Sửa tiêu đề các Điều đang là placeholder (\"Quy định tại 52/2024/ND-CP\") vì
    tiêu đề cũng được tính điểm.
+
+---
+
+## 7. Cập nhật 27/11/2026 — Sửa lỗi RRF + BM25-IDF fallback (`eval/raw/retrieval_100.json`)
+
+**Ba lỗi kỹ thuật đã sửa trong `src/agents/lawgraph.py`:**
+1. `dense_retrieve()` trước đây cắt `top_k` ở mức *chunk* rồi mới nạp vào RRF, khiến nhiều chunk thuộc cùng một Điều bị lặp và cộng điểm hai lần, còn `retrieve_provisions()` truyền cả chuỗi ghép `subgoals + keywords` vào bi-encoder làm loãng embedding câu hỏi gốc. Đã khử trùng ở cấp `doc_id:Điều` và truyền `raw_query`.
+2. Khi Neo4j dừng (`localhost:7687` không phản hồi), `retrieve_provisions()` rơi xuống `STATUTE_CATALOG` chưa xếp hạng, đẩy các điều khoản rác lên đầu RRF (`P@2` tụt về `0.200`). Đã bổ sung `lexical_retrieve_export()` dùng Okapi BM25+IDF (unigram + bigram) trên `qdrant_chunks_export.json` và chặn `STATUTE_CATALOG` chèn ngang khi đã có chunk index.
+3. Khử trùng hai danh sách trước khi gộp RRF (`K = 60`, trọng số 1:1).
+
+**Kết quả đo tự động đủ 100 câu (`scripts/eval_retrieval.py`, `top_k = 6`, Neo4j OFF, lưu tại `eval/raw/retrieval_100.json`):**
+
+| Cấu hình | P@2 | R@2 | F2@2 | Hit@2 | R@6 | Noise@2 (`1−P@2`) |
+|---|---:|---:|---:|---:|---:|---:|
+| `dense_only` | **0.4900** | 0.8817 | 0.7485 | 0.900 | 0.9600 | 0.5100 |
+| `bm25_only` (Okapi BM25+IDF) | **0.4850** | 0.8783 | 0.7450 | 0.900 | 0.9050 | 0.5150 |
+| **`hybrid_rrf` (mặc định)** | **0.4800** | 0.8683 | **0.7366** | **0.890** | **0.9600** | **0.5200** |
+
+**Giới hạn phạm vi tập dữ liệu:** index cục bộ hiện chứa **29 văn bản NHNN cốt lõi / 91 điều duy nhất / 103 chunk** (bao phủ 100% điều khoản ground truth của bộ 100 câu; trần toán học `P@2` là `0.5450`), nhỏ hơn rất nhiều so với kho **1.703 văn bản** của SBV-LawGraph. Kết quả vượt `P@2` (`48,0%` vs `37–39%`) vì vậy chỉ có giá trị trong phạm vi tập con đã lập chỉ mục này.
