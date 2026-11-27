@@ -106,3 +106,10 @@ Bảng trong bài phải sinh từ JSONL, không chép tay (yêu cầu B2).
 - `.venv/bin/python3` của repo **thiếu `pydantic_settings` và `bs4`** → `import src.*` chết. Đây là lỗi tái lập thật, phải xử lý ở W4.1 (pin deps), nếu không thì "chạy lại từ checkout sạch" sẽ fail đúng như vậy.
 - Payload A06 chứa ký tự vô hình U+200B và U+FE0F ở dạng escape JSON — đừng copy qua trình soạn thảo làm mất.
 - Không chạy ca nào trỏ vào tài khoản/dữ liệu bên thứ ba. A10/A11 dùng mock local, không gọi vbpl.vn thật.
+
+## Tài liệu tham khảo
+
+1. K. Greshake et al., *"Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection,"* Proc. ACM AISec, 2023.
+2. E. Debenedetti et al., *"AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents,"* NeurIPS (Datasets & Benchmarks), 2024 (`arXiv:2406.13352`).
+3. E. Wallace et al., *"The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions,"* `arXiv:2404.13208`, 2024.
+4. Y. Shavit et al., *"Practices for Governing Agentic AI Systems,"* OpenAI, 2023.

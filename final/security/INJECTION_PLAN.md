@@ -162,3 +162,12 @@ Logo/trace: dùng `eval/traces/` và **giữ nguyên**, không sửa tay. Số c
 3. **Kiểm soát quyền:** V8 `requires_human_token` + audit trail của ca A07/A20 (ảnh/log thật).
 4. **Residual risk:** phần nào *không* chặn được và vì sao — dự kiến (a) injection ngữ nghĩa không có từ khoá, (b) chỉ thị nằm trong ảnh scan PDF, (c) nội dung hợp lệ nhưng gây hiểu sai. Nói thẳng 3 điểm này; rubric trừ nặng nếu bỏ qua residual risk.
 5. **Giới hạn:** 20 ca là mẫu nhỏ, không phải đánh giá độ phủ đầy đủ; không thử trên tài khoản/dữ liệu bên thứ ba (đúng yêu cầu mẫu §3).
+
+---
+
+## 7. Tài liệu tham khảo
+
+1. K. Greshake, S. Abdelnabi, S. Mishra, C. Endres, T. Holz, M. Fritz, *"Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection,"* Proc. ACM AISec, 2023.
+2. E. Debenedetti, J. Zhang, M. Balunović, L. Beurer-Kellner, M. Fischer, F. Tramèr, *"AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents,"* NeurIPS (Datasets & Benchmarks), 2024 (`arXiv:2406.13352`).
+3. E. Wallace, K. Xiao, R. Leike, L. Weng, J. Heidecke, A. Beutel, *"The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions,"* OpenAI / `arXiv:2404.13208`, 2024.
+4. Y. Shavit, S. Agarwal, M. Brundage et al., *"Practices for Governing Agentic AI Systems,"* OpenAI Whitepaper, Dec. 2023.
